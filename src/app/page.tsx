@@ -14,7 +14,7 @@ export default async function HomePage() {
   });
   console.log(boards);
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-black text-white">
+    <main className="flex min-h-screen flex-col items-center justify-center">
       <section className="flex gap-32">
         {boards.map((board) => (
           <div key={board.id}>
