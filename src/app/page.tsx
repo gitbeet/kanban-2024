@@ -1,18 +1,9 @@
-import { db } from "~/server/db";
+import { getBoards } from "~/server/queries";
 
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
-  const boards = await db.query.boards.findMany({
-    with: {
-      columns: {
-        with: {
-          tasks: true,
-        },
-      },
-    },
-  });
-  console.log(boards);
+  const boards = await getBoards();
   return (
     <main className="flex min-h-screen flex-col items-center justify-center">
       <section className="flex gap-32">
