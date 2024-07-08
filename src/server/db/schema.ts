@@ -35,7 +35,9 @@ export const columns = createTable(
   {
     id: varchar("id", { length: 1024 }).primaryKey(),
     name: varchar("name", { length: 256 }).notNull(),
-    boardId: varchar("boardId", { length: 1024 }).notNull(),
+    boardId: varchar("boardId", { length: 1024 })
+      .references(() => boards.id, { onDelete: "cascade" })
+      .notNull(),
 
     createdAt: timestamp("created_at", { withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP`)
@@ -54,7 +56,9 @@ export const tasks = createTable(
   {
     id: varchar("id", { length: 1024 }).primaryKey(),
     name: varchar("name", { length: 256 }).notNull(),
-    columnId: varchar("columnId", { length: 1024 }).notNull(),
+    columnId: varchar("columnId", { length: 1024 })
+      .references(() => columns.id, { onDelete: "cascade" })
+      .notNull(),
     completed: boolean("completed").notNull().default(false),
 
     createdAt: timestamp("created_at", { withTimezone: true })
