@@ -97,3 +97,11 @@ export async function renameColumn(columnId: string, newName: string) {
 
   revalidatePath("/");
 }
+
+export async function deleteColumn(columnId: string) {
+  const user = auth();
+  if (!user.userId) throw new Error("Unauthorized");
+  // Check if col belongs to user?
+  await db.delete(columns).where(eq(columns.id, columnId));
+  revalidatePath("/");
+}

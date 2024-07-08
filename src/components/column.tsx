@@ -1,7 +1,7 @@
 import React from "react";
 import { type ColumnType } from "../types";
 import Task from "../components/task";
-import { renameColumn } from "~/server/queries";
+import { deleteColumn, renameColumn } from "~/server/queries";
 import SubmitButton from "./ui/submit-button";
 const Column = ({ column }: { column: ColumnType }) => {
   return (
@@ -14,6 +14,14 @@ const Column = ({ column }: { column: ColumnType }) => {
         }}
       >
         <SubmitButton text="Rename test" />
+      </form>
+      <form
+        action={async () => {
+          "use server";
+          await deleteColumn(column.id);
+        }}
+      >
+        <SubmitButton text="X" />
       </form>
       <div>
         {column.tasks.map((task) => (
