@@ -85,3 +85,15 @@ export async function createColumn(boardId: string, name: string) {
   revalidatePath("/");
   return insertedColumn;
 }
+
+export async function renameColumn(columnId: string, newName: string) {
+  const user = auth();
+  if (!user.userId) throw new Error("Unauthorized");
+  // Check if col belongs to user ?
+  await db
+    .update(columns)
+    .set({ name: newName })
+    .where(and(eq(columns.id, columnId)));
+
+  revalidatePath("/");
+}
