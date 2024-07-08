@@ -2,10 +2,8 @@ import { relations, sql } from "drizzle-orm";
 import {
   index,
   pgTableCreator,
-  serial,
   timestamp,
   varchar,
-  integer,
   boolean,
 } from "drizzle-orm/pg-core";
 
