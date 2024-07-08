@@ -2,11 +2,10 @@ import "server-only";
 
 import { auth } from "@clerk/nextjs/server";
 import { db } from "./db/index";
-import { boards, columns } from "./db/schema";
+import { boards, columns, tasks } from "./db/schema";
 import { v4 as uuid } from "uuid";
 import { revalidatePath } from "next/cache";
 import { and, eq } from "drizzle-orm";
-import { BoardType, ColumnType } from "~/types";
 
 // ---------- BOARD ----------
 
@@ -52,7 +51,7 @@ export async function renameBoard(boardId: string, newName: string) {
 
   await db
     .update(boards)
-    .set({ name: newName })
+    .set({ name: newName, updatedAt: new Date() })
     .where(and(eq(boards.id, boardId), eq(boards.userId, user.userId)));
   revalidatePath("/");
 }
@@ -92,7 +91,7 @@ export async function renameColumn(columnId: string, newName: string) {
   // Check if col belongs to user ?
   await db
     .update(columns)
-    .set({ name: newName })
+    .set({ name: newName, updatedAt: new Date() })
     .where(and(eq(columns.id, columnId)));
 
   revalidatePath("/");
@@ -104,4 +103,24 @@ export async function deleteColumn(columnId: string) {
   // Check if col belongs to user?
   await db.delete(columns).where(eq(columns.id, columnId));
   revalidatePath("/");
+}
+
+// ---------- TASK ----------
+
+export async function createTask(columnId: string, name: string) {
+  const user = auth();
+  if (!user.userId) throw new Error("Unauthorized");
+  // Check if task belongs to user?
+  const newTask = {
+    id: uuid(),
+    name,
+    completed: false,
+    columnId,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  };
+
+  await db.insert(tasks).values(newTask);
+  revalidatePath("/");
+  return newTask;
 }
