@@ -124,3 +124,14 @@ export async function createTask(columnId: string, name: string) {
   revalidatePath("/");
   return newTask;
 }
+
+export async function renameTask(taskId: string, newName: string) {
+  const user = auth();
+  if (!user.userId) throw new Error("Unauthorized");
+  // Check if task belongs to user?
+  await db
+    .update(tasks)
+    .set({ name: newName, updatedAt: new Date() })
+    .where(eq(tasks.id, taskId));
+  revalidatePath("/");
+}
