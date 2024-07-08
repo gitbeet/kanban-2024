@@ -143,3 +143,14 @@ export async function deleteTask(taskId: string) {
   await db.delete(tasks).where(eq(tasks.id, taskId));
   revalidatePath("/");
 }
+
+export async function toggleTaskCompleted(taskId: string, completed: boolean) {
+  const user = auth();
+  if (!user.userId) throw new Error("Unauthorized");
+  // Check if task belongs to user?
+  await db
+    .update(tasks)
+    .set({ completed, updatedAt: new Date() })
+    .where(eq(tasks.id, taskId));
+  revalidatePath("/");
+}
