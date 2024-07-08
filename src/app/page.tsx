@@ -16,8 +16,9 @@ export default async function HomePage() {
         }}
       >
         <input type="text" name="board-name-input" className="text-black" />
-        <SubmitButton text="Create todo" />
+        <SubmitButton text="Create Board" />
       </form>
+
       <Boards boards={boards} />
     </main>
   );

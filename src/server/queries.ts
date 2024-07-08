@@ -2,10 +2,11 @@ import "server-only";
 
 import { auth } from "@clerk/nextjs/server";
 import { db } from "./db/index";
-import { boards } from "./db/schema";
+import { boards, columns } from "./db/schema";
 import { v4 as uuid } from "uuid";
 import { revalidatePath } from "next/cache";
 import { and, eq } from "drizzle-orm";
+import { BoardType, ColumnType } from "~/types";
 
 // ---------- BOARD ----------
 
@@ -64,4 +65,23 @@ export async function deleteBoard(boardId: string) {
     .delete(boards)
     .where(and(eq(boards.id, boardId), eq(boards.userId, user.userId)));
   revalidatePath("/");
+}
+
+// ---------- COLUMN ----------
+
+export async function createColumn(boardId: string, name: string) {
+  const user = auth();
+  if (!user.userId) throw new Error("Unauthorized");
+
+  const newColumn = {
+    id: uuid(),
+    name,
+    boardId,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  };
+
+  const insertedColumn = db.insert(columns).values(newColumn);
+  revalidatePath("/");
+  return insertedColumn;
 }

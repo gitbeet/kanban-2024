@@ -1,7 +1,8 @@
 import React from "react";
 import { type BoardType } from "../types";
 import Column from "../components/column";
-import { deleteBoard, renameBoard } from "~/server/queries";
+import { createColumn, deleteBoard, renameBoard } from "~/server/queries";
+import SubmitButton from "./ui/submit-button";
 const Board = ({ board }: { board: BoardType }) => {
   return (
     <div>
@@ -25,6 +26,16 @@ const Board = ({ board }: { board: BoardType }) => {
         <button type="submit" className="border p-2">
           Rename to Rename test
         </button>
+      </form>
+      <form
+        action={async (formData: FormData) => {
+          "use server";
+          const text = formData.get("column-name-input") as string;
+          await createColumn(board.id, text);
+        }}
+      >
+        <input type="text" name="column-name-input" className="text-black" />
+        <SubmitButton text="Create column" />
       </form>
       <div className="flex gap-16">
         {board.columns.map((col) => (
