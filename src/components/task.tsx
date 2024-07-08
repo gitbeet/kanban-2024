@@ -1,7 +1,7 @@
 import React from "react";
 import { type TaskType } from "../types";
 import SubmitButton from "./ui/submit-button";
-import { renameTask } from "~/server/queries";
+import { deleteTask, renameTask } from "~/server/queries";
 
 const Task = ({ task }: { task: TaskType }) => {
   return (
@@ -17,6 +17,14 @@ const Task = ({ task }: { task: TaskType }) => {
         }}
       >
         <SubmitButton text="Rename task" />
+      </form>
+      <form
+        action={async () => {
+          "use server";
+          await deleteTask(task.id);
+        }}
+      >
+        <SubmitButton text="Delete" />
       </form>
     </>
   );

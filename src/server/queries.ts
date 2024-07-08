@@ -135,3 +135,11 @@ export async function renameTask(taskId: string, newName: string) {
     .where(eq(tasks.id, taskId));
   revalidatePath("/");
 }
+
+export async function deleteTask(taskId: string) {
+  const user = auth();
+  if (!user.userId) throw new Error("Unauthorized");
+  // Check if task belongs to user?
+  await db.delete(tasks).where(eq(tasks.id, taskId));
+  revalidatePath("/");
+}
