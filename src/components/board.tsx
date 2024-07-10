@@ -56,6 +56,7 @@ const Board = ({
           const renamedBoard: BoardType = {
             ...board,
             name,
+            updatedAt: new Date(),
           };
           setOptimistic({ action: "rename", board: renamedBoard });
           await renameBoardAction(formData);

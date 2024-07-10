@@ -32,11 +32,13 @@ const Task = ({
         ref={renameTaskRef}
         action={async (formData) => {
           renameTaskRef.current?.reset();
-          const updatedTask = {
+          const name = formData.get("task-name-input") as string;
+          const renamedTask: TaskType = {
             ...task,
-            name: formData.get("task-name-input") as string,
+            name,
+            updatedAt: new Date(),
           };
-          setOptimistic({ action: "rename", task: updatedTask });
+          setOptimistic({ action: "rename", task: renamedTask });
           await renameTaskAction(formData);
         }}
       >
