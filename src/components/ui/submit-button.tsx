@@ -2,11 +2,17 @@
 
 import { useFormStatus } from "react-dom";
 
-const SubmitButton = ({ text }: { text: string }) => {
+const SubmitButton = ({
+  text,
+  pendingText = "Loading...",
+}: {
+  text: string;
+  pendingText?: string;
+}) => {
   const { pending } = useFormStatus();
   return (
-    <button type="submit" className="border p-2">
-      {pending ? "Loading..." : text}
+    <button disabled={pending} type="submit" className="border p-2">
+      {pending ? pendingText : text}
     </button>
   );
 };
