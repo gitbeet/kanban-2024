@@ -5,9 +5,24 @@ import { type TaskType, type ColumnType } from "../types";
 import Task from "../components/task";
 import SubmitButton from "./ui/submit-button";
 import { v4 as uuid } from "uuid";
-import { createTaskAction } from "~/actions";
-const Column = ({ column }: { column: ColumnType }) => {
-  const ref = useRef<HTMLFormElement>(null);
+import {
+  createTaskAction,
+  deleteColumnAction,
+  renameColumnAction,
+} from "~/actions";
+import { deleteColumn } from "~/server/queries";
+const Column = ({
+  column,
+  setOptimistic,
+}: {
+  column: ColumnType;
+  setOptimistic: (action: {
+    action: "create" | "rename" | "delete";
+    column: ColumnType;
+  }) => void;
+}) => {
+  const renameColumnRef = useRef<HTMLFormElement>(null);
+  const createTaskRef = useRef<HTMLFormElement>(null);
   const [optimisticTasks, setOptimisticTasks] = useOptimistic(
     column.tasks,
     (
@@ -33,36 +48,34 @@ const Column = ({ column }: { column: ColumnType }) => {
   return (
     <div key={column.id}>
       <p className="border-b p-2">{column.name}</p>
-      {/* <form
-        action={async () => {
-          "use server";
-          await renameColumn(column.id, "Rename test");
-        }}
-      >
-        <SubmitButton text="Rename test" />
-      </form>
-      <form
-        action={async () => {
-          "use server";
-          await deleteColumn(column.id);
-        }}
-      >
-        <SubmitButton text="X" />
-      </form>
+      {/* Delete column */}
       <form
         action={async (formData: FormData) => {
-          "use server";
-          const taskName = formData.get("task-name-input") as string;
-          await createTask(column.id, taskName);
+          setOptimistic({ action: "delete", column });
+          await deleteColumnAction(formData);
         }}
       >
-        <input type="text" name="task-name-input" className="text-black" />
-        <SubmitButton text="Create task" />
-      </form> */}
+        <input type="hidden" name="column-id" value={column.id} />
+        <SubmitButton text="Delete column" />
+      </form>
+      {/* Rename column */}
       <form
-        ref={ref}
+        ref={renameColumnRef}
+        action={async (formData: FormData) => {
+          const newName = formData.get("column-name-input") as string;
+          const renamedColumn = { ...column, name: newName };
+          setOptimistic({ action: "rename", column: renamedColumn });
+          await renameColumnAction(formData);
+        }}
+      >
+        <input type="hidden" name="column-id" value={column.id} />
+        <input type="text" name="column-name-input" />
+        <SubmitButton text="Rename column" />
+      </form>
+      <form
+        ref={createTaskRef}
         action={async (formData) => {
-          ref.current?.reset();
+          createTaskRef.current?.reset();
           const newTask: TaskType = {
             id: uuid(),
             name: formData.get("task-name-input") as string,
@@ -72,11 +85,6 @@ const Column = ({ column }: { column: ColumnType }) => {
             updatedAt: new Date(),
           };
           setOptimisticTasks({ action: "create", task: newTask });
-          // renameOptimisticTask(formData.get("task-name-input") as string);
-          // const {error} = await renameTaskAction(formData);
-          // if(error) {
-          //     alert(error)
-          // }
           await createTaskAction(formData);
         }}
       >

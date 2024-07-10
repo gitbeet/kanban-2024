@@ -19,7 +19,7 @@ const Task = ({
     task: TaskType;
   }) => void;
 }) => {
-  const ref = useRef<HTMLFormElement>(null);
+  const renameTaskRef = useRef<HTMLFormElement>(null);
 
   return (
     <>
@@ -29,9 +29,9 @@ const Task = ({
       </p>
       {/* RENAME TASK ACTION */}
       <form
-        ref={ref}
+        ref={renameTaskRef}
         action={async (formData) => {
-          ref.current?.reset();
+          renameTaskRef.current?.reset();
           const updatedTask = {
             ...task,
             name: formData.get("task-name-input") as string,

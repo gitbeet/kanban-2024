@@ -68,13 +68,13 @@ export async function deleteBoard(boardId: string) {
 
 // ---------- COLUMN ----------
 
-export async function createColumn(boardId: string, name: string) {
+export async function createColumn(boardId: string, columnName: string) {
   const user = auth();
   if (!user.userId) throw new Error("Unauthorized");
 
   const newColumn = {
     id: uuid(),
-    name,
+    name: columnName,
     boardId,
     createdAt: new Date(),
     updatedAt: new Date(),
