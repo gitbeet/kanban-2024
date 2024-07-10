@@ -22,7 +22,7 @@ const Task = ({
   const renameTaskRef = useRef<HTMLFormElement>(null);
 
   return (
-    <>
+    <div className="border p-4">
       <p key={task.id}>
         <span className="pr-2">{task.completed ? "(v)" : "(x)"}</span>
         {task.name}
@@ -73,7 +73,7 @@ const Task = ({
         />
         <SubmitButton text="Toggle task" pendingText="Toggling..." />
       </form>
-    </>
+    </div>
   );
 };
 

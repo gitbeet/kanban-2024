@@ -107,14 +107,17 @@ const Board = ({
         />
         <SubmitButton text="Create column" />
       </form>
-      <div className="flex gap-16">
-        {optimisticColumns.map((col) => (
-          <Column
-            key={col.id}
-            column={col}
-            setOptimistic={setOptimisticColumns}
-          />
-        ))}
+      <div>
+        <h2 className="pb-4 text-xl font-bold">Columns</h2>
+        <div className="flex items-start gap-16">
+          {optimisticColumns.map((col) => (
+            <Column
+              key={col.id}
+              column={col}
+              setOptimistic={setOptimisticColumns}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );

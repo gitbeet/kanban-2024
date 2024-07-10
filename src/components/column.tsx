@@ -10,7 +10,6 @@ import {
   deleteColumnAction,
   renameColumnAction,
 } from "~/actions";
-import { deleteColumn } from "~/server/queries";
 const Column = ({
   column,
   setOptimistic,
@@ -46,8 +45,8 @@ const Column = ({
   );
 
   return (
-    <div key={column.id}>
-      <p className="border-b p-2">{column.name}</p>
+    <div key={column.id} className="border p-4">
+      <p className="pb-4 text-lg font-bold">{column.name}</p>
       {/* Delete column */}
       <form
         action={async (formData: FormData) => {
@@ -97,6 +96,7 @@ const Column = ({
         <SubmitButton text="Create task" pendingText="Creating..." />
       </form>
       <div>
+        <h4 className="pb-4 font-bold">Tasks</h4>
         {optimisticTasks.map((task) => (
           <Task key={task.id} task={task} setOptimistic={setOptimisticTasks} />
         ))}

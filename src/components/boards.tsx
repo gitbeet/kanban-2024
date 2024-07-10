@@ -54,7 +54,7 @@ const Boards = ({ boards }: { boards: BoardType[] }) => {
           type="text"
           name="board-name-input"
           className="text-black"
-          placeholder="Create column..."
+          placeholder="Create board..."
         />
         <SubmitButton text="Create board" />
       </form>{" "}
