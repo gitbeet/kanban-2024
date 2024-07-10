@@ -21,7 +21,8 @@ const Board = ({ board }: { board: BoardType }) => {
       if (action === "create") return [...state, column];
       if (action === "rename")
         return state.map((col) => (col.id === column.id ? column : col));
-
+      if (action === "delete")
+        return state.filter((col) => col.id !== column.id);
       return state;
     },
   );
