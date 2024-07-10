@@ -62,8 +62,8 @@ const Column = ({
       <form
         ref={renameColumnRef}
         action={async (formData: FormData) => {
-          const newName = formData.get("column-name-input") as string;
-          const renamedColumn = { ...column, name: newName };
+          const name = formData.get("column-name-input") as string;
+          const renamedColumn = { ...column, name };
           setOptimistic({ action: "rename", column: renamedColumn });
           await renameColumnAction(formData);
         }}

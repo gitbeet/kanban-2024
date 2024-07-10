@@ -1,14 +1,35 @@
 "use server";
 
 import {
+  createBoard,
   createColumn,
   createTask,
+  deleteBoard,
   deleteColumn,
   deleteTask,
+  renameBoard,
   renameColumn,
   renameTask,
   toggleTaskCompleted,
 } from "./server/queries";
+
+// ---------- BOARDS ----------
+
+export const createBoardAction = async (formData: FormData) => {
+  const name = formData.get("board-name-input") as string;
+  await createBoard(name);
+};
+
+export const renameBoardAction = async (formData: FormData) => {
+  const newName = formData.get("board-name-input") as string;
+  const boardId = formData.get("board-id") as string;
+  await renameBoard(boardId, newName);
+};
+
+export const deleteBoardAction = async (formData: FormData) => {
+  const boardId = formData.get("board-id") as string;
+  await deleteBoard(boardId);
+};
 
 // ---------- COLUMNS ----------
 

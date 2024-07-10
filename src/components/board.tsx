@@ -3,11 +3,26 @@
 import React, { useOptimistic, useRef } from "react";
 import { type ColumnType, type BoardType } from "../types";
 import Column from "../components/column";
-import { createColumn, deleteBoard, renameBoard } from "~/server/queries";
 import SubmitButton from "./ui/submit-button";
-import { createColumnAction } from "~/actions";
+import {
+  createColumnAction,
+  deleteBoardAction,
+  renameBoardAction,
+} from "~/actions";
 import { v4 as uuid } from "uuid";
-const Board = ({ board }: { board: BoardType }) => {
+import { useUser } from "@clerk/nextjs";
+const Board = ({
+  board,
+  setOptimistic,
+}: {
+  board: BoardType;
+  setOptimistic: (action: {
+    action: "create" | "rename" | "delete";
+    board: BoardType;
+  }) => void;
+}) => {
+  const { user } = useUser();
+  const renameBoardRef = useRef<HTMLFormElement>(null);
   const createColumnRef = useRef<HTMLFormElement>(null);
   const [optimisticColumns, setOptimisticColumns] = useOptimistic(
     board.columns,
@@ -27,29 +42,43 @@ const Board = ({ board }: { board: BoardType }) => {
     },
   );
 
+  if (!user?.id) return <h1>Please log in (placeholder error)</h1>;
+
   return (
     <div>
       <h2 className="pb-4 text-xl">{board.name}</h2>
-      {/* <form
-        action={async () => {
-          "use server";
-          await deleteBoard(board.id);
-        }}
-      >
-        <button type="submit" className="border p-2">
-          X
-        </button>
-      </form>
+      {/* Rename board action */}
       <form
-        action={async () => {
-          "use server";
-          await renameBoard(board.id, "Rename test");
+        ref={renameBoardRef}
+        action={async (formData: FormData) => {
+          renameBoardRef.current?.reset();
+          const name = formData.get("board-name-input") as string;
+          const renamedBoard: BoardType = {
+            ...board,
+            name,
+          };
+          setOptimistic({ action: "rename", board: renamedBoard });
+          await renameBoardAction(formData);
         }}
       >
-        <button type="submit" className="border p-2">
-          Rename to Rename test
-        </button>
-      </form> */}
+        <input type="hidden" name="board-id" value={board.id} />
+        <input
+          type="text"
+          name="board-name-input"
+          placeholder="Board name..."
+        />
+        <SubmitButton text="Rename board" pendingText="Renaming board..." />
+      </form>
+      {/* Delete board action */}
+      <form
+        action={async (formData: FormData) => {
+          setOptimistic({ action: "delete", board });
+          await deleteBoardAction(formData);
+        }}
+      >
+        <input type="hidden" name="board-id" value={board.id} />
+        <SubmitButton text="Delete board" pendingText="Deleting board..." />
+      </form>
 
       {/* ---------- COLUMN ---------- */}
       <form
