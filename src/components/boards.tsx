@@ -20,6 +20,9 @@ const Boards = ({ boards }: { boards: BoardType[] }) => {
         board,
         column,
         task,
+        oldColumnId,
+        newColumnId,
+        newColumnIndex,
       }: {
         action:
           | "createBoard"
@@ -36,6 +39,9 @@ const Boards = ({ boards }: { boards: BoardType[] }) => {
         board?: BoardType;
         column?: ColumnType;
         task?: TaskType;
+        oldColumnId?: string;
+        newColumnId?: string;
+        newColumnIndex?: number;
       },
     ) => {
       switch (action) {
@@ -165,31 +171,53 @@ const Boards = ({ boards }: { boards: BoardType[] }) => {
             );
           }
           break;
-        // case "switchTaskColumn":
-        //   if (board?.id && column && task) {
-        //     const { sourceColumnId, targetColumnId } = column;
-        //     return state.map((b) => {
-        //       if (b.id !== board.id) return b;
-        //       return {
-        //         ...b,
-        //         columns: b.columns.map((c) => {
-        //           if (c.id === sourceColumnId) {
-        //             return {
-        //               ...c,
-        //               tasks: c.tasks.filter((t) => t.id !== task.id),
-        //             };
-        //           } else if (c.id === targetColumnId) {
-        //             return {
-        //               ...c,
-        //               tasks: [...c.tasks, task],
-        //             };
-        //           }
-        //           return c;
-        //         }),
-        //       };
-        //     });
-        //   }
-        //   break;
+        case "switchTaskColumn":
+          if (
+            board?.id &&
+            column &&
+            task &&
+            oldColumnId &&
+            newColumnId &&
+            newColumnIndex
+          ) {
+            return state.map((b) => {
+              if (b.id !== board.id) return b;
+              return {
+                ...b,
+                columns: b.columns.map((c) => {
+                  if (c.id === oldColumnId) {
+                    return {
+                      ...c,
+                      tasks: c.tasks
+                        .map((t) =>
+                          t.index > task.index
+                            ? { ...t, index: t.index - 1 }
+                            : t,
+                        )
+                        .filter((t) => t.id !== task.id),
+                    };
+                  } else if (c.id === newColumnId) {
+                    const newTask: TaskType = {
+                      ...task,
+                      index: newColumnIndex,
+                    };
+                    const newTasks = [...c.tasks];
+                    newTasks.splice(newColumnIndex, 0, newTask);
+                    return {
+                      ...c,
+                      tasks: newTasks.map((t) =>
+                        t.index > newColumnIndex
+                          ? { ...t, index: t.index + 1 }
+                          : t,
+                      ),
+                    };
+                  }
+                  return c;
+                }),
+              };
+            });
+          }
+          break;
         default:
           break;
       }
@@ -204,10 +232,13 @@ const Boards = ({ boards }: { boards: BoardType[] }) => {
       <form
         ref={createBoardRef}
         action={async (formData: FormData) => {
+          const maxIndex = Math.max(...boards.map((b) => b.index));
+
           createBoardRef.current?.reset();
           const name = formData.get("board-name-input") as string;
           const newBoard: BoardType = {
             id: uuid(),
+            index: maxIndex + 1,
             name,
             columns: [],
             createdAt: new Date(),
@@ -225,12 +256,12 @@ const Boards = ({ boards }: { boards: BoardType[] }) => {
           placeholder="Create board..."
         />
         <SubmitButton text="Create board" />
-      </form>{" "}
+      </form>
       <section className="flex gap-32">
         {optimisticBoards.map((board) => (
           <Board
             board={board}
-            key={board.id}
+            key={board.index}
             setOptimistic={setOptimisticBoards}
           />
         ))}

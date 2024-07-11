@@ -78,6 +78,16 @@ export const toggleTaskCompletedAction = async (formData: FormData) => {
 
 export const switchColumnAction = async (formData: FormData) => {
   const taskId = formData.get("task-id") as string;
+  const oldColumnId = formData.get("old-column-id") as string;
   const newColumnId = formData.get("new-column-id") as string;
-  await switchColumn(taskId, newColumnId);
+  const oldColumnIndex = formData.get("old-column-index") as string;
+  const newColumnIndex = formData.get("new-column-index") as string;
+  console.log(newColumnIndex);
+  await switchColumn(
+    taskId,
+    oldColumnId,
+    newColumnId,
+    parseInt(oldColumnIndex),
+    parseInt(newColumnIndex),
+  );
 };

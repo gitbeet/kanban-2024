@@ -5,7 +5,8 @@ import { db } from "./db/index";
 import { boards, columns, tasks } from "./db/schema";
 import { v4 as uuid } from "uuid";
 import { revalidatePath } from "next/cache";
-import { and, eq } from "drizzle-orm";
+import { and, eq, gt, gte, sql } from "drizzle-orm";
+import { BoardType, ColumnType, TaskType } from "~/types";
 
 // ---------- BOARD ----------
 
@@ -32,12 +33,25 @@ export async function createBoard(name: string) {
 
   if (!user.userId) throw new Error("Unauthorized");
 
-  const newBoard = {
+  // calculate current max position
+  const boardsOrdered = await db.query.boards.findMany({
+    where: (model, { eq }) => eq(model.userId, user.userId),
+    orderBy: (model, { desc }) => desc(model.index),
+    limit: 1,
+  });
+  console.log(boardsOrdered[0]);
+  const maxIndex = boardsOrdered[0]?.index ?? 0;
+
+  if (typeof maxIndex === undefined) throw new Error("No max index");
+
+  const newBoard: BoardType = {
     id: uuid(),
     name,
+    columns: [],
     userId: user.userId,
     createdAt: new Date(),
     updatedAt: new Date(),
+    index: maxIndex + 1,
   };
 
   const insertedBoard = await db.insert(boards).values(newBoard);
@@ -72,8 +86,21 @@ export async function createColumn(boardId: string, columnName: string) {
   const user = auth();
   if (!user.userId) throw new Error("Unauthorized");
 
-  const newColumn = {
+  // calculate current max position
+  const columnsOrdered = await db.query.columns.findMany({
+    where: (model, { eq }) => eq(model.boardId, boardId),
+    orderBy: (model, { desc }) => desc(model.index),
+    limit: 1,
+  });
+
+  const maxIndex = columnsOrdered[0]?.index ?? 0;
+
+  if (typeof maxIndex === undefined) throw new Error("No max index");
+
+  const newColumn: ColumnType = {
     id: uuid(),
+    index: maxIndex + 1,
+    tasks: [],
     name: columnName,
     boardId,
     createdAt: new Date(),
@@ -111,8 +138,21 @@ export async function createTask(columnId: string, name: string) {
   const user = auth();
   if (!user.userId) throw new Error("Unauthorized");
   // Check if task belongs to user?
-  const newTask = {
+
+  // calculate current max position
+  const tasksOrdered = await db.query.tasks.findMany({
+    where: (model, { eq }) => eq(model.columnId, columnId),
+    orderBy: (model, { desc }) => desc(model.index),
+    limit: 1,
+  });
+  console.log(tasksOrdered[0]);
+  const maxIndex = tasksOrdered[0]?.index ?? 0;
+
+  if (typeof maxIndex === undefined) throw new Error("No max index");
+
+  const newTask: TaskType = {
     id: uuid(),
+    index: maxIndex + 1,
     name,
     completed: false,
     columnId,
@@ -155,13 +195,37 @@ export async function toggleTaskCompleted(taskId: string, completed: boolean) {
   revalidatePath("/");
 }
 
-export async function switchColumn(taskId: string, newColumnId: string) {
+export async function switchColumn(
+  taskId: string,
+  oldColumnId: string,
+  newColumnId: string,
+  oldColumnIndex: number,
+  newColumnIndex: number,
+) {
   const user = auth();
   if (!user.userId) throw new Error("Unauthorized");
   // Check if task belongs to user?
+
+  // Decrement the indicex of the tasks below the switched task in the old column
   await db
     .update(tasks)
-    .set({ columnId: newColumnId })
+    .set({ index: sql`${tasks.index} - 1` })
+    .where(
+      and(eq(tasks.columnId, oldColumnId), gt(tasks.index, oldColumnIndex)),
+    );
+
+  // Increment the indices of the tasks below the switched one in the new column
+  await db
+    .update(tasks)
+    .set({ index: sql`${tasks.index} + 1` })
+    .where(
+      and(eq(tasks.columnId, newColumnId), gte(tasks.index, newColumnIndex)),
+    );
+  // Switch the task to the new column and put it in its position (index)
+  await db
+    .update(tasks)
+    .set({ columnId: newColumnId, index: newColumnIndex })
     .where(eq(tasks.id, taskId));
+
   revalidatePath("/");
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useRef } from "react";
-import { BoardType, ColumnType, type TaskType } from "../types";
+import { type BoardType, type ColumnType, type TaskType } from "../types";
 import SubmitButton from "./ui/submit-button";
 import {
   deleteTaskAction,
@@ -32,19 +32,21 @@ const Task = ({
       | "deleteTask"
       | "toggleTask"
       | "switchTaskColumn";
-    board: BoardType;
+    board?: BoardType;
     column?: ColumnType;
     task?: TaskType;
+    oldColumnId?: string;
+    newColumnId?: string;
+    newColumnIndex?: number;
   }) => void;
 }) => {
   const renameTaskRef = useRef<HTMLFormElement>(null);
 
   return (
-    <div className="border p-4">
-      <p key={task.id}>
-        <span className="pr-2">{task.completed ? "(v)" : "(x)"}</span>
-        {task.name}
-      </p>
+    <div className="flex border p-4">
+      <p className="pr-2">{task.completed ? "(v)" : "(x)"}</p>
+      <p className="w-32 text-xl">{task.name}</p>
+      <p>Index - {task.index}</p>
       {/* RENAME TASK ACTION */}
       <form
         ref={renameTaskRef}
@@ -102,50 +104,69 @@ const Task = ({
       <form
         action={async (formData: FormData) => {
           const newColumnId = formData.get("new-column-id") as string;
-          const switchedTask: TaskType = {
-            ...task,
-            columnId: newColumnId,
-            updatedAt: new Date(),
-          };
+          const oldColumnId = formData.get("old-column-id") as string;
+          const newColumnIndex = parseInt(
+            formData.get("new-column-index") as string,
+          );
           setOptimistic({
             action: "switchTaskColumn",
             board,
             column,
-            task: switchedTask,
+            task,
+            newColumnId,
+            newColumnIndex,
+            oldColumnId,
           });
           await switchColumnAction(formData);
         }}
       >
         <input type="hidden" name="task-id" value={task.id} />
+        <input type="hidden" name="old-column-index" value={task.index} />
+        <input type="hidden" name="new-column-index" value={2} />
+        <input
+          type="hidden"
+          name="old-column-id"
+          value="1905060a-4484-4592-b4eb-3da48f9414a4"
+        />
         <input
           type="hidden"
           name="new-column-id"
-          value="e0f7f82c-7a81-4a2f-9b4b-e185e2a746f7"
+          value="cff16e14-4155-460e-ba5b-f54115228110"
         />
-        <SubmitButton text="Switch to 2" pendingText="Switching..." />
+        <SubmitButton text="Switch to 11" pendingText="Switching..." />
       </form>
       <form
         action={async (formData: FormData) => {
           const newColumnId = formData.get("new-column-id") as string;
-          const switchedTask: TaskType = {
-            ...task,
-            columnId: newColumnId,
-            updatedAt: new Date(),
-          };
+          const oldColumnId = formData.get("old-column-id") as string;
+
+          const newColumnIndex = parseInt(
+            formData.get("new-column-index") as string,
+          );
           setOptimistic({
             action: "switchTaskColumn",
             board,
             column,
-            task: switchedTask,
+            task,
+            newColumnId,
+            newColumnIndex,
+            oldColumnId,
           });
           await switchColumnAction(formData);
         }}
       >
         <input type="hidden" name="task-id" value={task.id} />
+        <input type="hidden" name="old-column-index" value={task.index} />
+        <input type="hidden" name="new-column-index" value={2} />
+        <input
+          type="hidden"
+          name="old-column-id"
+          value="cff16e14-4155-460e-ba5b-f54115228110"
+        />
         <input
           type="hidden"
           name="new-column-id"
-          value="4d20d33e-0398-4cea-b8b5-caba23706eff"
+          value="1905060a-4484-4592-b4eb-3da48f9414a4"
         />
         <SubmitButton text="Switch to 1" pendingText="Switching..." />
       </form>

@@ -30,9 +30,12 @@ const Column = ({
       | "deleteTask"
       | "toggleTask"
       | "switchTaskColumn";
-    board: BoardType;
+    board?: BoardType;
     column?: ColumnType;
     task?: TaskType;
+    oldColumnId?: string;
+    newColumnId?: string;
+    newColumnIndex?: number;
   }) => void;
 }) => {
   const renameColumnRef = useRef<HTMLFormElement>(null);
@@ -76,9 +79,12 @@ const Column = ({
       <form
         ref={createTaskRef}
         action={async (formData) => {
+          const maxIndex = Math.max(...column.tasks.map((t) => t.index));
+
           createTaskRef.current?.reset();
           const newTask: TaskType = {
             id: uuid(),
+            index: maxIndex + 1,
             name: formData.get("task-name-input") as string,
             columnId: column.id,
             completed: false,
@@ -99,15 +105,17 @@ const Column = ({
       </form>
       <div>
         <h4 className="pb-4 font-bold">Tasks</h4>
-        {column.tasks.map((task) => (
-          <Task
-            key={task.id}
-            board={board}
-            column={column}
-            task={task}
-            setOptimistic={setOptimistic}
-          />
-        ))}
+        {column.tasks
+          .sort((a, b) => a.index - b.index)
+          .map((task) => (
+            <Task
+              key={task.index}
+              board={board}
+              column={column}
+              task={task}
+              setOptimistic={setOptimistic}
+            />
+          ))}
       </div>
     </div>
   );

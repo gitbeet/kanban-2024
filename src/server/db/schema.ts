@@ -5,6 +5,8 @@ import {
   timestamp,
   varchar,
   boolean,
+  integer,
+  serial,
 } from "drizzle-orm/pg-core";
 
 export const createTable = pgTableCreator((name) => `kanban-2024_${name}`);
@@ -17,6 +19,7 @@ export const boards = createTable(
     id: varchar("id", { length: 1024 }).primaryKey(),
     name: varchar("name", { length: 256 }).notNull(),
     userId: varchar("userId", { length: 256 }).notNull(),
+    index: integer("index").notNull(),
 
     createdAt: timestamp("created_at", { withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP`)
@@ -38,6 +41,7 @@ export const columns = createTable(
     boardId: varchar("boardId", { length: 1024 })
       .references(() => boards.id, { onDelete: "cascade" })
       .notNull(),
+    index: integer("index").notNull(),
 
     createdAt: timestamp("created_at", { withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP`)
@@ -59,6 +63,7 @@ export const tasks = createTable(
     columnId: varchar("columnId", { length: 1024 })
       .references(() => columns.id, { onDelete: "cascade" })
       .notNull(),
+    index: integer("index").notNull(),
     completed: boolean("completed").notNull().default(false),
 
     createdAt: timestamp("created_at", { withTimezone: true })

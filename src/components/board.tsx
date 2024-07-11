@@ -11,6 +11,7 @@ import {
 } from "~/actions";
 import { v4 as uuid } from "uuid";
 import { useUser } from "@clerk/nextjs";
+import { columns } from "~/server/db/schema";
 const Board = ({
   board,
   setOptimistic,
@@ -29,9 +30,12 @@ const Board = ({
       | "deleteTask"
       | "toggleTask"
       | "switchTaskColumn";
-    board: BoardType;
+    board?: BoardType;
     column?: ColumnType;
     task?: TaskType;
+    oldColumnId?: string;
+    newColumnId?: string;
+    newColumnIndex?: number;
   }) => void;
 }) => {
   const { user } = useUser();
@@ -81,10 +85,13 @@ const Board = ({
       <form
         ref={createColumnRef}
         action={async (formData: FormData) => {
+          const maxIndex = Math.max(...board.columns.map((c) => c.index));
+
           createColumnRef.current?.reset();
           const name = formData.get("column-name-input") as string;
           const newColumn: ColumnType = {
             id: uuid(),
+            index: maxIndex + 1,
             boardId: board.id,
             name,
             tasks: [],
@@ -109,7 +116,7 @@ const Board = ({
         <div className="flex items-start gap-16">
           {board.columns.map((col) => (
             <Column
-              key={col.id}
+              key={col.index}
               board={board}
               column={col}
               setOptimistic={setOptimistic}
