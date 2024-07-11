@@ -10,6 +10,7 @@ import {
   renameBoard,
   renameColumn,
   renameTask,
+  switchColumn,
   toggleTaskCompleted,
 } from "./server/queries";
 
@@ -73,4 +74,10 @@ export const toggleTaskCompletedAction = async (formData: FormData) => {
   const taskId = formData.get("task-id") as string;
   const taskCompleted = formData.get("task-completed") as string;
   await toggleTaskCompleted(taskId, taskCompleted === "true" ? false : true);
+};
+
+export const switchColumnAction = async (formData: FormData) => {
+  const taskId = formData.get("task-id") as string;
+  const newColumnId = formData.get("new-column-id") as string;
+  await switchColumn(taskId, newColumnId);
 };

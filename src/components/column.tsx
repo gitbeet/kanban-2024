@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useOptimistic, useRef } from "react";
-import { type TaskType, type ColumnType } from "../types";
+import React, { useRef } from "react";
+import { type TaskType, type ColumnType, type BoardType } from "../types";
 import Task from "../components/task";
 import SubmitButton from "./ui/submit-button";
 import { v4 as uuid } from "uuid";
@@ -11,38 +11,32 @@ import {
   renameColumnAction,
 } from "~/actions";
 const Column = ({
+  board,
   column,
   setOptimistic,
 }: {
+  board: BoardType;
   column: ColumnType;
   setOptimistic: (action: {
-    action: "create" | "rename" | "delete";
-    column: ColumnType;
+    action:
+      | "createBoard"
+      | "renameBoard"
+      | "deleteBoard"
+      | "createColumn"
+      | "renameColumn"
+      | "deleteColumn"
+      | "createTask"
+      | "renameTask"
+      | "deleteTask"
+      | "toggleTask"
+      | "switchTaskColumn";
+    board: BoardType;
+    column?: ColumnType;
+    task?: TaskType;
   }) => void;
 }) => {
   const renameColumnRef = useRef<HTMLFormElement>(null);
   const createTaskRef = useRef<HTMLFormElement>(null);
-  const [optimisticTasks, setOptimisticTasks] = useOptimistic(
-    column.tasks,
-    (
-      state,
-      {
-        action,
-        task,
-      }: { action: "create" | "rename" | "delete" | "toggle"; task: TaskType },
-    ) => {
-      if (action === "create") return [...state, task];
-      if (action === "rename")
-        return state.map((t) => (t.id === task.id ? task : t));
-      if (action === "delete") return state.filter((t) => t.id !== task.id);
-      if (action === "toggle")
-        return state.map((t) =>
-          t.id === task.id ? { ...t, completed: !t.completed } : t,
-        );
-      // default case?
-      return state;
-    },
-  );
 
   return (
     <div key={column.id} className="border p-4">
@@ -50,7 +44,7 @@ const Column = ({
       {/* Delete column */}
       <form
         action={async (formData: FormData) => {
-          setOptimistic({ action: "delete", column });
+          setOptimistic({ action: "deleteColumn", board, column });
           await deleteColumnAction(formData);
         }}
       >
@@ -67,7 +61,11 @@ const Column = ({
             name,
             updatedAt: new Date(),
           };
-          setOptimistic({ action: "rename", column: renamedColumn });
+          setOptimistic({
+            action: "renameColumn",
+            board,
+            column: renamedColumn,
+          });
           await renameColumnAction(formData);
         }}
       >
@@ -87,7 +85,7 @@ const Column = ({
             createdAt: new Date(),
             updatedAt: new Date(),
           };
-          setOptimisticTasks({ action: "create", task: newTask });
+          setOptimistic({ action: "createTask", board, column, task: newTask });
           await createTaskAction(formData);
         }}
       >
@@ -101,8 +99,14 @@ const Column = ({
       </form>
       <div>
         <h4 className="pb-4 font-bold">Tasks</h4>
-        {optimisticTasks.map((task) => (
-          <Task key={task.id} task={task} setOptimistic={setOptimisticTasks} />
+        {column.tasks.map((task) => (
+          <Task
+            key={task.id}
+            board={board}
+            column={column}
+            task={task}
+            setOptimistic={setOptimistic}
+          />
         ))}
       </div>
     </div>

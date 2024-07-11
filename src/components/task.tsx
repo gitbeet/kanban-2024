@@ -1,22 +1,40 @@
 "use client";
 
 import React, { useRef } from "react";
-import { type TaskType } from "../types";
+import { BoardType, ColumnType, type TaskType } from "../types";
 import SubmitButton from "./ui/submit-button";
 import {
   deleteTaskAction,
   renameTaskAction,
+  switchColumnAction,
   toggleTaskCompletedAction,
 } from "~/actions";
 
 const Task = ({
+  board,
+  column,
   task,
   setOptimistic,
 }: {
+  board: BoardType;
+  column: ColumnType;
   task: TaskType;
   setOptimistic: (action: {
-    action: "create" | "rename" | "delete" | "toggle";
-    task: TaskType;
+    action:
+      | "createBoard"
+      | "renameBoard"
+      | "deleteBoard"
+      | "createColumn"
+      | "renameColumn"
+      | "deleteColumn"
+      | "createTask"
+      | "renameTask"
+      | "deleteTask"
+      | "toggleTask"
+      | "switchTaskColumn";
+    board: BoardType;
+    column?: ColumnType;
+    task?: TaskType;
   }) => void;
 }) => {
   const renameTaskRef = useRef<HTMLFormElement>(null);
@@ -38,7 +56,12 @@ const Task = ({
             name,
             updatedAt: new Date(),
           };
-          setOptimistic({ action: "rename", task: renamedTask });
+          setOptimistic({
+            action: "renameTask",
+            board,
+            column,
+            task: renamedTask,
+          });
           await renameTaskAction(formData);
         }}
       >
@@ -53,7 +76,7 @@ const Task = ({
       {/* DELETE TASK ACTION */}
       <form
         action={async (formData) => {
-          setOptimistic({ action: "delete", task });
+          setOptimistic({ action: "deleteTask", board, column, task });
           await deleteTaskAction(formData);
         }}
       >
@@ -63,7 +86,7 @@ const Task = ({
       {/* TOGGLE TASK */}
       <form
         action={async (formData) => {
-          setOptimistic({ action: "toggle", task });
+          setOptimistic({ action: "toggleTask", board, column, task });
           await toggleTaskCompletedAction(formData);
         }}
       >
@@ -74,6 +97,57 @@ const Task = ({
           value={task.completed ? "true" : "false"}
         />
         <SubmitButton text="Toggle task" pendingText="Toggling..." />
+      </form>
+      {/* SWITCH COLUMN TEST */}
+      <form
+        action={async (formData: FormData) => {
+          const newColumnId = formData.get("new-column-id") as string;
+          const switchedTask: TaskType = {
+            ...task,
+            columnId: newColumnId,
+            updatedAt: new Date(),
+          };
+          setOptimistic({
+            action: "switchTaskColumn",
+            board,
+            column,
+            task: switchedTask,
+          });
+          await switchColumnAction(formData);
+        }}
+      >
+        <input type="hidden" name="task-id" value={task.id} />
+        <input
+          type="hidden"
+          name="new-column-id"
+          value="e0f7f82c-7a81-4a2f-9b4b-e185e2a746f7"
+        />
+        <SubmitButton text="Switch to 2" pendingText="Switching..." />
+      </form>
+      <form
+        action={async (formData: FormData) => {
+          const newColumnId = formData.get("new-column-id") as string;
+          const switchedTask: TaskType = {
+            ...task,
+            columnId: newColumnId,
+            updatedAt: new Date(),
+          };
+          setOptimistic({
+            action: "switchTaskColumn",
+            board,
+            column,
+            task: switchedTask,
+          });
+          await switchColumnAction(formData);
+        }}
+      >
+        <input type="hidden" name="task-id" value={task.id} />
+        <input
+          type="hidden"
+          name="new-column-id"
+          value="4d20d33e-0398-4cea-b8b5-caba23706eff"
+        />
+        <SubmitButton text="Switch to 1" pendingText="Switching..." />
       </form>
     </div>
   );

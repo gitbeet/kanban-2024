@@ -154,3 +154,14 @@ export async function toggleTaskCompleted(taskId: string, completed: boolean) {
     .where(eq(tasks.id, taskId));
   revalidatePath("/");
 }
+
+export async function switchColumn(taskId: string, newColumnId: string) {
+  const user = auth();
+  if (!user.userId) throw new Error("Unauthorized");
+  // Check if task belongs to user?
+  await db
+    .update(tasks)
+    .set({ columnId: newColumnId })
+    .where(eq(tasks.id, taskId));
+  revalidatePath("/");
+}

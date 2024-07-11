@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useOptimistic, useRef } from "react";
-import { type BoardType } from "../types";
+import { ColumnType, TaskType, type BoardType } from "../types";
 import Board from "./board";
 import SubmitButton from "./ui/submit-button";
 import { v4 as uuid } from "uuid";
@@ -10,6 +10,7 @@ import { createBoardAction } from "~/actions";
 const Boards = ({ boards }: { boards: BoardType[] }) => {
   const createBoardRef = useRef<HTMLFormElement>(null);
   const { user } = useUser();
+
   const [optimisticBoards, setOptimisticBoards] = useOptimistic(
     boards,
     (
@@ -17,15 +18,182 @@ const Boards = ({ boards }: { boards: BoardType[] }) => {
       {
         action,
         board,
-      }: { action: "create" | "rename" | "delete"; board: BoardType },
+        column,
+        task,
+      }: {
+        action:
+          | "createBoard"
+          | "renameBoard"
+          | "deleteBoard"
+          | "createColumn"
+          | "renameColumn"
+          | "deleteColumn"
+          | "createTask"
+          | "renameTask"
+          | "deleteTask"
+          | "toggleTask"
+          | "switchTaskColumn";
+        board?: BoardType;
+        column?: ColumnType;
+        task?: TaskType;
+      },
     ) => {
-      if (action === "create") return [...state, board];
-      if (action === "rename")
-        return state.map((b) =>
-          b.id === board.id ? { ...b, name: board.name } : b,
-        );
-      if (action === "delete") return state.filter((b) => b.id !== board.id);
-      return state;
+      switch (action) {
+        case "createBoard":
+          if (board) {
+            return [...state, board];
+          }
+          break;
+        case "renameBoard":
+          if (board) {
+            return state.map((b) =>
+              b.id === board.id ? { ...b, name: board.name } : b,
+            );
+          }
+          break;
+        case "deleteBoard":
+          if (board) {
+            return state.filter((b) => b.id !== board.id);
+          }
+          break;
+        case "createColumn":
+          if (board?.id && column) {
+            return state.map((b) =>
+              b.id === board.id ? { ...b, columns: [...b.columns, column] } : b,
+            );
+          }
+          break;
+        case "renameColumn":
+          if (board?.id && column) {
+            return state.map((b) =>
+              b.id === board.id
+                ? {
+                    ...b,
+                    columns: b.columns.map((c) =>
+                      c.id === column.id ? { ...c, name: column.name } : c,
+                    ),
+                  }
+                : b,
+            );
+          }
+          break;
+        case "deleteColumn":
+          if (board?.id && column) {
+            return state.map((b) =>
+              b.id === board.id
+                ? { ...b, columns: b.columns.filter((c) => c.id !== column.id) }
+                : b,
+            );
+          }
+          break;
+        case "createTask":
+          if (board?.id && column && task) {
+            return state.map((b) =>
+              b.id === board.id
+                ? {
+                    ...b,
+                    columns: b.columns.map((c) =>
+                      c.id === column.id
+                        ? { ...c, tasks: [...c.tasks, task] }
+                        : c,
+                    ),
+                  }
+                : b,
+            );
+          }
+          break;
+        case "renameTask":
+          if (board?.id && column && task) {
+            return state.map((b) =>
+              b.id === board.id
+                ? {
+                    ...b,
+                    columns: b.columns.map((c) =>
+                      c.id === column.id
+                        ? {
+                            ...c,
+                            tasks: c.tasks.map((t) =>
+                              t.id === task.id ? { ...t, name: task.name } : t,
+                            ),
+                          }
+                        : c,
+                    ),
+                  }
+                : b,
+            );
+          }
+          break;
+        case "deleteTask":
+          if (board?.id && column && task) {
+            return state.map((b) =>
+              b.id === board.id
+                ? {
+                    ...b,
+                    columns: b.columns.map((c) =>
+                      c.id === column.id
+                        ? {
+                            ...c,
+                            tasks: c.tasks.filter((t) => t.id !== task.id),
+                          }
+                        : c,
+                    ),
+                  }
+                : b,
+            );
+          }
+          break;
+        case "toggleTask":
+          if (board?.id && column && task) {
+            return state.map((b) =>
+              b.id === board.id
+                ? {
+                    ...b,
+                    columns: b.columns.map((c) =>
+                      c.id === column.id
+                        ? {
+                            ...c,
+                            tasks: c.tasks.map((t) =>
+                              t.id === task.id
+                                ? { ...t, completed: !t.completed }
+                                : t,
+                            ),
+                          }
+                        : c,
+                    ),
+                  }
+                : b,
+            );
+          }
+          break;
+        // case "switchTaskColumn":
+        //   if (board?.id && column && task) {
+        //     const { sourceColumnId, targetColumnId } = column;
+        //     return state.map((b) => {
+        //       if (b.id !== board.id) return b;
+        //       return {
+        //         ...b,
+        //         columns: b.columns.map((c) => {
+        //           if (c.id === sourceColumnId) {
+        //             return {
+        //               ...c,
+        //               tasks: c.tasks.filter((t) => t.id !== task.id),
+        //             };
+        //           } else if (c.id === targetColumnId) {
+        //             return {
+        //               ...c,
+        //               tasks: [...c.tasks, task],
+        //             };
+        //           }
+        //           return c;
+        //         }),
+        //       };
+        //     });
+        //   }
+        //   break;
+        default:
+          break;
+      }
+      return state; // Ensure the function always returns the current state
     },
   );
 
@@ -46,7 +214,7 @@ const Boards = ({ boards }: { boards: BoardType[] }) => {
             updatedAt: new Date(),
             userId: user?.id,
           };
-          setOptimisticBoards({ action: "create", board: newBoard });
+          setOptimisticBoards({ action: "createBoard", board: newBoard });
           await createBoardAction(formData);
         }}
       >

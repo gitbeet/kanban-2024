@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useOptimistic, useRef } from "react";
-import { type ColumnType, type BoardType } from "../types";
+import React, { useRef } from "react";
+import { type ColumnType, type BoardType, type TaskType } from "../types";
 import Column from "../components/column";
 import SubmitButton from "./ui/submit-button";
 import {
@@ -17,30 +17,26 @@ const Board = ({
 }: {
   board: BoardType;
   setOptimistic: (action: {
-    action: "create" | "rename" | "delete";
+    action:
+      | "createBoard"
+      | "renameBoard"
+      | "deleteBoard"
+      | "createColumn"
+      | "renameColumn"
+      | "deleteColumn"
+      | "createTask"
+      | "renameTask"
+      | "deleteTask"
+      | "toggleTask"
+      | "switchTaskColumn";
     board: BoardType;
+    column?: ColumnType;
+    task?: TaskType;
   }) => void;
 }) => {
   const { user } = useUser();
   const renameBoardRef = useRef<HTMLFormElement>(null);
   const createColumnRef = useRef<HTMLFormElement>(null);
-  const [optimisticColumns, setOptimisticColumns] = useOptimistic(
-    board.columns,
-    (
-      state,
-      {
-        action,
-        column,
-      }: { action: "create" | "rename" | "delete"; column: ColumnType },
-    ) => {
-      if (action === "create") return [...state, column];
-      if (action === "rename")
-        return state.map((col) => (col.id === column.id ? column : col));
-      if (action === "delete")
-        return state.filter((col) => col.id !== column.id);
-      return state;
-    },
-  );
 
   if (!user?.id) return <h1>Please log in (placeholder error)</h1>;
 
@@ -58,7 +54,7 @@ const Board = ({
             name,
             updatedAt: new Date(),
           };
-          setOptimistic({ action: "rename", board: renamedBoard });
+          setOptimistic({ action: "renameBoard", board: renamedBoard });
           await renameBoardAction(formData);
         }}
       >
@@ -73,7 +69,7 @@ const Board = ({
       {/* Delete board action */}
       <form
         action={async (formData: FormData) => {
-          setOptimistic({ action: "delete", board });
+          setOptimistic({ action: "deleteBoard", board });
           await deleteBoardAction(formData);
         }}
       >
@@ -95,7 +91,7 @@ const Board = ({
             createdAt: new Date(),
             updatedAt: new Date(),
           };
-          setOptimisticColumns({ action: "create", column: newColumn });
+          setOptimistic({ action: "createColumn", board, column: newColumn });
           await createColumnAction(formData);
         }}
       >
@@ -111,11 +107,12 @@ const Board = ({
       <div>
         <h2 className="pb-4 text-xl font-bold">Columns</h2>
         <div className="flex items-start gap-16">
-          {optimisticColumns.map((col) => (
+          {board.columns.map((col) => (
             <Column
               key={col.id}
+              board={board}
               column={col}
-              setOptimistic={setOptimisticColumns}
+              setOptimistic={setOptimistic}
             />
           ))}
         </div>
