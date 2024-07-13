@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable @typescript-eslint/ban-types */
 "use client";
 
 import React, { DragEvent, useRef } from "react";
@@ -28,23 +30,21 @@ const Task = ({
   column: ColumnType;
   task: TaskType;
   setOptimistic: SetOptimisticType;
-  handleDragStart: (
-    e: DragEvent<HTMLDivElement>,
-    task: TaskType,
-    columnId: string,
-  ) => void;
+  handleDragStart: Function;
 }) => {
   const renameTaskRef = useRef<HTMLFormElement>(null);
 
   return (
     <>
-      <DropIndicator beforeId={task.id} columnId={task.columnId} />
+      <DropIndicator
+        beforeId={task.id}
+        beforeIndex={String(task.index)}
+        columnId={task.columnId}
+      />
       <motion.div
         layout
         layoutId={task.id}
-        onDragStart={(e: DragEvent<HTMLDivElement>) =>
-          handleDragStart(e, task, column.id)
-        }
+        onDragStart={(e) => handleDragStart(e, task, column.id)}
         draggable
         className="flex cursor-grab items-center gap-4 border p-4"
       >
@@ -108,40 +108,6 @@ const Task = ({
           <SubmitButton text="Toggle" />
         </form>
         {/* SWITCH COLUMN TEST */}
-        {/* <form
-          action={async (formData: FormData) => {
-            const newColumnId = formData.get("new-column-id") as string;
-            const oldColumnId = formData.get("old-column-id") as string;
-            const newColumnIndex = parseInt(
-              formData.get("new-column-index") as string,
-            );
-            setOptimistic({
-              action: "switchTaskColumn",
-              board,
-              column,
-              task,
-              newColumnId,
-              newColumnIndex,
-              oldColumnId,
-            });
-            await switchColumnAction(formData);
-          }}
-        >
-          <input type="hidden" name="task-id" value={task.id} />
-          <input type="hidden" name="old-column-index" value={task.index} />
-          <input type="hidden" name="new-column-index" value={2} />
-          <input
-            type="hidden"
-            name="old-column-id"
-            value="1905060a-4484-4592-b4eb-3da48f9414a4"
-          />
-          <input
-            type="hidden"
-            name="new-column-id"
-            value="cff16e14-4155-460e-ba5b-f54115228110"
-          />
-          <SubmitButton text=" -> 11" />
-        </form>
         <form
           action={async (formData: FormData) => {
             const newColumnId = formData.get("new-column-id") as string;
@@ -159,12 +125,13 @@ const Task = ({
               newColumnIndex,
               oldColumnId,
             });
+
             await switchColumnAction(formData);
           }}
         >
           <input type="hidden" name="task-id" value={task.id} />
           <input type="hidden" name="old-column-index" value={task.index} />
-          <input type="hidden" name="new-column-index" value={2} />
+          <input type="hidden" name="new-column-index" value={4} />
           <input
             type="hidden"
             name="old-column-id"
@@ -173,10 +140,10 @@ const Task = ({
           <input
             type="hidden"
             name="new-column-id"
-            value="1905060a-4484-4592-b4eb-3da48f9414a4"
+            value="cff16e14-4155-460e-ba5b-f54115228110"
           />
-          <SubmitButton text="<- 1" />
-        </form> */}
+          <SubmitButton text="Move" />
+        </form>
       </motion.div>
     </>
   );

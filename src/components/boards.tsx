@@ -192,13 +192,24 @@ const Boards = ({ boards }: { boards: BoardType[] }) => {
           if (
             board?.id &&
             column &&
-            task &&
+            taskId &&
             oldColumnId &&
             newColumnId &&
-            newColumnIndex
+            newColumnIndex &&
+            taskIndex
           ) {
-            return state.map((b) => {
+            const currentBoard = state.find((b) => b.id === board.id);
+            const currentColumn = currentBoard?.columns.find(
+              (col) => col.id === oldColumnId,
+            );
+            const currentTask = currentColumn?.tasks.find(
+              (task) => task.id === taskId,
+            );
+            if (!currentTask) return state;
+
+            const newState = state.map((b) => {
               if (b.id !== board.id) return b;
+
               return {
                 ...b,
                 columns: b.columns.map((c) => {
@@ -207,16 +218,17 @@ const Boards = ({ boards }: { boards: BoardType[] }) => {
                       ...c,
                       tasks: c.tasks
                         .map((t) =>
-                          t.index > task.index
+                          t.index > parseInt(taskIndex)
                             ? { ...t, index: t.index - 1 }
                             : t,
                         )
-                        .filter((t) => t.id !== task.id),
+                        .filter((t) => t.id !== taskId),
                     };
                   } else if (c.id === newColumnId) {
                     const newTask: TaskType = {
-                      ...task,
-                      index: newColumnIndex,
+                      ...currentTask,
+                      index: newColumnIndex - 1,
+                      updatedAt: new Date(),
                     };
                     const newTasks = [...c.tasks];
                     newTasks.splice(newColumnIndex, 0, newTask);
@@ -233,7 +245,9 @@ const Boards = ({ boards }: { boards: BoardType[] }) => {
                 }),
               };
             });
+            return newState;
           }
+
           break;
         default:
           break;

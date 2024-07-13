@@ -87,7 +87,7 @@ export const switchColumnAction = async (formData: FormData) => {
     taskId,
     oldColumnId,
     newColumnId,
-    parseInt(oldColumnIndex),
-    parseInt(newColumnIndex),
+    Number(oldColumnIndex),
+    Number(newColumnIndex),
   );
 };
