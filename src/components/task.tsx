@@ -78,7 +78,7 @@ const Task = ({
               board,
               columnId: column.id,
               taskId: task.id,
-              taskIndex: String(task.index),
+              taskIndex: task.index.toString(),
             });
 
             await deleteTaskAction(formData);

@@ -6,7 +6,7 @@ import { boards, columns, tasks } from "./db/schema";
 import { v4 as uuid } from "uuid";
 import { revalidatePath } from "next/cache";
 import { and, eq, gt, gte, sql } from "drizzle-orm";
-import { BoardType, ColumnType, TaskType } from "~/types";
+import type { BoardType, ColumnType, TaskType } from "~/types";
 
 // ---------- BOARD ----------
 
