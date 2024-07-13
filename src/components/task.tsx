@@ -15,6 +15,7 @@ import {
   toggleTaskCompletedAction,
 } from "~/actions";
 import DropIndicator from "./drop-indicator";
+import { motion } from "framer-motion";
 
 const Task = ({
   board,
@@ -27,19 +28,17 @@ const Task = ({
   column: ColumnType;
   task: TaskType;
   setOptimistic: SetOptimisticType;
-  handleDragStart: (
-    e: React.DragEvent<HTMLDivElement>,
-    task: TaskType,
-    columnId: string,
-  ) => void;
+  handleDragStart: (e: DragEvent, task: TaskType, columnId: string) => void;
 }) => {
   const renameTaskRef = useRef<HTMLFormElement>(null);
 
   return (
     <>
       <DropIndicator beforeId={task.id} columnId={task.columnId} />
-      <div
-        onDragStart={(e) => handleDragStart(e, task, column.id)}
+      <motion.div
+        layout
+        layoutId={task.id}
+        onDragStart={(e: DragEvent) => handleDragStart(e, task, column.id)}
         draggable
         className="flex cursor-grab items-center gap-4 border p-4"
       >
@@ -172,7 +171,7 @@ const Task = ({
           />
           <SubmitButton text="<- 1" />
         </form> */}
-      </div>
+      </motion.div>
     </>
   );
 };

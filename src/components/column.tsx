@@ -1,5 +1,5 @@
 "use client";
-
+import { motion } from "framer-motion";
 import React, { useRef } from "react";
 import type {
   TaskType,
@@ -28,11 +28,7 @@ const Column = ({
   const renameColumnRef = useRef<HTMLFormElement>(null);
   const createTaskRef = useRef<HTMLFormElement>(null);
 
-  const handleDragStart = (
-    e: React.DragEvent<HTMLDivElement>,
-    task: TaskType,
-    columnId: string,
-  ) => {
+  const handleDragStart = (e: DragEvent, task: TaskType, columnId: string) => {
     e.dataTransfer?.setData("columnId", columnId);
     e.dataTransfer?.setData("taskId", task.id);
     e.dataTransfer?.setData("taskIndex", String(task.index));
@@ -92,7 +88,8 @@ const Column = ({
           ))}
         <DropIndicator beforeId="-1" columnId={column.id} />
       </div>
-      <form
+      <motion.form
+        layout
         className="space-x-2 pt-8"
         ref={createTaskRef}
         action={async (formData) => {
@@ -119,7 +116,7 @@ const Column = ({
           placeholder="New name for task..."
         />
         <SubmitButton text="Add task" pendingText="Creating..." />
-      </form>
+      </motion.form>
     </div>
   );
 };
