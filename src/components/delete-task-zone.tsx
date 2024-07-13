@@ -38,6 +38,18 @@ const DeleteTaskZone = ({
     formRef.current?.requestSubmit();
   };
 
+  const deleteTaskActionForm = (
+    <form
+      className="hidden"
+      ref={formRef}
+      action={async (formData) => {
+        await deleteTaskAction(formData);
+      }}
+    >
+      <input ref={taskIdinputRef} type="hidden" name="task-id" />
+    </form>
+  );
+
   return (
     <>
       <div
@@ -48,15 +60,7 @@ const DeleteTaskZone = ({
       >
         Delete task
       </div>
-      <form
-        className="hidden"
-        ref={formRef}
-        action={async (formData) => {
-          await deleteTaskAction(formData);
-        }}
-      >
-        <input ref={taskIdinputRef} type="hidden" name="task-id" />
-      </form>
+      {deleteTaskActionForm}
     </>
   );
 };

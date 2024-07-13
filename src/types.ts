@@ -8,19 +8,21 @@ export type TaskType = Awaited<
   ReturnType<typeof getBoards>
 >[number]["columns"][number]["tasks"][number];
 
-export type SetOptimisticType = (action: {
-  action:
-    | "createBoard"
-    | "renameBoard"
-    | "deleteBoard"
-    | "createColumn"
-    | "renameColumn"
-    | "deleteColumn"
-    | "createTask"
-    | "renameTask"
-    | "deleteTask"
-    | "toggleTask"
-    | "switchTaskColumn";
+export type OptimisticActionType =
+  | "createBoard"
+  | "renameBoard"
+  | "deleteBoard"
+  | "createColumn"
+  | "renameColumn"
+  | "deleteColumn"
+  | "createTask"
+  | "renameTask"
+  | "deleteTask"
+  | "toggleTask"
+  | "switchTaskColumn";
+
+export type OptimisticParams = {
+  action: OptimisticActionType;
   board?: BoardType;
   column?: ColumnType;
   task?: TaskType;
@@ -30,4 +32,6 @@ export type SetOptimisticType = (action: {
   taskId?: string;
   columnId?: string;
   taskIndex?: string;
-}) => void;
+};
+
+export type SetOptimisticType = (args: OptimisticParams) => void;

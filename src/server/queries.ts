@@ -39,7 +39,6 @@ export async function createBoard(name: string) {
     orderBy: (model, { desc }) => desc(model.index),
     limit: 1,
   });
-  console.log(boardsOrdered[0]);
   const maxIndex = boardsOrdered[0]?.index ?? 0;
 
   if (typeof maxIndex === undefined) throw new Error("No max index");
@@ -145,7 +144,6 @@ export async function createTask(columnId: string, name: string) {
     orderBy: (model, { desc }) => desc(model.index),
     limit: 1,
   });
-  console.log(tasksOrdered[0]);
   const maxIndex = tasksOrdered[0]?.index ?? 0;
 
   if (typeof maxIndex === undefined) throw new Error("No max index");

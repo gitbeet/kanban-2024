@@ -1,5 +1,5 @@
 "use client";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import { type DragEvent, useRef, useState } from "react";
 import type {
   TaskType,
@@ -27,8 +27,12 @@ const Column = ({
   setOptimistic: SetOptimisticType;
 }) => {
   const [active, setActive] = useState(false);
+
+  // Refs
   const renameColumnRef = useRef<HTMLFormElement>(null);
   const createTaskRef = useRef<HTMLFormElement>(null);
+
+  const switchColumnRef = useRef<HTMLFormElement>(null);
 
   const taskIdRef = useRef<HTMLInputElement | null>(null);
   const oldColumnIdRef = useRef<HTMLInputElement | null>(null);
@@ -94,20 +98,6 @@ const Column = ({
     newColumnIndexRef.current.value = beforeIndex;
 
     switchColumnRef.current?.requestSubmit();
-
-    console.log("---- old column ----");
-    console.log("taskId", taskId);
-    console.log("columnId", columnId);
-    console.log("taskIndex", taskIndex);
-    console.log("--------");
-    console.log("---- new column ----");
-    console.log("before (task we hover over)", before);
-    console.log("beforeIndex (index of task we hover over)", beforeIndex);
-    console.log(
-      "beforeColumnId (id of the column we want to drop on)",
-      beforeColumnId,
-    );
-    console.log("--------");
   };
 
   // Indicators handling
@@ -163,42 +153,118 @@ const Column = ({
     );
   };
 
-  const switchColumnRef = useRef<HTMLFormElement>(null);
+  // Action forms jsx
+  const switchColumnActionForm = (
+    <form
+      ref={switchColumnRef}
+      className="hidden"
+      action={async (formData: FormData) => {
+        const taskId = formData.get("task-id") as string;
+        const oldColumnId = formData.get("old-column-id") as string;
+        const newColumnId = formData.get("new-column-id") as string;
+        const taskIndex = formData.get("old-column-index") as string;
+        const newColumnIndex = parseInt(
+          formData.get("new-column-index") as string,
+        );
+
+        setOptimistic({
+          action: "switchTaskColumn",
+          board,
+          column,
+          taskId,
+          oldColumnId,
+          newColumnId,
+          newColumnIndex,
+          taskIndex,
+        });
+
+        await switchColumnAction(formData);
+      }}
+    >
+      <input ref={taskIdRef} type="hidden" name="task-id" />
+      <input ref={oldColumnIdRef} type="hidden" name="old-column-id" />
+      <input ref={newColumnIdRef} type="hidden" name="new-column-id" />
+      <input ref={oldColumnIndexRef} type="hidden" name="old-column-index" />
+      <input ref={newColumnIndexRef} type="hidden" name="new-column-index" />
+    </form>
+  );
+
+  const deleteColumnActionForm = (
+    <form
+      action={async (formData: FormData) => {
+        setOptimistic({ action: "deleteColumn", board, column });
+        await deleteColumnAction(formData);
+      }}
+    >
+      <input type="hidden" name="column-id" value={column.id} />
+      <SubmitButton text="Delete column" />
+    </form>
+  );
+
+  const renameColumnActionForm = (
+    <form
+      ref={renameColumnRef}
+      action={async (formData: FormData) => {
+        const name = formData.get("column-name-input") as string;
+        const renamedColumn: ColumnType = {
+          ...column,
+          name,
+          updatedAt: new Date(),
+        };
+        setOptimistic({
+          action: "renameColumn",
+          board,
+          column: renamedColumn,
+        });
+        await renameColumnAction(formData);
+      }}
+    >
+      <input type="hidden" name="column-id" value={column.id} />
+      <input type="text" name="column-name-input" />
+      <SubmitButton text="Rename column" />
+    </form>
+  );
+
+  const createTaskActionForm = (
+    <motion.form
+      layout
+      className="space-x-2 pt-8"
+      ref={createTaskRef}
+      action={async (formData) => {
+        const maxIndex = Math.max(...column.tasks.map((t) => t.index));
+
+        createTaskRef.current?.reset();
+        const newTask: TaskType = {
+          id: uuid(),
+          index: maxIndex + 1,
+          name: formData.get("task-name-input") as string,
+          columnId: column.id,
+          completed: false,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        };
+        setOptimistic({
+          action: "createTask",
+          board,
+          column,
+          task: newTask,
+        });
+        await createTaskAction(formData);
+      }}
+    >
+      <input type="hidden" name="column-id" value={column.id} />
+      <input
+        type="text"
+        name="task-name-input"
+        placeholder="New name for task..."
+      />
+      <SubmitButton text="Add task" pendingText="Creating..." />
+    </motion.form>
+  );
 
   return (
     <>
-      <form
-        ref={switchColumnRef}
-        className="hidden"
-        action={async (formData: FormData) => {
-          const taskId = formData.get("task-id") as string;
-          const oldColumnId = formData.get("old-column-id") as string;
-          const newColumnId = formData.get("new-column-id") as string;
-          const taskIndex = formData.get("old-column-index") as string;
-          const newColumnIndex = parseInt(
-            formData.get("new-column-index") as string,
-          );
-
-          setOptimistic({
-            action: "switchTaskColumn",
-            board,
-            column,
-            taskId,
-            oldColumnId,
-            newColumnId,
-            newColumnIndex,
-            taskIndex,
-          });
-
-          await switchColumnAction(formData);
-        }}
-      >
-        <input ref={taskIdRef} type="hidden" name="task-id" />
-        <input ref={oldColumnIdRef} type="hidden" name="old-column-id" />
-        <input ref={newColumnIdRef} type="hidden" name="new-column-id" />
-        <input ref={oldColumnIndexRef} type="hidden" name="old-column-index" />
-        <input ref={newColumnIndexRef} type="hidden" name="new-column-index" />
-      </form>
+      {switchColumnActionForm}
       <div
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
@@ -208,38 +274,8 @@ const Column = ({
       >
         <div className="flex gap-4 pb-12">
           <h3 className="pb-4 text-lg font-bold">Column name: {column.name}</h3>
-          {/* Delete column */}
-          <form
-            action={async (formData: FormData) => {
-              setOptimistic({ action: "deleteColumn", board, column });
-              await deleteColumnAction(formData);
-            }}
-          >
-            <input type="hidden" name="column-id" value={column.id} />
-            <SubmitButton text="Delete column" />
-          </form>
-          {/* Rename column */}
-          <form
-            ref={renameColumnRef}
-            action={async (formData: FormData) => {
-              const name = formData.get("column-name-input") as string;
-              const renamedColumn: ColumnType = {
-                ...column,
-                name,
-                updatedAt: new Date(),
-              };
-              setOptimistic({
-                action: "renameColumn",
-                board,
-                column: renamedColumn,
-              });
-              await renameColumnAction(formData);
-            }}
-          >
-            <input type="hidden" name="column-id" value={column.id} />
-            <input type="text" name="column-name-input" />
-            <SubmitButton text="Rename column" />
-          </form>
+          {deleteColumnActionForm}
+          {renameColumnActionForm}
         </div>
 
         <div>
@@ -263,40 +299,7 @@ const Column = ({
           />
         </div>
 
-        <motion.form
-          layout
-          className="space-x-2 pt-8"
-          ref={createTaskRef}
-          action={async (formData) => {
-            const maxIndex = Math.max(...column.tasks.map((t) => t.index));
-
-            createTaskRef.current?.reset();
-            const newTask: TaskType = {
-              id: uuid(),
-              index: maxIndex + 1,
-              name: formData.get("task-name-input") as string,
-              columnId: column.id,
-              completed: false,
-              createdAt: new Date(),
-              updatedAt: new Date(),
-            };
-            setOptimistic({
-              action: "createTask",
-              board,
-              column,
-              task: newTask,
-            });
-            await createTaskAction(formData);
-          }}
-        >
-          <input type="hidden" name="column-id" value={column.id} />
-          <input
-            type="text"
-            name="task-name-input"
-            placeholder="New name for task..."
-          />
-          <SubmitButton text="Add task" pendingText="Creating..." />
-        </motion.form>
+        {createTaskActionForm}
       </div>
     </>
   );

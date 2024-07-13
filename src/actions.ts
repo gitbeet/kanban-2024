@@ -82,7 +82,6 @@ export const switchColumnAction = async (formData: FormData) => {
   const newColumnId = formData.get("new-column-id") as string;
   const oldColumnIndex = formData.get("old-column-index") as string;
   const newColumnIndex = formData.get("new-column-index") as string;
-  console.log(newColumnIndex);
   await switchColumn(
     taskId,
     oldColumnId,
