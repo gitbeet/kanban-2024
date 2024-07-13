@@ -1,5 +1,5 @@
 "use client";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { type DragEvent, useRef, useState } from "react";
 import type {
   TaskType,

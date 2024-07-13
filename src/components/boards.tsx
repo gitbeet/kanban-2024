@@ -206,8 +206,33 @@ const Boards = ({ boards }: { boards: BoardType[] }) => {
               (task) => task.id === taskId,
             );
             if (!currentTask) return state;
+            if (oldColumnId === newColumnId) {
+              return state.map((b) => {
+                return b.id === board.id
+                  ? {
+                      ...b,
+                      columns: b.columns.map((c) => {
+                        return c.id === column.id
+                          ? {
+                              ...c,
+                              tasks: c.tasks.map((t) => {
+                                if (t.id === taskId) {
+                                  return { ...t, index: newColumnIndex };
+                                } else if (t.index >= newColumnIndex) {
+                                  return { ...t, index: t.index + 1 };
+                                } else {
+                                  return t;
+                                }
+                              }),
+                            }
+                          : c;
+                      }),
+                    }
+                  : b;
+              });
+            }
 
-            const newState = state.map((b) => {
+            return state.map((b) => {
               if (b.id !== board.id) return b;
 
               return {
@@ -245,7 +270,6 @@ const Boards = ({ boards }: { boards: BoardType[] }) => {
                 }),
               };
             });
-            return newState;
           }
 
           break;
