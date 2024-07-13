@@ -1,13 +1,14 @@
 "use client";
 
 import React, { type FormEvent, useOptimistic, useRef, useState } from "react";
-import { type ColumnType, type TaskType, type BoardType } from "../types";
+import type { ColumnType, TaskType, BoardType } from "../types";
 import Board from "./board";
 import SubmitButton from "./ui/submit-button";
 import { v4 as uuid } from "uuid";
 import { useUser } from "@clerk/nextjs";
 import { createBoardAction } from "~/actions";
-import SelectBoard from "./SelectBoard";
+import SelectBoard from "./select-board";
+
 const Boards = ({ boards }: { boards: BoardType[] }) => {
   const createBoardRef = useRef<HTMLFormElement>(null);
   const { user } = useUser();
@@ -23,6 +24,9 @@ const Boards = ({ boards }: { boards: BoardType[] }) => {
         oldColumnId,
         newColumnId,
         newColumnIndex,
+        taskId,
+        columnId,
+        taskIndex,
       }: {
         action:
           | "createBoard"
@@ -42,6 +46,9 @@ const Boards = ({ boards }: { boards: BoardType[] }) => {
         oldColumnId?: string;
         newColumnId?: string;
         newColumnIndex?: number;
+        taskId?: string;
+        columnId?: string;
+        taskIndex?: string;
       },
     ) => {
       switch (action) {
@@ -130,24 +137,34 @@ const Boards = ({ boards }: { boards: BoardType[] }) => {
           }
           break;
         case "deleteTask":
-          if (board?.id && column && task) {
+          if (board?.id && columnId && taskId && taskIndex) {
+            console.log(taskIndex);
             return state.map((b) =>
               b.id === board.id
                 ? {
                     ...b,
                     columns: b.columns.map((c) =>
-                      c.id === column.id
+                      c.id === columnId
                         ? {
                             ...c,
-                            tasks: c.tasks.filter((t) => t.id !== task.id),
+                            tasks: c.tasks
+                              .filter((t) => t.id !== taskId)
+                              .map((t) =>
+                                t.index > Number(taskIndex)
+                                  ? { ...t, index: t.index - 1 }
+                                  : t,
+                              ),
                           }
                         : c,
                     ),
                   }
                 : b,
             );
+          } else {
+            console.log("Error");
           }
           break;
+
         case "toggleTask":
           if (board?.id && column && task) {
             return state.map((b) =>

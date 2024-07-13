@@ -180,6 +180,14 @@ export async function deleteTask(taskId: string) {
   const user = auth();
   if (!user.userId) throw new Error("Unauthorized");
   // Check if task belongs to user?
+  const task = await db.query.tasks.findFirst({
+    where: (model, { eq }) => eq(model.id, taskId),
+  });
+  if (!task) throw new Error("Task not found");
+  await db
+    .update(tasks)
+    .set({ index: sql`${tasks.index} - 1` })
+    .where(and(eq(tasks.columnId, task.columnId), gt(tasks.index, task.index)));
   await db.delete(tasks).where(eq(tasks.id, taskId));
   revalidatePath("/");
 }

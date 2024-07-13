@@ -1,7 +1,12 @@
 "use client";
 
 import React, { useRef } from "react";
-import { type TaskType, type ColumnType, type BoardType } from "../types";
+import type {
+  TaskType,
+  ColumnType,
+  BoardType,
+  SetOptimisticType,
+} from "../types";
 import Task from "../components/task";
 import SubmitButton from "./ui/submit-button";
 import { v4 as uuid } from "uuid";
@@ -10,6 +15,7 @@ import {
   deleteColumnAction,
   renameColumnAction,
 } from "~/actions";
+import DropIndicator from "./drop-indicator";
 const Column = ({
   board,
   column,
@@ -17,33 +23,24 @@ const Column = ({
 }: {
   board: BoardType;
   column: ColumnType;
-  setOptimistic: (action: {
-    action:
-      | "createBoard"
-      | "renameBoard"
-      | "deleteBoard"
-      | "createColumn"
-      | "renameColumn"
-      | "deleteColumn"
-      | "createTask"
-      | "renameTask"
-      | "deleteTask"
-      | "toggleTask"
-      | "switchTaskColumn";
-    board?: BoardType;
-    column?: ColumnType;
-    task?: TaskType;
-    oldColumnId?: string;
-    newColumnId?: string;
-    newColumnIndex?: number;
-  }) => void;
+  setOptimistic: SetOptimisticType;
 }) => {
   const renameColumnRef = useRef<HTMLFormElement>(null);
   const createTaskRef = useRef<HTMLFormElement>(null);
 
+  const handleDragStart = (
+    e: React.DragEvent<HTMLDivElement>,
+    task: TaskType,
+    columnId: string,
+  ) => {
+    e.dataTransfer?.setData("columnId", columnId);
+    e.dataTransfer?.setData("taskId", task.id);
+    e.dataTransfer?.setData("taskIndex", String(task.index));
+  };
+
   return (
-    <div key={column.id} className="border p-4">
-      <div className="flex gap-4">
+    <div key={column.id} className="p-4">
+      <div className="flex gap-4 pb-12">
         <h3 className="pb-4 text-lg font-bold">Column name: {column.name}</h3>
         {/* Delete column */}
         <form
@@ -90,8 +87,10 @@ const Column = ({
               column={column}
               task={task}
               setOptimistic={setOptimistic}
+              handleDragStart={handleDragStart}
             />
           ))}
+        <DropIndicator beforeId="-1" columnId={column.id} />
       </div>
       <form
         className="space-x-2 pt-8"

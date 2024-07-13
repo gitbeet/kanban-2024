@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useRef } from "react";
-import { type ColumnType, type BoardType, type TaskType } from "../types";
+import type { ColumnType, BoardType, SetOptimisticType } from "../types";
 import Column from "../components/column";
 import SubmitButton from "./ui/submit-button";
 import {
@@ -11,32 +11,13 @@ import {
 } from "~/actions";
 import { v4 as uuid } from "uuid";
 import { useUser } from "@clerk/nextjs";
-import { columns } from "~/server/db/schema";
+import DeleteTaskZone from "./delete-task-zone";
 const Board = ({
   board,
   setOptimistic,
 }: {
   board: BoardType;
-  setOptimistic: (action: {
-    action:
-      | "createBoard"
-      | "renameBoard"
-      | "deleteBoard"
-      | "createColumn"
-      | "renameColumn"
-      | "deleteColumn"
-      | "createTask"
-      | "renameTask"
-      | "deleteTask"
-      | "toggleTask"
-      | "switchTaskColumn";
-    board?: BoardType;
-    column?: ColumnType;
-    task?: TaskType;
-    oldColumnId?: string;
-    newColumnId?: string;
-    newColumnIndex?: number;
-  }) => void;
+  setOptimistic: SetOptimisticType;
 }) => {
   const { user } = useUser();
   const renameBoardRef = useRef<HTMLFormElement>(null);
@@ -113,7 +94,7 @@ const Board = ({
       </div>
       <div>
         <h2 className="pb-4 text-xl font-bold">Columns</h2>
-        <div className="flex items-start gap-16">
+        <div className="flex items-start">
           {board.columns.map((col) => (
             <Column
               key={col.index}
@@ -122,6 +103,7 @@ const Board = ({
               setOptimistic={setOptimistic}
             />
           ))}
+          <DeleteTaskZone setOptimistic={setOptimistic} board={board} />
         </div>
       </div>
     </div>

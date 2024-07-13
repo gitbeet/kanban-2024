@@ -7,3 +7,27 @@ export type ColumnType = Awaited<
 export type TaskType = Awaited<
   ReturnType<typeof getBoards>
 >[number]["columns"][number]["tasks"][number];
+
+export type SetOptimisticType = (action: {
+  action:
+    | "createBoard"
+    | "renameBoard"
+    | "deleteBoard"
+    | "createColumn"
+    | "renameColumn"
+    | "deleteColumn"
+    | "createTask"
+    | "renameTask"
+    | "deleteTask"
+    | "toggleTask"
+    | "switchTaskColumn";
+  board?: BoardType;
+  column?: ColumnType;
+  task?: TaskType;
+  oldColumnId?: string;
+  newColumnId?: string;
+  newColumnIndex?: number;
+  taskId?: string;
+  columnId?: string;
+  taskIndex?: string;
+}) => void;
