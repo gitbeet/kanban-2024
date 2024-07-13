@@ -1,6 +1,6 @@
 "use client";
 import { motion } from "framer-motion";
-import React, { useRef } from "react";
+import { type DragEvent, useRef, useState } from "react";
 import type {
   TaskType,
   ColumnType,
@@ -25,17 +25,45 @@ const Column = ({
   column: ColumnType;
   setOptimistic: SetOptimisticType;
 }) => {
+  const [active, setActive] = useState(false);
   const renameColumnRef = useRef<HTMLFormElement>(null);
   const createTaskRef = useRef<HTMLFormElement>(null);
 
-  const handleDragStart = (e: DragEvent, task: TaskType, columnId: string) => {
+  // Handle dragging the task around
+  const handleDragStart = (
+    e: DragEvent<HTMLDivElement>,
+    task: TaskType,
+    columnId: string,
+  ) => {
     e.dataTransfer?.setData("columnId", columnId);
     e.dataTransfer?.setData("taskId", task.id);
     e.dataTransfer?.setData("taskIndex", String(task.index));
   };
 
+  // Handle drag states over column
+  const handleDragOver = (e: DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setActive(true);
+  };
+
+  const handleDragLeave = (e: DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setActive(false);
+  };
+
+  const handleDragEnd = (e: DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setActive(false);
+  };
+
   return (
-    <div key={column.id} className="p-4">
+    <div
+      onDragOver={handleDragOver}
+      onDragLeave={handleDragLeave}
+      onDrop={handleDragEnd}
+      key={column.id}
+      className={`h-screen px-4 ${active ? "bg-neutral-700" : ""}`}
+    >
       <div className="flex gap-4 pb-12">
         <h3 className="pb-4 text-lg font-bold">Column name: {column.name}</h3>
         {/* Delete column */}

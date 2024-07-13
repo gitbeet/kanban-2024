@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef } from "react";
+import React, { DragEvent, useRef } from "react";
 import type {
   SetOptimisticType,
   BoardType,
@@ -28,7 +28,11 @@ const Task = ({
   column: ColumnType;
   task: TaskType;
   setOptimistic: SetOptimisticType;
-  handleDragStart: (e: DragEvent, task: TaskType, columnId: string) => void;
+  handleDragStart: (
+    e: DragEvent<HTMLDivElement>,
+    task: TaskType,
+    columnId: string,
+  ) => void;
 }) => {
   const renameTaskRef = useRef<HTMLFormElement>(null);
 
@@ -38,7 +42,9 @@ const Task = ({
       <motion.div
         layout
         layoutId={task.id}
-        onDragStart={(e: DragEvent) => handleDragStart(e, task, column.id)}
+        onDragStart={(e: DragEvent<HTMLDivElement>) =>
+          handleDragStart(e, task, column.id)
+        }
         draggable
         className="flex cursor-grab items-center gap-4 border p-4"
       >
