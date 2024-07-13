@@ -75,7 +75,7 @@ const Task = ({
           action={async (formData) => {
             setOptimistic({
               action: "deleteTask",
-              board,
+              board: board,
               columnId: column.id,
               taskId: task.id,
               taskIndex: task.index.toString(),

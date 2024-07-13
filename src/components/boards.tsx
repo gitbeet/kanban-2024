@@ -137,8 +137,8 @@ const Boards = ({ boards }: { boards: BoardType[] }) => {
           }
           break;
         case "deleteTask":
-          if (board?.id && columnId && taskId && taskIndex) {
-            console.log(taskIndex);
+          if (board && columnId && taskId && taskIndex) {
+            console.log("In if");
             return state.map((b) =>
               b.id === board.id
                 ? {
@@ -150,7 +150,7 @@ const Boards = ({ boards }: { boards: BoardType[] }) => {
                             tasks: c.tasks
                               .filter((t) => t.id !== taskId)
                               .map((t) =>
-                                t.index > Number(taskIndex)
+                                t.index > parseInt(taskIndex)
                                   ? { ...t, index: t.index - 1 }
                                   : t,
                               ),

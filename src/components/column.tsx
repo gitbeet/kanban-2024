@@ -82,7 +82,7 @@ const Column = ({
           .sort((a, b) => a.index - b.index)
           .map((task) => (
             <Task
-              key={task.index}
+              key={task.id}
               board={board}
               column={column}
               task={task}
