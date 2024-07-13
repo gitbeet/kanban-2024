@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
-input {
+input,
+select {
   @apply text-black;
+}
+
+input {
+  @apply max-w-32;
 }

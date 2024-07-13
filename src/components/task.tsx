@@ -43,7 +43,7 @@ const Task = ({
   const renameTaskRef = useRef<HTMLFormElement>(null);
 
   return (
-    <div className="flex border p-4">
+    <div className="flex items-center gap-4 border p-4">
       <p className="pr-2">{task.completed ? "(v)" : "(x)"}</p>
       <p className="w-32 text-xl">{task.name}</p>
       <p>Index - {task.index}</p>
@@ -67,13 +67,9 @@ const Task = ({
           await renameTaskAction(formData);
         }}
       >
-        <input
-          type="text"
-          name="task-name-input"
-          placeholder="New name for task..."
-        />
+        <input type="text" name="task-name-input" placeholder="New name..." />
         <input type="hidden" name="task-id" value={task.id} />
-        <SubmitButton text="Rename task" pendingText="Renaming..." />
+        <SubmitButton text="Rename" />
       </form>
       {/* DELETE TASK ACTION */}
       <form
@@ -83,7 +79,7 @@ const Task = ({
         }}
       >
         <input type="hidden" name="task-id" value={task.id} />
-        <SubmitButton text="Delete task" pendingText="Deleting..." />
+        <SubmitButton text="Delete" />
       </form>
       {/* TOGGLE TASK */}
       <form
@@ -98,7 +94,7 @@ const Task = ({
           name="task-completed"
           value={task.completed ? "true" : "false"}
         />
-        <SubmitButton text="Toggle task" pendingText="Toggling..." />
+        <SubmitButton text="Toggle" />
       </form>
       {/* SWITCH COLUMN TEST */}
       <form
@@ -133,7 +129,7 @@ const Task = ({
           name="new-column-id"
           value="cff16e14-4155-460e-ba5b-f54115228110"
         />
-        <SubmitButton text="Switch to 11" pendingText="Switching..." />
+        <SubmitButton text=" -> 11" />
       </form>
       <form
         action={async (formData: FormData) => {
@@ -168,7 +164,7 @@ const Task = ({
           name="new-column-id"
           value="1905060a-4484-4592-b4eb-3da48f9414a4"
         />
-        <SubmitButton text="Switch to 1" pendingText="Switching..." />
+        <SubmitButton text="<- 1" />
       </form>
     </div>
   );

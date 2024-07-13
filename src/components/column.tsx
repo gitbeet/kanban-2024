@@ -43,40 +43,58 @@ const Column = ({
 
   return (
     <div key={column.id} className="border p-4">
-      <p className="pb-4 text-lg font-bold">{column.name}</p>
-      {/* Delete column */}
+      <div className="flex gap-4">
+        <h3 className="pb-4 text-lg font-bold">Column name: {column.name}</h3>
+        {/* Delete column */}
+        <form
+          action={async (formData: FormData) => {
+            setOptimistic({ action: "deleteColumn", board, column });
+            await deleteColumnAction(formData);
+          }}
+        >
+          <input type="hidden" name="column-id" value={column.id} />
+          <SubmitButton text="Delete column" />
+        </form>
+        {/* Rename column */}
+        <form
+          ref={renameColumnRef}
+          action={async (formData: FormData) => {
+            const name = formData.get("column-name-input") as string;
+            const renamedColumn: ColumnType = {
+              ...column,
+              name,
+              updatedAt: new Date(),
+            };
+            setOptimistic({
+              action: "renameColumn",
+              board,
+              column: renamedColumn,
+            });
+            await renameColumnAction(formData);
+          }}
+        >
+          <input type="hidden" name="column-id" value={column.id} />
+          <input type="text" name="column-name-input" />
+          <SubmitButton text="Rename column" />
+        </form>
+      </div>
+
+      <div>
+        <h4 className="pb-4 font-bold">Tasks</h4>
+        {column.tasks
+          .sort((a, b) => a.index - b.index)
+          .map((task) => (
+            <Task
+              key={task.index}
+              board={board}
+              column={column}
+              task={task}
+              setOptimistic={setOptimistic}
+            />
+          ))}
+      </div>
       <form
-        action={async (formData: FormData) => {
-          setOptimistic({ action: "deleteColumn", board, column });
-          await deleteColumnAction(formData);
-        }}
-      >
-        <input type="hidden" name="column-id" value={column.id} />
-        <SubmitButton text="Delete column" />
-      </form>
-      {/* Rename column */}
-      <form
-        ref={renameColumnRef}
-        action={async (formData: FormData) => {
-          const name = formData.get("column-name-input") as string;
-          const renamedColumn: ColumnType = {
-            ...column,
-            name,
-            updatedAt: new Date(),
-          };
-          setOptimistic({
-            action: "renameColumn",
-            board,
-            column: renamedColumn,
-          });
-          await renameColumnAction(formData);
-        }}
-      >
-        <input type="hidden" name="column-id" value={column.id} />
-        <input type="text" name="column-name-input" />
-        <SubmitButton text="Rename column" />
-      </form>
-      <form
+        className="space-x-2 pt-8"
         ref={createTaskRef}
         action={async (formData) => {
           const maxIndex = Math.max(...column.tasks.map((t) => t.index));
@@ -101,22 +119,8 @@ const Column = ({
           name="task-name-input"
           placeholder="New name for task..."
         />
-        <SubmitButton text="Create task" pendingText="Creating..." />
+        <SubmitButton text="Add task" pendingText="Creating..." />
       </form>
-      <div>
-        <h4 className="pb-4 font-bold">Tasks</h4>
-        {column.tasks
-          .sort((a, b) => a.index - b.index)
-          .map((task) => (
-            <Task
-              key={task.index}
-              board={board}
-              column={column}
-              task={task}
-              setOptimistic={setOptimistic}
-            />
-          ))}
-      </div>
     </div>
   );
 };

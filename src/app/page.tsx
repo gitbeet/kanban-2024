@@ -7,7 +7,7 @@ export default async function HomePage() {
   const boards = await getBoards();
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center">
+    <main className="flex min-h-screen flex-col items-center">
       <Boards boards={boards} />
     </main>
   );
