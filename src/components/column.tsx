@@ -43,17 +43,73 @@ const Column = ({
   // Handle drag states over column
   const handleDragOver = (e: DragEvent<HTMLDivElement>) => {
     e.preventDefault();
+    highlightIndicator(e);
     setActive(true);
   };
 
   const handleDragLeave = (e: DragEvent<HTMLDivElement>) => {
     e.preventDefault();
+    clearHighlights();
     setActive(false);
   };
 
   const handleDragEnd = (e: DragEvent<HTMLDivElement>) => {
     e.preventDefault();
+    clearHighlights();
     setActive(false);
+  };
+
+  // Indicators handling
+  const clearHighlights = (els?: HTMLElement[]) => {
+    const indicators = els ?? getIndicators();
+
+    indicators.forEach((i) => {
+      i.style.opacity = "0";
+    });
+  };
+
+  const highlightIndicator = (e: DragEvent) => {
+    const indicators = getIndicators();
+
+    clearHighlights(indicators);
+
+    const el = getNearestIndicator(e, indicators);
+    if (!el.element) return;
+    el.element.style.opacity = "1";
+  };
+
+  const getNearestIndicator = (e: DragEvent, indicators: HTMLElement[]) => {
+    const DISTANCE_OFFSET = 50;
+
+    const el = indicators.reduce(
+      (closest, child) => {
+        const box = child.getBoundingClientRect();
+
+        const offset = e.clientY - (box.top + DISTANCE_OFFSET);
+
+        if (offset < 0 && offset > closest.offset) {
+          return { offset: offset, element: child };
+        } else {
+          return closest;
+        }
+      },
+
+      {
+        offset: Number.NEGATIVE_INFINITY,
+
+        element: indicators[indicators.length - 1],
+      },
+    );
+
+    return el;
+  };
+
+  const getIndicators = () => {
+    return Array.from(
+      document.querySelectorAll(
+        `[data-column-id="${column.id}"]`,
+      ) as unknown as HTMLElement[],
+    );
   };
 
   return (
