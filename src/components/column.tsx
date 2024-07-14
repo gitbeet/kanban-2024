@@ -8,18 +8,13 @@ import type {
   SetOptimisticType,
 } from "../types";
 import Task from "../components/task";
-import SubmitButton, { DeleteButton, EditButton } from "./ui/submit-button";
+import { EditButton } from "./ui/submit-button";
 import { v4 as uuid } from "uuid";
-import {
-  createTaskAction,
-  deleteColumnAction,
-  renameColumnAction,
-  switchColumnAction,
-} from "~/actions";
+import { createTaskAction, switchColumnAction } from "~/actions";
 import DropIndicator from "./drop-indicator";
-import { FaEdit } from "react-icons/fa";
-import { FaTrash } from "react-icons/fa6";
+
 import RenameColumnForm from "./action-forms/column/rename-column-form";
+import DeleteColumnForm from "./action-forms/column/delete-column-form";
 const Column = ({
   board,
   column,
@@ -194,18 +189,6 @@ const Column = ({
     </form>
   );
 
-  const deleteColumnActionForm = (
-    <form
-      action={async (formData: FormData) => {
-        setOptimistic({ action: "deleteColumn", board, column });
-        await deleteColumnAction(formData);
-      }}
-    >
-      <input type="hidden" name="column-id" value={column.id} />
-      <DeleteButton />
-    </form>
-  );
-
   const createTaskActionForm = (
     <motion.form
       layout
@@ -257,7 +240,11 @@ const Column = ({
       >
         <div className="flex items-center gap-4 pb-12">
           <h3 className="text-lg font-bold">Column name: {column.name}</h3>
-          {deleteColumnActionForm}
+          <DeleteColumnForm
+            board={board}
+            column={column}
+            setOptimistic={setOptimistic}
+          />
           <RenameColumnForm
             board={board}
             column={column}
