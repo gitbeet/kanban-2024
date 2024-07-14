@@ -1,5 +1,6 @@
 "use client";
 import { useRef, useState } from "react";
+import { FaTrash } from "react-icons/fa";
 import { deleteTaskAction } from "~/actions";
 import type { BoardType, SetOptimisticType } from "~/types";
 
@@ -56,9 +57,9 @@ const DeleteTaskZone = ({
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDragEnd}
-        className={`grid h-56 w-56 shrink-0 place-content-center rounded border text-3xl ${active ? "bg-red-500" : ""}`}
+        className={`grid h-56 w-56 shrink-0 place-content-center rounded border text-3xl ${active ? "border-red-500 bg-red-500/10" : ""}`}
       >
-        Delete task
+        <FaTrash className={`${active ? "text-red-500" : "text-white"}`} />
       </div>
       {deleteTaskActionForm}
     </>

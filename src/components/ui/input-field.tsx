@@ -23,7 +23,7 @@ const InputField = ({
         value={value}
         onChange={onChange}
         placeholder={placeholder}
-        className={`border ${error ? "border-red-500 text-red-500" : "border-neutral-300 text-white"} bg-neutral-800 p-2`}
+        className={`border ${error ? "border-red-500 text-red-500" : "border-neutral-400 text-white"} bg-neutral-800 p-2`}
       />
       <p className="text-red-500"> {error && error}</p>
     </div>

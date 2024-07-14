@@ -6,7 +6,7 @@ import { v4 as uuid } from "uuid";
 import { useUser } from "@clerk/nextjs";
 import { createBoardAction } from "~/actions";
 import { BoardSchema } from "~/zod-schemas";
-import SubmitButton from "~/components/ui/submit-button";
+import SubmitButton, { CreateButton } from "~/components/ui/submit-button";
 import InputField from "~/components/ui/input-field";
 
 const CreateBoardActionForm = ({
@@ -72,7 +72,7 @@ const CreateBoardActionForm = ({
         onChange={handleBoardName}
       />
 
-      <SubmitButton text="Create board" />
+      <CreateButton />
     </form>
   );
 };

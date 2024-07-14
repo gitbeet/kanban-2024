@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { deleteBoardAction } from "~/actions";
-import SubmitButton from "~/components/ui/submit-button";
+import SubmitButton, { DeleteButton } from "~/components/ui/submit-button";
 import type { BoardType, SetOptimisticType } from "~/types";
 import { BoardSchema } from "~/zod-schemas";
 
@@ -31,7 +31,7 @@ const DeleteBoardForm = ({
   return (
     <form action={clientAction}>
       <input type="hidden" name="board-id" value={board.id} />
-      <SubmitButton text="Delete board" pendingText="Deleting board..." />
+      <DeleteButton />
     </form>
   );
 };

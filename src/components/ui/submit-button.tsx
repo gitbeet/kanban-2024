@@ -2,6 +2,7 @@
 
 import { useFormStatus } from "react-dom";
 import { FaEdit, FaTrash } from "react-icons/fa";
+import { FaPlus } from "react-icons/fa6";
 
 const SubmitButton = ({
   text,
@@ -32,6 +33,10 @@ export const DeleteButton = () => (
 
 export const EditButton = () => (
   <SubmitButton icon={<FaEdit className="text-blue-400" />} />
+);
+
+export const CreateButton = () => (
+  <SubmitButton icon={<FaPlus className="text-teal-300" />} />
 );
 
 export default SubmitButton;

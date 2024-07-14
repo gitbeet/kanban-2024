@@ -3,7 +3,7 @@
 import React, { useRef } from "react";
 import type { ColumnType, BoardType, SetOptimisticType } from "../types";
 import Column from "../components/column";
-import SubmitButton from "./ui/submit-button";
+import SubmitButton, { CreateButton } from "./ui/submit-button";
 import { createColumnAction, deleteBoardAction } from "~/actions";
 import { v4 as uuid } from "uuid";
 import { useUser } from "@clerk/nextjs";
@@ -24,6 +24,7 @@ const Board = ({
 
   const createColumnActionForm = (
     <form
+      className="flex"
       ref={createColumnRef}
       action={async (formData: FormData) => {
         const maxIndex = Math.max(...board.columns.map((c) => c.index));
@@ -49,14 +50,14 @@ const Board = ({
         className="text-black"
         placeholder="Create column..."
       />
-      <SubmitButton text="Create column" />
+      <CreateButton />
     </form>
   );
   return (
     <div>
       <div className="flex items-start gap-4">
         <h2 className="pb-4 text-xl">{board.name}</h2>
-        <RenameBoardForm board={board} setOptimistic={setOptimistic} />;
+        <RenameBoardForm board={board} setOptimistic={setOptimistic} />
         <DeleteBoardForm board={board} setOptimistic={setOptimistic} />
         {createColumnActionForm}
       </div>

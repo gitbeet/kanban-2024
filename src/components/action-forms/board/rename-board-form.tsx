@@ -3,7 +3,7 @@
 import { type ChangeEvent, useRef, useState } from "react";
 import { renameBoardAction } from "~/actions";
 import InputField from "~/components/ui/input-field";
-import SubmitButton from "~/components/ui/submit-button";
+import SubmitButton, { EditButton } from "~/components/ui/submit-button";
 import type { BoardType, SetOptimisticType } from "~/types";
 import { BoardSchema } from "~/zod-schemas";
 
@@ -49,7 +49,7 @@ const RenameBoardForm = ({
   };
 
   return (
-    <form ref={renameBoardRef} action={clientAction}>
+    <form ref={renameBoardRef} action={clientAction} className="flex">
       <input type="hidden" name="board-id" value={board.id} />
       <InputField
         value={newBoardName}
@@ -60,7 +60,7 @@ const RenameBoardForm = ({
         error={error}
       />
 
-      <SubmitButton text="Rename board" pendingText="Renaming board..." />
+      <EditButton />
     </form>
   );
 };

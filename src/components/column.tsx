@@ -227,7 +227,7 @@ const Column = ({
     >
       <input type="hidden" name="column-id" value={column.id} />
       <input type="text" name="column-name-input" />
-      <SubmitButton icon={<FaEdit />} />
+      <EditButton />
     </form>
   );
 
