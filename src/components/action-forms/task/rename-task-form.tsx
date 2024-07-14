@@ -29,40 +29,36 @@ const RenameTaskForm = ({
     setError("");
     setNewTaskName(e.target.value);
   };
+
+  const clientAction = async () => {
+    renameTaskRef.current?.reset();
+    const renamedTask: TaskType = {
+      ...task,
+      name: newTaskName,
+      updatedAt: new Date(),
+    };
+
+    // Client error check
+    const result = TaskSchema.safeParse(renamedTask);
+    if (!result.success) {
+      return setError(result.error.issues[0]?.message ?? "An error occured");
+    }
+    setOptimistic({
+      action: "renameTask",
+      board,
+      column,
+      task: renamedTask,
+    });
+
+    // Server error check
+    const response = await renameTaskAction(renamedTask);
+
+    if (response?.error) {
+      return setError(response.error);
+    }
+  };
   return (
-    <form
-      className="flex"
-      ref={renameTaskRef}
-      action={async () => {
-        renameTaskRef.current?.reset();
-        const renamedTask: TaskType = {
-          ...task,
-          name: newTaskName,
-          updatedAt: new Date(),
-        };
-
-        // Client error check
-        const result = TaskSchema.safeParse(renamedTask);
-        if (!result.success) {
-          return setError(
-            result.error.issues[0]?.message ?? "An error occured",
-          );
-        }
-        setOptimistic({
-          action: "renameTask",
-          board,
-          column,
-          task: renamedTask,
-        });
-
-        // Server error check
-        const response = await renameTaskAction(renamedTask);
-
-        if (response?.error) {
-          return setError(response.error);
-        }
-      }}
-    >
+    <form className="flex" ref={renameTaskRef} action={clientAction}>
       <InputField
         value={newTaskName}
         type="text"

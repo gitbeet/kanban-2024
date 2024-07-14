@@ -1,7 +1,7 @@
 "use client";
 
 import { useFormStatus } from "react-dom";
-import { FaEdit, FaTrash } from "react-icons/fa";
+import { FaCheck, FaEdit, FaTrash } from "react-icons/fa";
 import { FaPlus } from "react-icons/fa6";
 
 const SubmitButton = ({
@@ -37,6 +37,16 @@ export const EditButton = () => (
 
 export const CreateButton = () => (
   <SubmitButton icon={<FaPlus className="text-teal-300" />} />
+);
+
+export const ToggleButton = ({ checked }: { checked: boolean }) => (
+  <SubmitButton
+    icon={
+      <div className="flex h-3 w-3 items-center justify-center">
+        {checked ? <FaCheck /> : undefined}
+      </div>
+    }
+  />
 );
 
 export default SubmitButton;

@@ -121,22 +121,26 @@ export const deleteTaskAction = async (taskId: unknown) => {
   await deleteTask(taskId as string);
 };
 
-export const toggleTaskCompletedAction = async (formData: FormData) => {
-  const taskId = formData.get("task-id") as string;
-  const taskCompleted = formData.get("task-completed") as string;
-  await toggleTaskCompleted(taskId, taskCompleted === "true" ? false : true);
+export const toggleTaskCompletedAction = async (task: unknown) => {
+  const result = TaskSchema.safeParse(task);
+  if (!result.success) {
+    return { error: result.error.issues[0]?.message };
+  }
+  const { id, completed } = task as TaskType;
+  await toggleTaskCompleted(id, !completed);
 };
 
-export const switchColumnAction = async (formData: FormData) => {
-  const taskId = formData.get("task-id") as string;
-  const oldColumnId = formData.get("old-column-id") as string;
-  const newColumnId = formData.get("new-column-id") as string;
-  const oldColumnIndex = formData.get("old-column-index") as string;
-  const newColumnIndex = formData.get("new-column-index") as string;
+export const switchColumnAction = async (
+  taskId: unknown,
+  oldColumnId: unknown,
+  newColumnId: unknown,
+  oldColumnIndex: unknown,
+  newColumnIndex: unknown,
+) => {
   await switchColumn(
-    taskId,
-    oldColumnId,
-    newColumnId,
+    taskId as string,
+    oldColumnId as string,
+    newColumnId as string,
     Number(oldColumnIndex),
     Number(newColumnIndex),
   );

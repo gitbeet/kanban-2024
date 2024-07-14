@@ -1,6 +1,5 @@
 "use client";
-import { motion } from "framer-motion";
-import { type DragEvent, useRef, useState } from "react";
+import { type DragEvent, useRef, useState, useTransition } from "react";
 import type {
   TaskType,
   ColumnType,
@@ -8,9 +7,7 @@ import type {
   SetOptimisticType,
 } from "../types";
 import Task from "../components/task";
-import { EditButton } from "./ui/submit-button";
-import { v4 as uuid } from "uuid";
-import { createTaskAction, switchColumnAction } from "~/actions";
+import { switchColumnAction } from "~/actions";
 import DropIndicator from "./drop-indicator";
 
 import RenameColumnForm from "./action-forms/column/rename-column-form";
@@ -26,15 +23,8 @@ const Column = ({
   setOptimistic: SetOptimisticType;
 }) => {
   const [active, setActive] = useState(false);
-  // Refs
-
-  const switchColumnRef = useRef<HTMLFormElement>(null);
-
-  const taskIdRef = useRef<HTMLInputElement | null>(null);
-  const oldColumnIdRef = useRef<HTMLInputElement | null>(null);
-  const newColumnIdRef = useRef<HTMLInputElement | null>(null);
-  const oldColumnIndexRef = useRef<HTMLInputElement | null>(null);
-  const newColumnIndexRef = useRef<HTMLInputElement | null>(null);
+  // TODO : Disable dragging when pending ?
+  const [isPending, startTransition] = useTransition();
 
   // Handle dragging the task around
   const handleDragStart = (e: DragEvent, task: TaskType, columnId: string) => {
@@ -56,7 +46,7 @@ const Column = ({
     setActive(false);
   };
 
-  const handleDragEnd = (e: DragEvent) => {
+  const handleDragEnd = async (e: DragEvent) => {
     // id of the task we are dragging
     const taskId = e.dataTransfer.getData("taskId");
     // columnId of the task we are dragging, aka the original column we are coming from
@@ -78,24 +68,17 @@ const Column = ({
     // If we are trying to put the task in the same place just return
     if (before === taskId) return;
 
-    if (
-      !taskIdRef.current ||
-      !oldColumnIdRef.current ||
-      !newColumnIdRef.current ||
-      !oldColumnIndexRef.current ||
-      !newColumnIndexRef.current ||
-      !beforeColumnId
-    )
-      return;
-    console.log("Hello");
+    if (!beforeColumnId) return;
 
-    taskIdRef.current.value = taskId;
-    oldColumnIdRef.current.value = columnId;
-    newColumnIdRef.current.value = beforeColumnId;
-    oldColumnIndexRef.current.value = taskIndex;
-    newColumnIndexRef.current.value = beforeIndex;
-
-    switchColumnRef.current?.requestSubmit();
+    startTransition(async () => {
+      await clientAction(
+        taskId,
+        columnId,
+        beforeColumnId,
+        beforeIndex,
+        taskIndex,
+      );
+    });
   };
 
   // Indicators handling
@@ -151,46 +134,36 @@ const Column = ({
     );
   };
 
+  async function clientAction(
+    taskId: string,
+    oldColumnId: string,
+    newColumnId: string,
+    newColumnIndex: string,
+    taskIndex: string,
+  ) {
+    setOptimistic({
+      action: "switchTaskColumn",
+      board,
+      column,
+      taskId,
+      oldColumnId,
+      newColumnId,
+      newColumnIndex: Number(newColumnIndex),
+      taskIndex,
+    });
+
+    await switchColumnAction(
+      taskId,
+      oldColumnId,
+      newColumnId,
+      taskIndex,
+      newColumnIndex,
+    );
+  }
   // Action forms jsx
-
-  const switchColumnActionForm = (
-    <form
-      ref={switchColumnRef}
-      className="hidden"
-      action={async (formData: FormData) => {
-        const taskId = formData.get("task-id") as string;
-        const oldColumnId = formData.get("old-column-id") as string;
-        const newColumnId = formData.get("new-column-id") as string;
-        const taskIndex = formData.get("old-column-index") as string;
-        const newColumnIndex = parseInt(
-          formData.get("new-column-index") as string,
-        );
-
-        setOptimistic({
-          action: "switchTaskColumn",
-          board,
-          column,
-          taskId,
-          oldColumnId,
-          newColumnId,
-          newColumnIndex,
-          taskIndex,
-        });
-
-        await switchColumnAction(formData);
-      }}
-    >
-      <input ref={taskIdRef} type="hidden" name="task-id" />
-      <input ref={oldColumnIdRef} type="hidden" name="old-column-id" />
-      <input ref={newColumnIdRef} type="hidden" name="new-column-id" />
-      <input ref={oldColumnIndexRef} type="hidden" name="old-column-index" />
-      <input ref={newColumnIndexRef} type="hidden" name="new-column-index" />
-    </form>
-  );
 
   return (
     <>
-      {switchColumnActionForm}
       <div
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
@@ -211,7 +184,6 @@ const Column = ({
             setOptimistic={setOptimistic}
           />
         </div>
-
         <div>
           <h4 className="font-bold">Tasks</h4>
           {column.tasks

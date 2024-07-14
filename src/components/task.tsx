@@ -9,18 +9,12 @@ import type {
   ColumnType,
   TaskType,
 } from "../types";
-import SubmitButton, { DeleteButton, EditButton } from "./ui/submit-button";
-import {
-  deleteTaskAction,
-  renameTaskAction,
-  switchColumnAction,
-  toggleTaskCompletedAction,
-} from "~/actions";
+
 import DropIndicator from "./drop-indicator";
 import { motion } from "framer-motion";
-import { FaCheck, FaEdit, FaTrash } from "react-icons/fa";
 import RenameTaskForm from "./action-forms/task/rename-task-form";
 import DeleteTaskForm from "./action-forms/task/delete-task-form";
+import ToggleTaskForm from "./action-forms/task/toggle-task-form";
 
 const Task = ({
   board,
@@ -35,31 +29,6 @@ const Task = ({
   setOptimistic: SetOptimisticType;
   handleDragStart: Function;
 }) => {
-  const toggleTaskActionForm = (
-    <form
-      action={async (formData) => {
-        setOptimistic({ action: "toggleTask", board, column, task });
-        await toggleTaskCompletedAction(formData);
-      }}
-    >
-      <input type="hidden" name="task-id" value={task.id} />
-      <input
-        readOnly
-        type="hidden"
-        name="task-completed"
-        checked={task.completed ? true : false}
-        value={task.completed ? "true" : "false"}
-      />
-      <SubmitButton
-        icon={
-          <div className="flex h-3 w-3 items-center justify-center">
-            {task.completed ? <FaCheck /> : undefined}
-          </div>
-        }
-      />
-    </form>
-  );
-
   return (
     <>
       <DropIndicator
@@ -74,7 +43,12 @@ const Task = ({
         draggable
         className="flex cursor-grab items-center gap-4 border p-4"
       >
-        {toggleTaskActionForm}
+        <ToggleTaskForm
+          board={board}
+          column={column}
+          task={task}
+          setOptimistic={setOptimistic}
+        />
         <p className="w-32 text-xl">{task.name}</p>
         <RenameTaskForm
           board={board}
