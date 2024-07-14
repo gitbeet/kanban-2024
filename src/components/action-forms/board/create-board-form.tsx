@@ -1,12 +1,13 @@
 "use client";
 
-import React, { useRef, useState } from "react";
-import SubmitButton from "../ui/submit-button";
+import React, { ChangeEvent, useRef, useState } from "react";
 import type { BoardType, SetOptimisticType } from "~/types";
 import { v4 as uuid } from "uuid";
 import { useUser } from "@clerk/nextjs";
 import { createBoardAction } from "~/actions";
 import { BoardSchema } from "~/zod-schemas";
+import SubmitButton from "~/components/ui/submit-button";
+import InputField from "~/components/ui/input-field";
 
 const CreateBoardActionForm = ({
   boards,
@@ -21,7 +22,7 @@ const CreateBoardActionForm = ({
   const [boardName, setBoardName] = useState("");
   const [error, setError] = useState("");
 
-  const clientAction = async (formData: FormData) => {
+  const clientAction = async () => {
     if (!user?.id) return;
     const maxIndex = Math.max(...boards.map((b) => b.index));
     createBoardRef.current?.reset();
@@ -51,22 +52,25 @@ const CreateBoardActionForm = ({
     }
   };
 
+  const handleBoardName = (e: ChangeEvent<HTMLInputElement>) => {
+    setError("");
+    setBoardName(e.target.value);
+  };
+
   return (
-    <form ref={createBoardRef} action={clientAction} className="flex">
-      <div>
-        <input
-          value={boardName}
-          onChange={(e) => {
-            setError("");
-            setBoardName(e.target.value);
-          }}
-          type="text"
-          name="board-name-input"
-          className={`${error ? "border-red-600" : ""} border-2 text-black`}
-          placeholder="Create board..."
-        />
-        <p className="text-red-500">{error}</p>
-      </div>
+    <form
+      ref={createBoardRef}
+      action={clientAction}
+      className="flex items-center gap-2"
+    >
+      <InputField
+        name="board-name-input"
+        type="text"
+        error={error}
+        placeholder="Create board..."
+        value={boardName}
+        onChange={handleBoardName}
+      />
 
       <SubmitButton text="Create board" />
     </form>

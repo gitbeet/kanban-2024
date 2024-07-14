@@ -6,7 +6,7 @@ import Board from "./board";
 import { useUser } from "@clerk/nextjs";
 import SelectBoard from "./select-board";
 import { handleOptimisticUpdate } from "~/optimisticHandlers";
-import CreateBoardActionForm from "./action-forms/create-board-form";
+import CreateBoardActionForm from "./action-forms/board/create-board-form";
 
 const Boards = ({ boards }: { boards: BoardType[] }) => {
   const { user } = useUser();
@@ -34,7 +34,7 @@ const Boards = ({ boards }: { boards: BoardType[] }) => {
 
   return (
     <div className="space-y-16">
-      <section className="flex items-center gap-4">
+      <section className="flex items-center gap-4 py-2">
         <SelectBoard boards={selectBoards} onChange={handleBoardChange} />
         <CreateBoardActionForm
           boards={boards}

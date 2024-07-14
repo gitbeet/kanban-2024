@@ -8,7 +8,7 @@ import type {
   SetOptimisticType,
 } from "../types";
 import Task from "../components/task";
-import SubmitButton from "./ui/submit-button";
+import SubmitButton, { DeleteButton, EditButton } from "./ui/submit-button";
 import { v4 as uuid } from "uuid";
 import {
   createTaskAction,
@@ -202,7 +202,7 @@ const Column = ({
       }}
     >
       <input type="hidden" name="column-id" value={column.id} />
-      <SubmitButton icon={<FaTrash className="text-red-500" />} />
+      <DeleteButton />
     </form>
   );
 
@@ -266,7 +266,7 @@ const Column = ({
         name="task-name-input"
         placeholder="New name for task..."
       />
-      <SubmitButton text="Add task" pendingText="Creating..." />
+      <EditButton />
     </motion.form>
   );
 

@@ -9,7 +9,7 @@ import type {
   ColumnType,
   TaskType,
 } from "../types";
-import SubmitButton from "./ui/submit-button";
+import SubmitButton, { DeleteButton, EditButton } from "./ui/submit-button";
 import {
   deleteTaskAction,
   renameTaskAction,
@@ -58,7 +58,7 @@ const Task = ({
     >
       <input type="text" name="task-name-input" placeholder="New name..." />
       <input type="hidden" name="task-id" value={task.id} />
-      <SubmitButton icon={<FaEdit />} />
+      <EditButton />
     </form>
   );
 
@@ -77,7 +77,7 @@ const Task = ({
       }}
     >
       <input type="hidden" name="task-id" value={task.id} />
-      <SubmitButton icon={<FaTrash className="text-red-500" />} />
+      <DeleteButton />
     </form>
   );
 

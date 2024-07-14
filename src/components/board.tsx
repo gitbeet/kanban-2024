@@ -4,14 +4,12 @@ import React, { useRef } from "react";
 import type { ColumnType, BoardType, SetOptimisticType } from "../types";
 import Column from "../components/column";
 import SubmitButton from "./ui/submit-button";
-import {
-  createColumnAction,
-  deleteBoardAction,
-  renameBoardAction,
-} from "~/actions";
+import { createColumnAction, deleteBoardAction } from "~/actions";
 import { v4 as uuid } from "uuid";
 import { useUser } from "@clerk/nextjs";
 import DeleteTaskZone from "./delete-task-zone";
+import RenameBoardForm from "./action-forms/board/rename-board-form";
+import DeleteBoardForm from "./action-forms/board/delete-board-form";
 const Board = ({
   board,
   setOptimistic,
@@ -20,42 +18,9 @@ const Board = ({
   setOptimistic: SetOptimisticType;
 }) => {
   const { user } = useUser();
-  const renameBoardRef = useRef<HTMLFormElement>(null);
   const createColumnRef = useRef<HTMLFormElement>(null);
 
   if (!user?.id) return <h1>Please log in (placeholder error)</h1>;
-
-  const renameBoardActionForm = (
-    <form
-      ref={renameBoardRef}
-      action={async (formData: FormData) => {
-        renameBoardRef.current?.reset();
-        const name = formData.get("board-name-input") as string;
-        const renamedBoard: BoardType = {
-          ...board,
-          name,
-          updatedAt: new Date(),
-        };
-        setOptimistic({ action: "renameBoard", board: renamedBoard });
-        await renameBoardAction(formData);
-      }}
-    >
-      <input type="hidden" name="board-id" value={board.id} />
-      <input type="text" name="board-name-input" placeholder="Board name..." />
-      <SubmitButton text="Rename board" pendingText="Renaming board..." />
-    </form>
-  );
-  const deleteBoardActionForm = (
-    <form
-      action={async (formData: FormData) => {
-        setOptimistic({ action: "deleteBoard", board });
-        await deleteBoardAction(formData);
-      }}
-    >
-      <input type="hidden" name="board-id" value={board.id} />
-      <SubmitButton text="Delete board" pendingText="Deleting board..." />
-    </form>
-  );
 
   const createColumnActionForm = (
     <form
@@ -91,8 +56,8 @@ const Board = ({
     <div>
       <div className="flex items-start gap-4">
         <h2 className="pb-4 text-xl">{board.name}</h2>
-        {renameBoardActionForm}
-        {deleteBoardActionForm}
+        <RenameBoardForm board={board} setOptimistic={setOptimistic} />;
+        <DeleteBoardForm board={board} setOptimistic={setOptimistic} />
         {createColumnActionForm}
       </div>
       <div>

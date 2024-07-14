@@ -24,9 +24,7 @@ export const ColumnSchema = z.object({
   createdAt: z.date(),
   updatedAt: z.date(),
   boardId: z.string().uuid({ message: "Board ID must be a uuid" }),
-  tasks: z
-    .array(TaskSchema)
-    .length(0, { message: "Tasks must be an empty array" }),
+  tasks: z.array(TaskSchema),
 });
 
 export const BoardSchema = z.object({
@@ -40,7 +38,5 @@ export const BoardSchema = z.object({
   createdAt: z.date(),
   updatedAt: z.date(),
   userId: z.string(),
-  columns: z
-    .array(ColumnSchema)
-    .length(0, { message: "Columns must be an empty array" }),
+  columns: z.array(ColumnSchema),
 });

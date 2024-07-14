@@ -1,6 +1,5 @@
 "use server";
 
-import { z } from "zod";
 import {
   createBoard,
   createColumn,
@@ -14,9 +13,12 @@ import {
   switchColumn,
   toggleTaskCompleted,
 } from "./server/queries";
+import type { BoardType } from "./types";
 import { BoardSchema } from "./zod-schemas";
 
 // ---------- BOARDS ----------
+
+// Not sure if I should use te whole object or just the needed properties to pass to the action
 
 export const createBoardAction = async (boardName: unknown) => {
   const BoardNameSchema = BoardSchema.shape.name;
@@ -24,18 +26,30 @@ export const createBoardAction = async (boardName: unknown) => {
   if (!result.success) {
     return { error: result.error.issues[0]?.message };
   }
+  // Add try/catch in case insert not successful
   await createBoard(boardName as string);
 };
 
-export const renameBoardAction = async (formData: FormData) => {
-  const newName = formData.get("board-name-input") as string;
-  const boardId = formData.get("board-id") as string;
-  await renameBoard(boardId, newName);
+export const renameBoardAction = async (renamedBoard: unknown) => {
+  const result = BoardSchema.safeParse(renamedBoard);
+  if (!result.success) {
+    console.log(result.error);
+    return { error: result.error.issues[0]?.message };
+  }
+
+  const { id, name } = renamedBoard as BoardType;
+
+  await renameBoard(id, name);
 };
 
-export const deleteBoardAction = async (formData: FormData) => {
-  const boardId = formData.get("board-id") as string;
-  await deleteBoard(boardId);
+export const deleteBoardAction = async (boardId: unknown) => {
+  const result = BoardSchema.shape.id.safeParse(boardId);
+  if (!result.success) {
+    console.log(result.error);
+    return { error: result.error.issues[0]?.message };
+  }
+
+  await deleteBoard(boardId as string);
 };
 
 // ---------- COLUMNS ----------
