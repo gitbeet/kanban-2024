@@ -15,6 +15,7 @@ import DropIndicator from "./drop-indicator";
 
 import RenameColumnForm from "./action-forms/column/rename-column-form";
 import DeleteColumnForm from "./action-forms/column/delete-column-form";
+import CreateTaskForm from "./action-forms/task/create-task-form";
 const Column = ({
   board,
   column,
@@ -25,9 +26,7 @@ const Column = ({
   setOptimistic: SetOptimisticType;
 }) => {
   const [active, setActive] = useState(false);
-  const [taskName, setTaskName] = useState("");
   // Refs
-  const createTaskRef = useRef<HTMLFormElement>(null);
 
   const switchColumnRef = useRef<HTMLFormElement>(null);
 
@@ -189,45 +188,6 @@ const Column = ({
     </form>
   );
 
-  const createTaskActionForm = (
-    <motion.form
-      layout
-      className="space-x-2 pt-8"
-      ref={createTaskRef}
-      action={async (formData) => {
-        const maxIndex = Math.max(...column.tasks.map((t) => t.index));
-
-        createTaskRef.current?.reset();
-        const newTask: TaskType = {
-          id: uuid(),
-          index: maxIndex + 1,
-          name: formData.get("task-name-input") as string,
-          columnId: column.id,
-          completed: false,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        };
-        setOptimistic({
-          action: "createTask",
-          board,
-          column,
-          task: newTask,
-        });
-        await createTaskAction(formData);
-      }}
-    >
-      <input type="hidden" name="column-id" value={column.id} />
-      <input
-        value={taskName}
-        onChange={(e) => setTaskName(e.target.value)}
-        type="text"
-        name="task-name-input"
-        placeholder="New name for task..."
-      />
-      <EditButton />
-    </motion.form>
-  );
-
   return (
     <>
       {switchColumnActionForm}
@@ -272,8 +232,11 @@ const Column = ({
             beforeIndex={(column.tasks.length + 1).toString()}
           />
         </div>
-
-        {createTaskActionForm}
+        <CreateTaskForm
+          board={board}
+          column={column}
+          setOptimistic={setOptimistic}
+        />
       </div>
     </>
   );

@@ -5,7 +5,7 @@ export const TaskSchema = z.object({
   index: z.number({ message: "Index must be a number" }),
   name: z
     .string({ message: "Task name must be a string" })
-    .min(1, { message: "Task name must be at least 1 character long" })
+    .min(1, { message: "Cannot be blank" })
     .max(100, { message: "Task name must be at most 100 character long" })
     .trim(),
   createdAt: z.date(),

@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useRef, useState } from "react";
+import { type ChangeEvent, useRef, useState } from "react";
 import { renameColumnAction } from "~/actions";
 import InputField from "~/components/ui/input-field";
 import { EditButton } from "~/components/ui/submit-button";

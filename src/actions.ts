@@ -14,7 +14,7 @@ import {
   toggleTaskCompleted,
 } from "./server/queries";
 import type { BoardType, ColumnType } from "./types";
-import { BoardSchema, ColumnSchema } from "./zod-schemas";
+import { BoardSchema, ColumnSchema, TaskSchema } from "./zod-schemas";
 
 // ---------- BOARDS ----------
 
@@ -90,9 +90,14 @@ export const renameColumnAction = async (renamedColumn: unknown) => {
 
 // ---------- TASKS ----------
 
-export const createTaskAction = async (formData: FormData) => {
-  const columnId = formData.get("column-id") as string;
-  const taskName = formData.get("task-name-input") as string;
+export const createTaskAction = async (newTask: unknown) => {
+  const result = TaskSchema.safeParse(newTask);
+  if (!result.success) {
+    console.log(result.error);
+    return { error: result.error.issues[0]?.message };
+  }
+  const { id: columnId, name: taskName } = newTask as BoardType;
+
   await createTask(columnId, taskName);
 };
 
