@@ -205,8 +205,8 @@ export async function switchColumn(
   taskId: string,
   oldColumnId: string,
   newColumnId: string,
-  oldColumnIndex: number,
   newColumnIndex: number,
+  oldColumnIndex: number,
 ) {
   const user = auth();
   if (!user.userId) throw new Error("Unauthorized");
@@ -217,7 +217,7 @@ export async function switchColumn(
     .update(tasks)
     .set({ index: sql`${tasks.index} - 1` })
     .where(
-      and(eq(tasks.columnId, oldColumnId), gt(tasks.index, oldColumnIndex)),
+      and(eq(tasks.columnId, oldColumnId), gt(tasks.index, newColumnIndex)),
     );
 
   // Increment the indices of the tasks below the switched one in the new column
@@ -225,12 +225,12 @@ export async function switchColumn(
     .update(tasks)
     .set({ index: sql`${tasks.index} + 1` })
     .where(
-      and(eq(tasks.columnId, newColumnId), gte(tasks.index, newColumnIndex)),
+      and(eq(tasks.columnId, newColumnId), gte(tasks.index, oldColumnIndex)),
     );
   // Switch the task to the new column and put it in its position (index)
   await db
     .update(tasks)
-    .set({ columnId: newColumnId, index: newColumnIndex })
+    .set({ columnId: newColumnId, index: oldColumnIndex })
     .where(eq(tasks.id, taskId));
 
   revalidatePath("/");

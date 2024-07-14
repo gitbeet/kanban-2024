@@ -26,12 +26,13 @@ export type OptimisticParams = {
   board?: BoardType;
   column?: ColumnType;
   task?: TaskType;
+  columnId?: string;
+  taskId?: string;
   oldColumnId?: string;
   newColumnId?: string;
   newColumnIndex?: number;
-  taskId?: string;
-  columnId?: string;
-  taskIndex?: string;
+  oldColumnIndex?: number;
+  taskIndex?: number;
 };
 
 export type SetOptimisticType = (args: OptimisticParams) => void;

@@ -13,6 +13,7 @@ import DropIndicator from "./drop-indicator";
 import RenameColumnForm from "./action-forms/column/rename-column-form";
 import DeleteColumnForm from "./action-forms/column/delete-column-form";
 import CreateTaskForm from "./action-forms/task/create-task-form";
+import { SwitchTaskActionSchema } from "~/zod-schemas";
 const Column = ({
   board,
   column,
@@ -69,7 +70,6 @@ const Column = ({
     if (before === taskId) return;
 
     if (!beforeColumnId) return;
-
     startTransition(async () => {
       await clientAction(
         taskId,
@@ -138,9 +138,22 @@ const Column = ({
     taskId: string,
     oldColumnId: string,
     newColumnId: string,
+    oldColumnIndex: string,
     newColumnIndex: string,
-    taskIndex: string,
   ) {
+    const result = SwitchTaskActionSchema.safeParse({
+      taskId,
+      oldColumnId,
+      newColumnId,
+      oldColumnIndex: Number(oldColumnIndex),
+      newColumnIndex: Number(newColumnIndex),
+    });
+    // TODO: Display the error
+    if (!result.success) {
+      console.log(result.error.issues[0]?.message);
+      return;
+    }
+
     setOptimistic({
       action: "switchTaskColumn",
       board,
@@ -148,19 +161,23 @@ const Column = ({
       taskId,
       oldColumnId,
       newColumnId,
+      oldColumnIndex: Number(oldColumnIndex),
       newColumnIndex: Number(newColumnIndex),
-      taskIndex,
     });
 
-    await switchColumnAction(
+    const response = await switchColumnAction(
       taskId,
       oldColumnId,
       newColumnId,
-      taskIndex,
+      oldColumnIndex,
       newColumnIndex,
     );
+    // TODO: Display the error
+    if (response?.error) {
+      console.log(response.error);
+      return;
+    }
   }
-  // Action forms jsx
 
   return (
     <>

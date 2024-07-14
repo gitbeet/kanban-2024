@@ -26,7 +26,10 @@ const CreateTaskForm = ({
   const [error, setError] = useState("");
 
   const clientAction = async () => {
-    const maxIndex = Math.max(...column.tasks.map((t) => t.index));
+    const maxIndex =
+      column.tasks.length < 1
+        ? 0
+        : Math.max(...column.tasks.map((t) => t.index));
 
     createTaskRef.current?.reset();
     const newTask: TaskType = {

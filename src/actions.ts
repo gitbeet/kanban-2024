@@ -14,7 +14,12 @@ import {
   toggleTaskCompleted,
 } from "./server/queries";
 import type { BoardType, ColumnType, TaskType } from "./types";
-import { BoardSchema, ColumnSchema, TaskSchema } from "./zod-schemas";
+import {
+  BoardSchema,
+  ColumnSchema,
+  SwitchTaskActionSchema,
+  TaskSchema,
+} from "./zod-schemas";
 
 // ---------- BOARDS ----------
 
@@ -130,6 +135,7 @@ export const toggleTaskCompletedAction = async (task: unknown) => {
   await toggleTaskCompleted(id, !completed);
 };
 
+// Not sure if its better to pass an object as args or pass args separately
 export const switchColumnAction = async (
   taskId: unknown,
   oldColumnId: unknown,
@@ -137,11 +143,23 @@ export const switchColumnAction = async (
   oldColumnIndex: unknown,
   newColumnIndex: unknown,
 ) => {
+  const args = {
+    taskId,
+    oldColumnId,
+    newColumnId,
+    oldColumnIndex: Number(oldColumnIndex),
+    newColumnIndex: Number(newColumnIndex),
+  };
+
+  const result = SwitchTaskActionSchema.safeParse(args);
+  if (!result.success) {
+    return { error: result.error.issues[0]?.message };
+  }
   await switchColumn(
     taskId as string,
     oldColumnId as string,
     newColumnId as string,
-    Number(oldColumnIndex),
     Number(newColumnIndex),
+    Number(oldColumnIndex),
   );
 };

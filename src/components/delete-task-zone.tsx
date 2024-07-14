@@ -1,5 +1,5 @@
 "use client";
-import { useRef, useState } from "react";
+import { useRef, useState, useTransition } from "react";
 import { FaTrash } from "react-icons/fa";
 import { deleteTaskAction } from "~/actions";
 import type { BoardType, SetOptimisticType } from "~/types";
@@ -11,7 +11,10 @@ const DeleteTaskZone = ({
   setOptimistic: SetOptimisticType;
   board: BoardType;
 }) => {
+  const [isPending, startTransition] = useTransition();
+
   const [active, setActive] = useState(false);
+  const [error, setError] = useState("");
 
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -23,33 +26,32 @@ const DeleteTaskZone = ({
     setActive(false);
   };
 
-  const formRef = useRef<HTMLFormElement | null>(null);
-  const taskIdinputRef = useRef<HTMLInputElement | null>(null);
-
-  const handleDragEnd = (e: React.DragEvent<HTMLDivElement>) => {
+  const handleDragEnd = async (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     const taskId = e.dataTransfer.getData("taskId");
     const taskIndex = e.dataTransfer.getData("taskIndex");
     const columnId = e.dataTransfer.getData("columnId");
-    if (!taskId) alert("No task id");
-    if (!taskIdinputRef.current) return;
-    taskIdinputRef.current.value = taskId;
-    setActive(false);
-    setOptimistic({ action: "deleteTask", board, columnId, taskId, taskIndex });
-    formRef.current?.requestSubmit();
-  };
 
-  const deleteTaskActionForm = (
-    <form
-      className="hidden"
-      ref={formRef}
-      action={async (formData) => {
-        await deleteTaskAction(formData);
-      }}
-    >
-      <input ref={taskIdinputRef} type="hidden" name="task-id" />
-    </form>
-  );
+    // TODO: Client side check needed?
+    startTransition(() => {
+      setOptimistic({
+        action: "deleteTask",
+        board: board,
+        columnId: columnId,
+        taskId,
+        oldColumnIndex: Number(taskIndex),
+      });
+    });
+
+    // TODO: Display error
+    const response = await deleteTaskAction(taskId);
+    if (response?.error) {
+      setError(response.error);
+      console.log(error);
+      return;
+    }
+    setActive(false);
+  };
 
   return (
     <>
@@ -61,7 +63,6 @@ const DeleteTaskZone = ({
       >
         <FaTrash className={`${active ? "text-red-500" : "text-white"}`} />
       </div>
-      {deleteTaskActionForm}
     </>
   );
 };

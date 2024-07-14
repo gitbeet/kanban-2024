@@ -27,7 +27,7 @@ const DeleteTaskForm = ({
       board: board,
       columnId: column.id,
       taskId: task.id,
-      taskIndex: task.index.toString(),
+      oldColumnIndex: task.index,
     });
 
     const response = await deleteTaskAction(task.id);

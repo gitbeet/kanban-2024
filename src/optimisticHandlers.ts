@@ -116,7 +116,7 @@ const deleteTask = (
   board?: BoardType,
   columnId?: string,
   taskId?: string,
-  taskIndex?: string,
+  taskIndex?: number,
 ) => {
   if (!board || !columnId || !taskId || !taskIndex) return state;
   return state.map((b) =>
@@ -130,9 +130,7 @@ const deleteTask = (
                   tasks: c.tasks
                     .filter((t) => t.id !== taskId)
                     .map((t) =>
-                      t.index > parseInt(taskIndex)
-                        ? { ...t, index: t.index - 1 }
-                        : t,
+                      t.index > taskIndex ? { ...t, index: t.index - 1 } : t,
                     ),
                 }
               : c,
@@ -175,8 +173,8 @@ const switchTaskColumn = (
   taskId?: string,
   oldColumnId?: string,
   newColumnId?: string,
+  oldColumnIndex?: number,
   newColumnIndex?: number,
-  taskIndex?: string,
 ) => {
   if (
     !board ||
@@ -185,7 +183,7 @@ const switchTaskColumn = (
     !oldColumnId ||
     !newColumnId ||
     !newColumnIndex ||
-    !taskIndex
+    !oldColumnIndex
   )
     return state;
   const currentBoard = state.find((b) => b.id === board.id);
@@ -231,9 +229,7 @@ const switchTaskColumn = (
             ...c,
             tasks: c.tasks
               .map((t) =>
-                t.index > parseInt(taskIndex)
-                  ? { ...t, index: t.index - 1 }
-                  : t,
+                t.index > oldColumnIndex ? { ...t, index: t.index - 1 } : t,
               )
               .filter((t) => t.id !== taskId),
           };
@@ -265,12 +261,12 @@ export const handleOptimisticUpdate = (
     board,
     column,
     task,
+    columnId,
+    taskId,
     oldColumnId,
     newColumnId,
+    oldColumnIndex,
     newColumnIndex,
-    taskId,
-    columnId,
-    taskIndex,
   }: OptimisticParams,
 ) => {
   switch (action) {
@@ -291,7 +287,7 @@ export const handleOptimisticUpdate = (
     case "renameTask":
       return renameTask(state, board, column, task);
     case "deleteTask":
-      return deleteTask(state, board, columnId, taskId, taskIndex);
+      return deleteTask(state, board, columnId, taskId, oldColumnIndex);
     case "toggleTask":
       return toggleTask(state, board, column, task);
     case "switchTaskColumn":
@@ -303,7 +299,7 @@ export const handleOptimisticUpdate = (
         oldColumnId,
         newColumnId,
         newColumnIndex,
-        taskIndex,
+        oldColumnIndex,
       );
     default:
       break;

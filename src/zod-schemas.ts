@@ -2,7 +2,10 @@ import { z } from "zod";
 
 export const TaskSchema = z.object({
   id: z.string().uuid({ message: "ID must be a uuid" }),
-  index: z.number({ message: "Index must be a number" }),
+  index: z
+    .number({ message: "Index must be a number" })
+    .int({ message: "Index must be a integer" })
+    .positive({ message: "Index must be a positive number" }),
   name: z
     .string({ message: "Task name must be a string" })
     .min(1, { message: "Cannot be blank" })
@@ -39,4 +42,12 @@ export const BoardSchema = z.object({
   updatedAt: z.date(),
   userId: z.string(),
   columns: z.array(ColumnSchema),
+});
+
+export const SwitchTaskActionSchema = z.object({
+  taskId: z.string().uuid(),
+  oldColumnId: z.string().uuid(),
+  newColumnId: z.string().uuid(),
+  oldColumnIndex: z.number().int().positive(),
+  newColumnIndex: z.number().int().positive(),
 });
