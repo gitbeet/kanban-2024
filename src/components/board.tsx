@@ -8,6 +8,8 @@ import DeleteTaskZone from "./delete-task-zone";
 import RenameBoardForm from "./action-forms/board/rename-board-form";
 import DeleteBoardForm from "./action-forms/board/delete-board-form";
 import CreateColumnForm from "./action-forms/column/create-column-form";
+import { motion } from "framer-motion";
+
 const Board = ({
   board,
   setOptimistic,
@@ -29,7 +31,7 @@ const Board = ({
       </div>
       <div className="shrink-0">
         <h2 className="pb-4 text-xl font-bold">Columns</h2>
-        <div className="flex gap-4">
+        <motion.div className="flex gap-4">
           {board.columns.map((col) => (
             <Column
               key={col.index}
@@ -38,8 +40,16 @@ const Board = ({
               setOptimistic={setOptimistic}
             />
           ))}
-          <DeleteTaskZone setOptimistic={setOptimistic} board={board} />
-        </div>
+
+          <motion.div className="flex gap-4" layout>
+            <CreateColumnForm
+              board={board}
+              setOptimistic={setOptimistic}
+              jsx="block"
+            />
+            <DeleteTaskZone setOptimistic={setOptimistic} board={board} />
+          </motion.div>
+        </motion.div>
       </div>
     </section>
   );

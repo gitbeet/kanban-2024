@@ -185,7 +185,7 @@ const Column = ({
       onDragLeave={handleDragLeave}
       onDrop={handleDragEnd}
       key={column.id}
-      className={`${active ? "bg-neutral-800" : ""} min-h-screen w-80 rounded-md px-2 pt-4`}
+      className={`${active ? "bg-neutral-800" : ""} min-h-screen w-80 shrink-0 rounded-md px-2 pt-4`}
     >
       <div className="flex items-center gap-4 pb-12">
         <h3 className="text-lg">

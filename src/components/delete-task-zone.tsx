@@ -1,8 +1,9 @@
 "use client";
-import { useRef, useState, useTransition } from "react";
+import { useState, useTransition } from "react";
 import { FaTrash } from "react-icons/fa";
 import { deleteTaskAction } from "~/actions";
 import type { BoardType, SetOptimisticType } from "~/types";
+import { motion } from "framer-motion";
 
 const DeleteTaskZone = ({
   setOptimistic,
@@ -54,16 +55,15 @@ const DeleteTaskZone = ({
   };
 
   return (
-    <>
-      <div
-        onDragOver={handleDragOver}
-        onDragLeave={handleDragLeave}
-        onDrop={handleDragEnd}
-        className={`grid h-56 w-56 shrink-0 place-content-center rounded border text-3xl ${active ? "border-red-500 bg-red-500/10" : ""}`}
-      >
-        <FaTrash className={`${active ? "text-red-500" : "text-white"}`} />
-      </div>
-    </>
+    <motion.div
+      layout
+      onDragOver={handleDragOver}
+      onDragLeave={handleDragLeave}
+      onDrop={handleDragEnd}
+      className={`grid h-48 w-80 shrink-0 place-content-center rounded border text-3xl ${active ? "border-red-500 bg-red-500/10" : ""}`}
+    >
+      <FaTrash className={`${active ? "text-red-500" : "text-white"}`} />
+    </motion.div>
   );
 };
 
