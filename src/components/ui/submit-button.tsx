@@ -5,9 +5,11 @@ import { useFormStatus } from "react-dom";
 const SubmitButton = ({
   text,
   pendingText = "Loading...",
+  icon,
 }: {
-  text: string;
+  text?: string;
   pendingText?: string;
+  icon?: JSX.Element;
 }) => {
   const { pending } = useFormStatus();
   return (
@@ -17,6 +19,7 @@ const SubmitButton = ({
       className="border p-2 disabled:opacity-20"
     >
       {text}
+      {icon}
       {/* {pending ? pendingText : text} */}
     </button>
   );

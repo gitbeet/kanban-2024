@@ -17,6 +17,8 @@ import {
   switchColumnAction,
 } from "~/actions";
 import DropIndicator from "./drop-indicator";
+import { FaEdit } from "react-icons/fa";
+import { FaTrash } from "react-icons/fa6";
 const Column = ({
   board,
   column,
@@ -27,7 +29,7 @@ const Column = ({
   setOptimistic: SetOptimisticType;
 }) => {
   const [active, setActive] = useState(false);
-
+  const [taskName, setTaskName] = useState("");
   // Refs
   const renameColumnRef = useRef<HTMLFormElement>(null);
   const createTaskRef = useRef<HTMLFormElement>(null);
@@ -91,6 +93,8 @@ const Column = ({
       !beforeColumnId
     )
       return;
+    console.log("Hello");
+
     taskIdRef.current.value = taskId;
     oldColumnIdRef.current.value = columnId;
     newColumnIdRef.current.value = beforeColumnId;
@@ -154,6 +158,7 @@ const Column = ({
   };
 
   // Action forms jsx
+
   const switchColumnActionForm = (
     <form
       ref={switchColumnRef}
@@ -197,12 +202,13 @@ const Column = ({
       }}
     >
       <input type="hidden" name="column-id" value={column.id} />
-      <SubmitButton text="Delete column" />
+      <SubmitButton icon={<FaTrash className="text-red-500" />} />
     </form>
   );
 
   const renameColumnActionForm = (
     <form
+      className="flex"
       ref={renameColumnRef}
       action={async (formData: FormData) => {
         const name = formData.get("column-name-input") as string;
@@ -221,7 +227,7 @@ const Column = ({
     >
       <input type="hidden" name="column-id" value={column.id} />
       <input type="text" name="column-name-input" />
-      <SubmitButton text="Rename column" />
+      <SubmitButton icon={<FaEdit />} />
     </form>
   );
 
@@ -254,6 +260,8 @@ const Column = ({
     >
       <input type="hidden" name="column-id" value={column.id} />
       <input
+        value={taskName}
+        onChange={(e) => setTaskName(e.target.value)}
         type="text"
         name="task-name-input"
         placeholder="New name for task..."
@@ -272,14 +280,14 @@ const Column = ({
         key={column.id}
         className={`h-screen px-4 ${active ? "bg-neutral-700" : ""}`}
       >
-        <div className="flex gap-4 pb-12">
-          <h3 className="pb-4 text-lg font-bold">Column name: {column.name}</h3>
+        <div className="flex items-center gap-4 pb-12">
+          <h3 className="text-lg font-bold">Column name: {column.name}</h3>
           {deleteColumnActionForm}
           {renameColumnActionForm}
         </div>
 
         <div>
-          <h4 className="pb-4 font-bold">Tasks</h4>
+          <h4 className="font-bold">Tasks</h4>
           {column.tasks
             .sort((a, b) => a.index - b.index)
             .map((task) => (

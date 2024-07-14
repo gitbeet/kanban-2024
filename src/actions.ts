@@ -1,5 +1,6 @@
 "use server";
 
+import { z } from "zod";
 import {
   createBoard,
   createColumn,
@@ -13,12 +14,17 @@ import {
   switchColumn,
   toggleTaskCompleted,
 } from "./server/queries";
+import { BoardSchema } from "./zod-schemas";
 
 // ---------- BOARDS ----------
 
-export const createBoardAction = async (formData: FormData) => {
-  const name = formData.get("board-name-input") as string;
-  await createBoard(name);
+export const createBoardAction = async (boardName: unknown) => {
+  const BoardNameSchema = BoardSchema.shape.name;
+  const result = BoardNameSchema.safeParse(boardName);
+  if (!result.success) {
+    return { error: result.error.issues[0]?.message };
+  }
+  await createBoard(boardName as string);
 };
 
 export const renameBoardAction = async (formData: FormData) => {
