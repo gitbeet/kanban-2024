@@ -74,9 +74,14 @@ export const deleteColumnAction = async (formData: FormData) => {
   await deleteColumn(columnId);
 };
 
-export const renameColumnAction = async (formData: FormData) => {
-  const columnId = formData.get("column-id") as string;
-  const newName = formData.get("column-name-input") as string;
+export const renameColumnAction = async (renamedColumn: unknown) => {
+  const result = ColumnSchema.safeParse(renamedColumn);
+  if (!result.success) {
+    console.log(result.error);
+    return { error: result.error.issues[0]?.message };
+  }
+
+  const { id: columnId, name: newName } = renamedColumn as BoardType;
   await renameColumn(columnId, newName);
 };
 

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { deleteBoardAction } from "~/actions";
-import SubmitButton, { DeleteButton } from "~/components/ui/submit-button";
+import { DeleteButton } from "~/components/ui/submit-button";
 import type { BoardType, SetOptimisticType } from "~/types";
 import { BoardSchema } from "~/zod-schemas";
 

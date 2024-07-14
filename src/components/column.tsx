@@ -19,6 +19,7 @@ import {
 import DropIndicator from "./drop-indicator";
 import { FaEdit } from "react-icons/fa";
 import { FaTrash } from "react-icons/fa6";
+import RenameColumnForm from "./action-forms/column/rename-column-form";
 const Column = ({
   board,
   column,
@@ -31,7 +32,6 @@ const Column = ({
   const [active, setActive] = useState(false);
   const [taskName, setTaskName] = useState("");
   // Refs
-  const renameColumnRef = useRef<HTMLFormElement>(null);
   const createTaskRef = useRef<HTMLFormElement>(null);
 
   const switchColumnRef = useRef<HTMLFormElement>(null);
@@ -206,31 +206,6 @@ const Column = ({
     </form>
   );
 
-  const renameColumnActionForm = (
-    <form
-      className="flex"
-      ref={renameColumnRef}
-      action={async (formData: FormData) => {
-        const name = formData.get("column-name-input") as string;
-        const renamedColumn: ColumnType = {
-          ...column,
-          name,
-          updatedAt: new Date(),
-        };
-        setOptimistic({
-          action: "renameColumn",
-          board,
-          column: renamedColumn,
-        });
-        await renameColumnAction(formData);
-      }}
-    >
-      <input type="hidden" name="column-id" value={column.id} />
-      <input type="text" name="column-name-input" />
-      <EditButton />
-    </form>
-  );
-
   const createTaskActionForm = (
     <motion.form
       layout
@@ -283,7 +258,11 @@ const Column = ({
         <div className="flex items-center gap-4 pb-12">
           <h3 className="text-lg font-bold">Column name: {column.name}</h3>
           {deleteColumnActionForm}
-          {renameColumnActionForm}
+          <RenameColumnForm
+            board={board}
+            column={column}
+            setOptimistic={setOptimistic}
+          />
         </div>
 
         <div>

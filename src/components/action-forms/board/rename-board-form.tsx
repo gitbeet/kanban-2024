@@ -18,12 +18,11 @@ const RenameBoardForm = ({
   const [error, setError] = useState("");
   const renameBoardRef = useRef<HTMLFormElement>(null);
 
-  const clientAction = async (formData: FormData) => {
+  const clientAction = async () => {
     renameBoardRef.current?.reset();
-    const name = formData.get("board-name-input") as string;
     const renamedBoard: BoardType = {
       ...board,
-      name,
+      name: newBoardName,
       updatedAt: new Date(),
     };
 
