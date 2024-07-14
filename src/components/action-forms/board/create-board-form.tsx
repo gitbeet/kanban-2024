@@ -8,23 +8,19 @@ import { createBoardAction } from "~/actions";
 import { BoardSchema } from "~/zod-schemas";
 import { CreateButton } from "~/components/ui/submit-button";
 import InputField from "~/components/ui/input-field";
+import { useBoards } from "~/context/boards-context";
 
-const CreateBoardActionForm = ({
-  boards,
-  setOptimistic,
-}: {
-  boards: BoardType[];
-  setOptimistic: SetOptimisticType;
-}) => {
+const CreateBoardActionForm = () => {
   const createBoardRef = useRef<HTMLFormElement>(null);
   const { user } = useUser();
+  const { optimisticBoards, setOptimisticBoards } = useBoards();
 
   const [boardName, setBoardName] = useState("");
   const [error, setError] = useState("");
 
   const clientAction = async () => {
     if (!user?.id) return;
-    const maxIndex = Math.max(...boards.map((b) => b.index));
+    const maxIndex = Math.max(...optimisticBoards.map((b) => b.index));
     createBoardRef.current?.reset();
     const newBoard: BoardType = {
       id: uuid(),
@@ -43,7 +39,7 @@ const CreateBoardActionForm = ({
       console.log(error);
       return;
     }
-    setOptimistic({ action: "createBoard", board: newBoard });
+    setOptimisticBoards({ action: "createBoard", board: newBoard });
 
     // Server error check
     const response = await createBoardAction(boardName);

@@ -9,6 +9,7 @@ export type TaskType = Awaited<
 >[number]["columns"][number]["tasks"][number];
 
 export type OptimisticActionType =
+  | "getInitialBoards"
   | "createBoard"
   | "renameBoard"
   | "deleteBoard"
@@ -24,6 +25,7 @@ export type OptimisticActionType =
 export type OptimisticParams = {
   action: OptimisticActionType;
   board?: BoardType;
+  boards?: BoardType[];
   column?: ColumnType;
   task?: TaskType;
   columnId?: string;

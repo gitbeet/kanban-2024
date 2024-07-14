@@ -2,16 +2,12 @@
 import { useState, useTransition } from "react";
 import { FaTrash } from "react-icons/fa";
 import { deleteTaskAction } from "~/actions";
-import type { BoardType, SetOptimisticType } from "~/types";
+import type { BoardType } from "~/types";
 import { motion } from "framer-motion";
+import { useBoards } from "~/context/boards-context";
 
-const DeleteTaskZone = ({
-  setOptimistic,
-  board,
-}: {
-  setOptimistic: SetOptimisticType;
-  board: BoardType;
-}) => {
+const DeleteTaskZone = ({ board }: { board: BoardType }) => {
+  const { setOptimisticBoards } = useBoards();
   const [isPending, startTransition] = useTransition();
 
   const [active, setActive] = useState(false);
@@ -35,7 +31,7 @@ const DeleteTaskZone = ({
 
     // TODO: Client side check needed?
     startTransition(() => {
-      setOptimistic({
+      setOptimisticBoards({
         action: "deleteTask",
         board: board,
         columnId: columnId,

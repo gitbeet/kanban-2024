@@ -7,6 +7,11 @@ import type {
 } from "./types";
 
 // Boards
+const getInitialBoards = (state: BoardType[], boards?: BoardType[]) => {
+  if (!boards) return state;
+  return [...state, ...boards];
+};
+
 const createBoard = (state: BoardType[], board?: BoardType) => {
   if (!board) return state;
   return [...state, board];
@@ -258,6 +263,7 @@ export const handleOptimisticUpdate = (
   state: BoardType[],
   {
     action,
+    boards,
     board,
     column,
     task,
@@ -270,6 +276,8 @@ export const handleOptimisticUpdate = (
   }: OptimisticParams,
 ) => {
   switch (action) {
+    case "getInitialBoards":
+      return getInitialBoards(state, boards);
     case "createBoard":
       return createBoard(state, board);
     case "renameBoard":

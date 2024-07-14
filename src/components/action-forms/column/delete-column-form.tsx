@@ -1,20 +1,19 @@
 import React, { useState } from "react";
 import { deleteColumnAction } from "~/actions";
 import { DeleteButton } from "~/components/ui/submit-button";
-import type { BoardType, ColumnType, SetOptimisticType } from "~/types";
+import { useBoards } from "~/context/boards-context";
+import type { BoardType, ColumnType } from "~/types";
 import { ColumnSchema } from "~/zod-schemas";
 
 const DeleteColumnForm = ({
   board,
   column,
-  setOptimistic,
 }: {
   board: BoardType;
   column: ColumnType;
-  setOptimistic: SetOptimisticType;
 }) => {
   const [error, setError] = useState("");
-
+  const { setOptimisticBoards } = useBoards();
   const clientAction = async () => {
     // Not completely sure if check is needed
     const result = ColumnSchema.shape.id.safeParse(column.id);
@@ -25,7 +24,7 @@ const DeleteColumnForm = ({
       console.log(error);
       return;
     }
-    setOptimistic({ action: "deleteColumn", board, column });
+    setOptimisticBoards({ action: "deleteColumn", board, column });
     const response = await deleteColumnAction(column.id);
     if (response?.error) {
       return setError(response.error);

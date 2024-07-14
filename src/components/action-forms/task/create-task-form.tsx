@@ -11,17 +11,17 @@ import { createTaskAction } from "~/actions";
 import SubmitButton from "~/components/ui/submit-button";
 import { TaskSchema } from "~/zod-schemas";
 import InputField from "~/components/ui/input-field";
+import { useBoards } from "~/context/boards-context";
 
 const CreateTaskForm = ({
   board,
   column,
-  setOptimistic,
 }: {
   board: BoardType;
   column: ColumnType;
-  setOptimistic: SetOptimisticType;
 }) => {
   const createTaskRef = useRef<HTMLFormElement>(null);
+  const { setOptimisticBoards } = useBoards();
   const [taskName, setTaskName] = useState("");
   const [error, setError] = useState("");
   const [active, setActive] = useState(false);
@@ -48,7 +48,7 @@ const CreateTaskForm = ({
       return setError(result.error.issues[0]?.message ?? "An error occured");
     }
 
-    setOptimistic({
+    setOptimisticBoards({
       action: "createTask",
       board,
       column,

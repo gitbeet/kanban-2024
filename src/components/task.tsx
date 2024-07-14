@@ -2,33 +2,26 @@
 /* eslint-disable @typescript-eslint/ban-types */
 "use client";
 
-import React, { useRef } from "react";
-import type {
-  SetOptimisticType,
-  BoardType,
-  ColumnType,
-  TaskType,
-} from "../types";
+import type { BoardType, ColumnType, TaskType } from "../types";
 
 import DropIndicator from "./drop-indicator";
 import { motion } from "framer-motion";
-import RenameTaskForm from "./action-forms/task/rename-task-form";
 import DeleteTaskForm from "./action-forms/task/delete-task-form";
 import ToggleTaskForm from "./action-forms/task/toggle-task-form";
+import { useBoards } from "~/context/boards-context";
 
 const Task = ({
   board,
   column,
   task,
-  setOptimistic,
   handleDragStart,
 }: {
   board: BoardType;
   column: ColumnType;
   task: TaskType;
-  setOptimistic: SetOptimisticType;
   handleDragStart: Function;
 }) => {
+  const { setOptimisticBoards } = useBoards();
   return (
     <>
       <DropIndicator
@@ -47,7 +40,7 @@ const Task = ({
           board={board}
           column={column}
           task={task}
-          setOptimistic={setOptimistic}
+          setOptimistic={setOptimisticBoards}
         />
         <p
           className={` ${task.completed ? "text-neutral-400 line-through" : ""} w-full`}
@@ -64,7 +57,7 @@ const Task = ({
           board={board}
           column={column}
           task={task}
-          setOptimistic={setOptimistic}
+          setOptimistic={setOptimisticBoards}
         />
       </motion.div>
     </>

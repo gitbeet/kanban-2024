@@ -1,5 +1,5 @@
 "use client";
-import { type DragEvent, useRef, useState, useTransition } from "react";
+import { type DragEvent, useState, useTransition } from "react";
 import type {
   TaskType,
   ColumnType,
@@ -14,19 +14,18 @@ import RenameColumnForm from "./action-forms/column/rename-column-form";
 import DeleteColumnForm from "./action-forms/column/delete-column-form";
 import CreateTaskForm from "./action-forms/task/create-task-form";
 import { SwitchTaskActionSchema } from "~/zod-schemas";
+import { useBoards } from "~/context/boards-context";
 const Column = ({
   board,
   column,
-  setOptimistic,
 }: {
   board: BoardType;
   column: ColumnType;
-  setOptimistic: SetOptimisticType;
 }) => {
   const [active, setActive] = useState(false);
   // TODO : Disable dragging when pending ?
   const [isPending, startTransition] = useTransition();
-
+  const { setOptimisticBoards } = useBoards();
   // Handle dragging the task around
   const handleDragStart = (e: DragEvent, task: TaskType, columnId: string) => {
     e.dataTransfer?.setData("columnId", columnId);
@@ -154,7 +153,7 @@ const Column = ({
       return;
     }
 
-    setOptimistic({
+    setOptimisticBoards({
       action: "switchTaskColumn",
       board,
       column,
@@ -194,15 +193,11 @@ const Column = ({
             ({column.tasks.length})
           </span>
         </h3>
-        <DeleteColumnForm
-          board={board}
-          column={column}
-          setOptimistic={setOptimistic}
-        />
+        <DeleteColumnForm board={board} column={column} />
         {/* <RenameColumnForm
             board={board}
             column={column}
-            setOptimistic={setOptimistic}
+            setOptimisticBoards={setOptimisticBoards}
           /> */}
       </div>
       <div>
@@ -214,7 +209,6 @@ const Column = ({
               board={board}
               column={column}
               task={task}
-              setOptimistic={setOptimistic}
               handleDragStart={handleDragStart}
             />
           ))}
@@ -226,11 +220,7 @@ const Column = ({
         <div className="h-4"></div>
       </div>
 
-      <CreateTaskForm
-        board={board}
-        column={column}
-        setOptimistic={setOptimistic}
-      />
+      <CreateTaskForm board={board} column={column} />
     </div>
   );
 };
