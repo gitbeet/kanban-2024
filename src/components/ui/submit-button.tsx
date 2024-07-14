@@ -18,7 +18,7 @@ const SubmitButton = ({
     <button
       disabled={pending}
       type="submit"
-      className="border p-2 disabled:opacity-20"
+      className="h-8 border p-2 disabled:opacity-20"
     >
       {text}
       {icon}

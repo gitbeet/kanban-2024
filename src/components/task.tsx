@@ -19,6 +19,7 @@ import {
 import DropIndicator from "./drop-indicator";
 import { motion } from "framer-motion";
 import { FaCheck, FaEdit, FaTrash } from "react-icons/fa";
+import RenameTaskForm from "./action-forms/task/rename-task-form";
 
 const Task = ({
   board,
@@ -33,35 +34,6 @@ const Task = ({
   setOptimistic: SetOptimisticType;
   handleDragStart: Function;
 }) => {
-  const renameTaskRef = useRef<HTMLFormElement>(null);
-
-  const renameTaskActionForm = (
-    <form
-      className="flex"
-      ref={renameTaskRef}
-      action={async (formData) => {
-        renameTaskRef.current?.reset();
-        const name = formData.get("task-name-input") as string;
-        const renamedTask: TaskType = {
-          ...task,
-          name,
-          updatedAt: new Date(),
-        };
-        setOptimistic({
-          action: "renameTask",
-          board,
-          column,
-          task: renamedTask,
-        });
-        await renameTaskAction(formData);
-      }}
-    >
-      <input type="text" name="task-name-input" placeholder="New name..." />
-      <input type="hidden" name="task-id" value={task.id} />
-      <EditButton />
-    </form>
-  );
-
   const deleteTaskActionForm = (
     <form
       action={async (formData) => {
@@ -122,7 +94,12 @@ const Task = ({
       >
         {toggleTaskActionForm}
         <p className="w-32 text-xl">{task.name}</p>
-        {renameTaskActionForm}
+        <RenameTaskForm
+          board={board}
+          column={column}
+          task={task}
+          setOptimistic={setOptimistic}
+        />
         {deleteTaskActionForm}
       </motion.div>
     </>

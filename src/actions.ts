@@ -13,7 +13,7 @@ import {
   switchColumn,
   toggleTaskCompleted,
 } from "./server/queries";
-import type { BoardType, ColumnType } from "./types";
+import type { BoardType, ColumnType, TaskType } from "./types";
 import { BoardSchema, ColumnSchema, TaskSchema } from "./zod-schemas";
 
 // ---------- BOARDS ----------
@@ -84,7 +84,7 @@ export const renameColumnAction = async (renamedColumn: unknown) => {
     return { error: result.error.issues[0]?.message };
   }
 
-  const { id: columnId, name: newName } = renamedColumn as BoardType;
+  const { id: columnId, name: newName } = renamedColumn as ColumnType;
   await renameColumn(columnId, newName);
 };
 
@@ -96,14 +96,19 @@ export const createTaskAction = async (newTask: unknown) => {
     console.log(result.error);
     return { error: result.error.issues[0]?.message };
   }
-  const { id: columnId, name: taskName } = newTask as BoardType;
+  const { columnId: columnId, name: taskName } = newTask as TaskType;
 
   await createTask(columnId, taskName);
 };
 
-export const renameTaskAction = async (formData: FormData) => {
-  const taskName = formData.get("task-name-input") as string;
-  const taskId = formData.get("task-id") as string;
+export const renameTaskAction = async (renamedTask: unknown) => {
+  const result = TaskSchema.safeParse(renamedTask);
+  if (!result.success) {
+    console.log(result.error);
+    return { error: result.error.issues[0]?.message };
+  }
+  const { id: taskId, name: taskName } = renamedTask as TaskType;
+
   await renameTask(taskId, taskName);
 };
 
