@@ -20,6 +20,7 @@ import DropIndicator from "./drop-indicator";
 import { motion } from "framer-motion";
 import { FaCheck, FaEdit, FaTrash } from "react-icons/fa";
 import RenameTaskForm from "./action-forms/task/rename-task-form";
+import DeleteTaskForm from "./action-forms/task/delete-task-form";
 
 const Task = ({
   board,
@@ -34,25 +35,6 @@ const Task = ({
   setOptimistic: SetOptimisticType;
   handleDragStart: Function;
 }) => {
-  const deleteTaskActionForm = (
-    <form
-      action={async (formData) => {
-        setOptimistic({
-          action: "deleteTask",
-          board: board,
-          columnId: column.id,
-          taskId: task.id,
-          taskIndex: task.index.toString(),
-        });
-
-        await deleteTaskAction(formData);
-      }}
-    >
-      <input type="hidden" name="task-id" value={task.id} />
-      <DeleteButton />
-    </form>
-  );
-
   const toggleTaskActionForm = (
     <form
       action={async (formData) => {
@@ -100,7 +82,12 @@ const Task = ({
           task={task}
           setOptimistic={setOptimistic}
         />
-        {deleteTaskActionForm}
+        <DeleteTaskForm
+          board={board}
+          column={column}
+          task={task}
+          setOptimistic={setOptimistic}
+        />
       </motion.div>
     </>
   );

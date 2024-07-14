@@ -112,9 +112,13 @@ export const renameTaskAction = async (renamedTask: unknown) => {
   await renameTask(taskId, taskName);
 };
 
-export const deleteTaskAction = async (formData: FormData) => {
-  const taskId = formData.get("task-id") as string;
-  await deleteTask(taskId);
+export const deleteTaskAction = async (taskId: unknown) => {
+  const result = TaskSchema.shape.id.safeParse(taskId);
+  if (!result.success) {
+    console.log(result.error);
+    return { error: result.error.issues[0]?.message };
+  }
+  await deleteTask(taskId as string);
 };
 
 export const toggleTaskCompletedAction = async (formData: FormData) => {
