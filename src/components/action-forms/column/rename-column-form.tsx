@@ -18,13 +18,15 @@ const RenameColumnForm = ({
   const [newColumnName, setNewColumnName] = useState("");
   const [error, setError] = useState("");
 
-  const handleColumnNameChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleColumnNameChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
     setError("");
     setNewColumnName(e.target.value);
   };
   return (
     <form
-      className="flex"
+      className="flex items-center"
       ref={renameColumnRef}
       action={async (formData: FormData) => {
         const name = formData.get("column-name-input") as string;

@@ -16,8 +16,8 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en" className={`${GeistSans.variable}`}>
-        <body className="mx-auto max-w-[1600px] bg-zinc-900 text-white">
-          <nav className="flex justify-between border-b px-16 py-4">
+        <body className="mx-auto max-w-[1600px] bg-neutral-900 text-white">
+          <nav className="flex justify-between border-b py-4">
             <SignedIn>
               <h1 className="text-2xl font-bold">Kanban</h1>
               <UserButton />

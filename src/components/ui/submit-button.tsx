@@ -18,7 +18,7 @@ const SubmitButton = ({
     <button
       disabled={pending}
       type="submit"
-      className="h-8 border p-2 disabled:opacity-20"
+      className="rounded border border-neutral-400 bg-white px-2 py-1 font-medium text-black disabled:opacity-20"
     >
       {text}
       {icon}
@@ -28,11 +28,21 @@ const SubmitButton = ({
 };
 
 export const DeleteButton = () => (
-  <SubmitButton icon={<FaTrash className="text-red-500" />} />
+  <button
+    type="submit"
+    className="flex h-6 w-6 items-center justify-center text-neutral-400 hover:text-neutral-300"
+  >
+    <FaTrash className="h-4 w-4 shrink-0" />
+  </button>
 );
 
 export const EditButton = () => (
-  <SubmitButton icon={<FaEdit className="text-blue-400" />} />
+  <button
+    type="submit"
+    className="flex h-6 w-6 items-center justify-center text-neutral-400 hover:text-neutral-300"
+  >
+    <FaEdit className="h-4 w-4 shrink-0" />
+  </button>
 );
 
 export const CreateButton = () => (
@@ -40,13 +50,12 @@ export const CreateButton = () => (
 );
 
 export const ToggleButton = ({ checked }: { checked: boolean }) => (
-  <SubmitButton
-    icon={
-      <div className="flex h-3 w-3 items-center justify-center">
-        {checked ? <FaCheck /> : undefined}
-      </div>
-    }
-  />
+  <button
+    type="submit"
+    className="flex h-6 w-6 items-center justify-center bg-neutral-600"
+  >
+    {checked ? <FaCheck className="h-4 w-4 shrink-0" /> : undefined}
+  </button>
 );
 
 export default SubmitButton;

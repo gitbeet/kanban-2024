@@ -41,7 +41,7 @@ const Task = ({
         layoutId={task.id}
         onDragStart={(e) => handleDragStart(e, task, column.id)}
         draggable
-        className="flex cursor-grab items-center gap-4 border p-4"
+        className="flex shrink-0 cursor-grab items-center justify-between gap-4 rounded-md border border-neutral-700 bg-neutral-800 px-4 py-6 shadow-md"
       >
         <ToggleTaskForm
           board={board}
@@ -49,13 +49,17 @@ const Task = ({
           task={task}
           setOptimistic={setOptimistic}
         />
-        <p className="w-32 text-xl">{task.name}</p>
-        <RenameTaskForm
+        <p
+          className={` ${task.completed ? "text-neutral-400 line-through" : ""} w-full`}
+        >
+          {task.name}
+        </p>
+        {/* <RenameTaskForm
           board={board}
           column={column}
           task={task}
           setOptimistic={setOptimistic}
-        />
+        /> */}
         <DeleteTaskForm
           board={board}
           column={column}

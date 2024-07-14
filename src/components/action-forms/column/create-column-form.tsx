@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useRef, useState } from "react";
+import React, { type ChangeEvent, useRef, useState } from "react";
 import type { BoardType, ColumnType, SetOptimisticType } from "~/types";
 import { v4 as uuid } from "uuid";
 import { createColumnAction } from "~/actions";
@@ -45,7 +45,9 @@ const CreateColumnForm = ({
     }
   };
 
-  const handleColumnName = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleColumnName = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
     setError("");
     setColumnName(e.target.value);
   };

@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useRef, useState } from "react";
+import React, { type ChangeEvent, useRef, useState } from "react";
 import { renameTaskAction } from "~/actions";
 import InputField from "~/components/ui/input-field";
 import { EditButton } from "~/components/ui/submit-button";
@@ -25,7 +25,9 @@ const RenameTaskForm = ({
   const [newTaskName, setNewTaskName] = useState("");
   const [error, setError] = useState("");
 
-  const handleTaskNameChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleTaskNameChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
     setError("");
     setNewTaskName(e.target.value);
   };

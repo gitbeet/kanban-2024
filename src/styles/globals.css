@@ -7,10 +7,6 @@ select {
   @apply text-black;
 }
 
-input {
-  @apply max-w-32;
-}
-
 /*
   1. Use a more-intuitive box-sizing model.
 */

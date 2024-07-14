@@ -6,9 +6,5 @@ export const dynamic = "force-dynamic";
 export default async function HomePage() {
   const boards = await getBoards();
 
-  return (
-    <main className="flex min-h-screen flex-col items-center">
-      <Boards boards={boards} />
-    </main>
-  );
+  return <Boards boards={boards} />;
 }

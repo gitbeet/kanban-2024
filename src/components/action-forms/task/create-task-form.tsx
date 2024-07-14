@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { useRef, useState } from "react";
+import { type ChangeEvent, useRef, useState } from "react";
 import type {
   BoardType,
   ColumnType,
@@ -8,7 +8,7 @@ import type {
 } from "~/types";
 import { v4 as uuid } from "uuid";
 import { createTaskAction } from "~/actions";
-import { CreateButton, EditButton } from "~/components/ui/submit-button";
+import SubmitButton from "~/components/ui/submit-button";
 import { TaskSchema } from "~/zod-schemas";
 import InputField from "~/components/ui/input-field";
 
@@ -24,6 +24,7 @@ const CreateTaskForm = ({
   const createTaskRef = useRef<HTMLFormElement>(null);
   const [taskName, setTaskName] = useState("");
   const [error, setError] = useState("");
+  const [active, setActive] = useState(false);
 
   const clientAction = async () => {
     const maxIndex =
@@ -53,32 +54,61 @@ const CreateTaskForm = ({
       column,
       task: newTask,
     });
-
+    setActive(false);
+    setTaskName("");
     const response = await createTaskAction(newTask);
     if (response?.error) {
       return setError(response.error);
     }
   };
 
-  return (
-    <motion.form
-      layout
-      className="flex space-x-2 pt-8"
-      ref={createTaskRef}
-      action={clientAction}
-    >
-      <input type="hidden" name="column-id" value={column.id} />
-      <InputField
-        type="text"
-        name="task-name-input"
-        value={taskName}
-        onChange={(e) => setTaskName(e.target.value)}
-        error={error}
-        placeholder="New task..."
-      />
+  const handleCancel = () => {
+    setActive(false);
+    setError("");
+  };
 
-      <CreateButton />
-    </motion.form>
+  const handleChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
+    setError("");
+    setTaskName(e.target.value);
+  };
+
+  return (
+    <>
+      {!active && (
+        <motion.button
+          layout
+          onClick={() => setActive(true)}
+          className="font-medium text-white"
+        >
+          Add +
+        </motion.button>
+      )}
+      {active && (
+        <form
+          className="flex flex-col gap-2"
+          ref={createTaskRef}
+          action={clientAction}
+        >
+          <InputField
+            textarea
+            type="text"
+            name="task-name-input"
+            value={taskName}
+            onChange={handleChange}
+            error={error}
+            placeholder="New task..."
+          />
+          <div className="flex items-center gap-2 self-end">
+            <button onClick={handleCancel} type="button">
+              Cancel
+            </button>
+            <SubmitButton text="Add" />
+          </div>
+        </form>
+      )}
+    </>
   );
 };
 

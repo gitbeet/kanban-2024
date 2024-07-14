@@ -33,15 +33,16 @@ const Boards = ({ boards }: { boards: BoardType[] }) => {
   if (!user?.id) return <h1>please log in (placeholder error message)</h1>;
 
   return (
-    <div className="space-y-16">
-      <section className="flex items-center gap-4 py-2">
+    <div className="w-full">
+      <section className="flex items-center gap-4 border-b py-2">
         <SelectBoard boards={selectBoards} onChange={handleBoardChange} />
         <CreateBoardActionForm
           boards={boards}
           setOptimistic={setOptimisticBoards}
         />
       </section>
-      <section className="flex gap-32">
+      <div className="h-16"></div>
+      <section>
         {currentBoard && (
           <Board
             board={currentBoard}

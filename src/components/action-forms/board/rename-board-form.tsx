@@ -3,7 +3,7 @@
 import { type ChangeEvent, useRef, useState } from "react";
 import { renameBoardAction } from "~/actions";
 import InputField from "~/components/ui/input-field";
-import SubmitButton, { EditButton } from "~/components/ui/submit-button";
+import { EditButton } from "~/components/ui/submit-button";
 import type { BoardType, SetOptimisticType } from "~/types";
 import { BoardSchema } from "~/zod-schemas";
 
@@ -42,7 +42,9 @@ const RenameBoardForm = ({
     }
   };
 
-  const handleBoardNameChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleBoardNameChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
     setError("");
     setNewBoardName(e.target.value);
   };

@@ -180,54 +180,58 @@ const Column = ({
   }
 
   return (
-    <>
-      <div
-        onDragOver={handleDragOver}
-        onDragLeave={handleDragLeave}
-        onDrop={handleDragEnd}
-        key={column.id}
-        className={`h-screen px-4 ${active ? "bg-neutral-700" : ""}`}
-      >
-        <div className="flex items-center gap-4 pb-12">
-          <h3 className="text-lg font-bold">Column name: {column.name}</h3>
-          <DeleteColumnForm
-            board={board}
-            column={column}
-            setOptimistic={setOptimistic}
-          />
-          <RenameColumnForm
-            board={board}
-            column={column}
-            setOptimistic={setOptimistic}
-          />
-        </div>
-        <div>
-          <h4 className="font-bold">Tasks</h4>
-          {column.tasks
-            .sort((a, b) => a.index - b.index)
-            .map((task) => (
-              <Task
-                key={task.id}
-                board={board}
-                column={column}
-                task={task}
-                setOptimistic={setOptimistic}
-                handleDragStart={handleDragStart}
-              />
-            ))}
-          <DropIndicator
-            beforeId="-1"
-            columnId={column.id}
-            beforeIndex={(column.tasks.length + 1).toString()}
-          />
-        </div>
-        <CreateTaskForm
+    <div
+      onDragOver={handleDragOver}
+      onDragLeave={handleDragLeave}
+      onDrop={handleDragEnd}
+      key={column.id}
+      className={`${active ? "bg-neutral-800" : ""} min-h-screen w-80 rounded-md px-2 pt-4`}
+    >
+      <div className="flex items-center gap-4 pb-12">
+        <h3 className="text-lg">
+          <span className="font-semibold">{column.name} </span>
+          <span className="font-normal text-neutral-400">
+            ({column.tasks.length})
+          </span>
+        </h3>
+        <DeleteColumnForm
           board={board}
           column={column}
           setOptimistic={setOptimistic}
         />
+        {/* <RenameColumnForm
+            board={board}
+            column={column}
+            setOptimistic={setOptimistic}
+          /> */}
       </div>
-    </>
+      <div>
+        {column.tasks
+          .sort((a, b) => a.index - b.index)
+          .map((task) => (
+            <Task
+              key={task.id}
+              board={board}
+              column={column}
+              task={task}
+              setOptimistic={setOptimistic}
+              handleDragStart={handleDragStart}
+            />
+          ))}
+        <DropIndicator
+          beforeId="-1"
+          columnId={column.id}
+          beforeIndex={(column.tasks.length + 1).toString()}
+        />
+        <div className="h-4"></div>
+      </div>
+
+      <CreateTaskForm
+        board={board}
+        column={column}
+        setOptimistic={setOptimistic}
+      />
+    </div>
   );
 };
 

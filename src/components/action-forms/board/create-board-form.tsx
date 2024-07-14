@@ -1,6 +1,6 @@
 "use client";
 
-import React, { ChangeEvent, useRef, useState } from "react";
+import React, { type ChangeEvent, useRef, useState } from "react";
 import type { BoardType, SetOptimisticType } from "~/types";
 import { v4 as uuid } from "uuid";
 import { useUser } from "@clerk/nextjs";
@@ -52,7 +52,9 @@ const CreateBoardActionForm = ({
     }
   };
 
-  const handleBoardName = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleBoardName = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
     setError("");
     setBoardName(e.target.value);
   };

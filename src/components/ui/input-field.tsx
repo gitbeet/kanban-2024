@@ -7,25 +7,41 @@ const InputField = ({
   error,
   placeholder,
   type,
+  textarea = false,
 }: {
   value: string;
   name: string;
-  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  onChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   error: string;
   placeholder: string;
   type: InputHTMLAttributes<HTMLInputElement>["type"];
+  textarea?: boolean;
 }) => {
+  const sharedClasses = `w-full rounded-md border p-2 ${error ? "border-red-500 text-red-500" : "border-neutral-500 text-white"} bg-neutral-800`;
+
   return (
-    <div>
-      <input
-        type={type}
-        name={name}
-        value={value}
-        onChange={onChange}
-        placeholder={placeholder}
-        className={`h-8 border ${error ? "border-red-500 text-red-500" : "border-neutral-400 text-white"} bg-neutral-800 p-2`}
-      />
-      <p className="text-red-500"> {error && error}</p>
+    <div className="relative top-4 w-full">
+      {!textarea && (
+        <input
+          type={type}
+          name={name}
+          value={value}
+          onChange={onChange}
+          placeholder={placeholder}
+          className={`h-8 ${sharedClasses} `}
+        />
+      )}
+      {textarea && (
+        <textarea
+          name={name}
+          value={value}
+          rows={2}
+          onChange={onChange}
+          placeholder={placeholder}
+          className={sharedClasses}
+        />
+      )}
+      <p className="h-8 text-red-500">{error && error}</p>
     </div>
   );
 };

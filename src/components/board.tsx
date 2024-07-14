@@ -1,11 +1,8 @@
 "use client";
 
-import React, { useRef } from "react";
-import type { ColumnType, BoardType, SetOptimisticType } from "../types";
+import React from "react";
+import type { BoardType, SetOptimisticType } from "../types";
 import Column from "../components/column";
-import SubmitButton, { CreateButton } from "./ui/submit-button";
-import { createColumnAction, deleteBoardAction } from "~/actions";
-import { v4 as uuid } from "uuid";
 import { useUser } from "@clerk/nextjs";
 import DeleteTaskZone from "./delete-task-zone";
 import RenameBoardForm from "./action-forms/board/rename-board-form";
@@ -23,16 +20,16 @@ const Board = ({
   if (!user?.id) return <h1>Please log in (placeholder error)</h1>;
 
   return (
-    <div>
+    <section className="overflow-x-scroll">
       <div className="flex items-start gap-4">
         <h2 className="pb-4 text-xl">{board.name}</h2>
         <RenameBoardForm board={board} setOptimistic={setOptimistic} />
         <DeleteBoardForm board={board} setOptimistic={setOptimistic} />
         <CreateColumnForm board={board} setOptimistic={setOptimistic} />
       </div>
-      <div>
+      <div className="shrink-0">
         <h2 className="pb-4 text-xl font-bold">Columns</h2>
-        <div className="flex items-start">
+        <div className="flex gap-4">
           {board.columns.map((col) => (
             <Column
               key={col.index}
@@ -44,7 +41,7 @@ const Board = ({
           <DeleteTaskZone setOptimistic={setOptimistic} board={board} />
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 
