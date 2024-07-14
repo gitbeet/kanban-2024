@@ -69,9 +69,12 @@ export const createColumnAction = async (newColumn: unknown) => {
   await createColumn(boardId, columnName);
 };
 
-export const deleteColumnAction = async (formData: FormData) => {
-  const columnId = formData.get("column-id") as string;
-  await deleteColumn(columnId);
+export const deleteColumnAction = async (columnId: unknown) => {
+  const result = ColumnSchema.shape.id.safeParse(columnId);
+  if (!result.success) {
+    return { error: result.error.issues[0]?.message };
+  }
+  await deleteColumn(columnId as string);
 };
 
 export const renameColumnAction = async (renamedColumn: unknown) => {
