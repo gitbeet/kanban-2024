@@ -13,8 +13,8 @@ import {
   switchColumn,
   toggleTaskCompleted,
 } from "./server/queries";
-import type { BoardType } from "./types";
-import { BoardSchema } from "./zod-schemas";
+import type { BoardType, ColumnType } from "./types";
+import { BoardSchema, ColumnSchema } from "./zod-schemas";
 
 // ---------- BOARDS ----------
 
@@ -38,6 +38,7 @@ export const renameBoardAction = async (renamedBoard: unknown) => {
   }
 
   const { id, name } = renamedBoard as BoardType;
+  // Add try/catch in case insert not successful
 
   await renameBoard(id, name);
 };
@@ -48,15 +49,23 @@ export const deleteBoardAction = async (boardId: unknown) => {
     console.log(result.error);
     return { error: result.error.issues[0]?.message };
   }
+  // Add try/catch in case insert not successful
 
   await deleteBoard(boardId as string);
 };
 
 // ---------- COLUMNS ----------
 
-export const createColumnAction = async (formData: FormData) => {
-  const boardId = formData.get("board-id") as string;
-  const columnName = formData.get("column-name-input") as string;
+export const createColumnAction = async (newColumn: unknown) => {
+  const result = ColumnSchema.safeParse(newColumn);
+  if (!result.success) {
+    console.log(result.error);
+    return { error: result.error.issues[0]?.message };
+  }
+
+  const { boardId, name: columnName } = newColumn as ColumnType;
+  // Add try/catch in case insert not successful
+
   await createColumn(boardId, columnName);
 };
 

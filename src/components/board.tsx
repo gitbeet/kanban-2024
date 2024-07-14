@@ -10,6 +10,7 @@ import { useUser } from "@clerk/nextjs";
 import DeleteTaskZone from "./delete-task-zone";
 import RenameBoardForm from "./action-forms/board/rename-board-form";
 import DeleteBoardForm from "./action-forms/board/delete-board-form";
+import CreateColumnForm from "./action-forms/column/create-column-form";
 const Board = ({
   board,
   setOptimistic,
@@ -18,48 +19,16 @@ const Board = ({
   setOptimistic: SetOptimisticType;
 }) => {
   const { user } = useUser();
-  const createColumnRef = useRef<HTMLFormElement>(null);
 
   if (!user?.id) return <h1>Please log in (placeholder error)</h1>;
 
-  const createColumnActionForm = (
-    <form
-      className="flex"
-      ref={createColumnRef}
-      action={async (formData: FormData) => {
-        const maxIndex = Math.max(...board.columns.map((c) => c.index));
-        createColumnRef.current?.reset();
-        const name = formData.get("column-name-input") as string;
-        const newColumn: ColumnType = {
-          id: uuid(),
-          index: maxIndex + 1,
-          boardId: board.id,
-          name,
-          tasks: [],
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        };
-        setOptimistic({ action: "createColumn", board, column: newColumn });
-        await createColumnAction(formData);
-      }}
-    >
-      <input type="hidden" name="board-id" value={board.id} />
-      <input
-        type="text"
-        name="column-name-input"
-        className="text-black"
-        placeholder="Create column..."
-      />
-      <CreateButton />
-    </form>
-  );
   return (
     <div>
       <div className="flex items-start gap-4">
         <h2 className="pb-4 text-xl">{board.name}</h2>
         <RenameBoardForm board={board} setOptimistic={setOptimistic} />
         <DeleteBoardForm board={board} setOptimistic={setOptimistic} />
-        {createColumnActionForm}
+        <CreateColumnForm board={board} setOptimistic={setOptimistic} />
       </div>
       <div>
         <h2 className="pb-4 text-xl font-bold">Columns</h2>

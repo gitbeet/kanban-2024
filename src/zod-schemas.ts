@@ -18,8 +18,8 @@ export const ColumnSchema = z.object({
   index: z.number({ message: "Index must be a number" }),
   name: z
     .string({ message: "Column name must be a string" })
-    .min(1, { message: "Column name must be at least 1 character long" })
-    .max(100, { message: "Column name must be at most 100 character long" })
+    .min(1, { message: "Cannot be blank" })
+    .max(20, { message: "Column name must be at most 20 character long" })
     .trim(),
   createdAt: z.date(),
   updatedAt: z.date(),
@@ -33,7 +33,7 @@ export const BoardSchema = z.object({
   name: z
     .string({ message: "Board name must be a string" })
     .min(1, { message: "Cannot be blank" })
-    .max(100, { message: "Board name must be at most 100 character long" })
+    .max(20, { message: "Board name must be at most 20 character long" })
     .trim(),
   createdAt: z.date(),
   updatedAt: z.date(),
