@@ -9,11 +9,11 @@ import InputField from "~/components/ui/input-field";
 import { useBoards } from "~/context/boards-context";
 
 const CreateTaskForm = ({
-  board,
-  column,
+  boardId,
+  columnId,
 }: {
-  board: BoardType;
-  column: ColumnType;
+  boardId: string;
+  columnId: string;
 }) => {
   const createTaskRef = useRef<HTMLFormElement>(null);
   const { setOptimisticBoards } = useBoards();
@@ -21,18 +21,27 @@ const CreateTaskForm = ({
   const [error, setError] = useState("");
   const [active, setActive] = useState(false);
 
+  const { optimisticBoards } = useBoards();
+
+  const currentColumn = optimisticBoards
+    .find((board) => board.id === boardId)
+    ?.columns.find((column) => column.id === columnId);
+
+  if (!currentColumn)
+    return <h1>Current column not found (placeholder error)</h1>;
+
   const clientAction = async () => {
     const maxIndex =
-      column.tasks.length < 1
+      currentColumn.tasks.length < 1
         ? 0
-        : Math.max(...column.tasks.map((t) => t.index));
+        : Math.max(...currentColumn.tasks.map((t) => t.index));
 
     createTaskRef.current?.reset();
     const newTask: TaskType = {
       id: uuid(),
       index: maxIndex + 1,
       name: taskName,
-      columnId: column.id,
+      columnId,
       completed: false,
       createdAt: new Date(),
       updatedAt: new Date(),
@@ -45,8 +54,8 @@ const CreateTaskForm = ({
 
     setOptimisticBoards({
       action: "createTask",
-      board,
-      column,
+      boardId,
+      columnId,
       task: newTask,
     });
     setActive(false);

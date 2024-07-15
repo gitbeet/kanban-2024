@@ -192,17 +192,17 @@ const Column = ({
         <RenameColumnForm boardId={boardId} columnId={column.id} />
       </div>
       <div>
-        {/* {column.tasks
+        {column.tasks
           .sort((a, b) => a.index - b.index)
           .map((task) => (
             <Task
               key={task.id}
-              board={board}
-              column={column}
+              // board={board}
+              // column={column}
               task={task}
               handleDragStart={handleDragStart}
             />
-          ))} */}
+          ))}
         <DropIndicator
           beforeId="-1"
           columnId={column.id}
@@ -211,7 +211,7 @@ const Column = ({
         <div className="h-4"></div>
       </div>
 
-      {/* <CreateTaskForm board={board} column={column} /> */}
+      <CreateTaskForm boardId={boardId} columnId={column.id} />
     </div>
   );
 };

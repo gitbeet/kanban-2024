@@ -80,17 +80,17 @@ const deleteColumn = (
 // Tasks
 const createTask = (
   state: BoardType[],
-  board?: BoardType,
-  column?: ColumnType,
+  boardId?: string,
+  columnId?: string,
   task?: TaskType,
 ) => {
-  if (!board || !column || !task) return state;
+  if (!boardId || !columnId || !task) return state;
   return state.map((b) =>
-    b.id === board.id
+    b.id === boardId
       ? {
           ...b,
           columns: b.columns.map((c) =>
-            c.id === column.id ? { ...c, tasks: [...c.tasks, task] } : c,
+            c.id === columnId ? { ...c, tasks: [...c.tasks, task] } : c,
           ),
         }
       : b,
@@ -301,7 +301,7 @@ export const handleOptimisticUpdate = (
     case "deleteColumn":
       return deleteColumn(state, boardId, columnId);
     case "createTask":
-      return createTask(state, board, column, task);
+      return createTask(state, boardId, columnId, task);
     case "renameTask":
       return renameTask(state, board, column, task);
     case "deleteTask":

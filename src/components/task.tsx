@@ -8,18 +8,21 @@ import DropIndicator from "./drop-indicator";
 import { motion } from "framer-motion";
 import DeleteTaskForm from "./action-forms/task/delete-task-form";
 import ToggleTaskForm from "./action-forms/task/toggle-task-form";
+import { useBoards } from "~/context/boards-context";
 
 const Task = ({
-  board,
-  column,
+  // board,
+  // column,
   task,
   handleDragStart,
 }: {
-  board: BoardType;
-  column: ColumnType;
+  // board: BoardType;
+  // column: ColumnType;
   task: TaskType;
   handleDragStart: Function;
 }) => {
+  const { currentBoardId, optimisticBoards } = useBoards();
+
   return (
     <>
       <DropIndicator
@@ -30,11 +33,11 @@ const Task = ({
       <motion.div
         layout
         layoutId={task.id}
-        onDragStart={(e) => handleDragStart(e, task, column.id)}
+        // onDragStart={(e) => handleDragStart(e, task, column.id)}
         draggable
         className="flex shrink-0 cursor-grab items-center justify-between gap-4 rounded-md border border-neutral-700 bg-neutral-800 px-4 py-6 shadow-md"
       >
-        <ToggleTaskForm board={board} column={column} task={task} />
+        {/* <ToggleTaskForm board={board} column={column} task={task} /> */}
         <p
           className={` ${task.completed ? "text-neutral-400 line-through" : ""} w-full`}
         >
@@ -45,7 +48,7 @@ const Task = ({
           column={column}
           task={task}
         /> */}
-        <DeleteTaskForm board={board} column={column} task={task} />
+        {/* <DeleteTaskForm board={board} column={column} task={task} /> */}
       </motion.div>
     </>
   );
