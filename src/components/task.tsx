@@ -11,17 +11,18 @@ import ToggleTaskForm from "./action-forms/task/toggle-task-form";
 import { useBoards } from "~/context/boards-context";
 
 const Task = ({
-  // board,
-  // column,
+  columnId,
   task,
   handleDragStart,
 }: {
-  // board: BoardType;
-  // column: ColumnType;
+  columnId: string;
   task: TaskType;
   handleDragStart: Function;
 }) => {
   const { currentBoardId, optimisticBoards } = useBoards();
+
+  if (!currentBoardId)
+    return <h1>No currentboardId found (placeholder error)</h1>;
 
   return (
     <>
@@ -48,7 +49,11 @@ const Task = ({
           column={column}
           task={task}
         /> */}
-        {/* <DeleteTaskForm board={board} column={column} task={task} /> */}
+        <DeleteTaskForm
+          boardId={currentBoardId}
+          columnId={columnId}
+          taskId={task.id}
+        />
       </motion.div>
     </>
   );

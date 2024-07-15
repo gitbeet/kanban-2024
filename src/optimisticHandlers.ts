@@ -125,28 +125,35 @@ const renameTask = (
 
 const deleteTask = (
   state: BoardType[],
-  board?: BoardType,
+  boardId?: string,
   columnId?: string,
   taskId?: string,
-  taskIndex?: number,
 ) => {
-  if (!board || !columnId || !taskId || !taskIndex) return state;
+  if (!boardId || !columnId || !taskId) return state;
   return state.map((b) =>
-    b.id === board.id
+    b.id === boardId
       ? {
           ...b,
-          columns: b.columns.map((c) =>
-            c.id === columnId
-              ? {
-                  ...c,
-                  tasks: c.tasks
-                    .filter((t) => t.id !== taskId)
-                    .map((t) =>
-                      t.index > taskIndex ? { ...t, index: t.index - 1 } : t,
-                    ),
-                }
-              : c,
-          ),
+          columns: b.columns.map((c) => {
+            if (c.id === columnId) {
+              const currentTaskIndex = c.tasks.find(
+                (t) => t.id === taskId,
+              )?.index;
+              if (!currentTaskIndex) return c;
+              return {
+                ...c,
+                tasks: c.tasks
+                  .filter((t) => t.id !== taskId)
+                  .map((t) =>
+                    t.index > currentTaskIndex
+                      ? { ...t, index: t.index - 1 }
+                      : t,
+                  ),
+              };
+            } else {
+              return c;
+            }
+          }),
         }
       : b,
   );
@@ -305,7 +312,7 @@ export const handleOptimisticUpdate = (
     case "renameTask":
       return renameTask(state, board, column, task);
     case "deleteTask":
-      return deleteTask(state, board, columnId, taskId, oldColumnIndex);
+      return deleteTask(state, boardId, columnId, taskId);
     case "toggleTask":
       return toggleTask(state, board, column, task);
     case "switchTaskColumn":

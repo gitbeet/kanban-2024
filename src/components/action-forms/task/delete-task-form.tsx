@@ -2,16 +2,15 @@ import React, { useState } from "react";
 import { deleteTaskAction } from "~/actions";
 import { DeleteButton } from "~/components/ui/submit-button";
 import { useBoards } from "~/context/boards-context";
-import type { BoardType, ColumnType, TaskType } from "~/types";
 
 const DeleteTaskForm = ({
-  board,
-  column,
-  task,
+  boardId,
+  columnId,
+  taskId,
 }: {
-  board: BoardType;
-  column: ColumnType;
-  task: TaskType;
+  boardId: string;
+  columnId: string;
+  taskId: string;
 }) => {
   const [error, setError] = useState("");
   const { setOptimisticBoards } = useBoards();
@@ -19,13 +18,12 @@ const DeleteTaskForm = ({
   const clientAction = async () => {
     setOptimisticBoards({
       action: "deleteTask",
-      board: board,
-      columnId: column.id,
-      taskId: task.id,
-      oldColumnIndex: task.index,
+      boardId,
+      columnId,
+      taskId,
     });
 
-    const response = await deleteTaskAction(task.id);
+    const response = await deleteTaskAction(taskId);
     if (response?.error) {
       setError(response.error);
       console.log(error);
@@ -34,7 +32,6 @@ const DeleteTaskForm = ({
   };
   return (
     <form action={clientAction}>
-      <input type="hidden" name="task-id" value={task.id} />
       <DeleteButton />
     </form>
   );

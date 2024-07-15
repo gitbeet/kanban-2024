@@ -3,8 +3,7 @@ import { renameColumnAction } from "~/actions";
 import InputField from "~/components/ui/input-field";
 import { EditButton } from "~/components/ui/submit-button";
 import { useBoards } from "~/context/boards-context";
-import type { BoardType, ColumnType } from "~/types";
-import { BoardSchema, ColumnSchema } from "~/zod-schemas";
+import { ColumnSchema } from "~/zod-schemas";
 
 const RenameColumnForm = ({
   boardId,

@@ -197,8 +197,7 @@ const Column = ({
           .map((task) => (
             <Task
               key={task.id}
-              // board={board}
-              // column={column}
+              columnId={column.id}
               task={task}
               handleDragStart={handleDragStart}
             />
