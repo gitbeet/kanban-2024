@@ -148,16 +148,15 @@ const Column = ({
       return;
     }
 
-    // setOptimisticBoards({
-    //   action: "switchTaskColumn",
-    //   board,
-    //   column,
-    //   taskId,
-    //   oldColumnId,
-    //   newColumnId,
-    //   oldColumnIndex: Number(oldColumnIndex),
-    //   newColumnIndex: Number(newColumnIndex),
-    // });
+    setOptimisticBoards({
+      action: "switchTaskColumn",
+      boardId,
+      taskId,
+      oldColumnId,
+      newColumnId,
+      oldColumnIndex: Number(oldColumnIndex),
+      newColumnIndex: Number(newColumnIndex),
+    });
 
     const response = await switchColumnAction(
       taskId,

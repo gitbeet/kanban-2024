@@ -190,8 +190,7 @@ const toggleTask = (
 
 const switchTaskColumn = (
   state: BoardType[],
-  board?: BoardType,
-  column?: ColumnType,
+  boardId?: string,
   taskId?: string,
   oldColumnId?: string,
   newColumnId?: string,
@@ -199,8 +198,7 @@ const switchTaskColumn = (
   newColumnIndex?: number,
 ) => {
   if (
-    !board ||
-    !column ||
+    !boardId ||
     !taskId ||
     !oldColumnId ||
     !newColumnId ||
@@ -208,7 +206,7 @@ const switchTaskColumn = (
     !oldColumnIndex
   )
     return state;
-  const currentBoard = state.find((b) => b.id === board.id);
+  const currentBoard = state.find((b) => b.id === boardId);
   const currentColumn = currentBoard?.columns.find(
     (col) => col.id === oldColumnId,
   );
@@ -216,11 +214,11 @@ const switchTaskColumn = (
   if (!currentTask) return state;
   if (oldColumnId === newColumnId) {
     return state.map((b) => {
-      return b.id === board.id
+      return b.id === boardId
         ? {
             ...b,
             columns: b.columns.map((c) => {
-              return c.id === column.id
+              return c.id === oldColumnId
                 ? {
                     ...c,
                     tasks: c.tasks.map((t) => {
@@ -241,7 +239,7 @@ const switchTaskColumn = (
   }
 
   return state.map((b) => {
-    if (b.id !== board.id) return b;
+    if (b.id !== boardId) return b;
 
     return {
       ...b,
@@ -322,8 +320,7 @@ export const handleOptimisticUpdate = (
     case "switchTaskColumn":
       return switchTaskColumn(
         state,
-        board,
-        column,
+        boardId,
         taskId,
         oldColumnId,
         newColumnId,
