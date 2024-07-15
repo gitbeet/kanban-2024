@@ -5,6 +5,7 @@ import { renameBoardAction } from "~/actions";
 import InputField from "~/components/ui/input-field";
 import { EditButton } from "~/components/ui/submit-button";
 import { useBoards } from "~/context/boards-context";
+import { boards } from "~/server/db/schema";
 import type { BoardType } from "~/types";
 import { BoardSchema } from "~/zod-schemas";
 
@@ -16,23 +17,24 @@ const RenameBoardForm = ({ board }: { board: BoardType }) => {
 
   const clientAction = async () => {
     renameBoardRef.current?.reset();
-    const renamedBoard: BoardType = {
-      ...board,
-      name: newBoardName,
-      updatedAt: new Date(),
-    };
-
     // Client error check
-    const result = BoardSchema.safeParse(renamedBoard);
+    const result = BoardSchema.pick({ id: true, name: true }).safeParse({
+      id: board.id,
+      name: newBoardName,
+    });
     if (!result.success) {
       return setError(result.error.issues[0]?.message ?? "An error occured");
     }
 
-    setOptimisticBoards({ action: "renameBoard", board: renamedBoard });
+    setOptimisticBoards({
+      action: "renameBoard",
+      boardId: board.id,
+      newBoardName,
+    });
 
     // Server error check
 
-    const response = await renameBoardAction(renamedBoard);
+    const response = await renameBoardAction(board.id, newBoardName);
     if (response?.error) {
       return setError(response.error);
     }

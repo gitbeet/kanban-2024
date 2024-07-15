@@ -1,7 +1,7 @@
 "use client";
 
 import React, { type ChangeEvent, useRef, useState } from "react";
-import type { BoardType, SetOptimisticType } from "~/types";
+import type { BoardType } from "~/types";
 import { v4 as uuid } from "uuid";
 import { useUser } from "@clerk/nextjs";
 import { createBoardAction } from "~/actions";
@@ -10,7 +10,7 @@ import { CreateButton } from "~/components/ui/submit-button";
 import InputField from "~/components/ui/input-field";
 import { useBoards } from "~/context/boards-context";
 
-const CreateBoardActionForm = () => {
+const CreateBoardForm = () => {
   const createBoardRef = useRef<HTMLFormElement>(null);
   const { user } = useUser();
   const { optimisticBoards, setOptimisticBoards } = useBoards();
@@ -75,4 +75,4 @@ const CreateBoardActionForm = () => {
   );
 };
 
-export default CreateBoardActionForm;
+export default CreateBoardForm;

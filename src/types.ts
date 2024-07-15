@@ -25,6 +25,8 @@ export type OptimisticActionType =
 export type OptimisticParams = {
   action: OptimisticActionType;
   board?: BoardType;
+  boardId?: string;
+  newBoardName?: string;
   boards?: BoardType[];
   column?: ColumnType;
   task?: TaskType;
@@ -34,7 +36,6 @@ export type OptimisticParams = {
   newColumnId?: string;
   newColumnIndex?: number;
   oldColumnIndex?: number;
-  taskIndex?: number;
 };
 
 export type SetOptimisticType = (args: OptimisticParams) => void;

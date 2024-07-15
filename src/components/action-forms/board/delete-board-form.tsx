@@ -25,6 +25,7 @@ const DeleteBoardForm = ({ board }: { board: BoardType }) => {
       return setError(response.error);
     }
   };
+
   return (
     <form action={clientAction}>
       <input type="hidden" name="board-id" value={board.id} />

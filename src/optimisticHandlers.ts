@@ -17,9 +17,15 @@ const createBoard = (state: BoardType[], board?: BoardType) => {
   return [...state, board];
 };
 
-const renameBoard = (state: BoardType[], board?: BoardType) => {
-  if (!board) return state;
-  return state.map((b) => (b.id === board.id ? { ...b, name: board.name } : b));
+const renameBoard = (
+  state: BoardType[],
+  boardId?: string,
+  newBoardName?: string,
+) => {
+  if (!boardId || !newBoardName) return state;
+  return state.map((b) =>
+    b.id === boardId ? { ...b, name: newBoardName, updatedAt: new Date() } : b,
+  );
 };
 
 const deleteBoard = (state: BoardType[], board?: BoardType) => {
@@ -265,6 +271,8 @@ export const handleOptimisticUpdate = (
     action,
     boards,
     board,
+    boardId,
+    newBoardName,
     column,
     task,
     columnId,
@@ -281,7 +289,7 @@ export const handleOptimisticUpdate = (
     case "createBoard":
       return createBoard(state, board);
     case "renameBoard":
-      return renameBoard(state, board);
+      return renameBoard(state, boardId, newBoardName);
     case "deleteBoard":
       return deleteBoard(state, board);
     case "createColumn":

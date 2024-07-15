@@ -13,7 +13,7 @@ import {
   switchColumn,
   toggleTaskCompleted,
 } from "./server/queries";
-import type { BoardType, ColumnType, TaskType } from "./types";
+import type { ColumnType, TaskType } from "./types";
 import {
   BoardSchema,
   ColumnSchema,
@@ -35,17 +35,22 @@ export const createBoardAction = async (boardName: unknown) => {
   await createBoard(boardName as string);
 };
 
-export const renameBoardAction = async (renamedBoard: unknown) => {
-  const result = BoardSchema.safeParse(renamedBoard);
+export const renameBoardAction = async (
+  boardId: unknown,
+  newBoardName: unknown,
+) => {
+  const result = BoardSchema.pick({ id: true, name: true }).safeParse({
+    id: boardId,
+    name: newBoardName,
+  });
   if (!result.success) {
     console.log(result.error);
     return { error: result.error.issues[0]?.message };
   }
 
-  const { id, name } = renamedBoard as BoardType;
   // Add try/catch in case insert not successful
 
-  await renameBoard(id, name);
+  await renameBoard(boardId as string, newBoardName as string);
 };
 
 export const deleteBoardAction = async (boardId: unknown) => {
