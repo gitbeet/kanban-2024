@@ -4,14 +4,14 @@ import InputField from "~/components/ui/input-field";
 import { EditButton } from "~/components/ui/submit-button";
 import { useBoards } from "~/context/boards-context";
 import type { BoardType, ColumnType } from "~/types";
-import { ColumnSchema } from "~/zod-schemas";
+import { BoardSchema, ColumnSchema } from "~/zod-schemas";
 
 const RenameColumnForm = ({
-  board,
-  column,
+  boardId,
+  columnId,
 }: {
-  board: BoardType;
-  column: ColumnType;
+  boardId: string;
+  columnId: string;
 }) => {
   const renameColumnRef = useRef<HTMLFormElement>(null);
   const [newColumnName, setNewColumnName] = useState("");
@@ -24,37 +24,32 @@ const RenameColumnForm = ({
     setError("");
     setNewColumnName(e.target.value);
   };
+
+  const clientAction = async () => {
+    // Client error check
+    const result = ColumnSchema.shape.name.safeParse(newColumnName);
+    if (!result.success) {
+      return setError(result.error.issues[0]?.message ?? "An error occured");
+    }
+    setOptimisticBoards({
+      action: "renameColumn",
+      boardId,
+      columnId,
+      newColumnName,
+    });
+    const response = await renameColumnAction(columnId, newColumnName);
+    if (response?.error) {
+      return setError(response.error);
+    }
+  };
+
   return (
     <form
       className="flex items-center"
       ref={renameColumnRef}
-      action={async (formData: FormData) => {
-        const name = formData.get("column-name-input") as string;
-        const renamedColumn: ColumnType = {
-          ...column,
-          name,
-          updatedAt: new Date(),
-        };
-
-        // Client error check
-        const result = ColumnSchema.safeParse(renamedColumn);
-        if (!result.success) {
-          return setError(
-            result.error.issues[0]?.message ?? "An error occured",
-          );
-        }
-        setOptimisticBoards({
-          action: "renameColumn",
-          board,
-          column: renamedColumn,
-        });
-        const response = await renameColumnAction(renamedColumn);
-        if (response?.error) {
-          return setError(response.error);
-        }
-      }}
+      action={clientAction}
     >
-      <input type="hidden" name="column-id" value={column.id} />
+      <input type="hidden" name="column-id" value={columnId} />
       <InputField
         type="text"
         name="column-name-input"

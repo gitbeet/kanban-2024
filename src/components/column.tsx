@@ -189,10 +189,7 @@ const Column = ({
           </span>
         </h3>
         <DeleteColumnForm boardId={boardId} columnId={column.id} />
-        {/* <RenameColumnForm
-            board={board}
-            column={column}
-          /> */}
+        <RenameColumnForm boardId={boardId} columnId={column.id} />
       </div>
       <div>
         {/* {column.tasks

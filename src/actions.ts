@@ -87,15 +87,20 @@ export const deleteColumnAction = async (columnId: unknown) => {
   await deleteColumn(columnId as string);
 };
 
-export const renameColumnAction = async (renamedColumn: unknown) => {
-  const result = ColumnSchema.safeParse(renamedColumn);
+export const renameColumnAction = async (
+  columnId: unknown,
+  newColumnName: unknown,
+) => {
+  const result = ColumnSchema.pick({ id: true, name: true }).safeParse({
+    id: columnId,
+    name: newColumnName,
+  });
   if (!result.success) {
     console.log(result.error);
     return { error: result.error.issues[0]?.message };
   }
 
-  const { id: columnId, name: newName } = renamedColumn as ColumnType;
-  await renameColumn(columnId, newName);
+  await renameColumn(columnId as string, newColumnName as string);
 };
 
 // ---------- TASKS ----------

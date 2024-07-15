@@ -47,16 +47,17 @@ const createColumn = (
 
 const renameColumn = (
   state: BoardType[],
-  board?: BoardType,
-  column?: ColumnType,
+  boardId?: string,
+  columnId?: string,
+  newColumnName?: string,
 ) => {
-  if (!board || !column) return state;
+  if (!boardId || !columnId || !newColumnName) return state;
   return state.map((b) =>
-    b.id === board.id
+    b.id === boardId
       ? {
           ...b,
           columns: b.columns.map((c) =>
-            c.id === column.id ? { ...c, name: column.name } : c,
+            c.id === columnId ? { ...c, name: newColumnName } : c,
           ),
         }
       : b,
@@ -274,8 +275,9 @@ export const handleOptimisticUpdate = (
     boardId,
     newBoardName,
     column,
-    task,
     columnId,
+    newColumnName,
+    task,
     taskId,
     oldColumnId,
     newColumnId,
@@ -295,7 +297,7 @@ export const handleOptimisticUpdate = (
     case "createColumn":
       return createColumn(state, boardId, column);
     case "renameColumn":
-      return renameColumn(state, board, column);
+      return renameColumn(state, boardId, columnId, newColumnName);
     case "deleteColumn":
       return deleteColumn(state, boardId, columnId);
     case "createTask":
