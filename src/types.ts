@@ -27,6 +27,7 @@ export type OptimisticParams = {
   board?: BoardType;
   boardId?: string;
   newBoardName?: string;
+  newColumnName?: string;
   boards?: BoardType[];
   column?: ColumnType;
   task?: TaskType;

@@ -25,17 +25,17 @@ const Board = () => {
         <h2 className="pb-4 text-xl">{currentBoard.name}</h2>
         <RenameBoardForm boardId={currentBoardId} />
         <DeleteBoardForm boardId={currentBoardId} />
-        <CreateColumnForm board={currentBoard} />
+        <CreateColumnForm boardId={currentBoardId} />
       </div>
       <div className="shrink-0">
         <h2 className="pb-4 text-xl font-bold">Columns</h2>
         <motion.div className="flex gap-4">
           {currentBoard.columns.map((col) => (
-            <Column key={col.index} board={currentBoard} column={col} />
+            <Column key={col.index} boardId={currentBoardId} column={col} />
           ))}
 
           <motion.div className="flex gap-4" layout>
-            <CreateColumnForm board={currentBoard} jsx="block" />
+            <CreateColumnForm boardId={currentBoardId} jsx="block" />
             <DeleteTaskZone board={currentBoard} />
           </motion.div>
         </motion.div>

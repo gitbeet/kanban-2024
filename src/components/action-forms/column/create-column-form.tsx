@@ -1,5 +1,5 @@
 import React, { type ChangeEvent, useRef, useState } from "react";
-import type { BoardType, ColumnType } from "~/types";
+import type { ColumnType } from "~/types";
 import { v4 as uuid } from "uuid";
 import { createColumnAction } from "~/actions";
 import { CreateButton } from "~/components/ui/submit-button";
@@ -8,26 +8,30 @@ import InputField from "~/components/ui/input-field";
 import { motion } from "framer-motion";
 import { useBoards } from "~/context/boards-context";
 const CreateColumnForm = ({
-  board,
+  boardId,
   jsx = "input",
 }: {
-  board: BoardType;
+  boardId: string;
   jsx?: "input" | "block";
 }) => {
   const createColumnRef = useRef<HTMLFormElement>(null);
-  const { setOptimisticBoards } = useBoards();
+  const { setOptimisticBoards, optimisticBoards } = useBoards();
 
   const [columnName, setColumnName] = useState("");
   const [error, setError] = useState("");
   const [active, setActive] = useState(false);
 
+  const currentBoard = optimisticBoards.find((board) => board.id === boardId);
+  if (!currentBoard)
+    return <h1>Error finding the current board (placeholder error)</h1>;
+
   const clientAction = async () => {
-    const maxIndex = Math.max(...board.columns.map((c) => c.index));
+    const maxIndex = Math.max(...currentBoard.columns.map((c) => c.index));
     createColumnRef.current?.reset();
     const newColumn: ColumnType = {
       id: uuid(),
       index: maxIndex + 1,
-      boardId: board.id,
+      boardId: boardId,
       name: columnName,
       tasks: [],
       createdAt: new Date(),
@@ -39,7 +43,7 @@ const CreateColumnForm = ({
       return setError(result.error.issues[0]?.message ?? "An error occured");
     }
 
-    setOptimisticBoards({ action: "createColumn", board, column: newColumn });
+    setOptimisticBoards({ action: "createColumn", boardId, column: newColumn });
 
     const response = await createColumnAction(newColumn);
     if (response?.error) {
@@ -60,7 +64,7 @@ const CreateColumnForm = ({
     <>
       {jsx === "input" && (
         <form className="flex" ref={createColumnRef} action={clientAction}>
-          <input type="hidden" name="board-id" value={board.id} />
+          <input type="hidden" name="board-id" value={boardId} />
           <InputField
             value={columnName}
             onChange={handleColumnName}

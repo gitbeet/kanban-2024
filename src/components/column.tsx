@@ -11,10 +11,10 @@ import CreateTaskForm from "./action-forms/task/create-task-form";
 import { SwitchTaskActionSchema } from "~/zod-schemas";
 import { useBoards } from "~/context/boards-context";
 const Column = ({
-  board,
+  boardId,
   column,
 }: {
-  board: BoardType;
+  boardId: string;
   column: ColumnType;
 }) => {
   const [active, setActive] = useState(false);
@@ -148,16 +148,16 @@ const Column = ({
       return;
     }
 
-    setOptimisticBoards({
-      action: "switchTaskColumn",
-      board,
-      column,
-      taskId,
-      oldColumnId,
-      newColumnId,
-      oldColumnIndex: Number(oldColumnIndex),
-      newColumnIndex: Number(newColumnIndex),
-    });
+    // setOptimisticBoards({
+    //   action: "switchTaskColumn",
+    //   board,
+    //   column,
+    //   taskId,
+    //   oldColumnId,
+    //   newColumnId,
+    //   oldColumnIndex: Number(oldColumnIndex),
+    //   newColumnIndex: Number(newColumnIndex),
+    // });
 
     const response = await switchColumnAction(
       taskId,
@@ -188,14 +188,14 @@ const Column = ({
             ({column.tasks.length})
           </span>
         </h3>
-        <DeleteColumnForm board={board} column={column} />
+        <DeleteColumnForm boardId={boardId} columnId={column.id} />
         {/* <RenameColumnForm
             board={board}
             column={column}
           /> */}
       </div>
       <div>
-        {column.tasks
+        {/* {column.tasks
           .sort((a, b) => a.index - b.index)
           .map((task) => (
             <Task
@@ -205,7 +205,7 @@ const Column = ({
               task={task}
               handleDragStart={handleDragStart}
             />
-          ))}
+          ))} */}
         <DropIndicator
           beforeId="-1"
           columnId={column.id}
@@ -214,7 +214,7 @@ const Column = ({
         <div className="h-4"></div>
       </div>
 
-      <CreateTaskForm board={board} column={column} />
+      {/* <CreateTaskForm board={board} column={column} /> */}
     </div>
   );
 };

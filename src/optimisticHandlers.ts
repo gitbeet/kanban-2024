@@ -36,12 +36,12 @@ const deleteBoard = (state: BoardType[], boardId?: string) => {
 // Columns
 const createColumn = (
   state: BoardType[],
-  board?: BoardType,
+  boardId?: string,
   column?: ColumnType,
 ) => {
-  if (!board || !column) return state;
+  if (!boardId || !column) return state;
   return state.map((b) =>
-    b.id === board.id ? { ...b, columns: [...b.columns, column] } : b,
+    b.id === boardId ? { ...b, columns: [...b.columns, column] } : b,
   );
 };
 
@@ -65,13 +65,13 @@ const renameColumn = (
 
 const deleteColumn = (
   state: BoardType[],
-  board?: BoardType,
-  column?: ColumnType,
+  boardId?: string,
+  columnId?: string,
 ) => {
-  if (!board || !column) return state;
+  if (!boardId || !columnId) return state;
   return state.map((b) =>
-    b.id === board.id
-      ? { ...b, columns: b.columns.filter((c) => c.id !== column.id) }
+    b.id === boardId
+      ? { ...b, columns: b.columns.filter((c) => c.id !== columnId) }
       : b,
   );
 };
@@ -293,11 +293,11 @@ export const handleOptimisticUpdate = (
     case "deleteBoard":
       return deleteBoard(state, boardId);
     case "createColumn":
-      return createColumn(state, board, column);
+      return createColumn(state, boardId, column);
     case "renameColumn":
       return renameColumn(state, board, column);
     case "deleteColumn":
-      return deleteColumn(state, board, column);
+      return deleteColumn(state, boardId, columnId);
     case "createTask":
       return createTask(state, board, column, task);
     case "renameTask":
