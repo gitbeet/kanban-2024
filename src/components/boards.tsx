@@ -10,7 +10,7 @@ import { useBoards } from "~/context/boards-context";
 const Boards = () => {
   const { user } = useUser();
 
-  const { optimisticBoards, setOptimisticBoards } = useBoards();
+  const { optimisticBoards } = useBoards();
 
   const [currentBoardId, setCurrentBoardId] = useState<string | null>(
     optimisticBoards?.[0]?.id ?? null,

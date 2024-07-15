@@ -1,11 +1,6 @@
 "use client";
 import { type DragEvent, useState, useTransition } from "react";
-import type {
-  TaskType,
-  ColumnType,
-  BoardType,
-  SetOptimisticType,
-} from "../types";
+import type { TaskType, ColumnType, BoardType } from "../types";
 import Task from "../components/task";
 import { switchColumnAction } from "~/actions";
 import DropIndicator from "./drop-indicator";
@@ -197,7 +192,6 @@ const Column = ({
         {/* <RenameColumnForm
             board={board}
             column={column}
-            setOptimisticBoards={setOptimisticBoards}
           /> */}
       </div>
       <div>

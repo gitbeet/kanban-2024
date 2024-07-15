@@ -1,28 +1,23 @@
 import React, { useState } from "react";
 import { deleteTaskAction } from "~/actions";
 import { DeleteButton } from "~/components/ui/submit-button";
-import type {
-  BoardType,
-  ColumnType,
-  SetOptimisticType,
-  TaskType,
-} from "~/types";
+import { useBoards } from "~/context/boards-context";
+import type { BoardType, ColumnType, TaskType } from "~/types";
 
 const DeleteTaskForm = ({
   board,
   column,
   task,
-  setOptimistic,
 }: {
   board: BoardType;
   column: ColumnType;
   task: TaskType;
-  setOptimistic: SetOptimisticType;
 }) => {
   const [error, setError] = useState("");
+  const { setOptimisticBoards } = useBoards();
 
   const clientAction = async () => {
-    setOptimistic({
+    setOptimisticBoards({
       action: "deleteTask",
       board: board,
       columnId: column.id,

@@ -2,21 +2,21 @@ import { type ChangeEvent, useRef, useState } from "react";
 import { renameColumnAction } from "~/actions";
 import InputField from "~/components/ui/input-field";
 import { EditButton } from "~/components/ui/submit-button";
-import type { BoardType, ColumnType, SetOptimisticType } from "~/types";
+import { useBoards } from "~/context/boards-context";
+import type { BoardType, ColumnType } from "~/types";
 import { ColumnSchema } from "~/zod-schemas";
 
 const RenameColumnForm = ({
   board,
   column,
-  setOptimistic,
 }: {
   board: BoardType;
   column: ColumnType;
-  setOptimistic: SetOptimisticType;
 }) => {
   const renameColumnRef = useRef<HTMLFormElement>(null);
   const [newColumnName, setNewColumnName] = useState("");
   const [error, setError] = useState("");
+  const { setOptimisticBoards } = useBoards();
 
   const handleColumnNameChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -43,7 +43,7 @@ const RenameColumnForm = ({
             result.error.issues[0]?.message ?? "An error occured",
           );
         }
-        setOptimistic({
+        setOptimisticBoards({
           action: "renameColumn",
           board,
           column: renamedColumn,

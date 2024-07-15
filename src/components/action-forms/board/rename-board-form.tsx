@@ -4,19 +4,15 @@ import { type ChangeEvent, useRef, useState } from "react";
 import { renameBoardAction } from "~/actions";
 import InputField from "~/components/ui/input-field";
 import { EditButton } from "~/components/ui/submit-button";
-import type { BoardType, SetOptimisticType } from "~/types";
+import { useBoards } from "~/context/boards-context";
+import type { BoardType } from "~/types";
 import { BoardSchema } from "~/zod-schemas";
 
-const RenameBoardForm = ({
-  board,
-  setOptimistic,
-}: {
-  board: BoardType;
-  setOptimistic: SetOptimisticType;
-}) => {
+const RenameBoardForm = ({ board }: { board: BoardType }) => {
   const [newBoardName, setNewBoardName] = useState("");
   const [error, setError] = useState("");
   const renameBoardRef = useRef<HTMLFormElement>(null);
+  const { setOptimisticBoards } = useBoards();
 
   const clientAction = async () => {
     renameBoardRef.current?.reset();
@@ -32,7 +28,7 @@ const RenameBoardForm = ({
       return setError(result.error.issues[0]?.message ?? "An error occured");
     }
 
-    setOptimistic({ action: "renameBoard", board: renamedBoard });
+    setOptimisticBoards({ action: "renameBoard", board: renamedBoard });
 
     // Server error check
 

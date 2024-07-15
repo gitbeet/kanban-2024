@@ -1,27 +1,21 @@
 import React, { useState } from "react";
 import { toggleTaskCompletedAction } from "~/actions";
 import { ToggleButton } from "~/components/ui/submit-button";
-import type {
-  BoardType,
-  ColumnType,
-  SetOptimisticType,
-  TaskType,
-} from "~/types";
+import { useBoards } from "~/context/boards-context";
+import type { BoardType, ColumnType, TaskType } from "~/types";
 import { TaskSchema } from "~/zod-schemas";
 
 const ToggleTaskForm = ({
   board,
   column,
   task,
-  setOptimistic,
 }: {
   board: BoardType;
   column: ColumnType;
   task: TaskType;
-  setOptimistic: SetOptimisticType;
 }) => {
   const [error, setError] = useState("");
-
+  const { setOptimisticBoards } = useBoards();
   const clientAction = async () => {
     // Client validation
     const result = TaskSchema.safeParse(task);
@@ -29,7 +23,7 @@ const ToggleTaskForm = ({
       return setError(result.error.issues[0]?.message ?? "An error occured");
     }
 
-    setOptimistic({ action: "toggleTask", board, column, task });
+    setOptimisticBoards({ action: "toggleTask", board, column, task });
     const response = await toggleTaskCompletedAction(task);
     if (response?.error) {
       setError(response.error);

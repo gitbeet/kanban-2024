@@ -1,21 +1,21 @@
 import React, { type ChangeEvent, useRef, useState } from "react";
-import type { BoardType, ColumnType, SetOptimisticType } from "~/types";
+import type { BoardType, ColumnType } from "~/types";
 import { v4 as uuid } from "uuid";
 import { createColumnAction } from "~/actions";
 import { CreateButton } from "~/components/ui/submit-button";
 import { ColumnSchema } from "~/zod-schemas";
 import InputField from "~/components/ui/input-field";
 import { motion } from "framer-motion";
+import { useBoards } from "~/context/boards-context";
 const CreateColumnForm = ({
   board,
-  setOptimistic,
   jsx = "input",
 }: {
   board: BoardType;
-  setOptimistic: SetOptimisticType;
   jsx?: "input" | "block";
 }) => {
   const createColumnRef = useRef<HTMLFormElement>(null);
+  const { setOptimisticBoards } = useBoards();
 
   const [columnName, setColumnName] = useState("");
   const [error, setError] = useState("");
@@ -39,7 +39,7 @@ const CreateColumnForm = ({
       return setError(result.error.issues[0]?.message ?? "An error occured");
     }
 
-    setOptimistic({ action: "createColumn", board, column: newColumn });
+    setOptimisticBoards({ action: "createColumn", board, column: newColumn });
 
     const response = await createColumnAction(newColumn);
     if (response?.error) {

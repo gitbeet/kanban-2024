@@ -2,29 +2,23 @@ import React, { type ChangeEvent, useRef, useState } from "react";
 import { renameTaskAction } from "~/actions";
 import InputField from "~/components/ui/input-field";
 import { EditButton } from "~/components/ui/submit-button";
-import type {
-  BoardType,
-  ColumnType,
-  SetOptimisticType,
-  TaskType,
-} from "~/types";
+import { useBoards } from "~/context/boards-context";
+import type { BoardType, ColumnType, TaskType } from "~/types";
 import { TaskSchema } from "~/zod-schemas";
 
 const RenameTaskForm = ({
   board,
   column,
   task,
-  setOptimistic,
 }: {
   board: BoardType;
   column: ColumnType;
   task: TaskType;
-  setOptimistic: SetOptimisticType;
 }) => {
   const renameTaskRef = useRef<HTMLFormElement>(null);
   const [newTaskName, setNewTaskName] = useState("");
   const [error, setError] = useState("");
-
+  const { setOptimisticBoards } = useBoards();
   const handleTaskNameChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
@@ -45,7 +39,7 @@ const RenameTaskForm = ({
     if (!result.success) {
       return setError(result.error.issues[0]?.message ?? "An error occured");
     }
-    setOptimistic({
+    setOptimisticBoards({
       action: "renameTask",
       board,
       column,

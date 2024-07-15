@@ -1,11 +1,6 @@
 import { motion } from "framer-motion";
 import { type ChangeEvent, useRef, useState } from "react";
-import type {
-  BoardType,
-  ColumnType,
-  SetOptimisticType,
-  TaskType,
-} from "~/types";
+import type { BoardType, ColumnType, TaskType } from "~/types";
 import { v4 as uuid } from "uuid";
 import { createTaskAction } from "~/actions";
 import SubmitButton from "~/components/ui/submit-button";

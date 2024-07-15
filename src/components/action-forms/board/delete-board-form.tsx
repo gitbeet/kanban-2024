@@ -1,17 +1,13 @@
 import React, { useState } from "react";
 import { deleteBoardAction } from "~/actions";
 import { DeleteButton } from "~/components/ui/submit-button";
-import type { BoardType, SetOptimisticType } from "~/types";
+import { useBoards } from "~/context/boards-context";
+import type { BoardType } from "~/types";
 import { BoardSchema } from "~/zod-schemas";
 
-const DeleteBoardForm = ({
-  board,
-  setOptimistic,
-}: {
-  board: BoardType;
-  setOptimistic: SetOptimisticType;
-}) => {
+const DeleteBoardForm = ({ board }: { board: BoardType }) => {
   const [error, setError] = useState("");
+  const { setOptimisticBoards } = useBoards();
 
   const clientAction = async () => {
     // Not completely sure if check is needed
@@ -23,7 +19,7 @@ const DeleteBoardForm = ({
       console.log(error);
       return;
     }
-    setOptimistic({ action: "deleteBoard", board });
+    setOptimisticBoards({ action: "deleteBoard", board });
     const response = await deleteBoardAction(board.id);
     if (response?.error) {
       return setError(response.error);
