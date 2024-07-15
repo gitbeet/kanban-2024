@@ -2,16 +2,20 @@
 import { useState, useTransition } from "react";
 import { FaTrash } from "react-icons/fa";
 import { deleteTaskAction } from "~/actions";
-import type { BoardType } from "~/types";
 import { motion } from "framer-motion";
 import { useBoards } from "~/context/boards-context";
 
-const DeleteTaskZone = ({ board }: { board: BoardType }) => {
+const DeleteTaskZone = () => {
   const { setOptimisticBoards } = useBoards();
   const [isPending, startTransition] = useTransition();
 
   const [active, setActive] = useState(false);
   const [error, setError] = useState("");
+
+  const { currentBoardId } = useBoards();
+
+  if (!currentBoardId)
+    return <h1>currentBoardId not found (placeholder error)</h1>;
 
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -26,19 +30,19 @@ const DeleteTaskZone = ({ board }: { board: BoardType }) => {
   const handleDragEnd = async (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     const taskId = e.dataTransfer.getData("taskId");
-    const taskIndex = e.dataTransfer.getData("taskIndex");
+    // const taskIndex = e.dataTransfer.getData("taskIndex");
     const columnId = e.dataTransfer.getData("columnId");
 
     // TODO: Client side check needed?
     startTransition(() => {
       setOptimisticBoards({
         action: "deleteTask",
-        board: board,
-        columnId: columnId,
+        boardId: currentBoardId,
+        columnId,
         taskId,
-        oldColumnIndex: Number(taskIndex),
       });
     });
+    setActive(false);
 
     // TODO: Display error
     const response = await deleteTaskAction(taskId);
@@ -47,7 +51,6 @@ const DeleteTaskZone = ({ board }: { board: BoardType }) => {
       console.log(error);
       return;
     }
-    setActive(false);
   };
 
   return (

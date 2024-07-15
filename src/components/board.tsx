@@ -36,7 +36,7 @@ const Board = () => {
 
           <motion.div className="flex gap-4" layout>
             <CreateColumnForm boardId={currentBoardId} jsx="block" />
-            <DeleteTaskZone board={currentBoard} />
+            <DeleteTaskZone />
           </motion.div>
         </motion.div>
       </div>

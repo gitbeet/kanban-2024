@@ -35,7 +35,7 @@ const Task = ({
       <motion.div
         layout
         layoutId={task.id}
-        // onDragStart={(e) => handleDragStart(e, task, column.id)}
+        onDragStart={(e) => handleDragStart(e, task, columnId)}
         draggable
         className="flex shrink-0 cursor-grab items-center justify-between gap-4 rounded-md border border-neutral-700 bg-neutral-800 px-4 py-6 shadow-md"
       >
