@@ -116,15 +116,20 @@ export const createTaskAction = async (newTask: unknown) => {
   await createTask(columnId, taskName);
 };
 
-export const renameTaskAction = async (renamedTask: unknown) => {
-  const result = TaskSchema.safeParse(renamedTask);
+export const renameTaskAction = async (
+  taskId: unknown,
+  newTaskName: unknown,
+) => {
+  const result = TaskSchema.pick({ id: true, name: true }).safeParse({
+    id: taskId,
+    name: newTaskName,
+  });
   if (!result.success) {
     console.log(result.error);
     return { error: result.error.issues[0]?.message };
   }
-  const { id: taskId, name: taskName } = renamedTask as TaskType;
 
-  await renameTask(taskId, taskName);
+  await renameTask(taskId as string, newTaskName as string);
 };
 
 export const deleteTaskAction = async (taskId: unknown) => {

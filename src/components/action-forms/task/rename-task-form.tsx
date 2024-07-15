@@ -7,13 +7,13 @@ import type { BoardType, ColumnType, TaskType } from "~/types";
 import { TaskSchema } from "~/zod-schemas";
 
 const RenameTaskForm = ({
-  board,
-  column,
-  task,
+  boardId,
+  columnId,
+  taskId,
 }: {
-  board: BoardType;
-  column: ColumnType;
-  task: TaskType;
+  boardId: string;
+  columnId: string;
+  taskId: string;
 }) => {
   const renameTaskRef = useRef<HTMLFormElement>(null);
   const [newTaskName, setNewTaskName] = useState("");
@@ -28,26 +28,20 @@ const RenameTaskForm = ({
 
   const clientAction = async () => {
     renameTaskRef.current?.reset();
-    const renamedTask: TaskType = {
-      ...task,
-      name: newTaskName,
-      updatedAt: new Date(),
-    };
 
-    // Client error check
-    const result = TaskSchema.safeParse(renamedTask);
+    const result = TaskSchema.shape.name.safeParse(newTaskName);
     if (!result.success) {
       return setError(result.error.issues[0]?.message ?? "An error occured");
     }
     setOptimisticBoards({
       action: "renameTask",
-      board,
-      column,
-      task: renamedTask,
+      boardId,
+      columnId,
+      taskId,
+      newTaskName,
     });
 
-    // Server error check
-    const response = await renameTaskAction(renamedTask);
+    const response = await renameTaskAction(taskId, newTaskName);
 
     if (response?.error) {
       return setError(response.error);
@@ -63,7 +57,6 @@ const RenameTaskForm = ({
         error={error}
         onChange={handleTaskNameChange}
       />
-      <input type="hidden" name="task-id" value={task.id} />
       <EditButton />
     </form>
   );

@@ -33,6 +33,7 @@ export type OptimisticParams = {
   task?: TaskType;
   columnId?: string;
   taskId?: string;
+  newTaskName?: string;
   oldColumnId?: string;
   newColumnId?: string;
   newColumnIndex?: number;

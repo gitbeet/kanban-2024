@@ -9,6 +9,7 @@ import { motion } from "framer-motion";
 import DeleteTaskForm from "./action-forms/task/delete-task-form";
 import ToggleTaskForm from "./action-forms/task/toggle-task-form";
 import { useBoards } from "~/context/boards-context";
+import RenameTaskForm from "./action-forms/task/rename-task-form";
 
 const Task = ({
   columnId,
@@ -44,11 +45,11 @@ const Task = ({
         >
           {task.name}
         </p>
-        {/* <RenameTaskForm
-          board={board}
-          column={column}
-          task={task}
-        /> */}
+        <RenameTaskForm
+          boardId={currentBoardId}
+          columnId={columnId}
+          taskId={task.id}
+        />
         <DeleteTaskForm
           boardId={currentBoardId}
           columnId={columnId}
