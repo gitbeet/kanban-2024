@@ -28,9 +28,9 @@ const renameBoard = (
   );
 };
 
-const deleteBoard = (state: BoardType[], board?: BoardType) => {
-  if (!board) return state;
-  return state.filter((b) => b.id !== board.id);
+const deleteBoard = (state: BoardType[], boardId?: string) => {
+  if (!boardId) return state;
+  return state.filter((b) => b.id !== boardId);
 };
 
 // Columns
@@ -291,7 +291,7 @@ export const handleOptimisticUpdate = (
     case "renameBoard":
       return renameBoard(state, boardId, newBoardName);
     case "deleteBoard":
-      return deleteBoard(state, board);
+      return deleteBoard(state, boardId);
     case "createColumn":
       return createColumn(state, board, column);
     case "renameColumn":

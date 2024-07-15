@@ -2,16 +2,15 @@ import React, { useState } from "react";
 import { deleteBoardAction } from "~/actions";
 import { DeleteButton } from "~/components/ui/submit-button";
 import { useBoards } from "~/context/boards-context";
-import type { BoardType } from "~/types";
 import { BoardSchema } from "~/zod-schemas";
 
-const DeleteBoardForm = ({ board }: { board: BoardType }) => {
+const DeleteBoardForm = ({ boardId }: { boardId: string }) => {
   const [error, setError] = useState("");
   const { setOptimisticBoards } = useBoards();
 
   const clientAction = async () => {
     // Not completely sure if check is needed
-    const result = BoardSchema.shape.id.safeParse(board.id);
+    const result = BoardSchema.shape.id.safeParse(boardId);
 
     // Fix error display later
     if (!result.success) {
@@ -19,8 +18,8 @@ const DeleteBoardForm = ({ board }: { board: BoardType }) => {
       console.log(error);
       return;
     }
-    setOptimisticBoards({ action: "deleteBoard", board });
-    const response = await deleteBoardAction(board.id);
+    setOptimisticBoards({ action: "deleteBoard", boardId });
+    const response = await deleteBoardAction(boardId);
     if (response?.error) {
       return setError(response.error);
     }
@@ -28,7 +27,7 @@ const DeleteBoardForm = ({ board }: { board: BoardType }) => {
 
   return (
     <form action={clientAction}>
-      <input type="hidden" name="board-id" value={board.id} />
+      <input type="hidden" name="board-id" value={boardId} />
       <DeleteButton />
     </form>
   );

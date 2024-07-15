@@ -5,11 +5,9 @@ import { renameBoardAction } from "~/actions";
 import InputField from "~/components/ui/input-field";
 import { EditButton } from "~/components/ui/submit-button";
 import { useBoards } from "~/context/boards-context";
-import { boards } from "~/server/db/schema";
-import type { BoardType } from "~/types";
 import { BoardSchema } from "~/zod-schemas";
 
-const RenameBoardForm = ({ board }: { board: BoardType }) => {
+const RenameBoardForm = ({ boardId }: { boardId: string }) => {
   const [newBoardName, setNewBoardName] = useState("");
   const [error, setError] = useState("");
   const renameBoardRef = useRef<HTMLFormElement>(null);
@@ -17,9 +15,9 @@ const RenameBoardForm = ({ board }: { board: BoardType }) => {
 
   const clientAction = async () => {
     renameBoardRef.current?.reset();
-    // Client error check
+
     const result = BoardSchema.pick({ id: true, name: true }).safeParse({
-      id: board.id,
+      id: boardId,
       name: newBoardName,
     });
     if (!result.success) {
@@ -28,13 +26,11 @@ const RenameBoardForm = ({ board }: { board: BoardType }) => {
 
     setOptimisticBoards({
       action: "renameBoard",
-      boardId: board.id,
+      boardId: boardId,
       newBoardName,
     });
 
-    // Server error check
-
-    const response = await renameBoardAction(board.id, newBoardName);
+    const response = await renameBoardAction(boardId, newBoardName);
     if (response?.error) {
       return setError(response.error);
     }
@@ -49,7 +45,7 @@ const RenameBoardForm = ({ board }: { board: BoardType }) => {
 
   return (
     <form ref={renameBoardRef} action={clientAction} className="flex">
-      <input type="hidden" name="board-id" value={board.id} />
+      <input type="hidden" name="board-id" value={boardId} />
       <InputField
         value={newBoardName}
         onChange={handleBoardNameChange}

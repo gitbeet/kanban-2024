@@ -17,14 +17,14 @@ const Board = () => {
     (board) => board.id === currentBoardId,
   );
   if (!user?.id) return <h1>Please log in (placeholder error)</h1>;
-  if (!currentBoard)
+  if (!currentBoard || !currentBoardId)
     return <h1>No current board available (placeholder error)</h1>;
   return (
     <section className="overflow-x-scroll">
       <div className="flex items-start gap-4">
         <h2 className="pb-4 text-xl">{currentBoard.name}</h2>
-        <RenameBoardForm board={currentBoard} />
-        <DeleteBoardForm board={currentBoard} />
+        <RenameBoardForm boardId={currentBoardId} />
+        <DeleteBoardForm boardId={currentBoardId} />
         <CreateColumnForm board={currentBoard} />
       </div>
       <div className="shrink-0">
