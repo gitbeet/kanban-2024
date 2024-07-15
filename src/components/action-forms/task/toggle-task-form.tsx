@@ -2,29 +2,27 @@ import React, { useState } from "react";
 import { toggleTaskCompletedAction } from "~/actions";
 import { ToggleButton } from "~/components/ui/submit-button";
 import { useBoards } from "~/context/boards-context";
-import type { BoardType, ColumnType, TaskType } from "~/types";
-import { TaskSchema } from "~/zod-schemas";
+import type { TaskType } from "~/types";
 
 const ToggleTaskForm = ({
-  board,
-  column,
+  boardId,
+  columnId,
   task,
 }: {
-  board: BoardType;
-  column: ColumnType;
+  boardId: string;
+  columnId: string;
   task: TaskType;
 }) => {
   const [error, setError] = useState("");
   const { setOptimisticBoards } = useBoards();
   const clientAction = async () => {
-    // Client validation
-    const result = TaskSchema.safeParse(task);
-    if (!result.success) {
-      return setError(result.error.issues[0]?.message ?? "An error occured");
-    }
-
-    setOptimisticBoards({ action: "toggleTask", board, column, task });
-    const response = await toggleTaskCompletedAction(task);
+    setOptimisticBoards({
+      action: "toggleTask",
+      boardId,
+      columnId,
+      taskId: task.id,
+    });
+    const response = await toggleTaskCompletedAction(task.id);
     if (response?.error) {
       setError(response.error);
       console.log(error);
@@ -33,7 +31,6 @@ const ToggleTaskForm = ({
   };
   return (
     <form action={clientAction}>
-      <input type="hidden" name="task-id" value={task.id} />
       <input
         readOnly
         type="hidden"

@@ -190,13 +190,20 @@ export async function deleteTask(taskId: string) {
   revalidatePath("/");
 }
 
-export async function toggleTaskCompleted(taskId: string, completed: boolean) {
+export async function toggleTaskCompleted(taskId: string) {
   const user = auth();
   if (!user.userId) throw new Error("Unauthorized");
   // Check if task belongs to user?
+
+  const task = await db.query.tasks.findFirst({
+    where: (model, { eq }) => eq(model.id, taskId),
+  });
+
+  if (!task) throw new Error("Task not found!");
+
   await db
     .update(tasks)
-    .set({ completed, updatedAt: new Date() })
+    .set({ completed: !task.completed, updatedAt: new Date() })
     .where(eq(tasks.id, taskId));
   revalidatePath("/");
 }

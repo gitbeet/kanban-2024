@@ -141,13 +141,12 @@ export const deleteTaskAction = async (taskId: unknown) => {
   await deleteTask(taskId as string);
 };
 
-export const toggleTaskCompletedAction = async (task: unknown) => {
-  const result = TaskSchema.safeParse(task);
+export const toggleTaskCompletedAction = async (taskId: unknown) => {
+  const result = TaskSchema.shape.id.safeParse(taskId);
   if (!result.success) {
     return { error: result.error.issues[0]?.message };
   }
-  const { id, completed } = task as TaskType;
-  await toggleTaskCompleted(id, !completed);
+  await toggleTaskCompleted(taskId as string);
 };
 
 // Not sure if its better to pass an object as args or pass args separately

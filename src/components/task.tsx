@@ -39,7 +39,11 @@ const Task = ({
         draggable
         className="flex shrink-0 cursor-grab items-center justify-between gap-4 rounded-md border border-neutral-700 bg-neutral-800 px-4 py-6 shadow-md"
       >
-        {/* <ToggleTaskForm board={board} column={column} task={task} /> */}
+        <ToggleTaskForm
+          boardId={currentBoardId}
+          columnId={columnId}
+          task={task}
+        />
         <p
           className={` ${task.completed ? "text-neutral-400 line-through" : ""} w-full`}
         >

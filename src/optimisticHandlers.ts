@@ -164,21 +164,21 @@ const deleteTask = (
 
 const toggleTask = (
   state: BoardType[],
-  board?: BoardType,
-  column?: ColumnType,
-  task?: TaskType,
+  boardId?: string,
+  columnId?: string,
+  taskId?: string,
 ) => {
-  if (!board || !column || !task) return state;
+  if (!boardId || !columnId || !taskId) return state;
   return state.map((b) =>
-    b.id === board.id
+    b.id === boardId
       ? {
           ...b,
           columns: b.columns.map((c) =>
-            c.id === column.id
+            c.id === columnId
               ? {
                   ...c,
                   tasks: c.tasks.map((t) =>
-                    t.id === task.id ? { ...t, completed: !t.completed } : t,
+                    t.id === taskId ? { ...t, completed: !t.completed } : t,
                   ),
                 }
               : c,
@@ -318,7 +318,7 @@ export const handleOptimisticUpdate = (
     case "deleteTask":
       return deleteTask(state, boardId, columnId, taskId);
     case "toggleTask":
-      return toggleTask(state, board, column, task);
+      return toggleTask(state, boardId, columnId, taskId);
     case "switchTaskColumn":
       return switchTaskColumn(
         state,
