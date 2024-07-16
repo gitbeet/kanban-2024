@@ -28,7 +28,7 @@ const BoardsContext = createContext<BoardsContextType | undefined>(undefined);
 export const useBoards = () => {
   const context = useContext(BoardsContext);
   if (!context) {
-    throw new Error("Boards context not found.");
+    throw new Error("Boards context   not found.");
   }
   return context;
 };

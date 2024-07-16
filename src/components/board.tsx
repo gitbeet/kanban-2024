@@ -21,9 +21,10 @@ const Board = () => {
     return <h1>No current board available (placeholder error)</h1>;
   return (
     // Key prop for framer-motion
-    <section
+    <motion.section
+      layout
       key={currentBoardId}
-      className="grid grow grid-rows-[1fr,100%] overflow-scroll"
+      className="grid flex-1 grow grid-rows-[1fr,100%] overflow-scroll"
     >
       <div className="flex items-center gap-4 border-b">
         <RenameBoardForm boardId={currentBoardId} />
@@ -40,7 +41,7 @@ const Board = () => {
           <DeleteTaskZone />
         </motion.div>
       </motion.div>
-    </section>
+    </motion.section>
   );
 };
 

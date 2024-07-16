@@ -6,6 +6,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { BoardsProvider } from "~/context/boards-context";
 import { getBoards } from "~/server/queries";
 import TopNav from "~/components/top-nav";
+import { UIProvider } from "~/context/ui-context";
 
 export const metadata: Metadata = {
   title: "KANBAN 2024",
@@ -19,14 +20,16 @@ export default async function RootLayout({
   const boards = await getBoards();
   return (
     <ClerkProvider>
-      <BoardsProvider boards={boards}>
-        <html lang="en" className={`${GeistSans.variable}`}>
-          <body className="mx-auto grid h-[92dvh] max-w-[1600px] grid-rows-[1fr,100%] bg-neutral-900 text-white">
-            <TopNav />
-            {children}
-          </body>
-        </html>
-      </BoardsProvider>
+      <UIProvider>
+        <BoardsProvider boards={boards}>
+          <html lang="en" className={`${GeistSans.variable}`}>
+            <body className="mx-auto grid h-[92dvh] max-w-[1600px] grid-rows-[1fr,100%] bg-neutral-900 text-white">
+              <TopNav />
+              {children}
+            </body>
+          </html>
+        </BoardsProvider>
+      </UIProvider>
     </ClerkProvider>
   );
 }

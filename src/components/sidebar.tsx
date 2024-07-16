@@ -2,11 +2,18 @@
 
 import React from "react";
 import { useBoards } from "~/context/boards-context";
+import { useUI } from "~/context/ui-context";
+import { motion } from "framer-motion";
+import { FaEye, FaEyeSlash } from "react-icons/fa6";
 
 const Sidebar = () => {
+  const { showSidebar, setShowSidebar } = useUI();
   const { optimisticBoards, setCurrentBoardId } = useBoards();
   return (
-    <section className="w-64 shrink-0 border-r">
+    <motion.section
+      layout
+      className={`relative p-4 ${showSidebar ? "ml-0 translate-x-0" : "-mr-64 -translate-x-64"} w-64 border-r transition-all duration-300`}
+    >
       <div className="h-12"></div>
       <h2 className="text-xl font-medium">
         All boards ({optimisticBoards.length})
@@ -25,8 +32,16 @@ const Sidebar = () => {
       <div className="h-16"></div>
 
       <p>Dark mode button</p>
-      <p>Hide sidebar</p>
-    </section>
+      {/* <p onClick={() => setShowSidebar(false)}>Hide sidebar</p> */}
+      <p
+        onClick={() =>
+          showSidebar ? setShowSidebar(false) : setShowSidebar(true)
+        }
+        className="absolute bottom-12 right-0 translate-x-full rounded border bg-neutral-800 px-4 py-3"
+      >
+        {showSidebar ? <FaEyeSlash /> : <FaEye />}
+      </p>
+    </motion.section>
   );
 };
 
