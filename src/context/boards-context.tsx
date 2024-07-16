@@ -15,6 +15,7 @@ interface BoardsContextType {
   setOptimisticBoards: SetOptimisticType;
   currentBoardId: string | null;
   setCurrentBoardId: React.Dispatch<React.SetStateAction<string | null>>;
+  getCurrentBoard: () => BoardType | undefined;
 }
 
 interface BoardsProviderProps {
@@ -45,6 +46,14 @@ export const BoardsProvider: React.FC<BoardsProviderProps> = ({
     optimisticBoards?.[0]?.id ?? null,
   );
 
+  const getCurrentBoard = () => {
+    const currentBoard = optimisticBoards.find(
+      (board) => board.id === currentBoardId,
+    );
+
+    return currentBoard;
+  };
+
   return (
     <BoardsContext.Provider
       value={{
@@ -52,6 +61,7 @@ export const BoardsProvider: React.FC<BoardsProviderProps> = ({
         setOptimisticBoards,
         currentBoardId,
         setCurrentBoardId,
+        getCurrentBoard,
       }}
     >
       {children}

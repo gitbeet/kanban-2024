@@ -20,26 +20,26 @@ const Board = () => {
   if (!currentBoard || !currentBoardId)
     return <h1>No current board available (placeholder error)</h1>;
   return (
-    <section className="overflow-x-scroll">
-      <div className="flex items-start gap-4">
-        <h2 className="pb-4 text-xl">{currentBoard.name}</h2>
+    // Key prop for framer-motion
+    <section
+      key={currentBoardId}
+      className="grid grid-rows-[1fr,100%] overflow-scroll"
+    >
+      <div className="flex items-center gap-4 border-b">
         <RenameBoardForm boardId={currentBoardId} />
         <DeleteBoardForm boardId={currentBoardId} />
         <CreateColumnForm boardId={currentBoardId} />
       </div>
-      <div className="shrink-0">
-        <h2 className="pb-4 text-xl font-bold">Columns</h2>
-        <motion.div className="flex gap-4">
-          {currentBoard.columns.map((col) => (
-            <Column key={col.index} boardId={currentBoardId} column={col} />
-          ))}
+      <motion.div className="flex gap-4">
+        {currentBoard.columns.map((col) => (
+          <Column key={col.index} boardId={currentBoardId} column={col} />
+        ))}
 
-          <motion.div className="flex gap-4" layout>
-            <CreateColumnForm boardId={currentBoardId} jsx="block" />
-            <DeleteTaskZone />
-          </motion.div>
+        <motion.div className="flex gap-4" layout>
+          <CreateColumnForm boardId={currentBoardId} jsx="block" />
+          <DeleteTaskZone />
         </motion.div>
-      </div>
+      </motion.div>
     </section>
   );
 };

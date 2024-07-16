@@ -10,8 +10,10 @@ const SelectBoard = () => {
   };
   return (
     <>
-      <h2>Select board</h2>
-      <select onChange={handleBoardChange}>
+      <select
+        className="rounded-md bg-neutral-800 px-4 py-2 text-2xl text-white"
+        onChange={handleBoardChange}
+      >
         {selectBoards.map((board) => (
           <option value={board.id} key={board.id}>
             {board.name}
