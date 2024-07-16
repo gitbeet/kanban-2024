@@ -23,7 +23,7 @@ const Board = () => {
     // Key prop for framer-motion
     <section
       key={currentBoardId}
-      className="grid grid-rows-[1fr,100%] overflow-scroll"
+      className="grid grow grid-rows-[1fr,100%] overflow-scroll"
     >
       <div className="flex items-center gap-4 border-b">
         <RenameBoardForm boardId={currentBoardId} />
