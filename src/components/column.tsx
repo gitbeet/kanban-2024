@@ -81,6 +81,8 @@ const Column = ({
 
     indicators.forEach((i) => {
       i.style.opacity = "0";
+      i.style.height = "0.375rem";
+      i.style.marginBlock = "0";
     });
   };
 
@@ -92,6 +94,8 @@ const Column = ({
     const el = getNearestIndicator(e, indicators);
     if (!el.element) return;
     el.element.style.opacity = "1";
+    el.element.style.height = "4rem";
+    el.element.style.marginBlock = "0.5rem";
   };
 
   const getNearestIndicator = (e: DragEvent, indicators: HTMLElement[]) => {
@@ -181,7 +185,7 @@ const Column = ({
       // hard coded width for transition animation
       className={`${active ? "bg-neutral-800" : ""} min-h-screen w-80 shrink-0 rounded-md px-2 pt-4`}
     >
-      <div className="flex items-center justify-between gap-4 pb-12">
+      <div className="flex items-center justify-between gap-4 px-4 pb-4">
         <h3 className="flex items-center text-lg">
           {/* hard coded width to avoid shifting of column name */}
           <span className="w-8 font-normal text-neutral-400">

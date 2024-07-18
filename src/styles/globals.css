@@ -3,21 +3,18 @@
 @tailwind utilities;
 
 input,
-select {
+select,
+textarea {
   @apply focus:outline-none;
 }
 
 .input,
 .input-readonly {
-  @apply rounded-md border-2 border-transparent px-2 py-1.5 text-white;
+  @apply rounded-md border-2 border-transparent bg-transparent px-2 py-1.5 text-white;
 }
 
 .input {
-  @apply bg-neutral-800 focus:border-sky-400;
-}
-
-.input-readonly {
-  @apply bg-neutral-900;
+  @apply focus:border-sky-400;
 }
 
 /* RESET */

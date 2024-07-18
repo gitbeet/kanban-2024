@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/ban-types */
 "use client";
 
-import type { BoardType, ColumnType, TaskType } from "../types";
+import type { TaskType } from "../types";
 
 import DropIndicator from "./drop-indicator";
 import { motion } from "framer-motion";
@@ -10,6 +10,7 @@ import DeleteTaskForm from "./action-forms/task/delete-task-form";
 import ToggleTaskForm from "./action-forms/task/toggle-task-form";
 import { useBoards } from "~/context/boards-context";
 import RenameTaskForm from "./action-forms/task/rename-task-form";
+import { useState } from "react";
 
 const Task = ({
   columnId,
@@ -20,7 +21,8 @@ const Task = ({
   task: TaskType;
   handleDragStart: Function;
 }) => {
-  const { currentBoardId, optimisticBoards } = useBoards();
+  const { currentBoardId } = useBoards();
+  const [draggable, setDraggable] = useState(false);
 
   if (!currentBoardId)
     return <h1>No currentboardId found (placeholder error)</h1>;
@@ -32,33 +34,33 @@ const Task = ({
         beforeIndex={String(task.index)}
         columnId={task.columnId}
       />
+      {/* <textarea className="text-black" /> */}
       <motion.div
         layout
         layoutId={task.id}
         onDragStart={(e) => handleDragStart(e, task, columnId)}
-        draggable
-        className="flex shrink-0 cursor-grab items-center justify-between gap-4 rounded-lg border border-neutral-700 bg-neutral-700 px-4 py-3 shadow-md"
+        draggable={draggable}
+        className="group flex shrink-0 cursor-grab items-center justify-between gap-4 rounded-lg border-2 border-neutral-700 border-transparent bg-neutral-700 px-4 py-3 shadow-md hover:border-sky-300"
       >
         <ToggleTaskForm
           boardId={currentBoardId}
           columnId={columnId}
           task={task}
         />
-        <p
-          className={` ${task.completed ? "text-neutral-400 line-through" : ""} w-full`}
-        >
-          {task.name}
-        </p>
-        {/* <RenameTaskForm
+
+        <RenameTaskForm
+          setDraggable={setDraggable}
           boardId={currentBoardId}
           columnId={columnId}
-          taskId={task.id}
+          task={task}
         />
-        <DeleteTaskForm
-          boardId={currentBoardId}
-          columnId={columnId}
-          taskId={task.id}
-        /> */}
+        <div className="pointer-events-none opacity-0 group-hover:pointer-events-auto group-hover:opacity-100">
+          <DeleteTaskForm
+            boardId={currentBoardId}
+            columnId={columnId}
+            taskId={task.id}
+          />
+        </div>
       </motion.div>
     </>
   );

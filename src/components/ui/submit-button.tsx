@@ -49,6 +49,16 @@ export const CreateButton = () => (
   <SubmitButton icon={<FaPlus className="text-teal-300" />} />
 );
 
+export const SaveButton = ({ error }: { error: string | boolean }) => (
+  <button
+    disabled={!!error}
+    type="submit"
+    className={`flex h-6 w-6 items-center justify-center rounded-full ${error ? "bg-red-500" : "bg-neutral-600 hover:bg-teal-400"} text-white disabled:opacity-50`}
+  >
+    <FaCheck className="h-3.5 w-3.5 shrink-0" />
+  </button>
+);
+
 export const ToggleButton = ({ checked }: { checked: boolean }) => (
   <button
     type="submit"
