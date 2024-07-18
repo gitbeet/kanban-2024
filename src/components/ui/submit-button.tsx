@@ -30,7 +30,7 @@ const SubmitButton = ({
 export const DeleteButton = () => (
   <button
     type="submit"
-    className="flex h-6 w-6 items-center justify-center text-neutral-400 hover:text-neutral-300"
+    className="flex h-6 w-6 items-center justify-center text-neutral-400 hover:text-red-400"
   >
     <FaTrash className="h-4 w-4 shrink-0" />
   </button>
