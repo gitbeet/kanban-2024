@@ -31,10 +31,12 @@ const Board = () => {
         <DeleteBoardForm boardId={currentBoardId} />
         <CreateColumnForm boardId={currentBoardId} />
       </div>
-      <motion.div className="flex gap-4">
-        {currentBoard.columns.map((col) => (
-          <Column key={col.index} boardId={currentBoardId} column={col} />
-        ))}
+      <motion.div className="flex gap-4 p-8">
+        {currentBoard.columns
+          .sort((a, b) => a.index - b.index)
+          .map((col) => (
+            <Column key={col.index} boardId={currentBoardId} column={col} />
+          ))}
 
         <motion.div className="flex gap-4" layout>
           <CreateColumnForm boardId={currentBoardId} jsx="block" />

@@ -178,17 +178,18 @@ const Column = ({
       onDragLeave={handleDragLeave}
       onDrop={handleDragEnd}
       key={column.id}
+      // hard coded width for transition animation
       className={`${active ? "bg-neutral-800" : ""} min-h-screen w-80 shrink-0 rounded-md px-2 pt-4`}
     >
-      <div className="flex items-center gap-4 pb-12">
-        <h3 className="text-lg">
-          <span className="font-semibold">{column.name} </span>
-          <span className="font-normal text-neutral-400">
+      <div className="flex items-center justify-between gap-4 pb-12">
+        <h3 className="flex items-center text-lg">
+          {/* hard coded width to avoid shifting of column name */}
+          <span className="w-8 font-normal text-neutral-400">
             ({column.tasks.length})
           </span>
+          <RenameColumnForm boardId={boardId} columnId={column.id} />
         </h3>
         <DeleteColumnForm boardId={boardId} columnId={column.id} />
-        <RenameColumnForm boardId={boardId} columnId={column.id} />
       </div>
       <div>
         {column.tasks

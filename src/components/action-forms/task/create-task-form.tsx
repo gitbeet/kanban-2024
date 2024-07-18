@@ -7,6 +7,7 @@ import SubmitButton from "~/components/ui/submit-button";
 import { TaskSchema } from "~/zod-schemas";
 import InputField from "~/components/ui/input-field";
 import { useBoards } from "~/context/boards-context";
+import { FaPlus } from "react-icons/fa6";
 
 const CreateTaskForm = ({
   boardId,
@@ -84,9 +85,10 @@ const CreateTaskForm = ({
         <motion.button
           layout
           onClick={() => setActive(true)}
-          className="font-medium text-white"
+          className="flex items-center gap-2 font-medium text-white"
         >
-          Add +
+          <FaPlus />
+          <span>Add a card</span>
         </motion.button>
       )}
       {active && (

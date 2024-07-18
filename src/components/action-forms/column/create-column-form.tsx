@@ -81,7 +81,7 @@ const CreateColumnForm = ({
         <motion.div
           layout
           onClick={() => setActive(true)}
-          className="grid w-80 shrink-0 cursor-pointer place-content-center rounded-md bg-neutral-800"
+          className="grid h-max w-80 shrink-0 cursor-pointer place-content-center rounded-md bg-neutral-800"
         >
           {!active && <p className="text-xl font-medium">+Column</p>}
           {active && (

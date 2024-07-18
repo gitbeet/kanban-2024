@@ -37,7 +37,7 @@ const Task = ({
         layoutId={task.id}
         onDragStart={(e) => handleDragStart(e, task, columnId)}
         draggable
-        className="flex shrink-0 cursor-grab items-center justify-between gap-4 rounded-md border border-neutral-700 bg-neutral-800 px-4 py-6 shadow-md"
+        className="flex shrink-0 cursor-grab items-center justify-between gap-4 rounded-lg border border-neutral-700 bg-neutral-700 px-4 py-3 shadow-md"
       >
         <ToggleTaskForm
           boardId={currentBoardId}
@@ -49,7 +49,7 @@ const Task = ({
         >
           {task.name}
         </p>
-        <RenameTaskForm
+        {/* <RenameTaskForm
           boardId={currentBoardId}
           columnId={columnId}
           taskId={task.id}
@@ -58,7 +58,7 @@ const Task = ({
           boardId={currentBoardId}
           columnId={columnId}
           taskId={task.id}
-        />
+        /> */}
       </motion.div>
     </>
   );

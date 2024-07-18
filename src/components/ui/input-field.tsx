@@ -13,7 +13,7 @@ const InputField = ({
   name: string;
   onChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   error: string;
-  placeholder: string;
+  placeholder?: string;
   type: InputHTMLAttributes<HTMLInputElement>["type"];
   textarea?: boolean;
 }) => {

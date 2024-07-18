@@ -17,7 +17,9 @@ const DropIndicator = ({
       // data-column --> for specifying which indicators we should get (by column)
       data-column-id={columnId}
       className="my-1 h-1.5 w-full rounded-xl bg-indigo-400 opacity-0"
-    ></div>
+    >
+      {beforeIndex}
+    </div>
   );
 };
 
