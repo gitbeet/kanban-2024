@@ -3,7 +3,7 @@
 import type { ChangeEvent, Dispatch, FormEvent, SetStateAction } from "react";
 import { useEffect, useState, useTransition, useRef } from "react";
 import { renameTaskAction } from "~/actions";
-import { SaveButton } from "~/components/ui/submit-button";
+import { CancelButton, SaveButton } from "~/components/ui/submit-button";
 import { useBoards } from "~/context/boards-context";
 import useClickOutside from "~/hooks/useClickOutside";
 import type { TaskType } from "~/types";
@@ -111,8 +111,17 @@ const RenameTaskForm = ({
           />
           <p className="text-right text-sm text-red-500"> {error}</p>
         </div>
-        <div className={`${isOpen ? "opacity-100" : "opacity-0"} `}>
+        <div
+          className={`${isOpen ? "opacity-100" : "opacity-0"} flex flex-col gap-2`}
+        >
           <SaveButton error={error} />
+          <CancelButton
+            onClick={() => {
+              setError("");
+              setIsOpen(false);
+              setNewTaskName(task.name);
+            }}
+          />
         </div>
       </form>
     </div>

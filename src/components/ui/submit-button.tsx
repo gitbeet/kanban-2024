@@ -49,7 +49,23 @@ export const CreateButton = () => (
   <SubmitButton icon={<FaPlus className="text-teal-300" />} />
 );
 
-export const SaveButton = ({ error }: { error: string | boolean }) => (
+export const CancelButton = ({
+  error,
+  onClick,
+}: {
+  error?: string | boolean;
+  onClick: () => void;
+}) => (
+  <button
+    disabled={!!error}
+    onClick={onClick}
+    className={`flex h-6 w-6 items-center justify-center rounded-full bg-neutral-600 text-white hover:bg-red-500 disabled:opacity-50`}
+  >
+    <FaPlus className="h-4 w-4 shrink-0 rotate-45" />
+  </button>
+);
+
+export const SaveButton = ({ error }: { error?: string | boolean }) => (
   <button
     disabled={!!error}
     type="submit"
