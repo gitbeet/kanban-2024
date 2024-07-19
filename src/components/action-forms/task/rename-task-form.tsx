@@ -8,6 +8,7 @@ import { useBoards } from "~/context/boards-context";
 import useClickOutside from "~/hooks/useClickOutside";
 import type { TaskType } from "~/types";
 import { TaskSchema } from "~/zod-schemas";
+import { resizeTextArea } from "~/utilities/resizeTextArea";
 
 const RenameTaskForm = ({
   boardId,
@@ -20,18 +21,27 @@ const RenameTaskForm = ({
   task: TaskType;
   setDraggable: Dispatch<SetStateAction<boolean>>;
 }) => {
+  // Refs3
+  const testRef = useRef<HTMLTextAreaElement | null>(null);
   const renameTaskRef = useRef<HTMLFormElement>(null);
-  const [newTaskName, setNewTaskName] = useState(task.name);
-  const [error, setError] = useState("");
-  const { setOptimisticBoards } = useBoards();
-  const [_, startTransition] = useTransition();
-
-  const [isOpen, setIsOpen] = useState(false);
   const ref = useClickOutside<HTMLDivElement>(() => {
     if (error) return;
     setIsOpen(false);
   });
+
+  // States
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const [newTaskName, setNewTaskName] = useState(task.name);
+  const [isOpen, setIsOpen] = useState(false);
+  const { setOptimisticBoards } = useBoards();
+  const [pending, startTransition] = useTransition();
+
+  // Dynamic height for the textarea
+  useEffect(() => resizeTextArea(testRef), [task.name, newTaskName, isOpen]);
+  // Disable draggable when renaming so you can interact with the field
+  useEffect(() => setDraggable(!isOpen), [isOpen, setDraggable]);
 
   const handleTaskNameChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -44,13 +54,13 @@ const RenameTaskForm = ({
     e.preventDefault();
     setLoading(true);
 
+    // Client validation
     const result = TaskSchema.shape.name.safeParse(newTaskName);
     if (!result.success) {
       setError(result.error.issues[0]?.message ?? "An error occurred");
       setLoading(false);
       return;
     }
-
     startTransition(() => {
       setOptimisticBoards({
         action: "renameTask",
@@ -61,8 +71,8 @@ const RenameTaskForm = ({
       });
     });
 
+    // Server
     const response = await renameTaskAction(task.id, newTaskName);
-
     if (response?.error) {
       setError(response.error);
       setLoading(false);
@@ -73,16 +83,6 @@ const RenameTaskForm = ({
     setIsOpen(false);
   };
 
-  const testRef = useRef<HTMLTextAreaElement | null>(null);
-
-  const resizeTextArea = () => {
-    if (!testRef.current) return;
-    testRef.current.style.height = "auto";
-    testRef.current.style.height = testRef.current.scrollHeight + "px";
-  };
-
-  useEffect(resizeTextArea, [task.name, newTaskName, isOpen]);
-  useEffect(() => setDraggable(!isOpen), [isOpen, setDraggable]);
   return (
     <div ref={ref} className={`${loading ? "pointer-events-none" : ""} `}>
       <form
@@ -114,8 +114,9 @@ const RenameTaskForm = ({
         <div
           className={`${isOpen ? "opacity-100" : "opacity-0"} flex flex-col gap-2`}
         >
-          <SaveButton error={error} />
+          <SaveButton disabled={!!error} />
           <CancelButton
+            disabled={!!error}
             onClick={() => {
               setError("");
               setIsOpen(false);

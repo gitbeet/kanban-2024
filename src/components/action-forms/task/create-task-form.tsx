@@ -3,7 +3,7 @@ import { type ChangeEvent, useRef, useState } from "react";
 import type { BoardType, ColumnType, TaskType } from "~/types";
 import { v4 as uuid } from "uuid";
 import { createTaskAction } from "~/actions";
-import SubmitButton from "~/components/ui/submit-button";
+import SubmitButton, { Button } from "~/components/ui/submit-button";
 import { TaskSchema } from "~/zod-schemas";
 import InputField from "~/components/ui/input-field";
 import { useBoards } from "~/context/boards-context";
@@ -107,10 +107,12 @@ const CreateTaskForm = ({
             placeholder="New task..."
           />
           <div className="flex items-center gap-2 self-end">
-            <button onClick={handleCancel} type="button">
+            <Button ghost onClick={handleCancel} type="button">
               Cancel
-            </button>
-            <SubmitButton text="Add" />
+            </Button>
+            <SubmitButton>
+              <>Add</>
+            </SubmitButton>
           </div>
         </form>
       )}

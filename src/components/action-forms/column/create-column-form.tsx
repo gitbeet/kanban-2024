@@ -2,11 +2,12 @@ import React, { type ChangeEvent, useRef, useState } from "react";
 import type { ColumnType } from "~/types";
 import { v4 as uuid } from "uuid";
 import { createColumnAction } from "~/actions";
-import { CreateButton } from "~/components/ui/submit-button";
+import { CreateButton, SaveButton } from "~/components/ui/submit-button";
 import { ColumnSchema } from "~/zod-schemas";
 import InputField from "~/components/ui/input-field";
 import { motion } from "framer-motion";
 import { useBoards } from "~/context/boards-context";
+import { FaPlus } from "react-icons/fa6";
 const CreateColumnForm = ({
   boardId,
   jsx = "input",
@@ -81,9 +82,14 @@ const CreateColumnForm = ({
         <motion.div
           layout
           onClick={() => setActive(true)}
-          className="grid h-max w-80 shrink-0 cursor-pointer place-content-center rounded-md bg-neutral-800"
+          className="grid h-max w-80 shrink-0 cursor-pointer place-content-center rounded-md bg-neutral-800 p-4"
         >
-          {!active && <p className="text-xl font-medium">+Column</p>}
+          {!active && (
+            <div className="flex items-center gap-1.5">
+              <FaPlus />
+              <span className="text-xl font-medium">Column</span>
+            </div>
+          )}
           {active && (
             <form className="flex" ref={createColumnRef} action={clientAction}>
               <InputField
@@ -95,7 +101,7 @@ const CreateColumnForm = ({
                 error={error}
               />
 
-              <CreateButton />
+              <SaveButton />
             </form>
           )}
         </motion.div>

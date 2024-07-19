@@ -8,6 +8,7 @@ const InputField = ({
   placeholder,
   type,
   textarea = false,
+  autoFocus = false,
 }: {
   value: string;
   name: string;
@@ -16,6 +17,7 @@ const InputField = ({
   placeholder?: string;
   type: InputHTMLAttributes<HTMLInputElement>["type"];
   textarea?: boolean;
+  autoFocus?: boolean;
 }) => {
   const sharedClasses = `w-full rounded-md border p-2 ${error ? "border-red-500 text-red-500" : "border-neutral-500 text-white"} bg-neutral-800`;
 
@@ -23,6 +25,7 @@ const InputField = ({
     <div className="relative top-4 w-full">
       {!textarea && (
         <input
+          autoFocus={autoFocus}
           type={type}
           name={name}
           value={value}
@@ -33,6 +36,7 @@ const InputField = ({
       )}
       {textarea && (
         <textarea
+          autoFocus={autoFocus}
           name={name}
           value={value}
           rows={2}

@@ -59,8 +59,9 @@ const DeleteTaskZone = () => {
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
       onDrop={handleDragEnd}
-      className={`grid h-48 w-80 shrink-0 place-content-center rounded border text-3xl ${active ? "border-red-500 bg-red-500/10" : ""}`}
+      className={`flex h-48 w-80 shrink-0 items-center justify-center gap-2 rounded-md border ${active ? "border-red-500 bg-red-500/10" : ""}`}
     >
+      <span>Drag to delete</span>
       <FaTrash className={`${active ? "text-red-500" : "text-white"}`} />
     </motion.div>
   );
