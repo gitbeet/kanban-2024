@@ -1,14 +1,12 @@
 import {
   type ChangeEvent,
   FormEvent,
+  useEffect,
   useRef,
   useState,
   useTransition,
 } from "react";
-import { useFormStatus } from "react-dom";
 import { renameColumnAction } from "~/actions";
-import InputField from "~/components/ui/input-field";
-import { EditButton } from "~/components/ui/buttons";
 import { useBoards } from "~/context/boards-context";
 import useClickOutside from "~/hooks/useClickOutside";
 import { ColumnSchema } from "~/zod-schemas";
@@ -32,7 +30,19 @@ const RenameColumnForm = ({
   const [isOpen, setIsOpen] = useState(false);
   const renameColumnRef = useRef<HTMLFormElement>(null);
   const [loading, setLoading] = useState(false);
-  const ref = useClickOutside<HTMLDivElement>(() => setIsOpen(false));
+  // const {
+  //   ref,
+  //   error: useClickOutsideError,
+  //   loading: useClickOutsideLoading,
+  // } = useClickOutside<HTMLDivElement>(async () => {
+  //   if (error) return;
+  //   await clientAction();
+  // });
+
+  // useEffect(() => {
+  //   setError(useClickOutsideError);
+  //   setLoading(useClickOutsideLoading);
+  // }, [useClickOutsideError, useClickOutsideLoading]);
 
   const handleColumnNameChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -41,8 +51,8 @@ const RenameColumnForm = ({
     setNewColumnName(e.target.value);
   };
 
-  const clientAction = async (e: FormEvent) => {
-    e.preventDefault();
+  const clientAction = async (e?: FormEvent) => {
+    e?.preventDefault();
     setLoading(true);
     const result = ColumnSchema.shape.name.safeParse(newColumnName);
     if (!result.success) {
@@ -66,7 +76,7 @@ const RenameColumnForm = ({
   };
 
   return (
-    <div ref={ref} className={`${loading ? "pointer-events-none" : ""}`}>
+    <div className={`${loading ? "pointer-events-none" : ""}`}>
       <form
         ref={renameColumnRef}
         onSubmit={clientAction}

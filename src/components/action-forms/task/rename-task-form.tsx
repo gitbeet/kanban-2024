@@ -30,25 +30,29 @@ const RenameTaskForm = ({
   const { setOptimisticBoards } = useBoards();
   const [pending, startTransition] = useTransition();
 
-  // Refs3
+  // Refs
   const testRef = useRef<HTMLTextAreaElement | null>(null);
   const renameTaskRef = useRef<HTMLFormElement>(null);
-  const {
-    ref,
-    error: clickOutsideError,
-    loading: clickOutsideLoading,
-  } = useClickOutside<HTMLDivElement>(async () => {
-    if (error) return;
-    await clientAction();
-  });
+  // const {
+  //   ref,
+  //   error: useClickOutsideError,
+  //   loading: useClickOutsideLoading,
+  // } = useClickOutside<HTMLDivElement>(async () => {
+  //   if (error) return;
+  //   await clientAction();
+  // });
 
-  useEffect(() => {
-    setError(clickOutsideError);
-    setLoading(clickOutsideLoading);
-  }, [clickOutsideError, clickOutsideLoading]);
+  // useEffect(() => {
+  //   setError(useClickOutsideError);
+  // }, [useClickOutsideError]);
+
+  // useEffect(() => {
+  //   setLoading(useClickOutsideLoading);
+  // }, [useClickOutsideLoading]);
 
   // Dynamic height for the textarea
   useEffect(() => resizeTextArea(testRef), [task.name, newTaskName, isOpen]);
+
   // Disable draggable when renaming so you can interact with the field
   useEffect(() => setDraggable(!isOpen), [isOpen, setDraggable]);
 
@@ -70,6 +74,7 @@ const RenameTaskForm = ({
       setLoading(false);
       return;
     }
+
     startTransition(() => {
       setOptimisticBoards({
         action: "renameTask",
@@ -90,6 +95,7 @@ const RenameTaskForm = ({
       setLoading(false);
       // If server action fails open again
       setIsOpen(true);
+      console.log("In server error");
       return;
     }
 
@@ -98,7 +104,7 @@ const RenameTaskForm = ({
   };
 
   return (
-    <div ref={ref} className={`${loading ? "pointer-events-none" : ""} `}>
+    <div className={`${loading ? "pointer-events-none" : ""} `}>
       <form
         className="flex items-center gap-2"
         ref={renameTaskRef}
