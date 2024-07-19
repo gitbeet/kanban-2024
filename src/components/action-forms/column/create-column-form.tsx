@@ -2,7 +2,7 @@ import React, { type ChangeEvent, useRef, useState } from "react";
 import type { ColumnType } from "~/types";
 import { v4 as uuid } from "uuid";
 import { createColumnAction } from "~/actions";
-import { CreateButton, SaveButton } from "~/components/ui/submit-button";
+import { CreateButton, SaveButton } from "~/components/ui/buttons";
 import { ColumnSchema } from "~/zod-schemas";
 import InputField from "~/components/ui/input-field";
 import { motion } from "framer-motion";

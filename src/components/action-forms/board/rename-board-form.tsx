@@ -3,7 +3,7 @@
 import { type ChangeEvent, useRef, useState } from "react";
 import { renameBoardAction } from "~/actions";
 import InputField from "~/components/ui/input-field";
-import { EditButton } from "~/components/ui/submit-button";
+import { EditButton } from "~/components/ui/buttons";
 import { useBoards } from "~/context/boards-context";
 import { BoardSchema } from "~/zod-schemas";
 

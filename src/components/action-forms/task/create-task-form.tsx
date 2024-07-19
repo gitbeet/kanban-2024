@@ -3,7 +3,7 @@ import { type ChangeEvent, useRef, useState } from "react";
 import type { BoardType, ColumnType, TaskType } from "~/types";
 import { v4 as uuid } from "uuid";
 import { createTaskAction } from "~/actions";
-import SubmitButton, { Button } from "~/components/ui/submit-button";
+import { Button, SubmitButton } from "~/components/ui/buttons";
 import { TaskSchema } from "~/zod-schemas";
 import InputField from "~/components/ui/input-field";
 import { useBoards } from "~/context/boards-context";

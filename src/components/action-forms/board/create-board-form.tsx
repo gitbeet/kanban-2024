@@ -6,7 +6,7 @@ import { v4 as uuid } from "uuid";
 import { useUser } from "@clerk/nextjs";
 import { createBoardAction } from "~/actions";
 import { BoardSchema } from "~/zod-schemas";
-import { CreateButton } from "~/components/ui/submit-button";
+import { CreateButton } from "~/components/ui/buttons";
 import InputField from "~/components/ui/input-field";
 import { useBoards } from "~/context/boards-context";
 

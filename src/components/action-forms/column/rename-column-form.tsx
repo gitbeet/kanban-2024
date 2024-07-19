@@ -8,7 +8,7 @@ import {
 import { useFormStatus } from "react-dom";
 import { renameColumnAction } from "~/actions";
 import InputField from "~/components/ui/input-field";
-import { EditButton } from "~/components/ui/submit-button";
+import { EditButton } from "~/components/ui/buttons";
 import { useBoards } from "~/context/boards-context";
 import useClickOutside from "~/hooks/useClickOutside";
 import { ColumnSchema } from "~/zod-schemas";

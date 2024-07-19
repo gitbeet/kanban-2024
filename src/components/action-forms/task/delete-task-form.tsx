@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { deleteTaskAction } from "~/actions";
-import { DeleteButton } from "~/components/ui/submit-button";
+import { DeleteButton } from "~/components/ui/buttons";
 import { useBoards } from "~/context/boards-context";
 
 const DeleteTaskForm = ({

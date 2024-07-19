@@ -90,5 +90,3 @@ export const ToggleButton = ({ checked }: { checked: boolean }) => (
     {checked ? <FaCheck className="h-4 w-4 shrink-0" /> : undefined}
   </button>
 );
-
-export default SubmitButton;

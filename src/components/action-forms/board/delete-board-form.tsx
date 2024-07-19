@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { deleteBoardAction } from "~/actions";
-import { DeleteButton } from "~/components/ui/submit-button";
+import { DeleteButton } from "~/components/ui/buttons";
 import { useBoards } from "~/context/boards-context";
 import { BoardSchema } from "~/zod-schemas";
 

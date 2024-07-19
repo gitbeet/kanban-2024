@@ -3,7 +3,7 @@
 import type { ChangeEvent, Dispatch, FormEvent, SetStateAction } from "react";
 import { useEffect, useState, useTransition, useRef } from "react";
 import { renameTaskAction } from "~/actions";
-import { CancelButton, SaveButton } from "~/components/ui/submit-button";
+import { CancelButton, SaveButton } from "~/components/ui/buttons";
 import { useBoards } from "~/context/boards-context";
 import useClickOutside from "~/hooks/useClickOutside";
 import type { TaskType } from "~/types";
