@@ -208,41 +208,6 @@ export async function toggleTaskCompleted(taskId: string) {
   revalidatePath("/");
 }
 
-// export async function switchColumn(
-//   taskId: string,
-//   oldColumnId: string,
-//   newColumnId: string,
-//   oldColumnIndex: number,
-//   newColumnIndex: number,
-// ) {
-//   const user = auth();
-//   if (!user.userId) throw new Error("Unauthorized");
-//   // Check if task belongs to user?
-
-//   // Decrement the indices of the tasks below the switched task in the old column
-//   await db
-//     .update(tasks)
-//     .set({ index: sql`${tasks.index} - 1` })
-//     .where(
-//       and(eq(tasks.columnId, oldColumnId), gt(tasks.index, oldColumnIndex)),
-//     );
-
-//   // Increment the indices of the tasks below the switched one in the new column
-//   await db
-//     .update(tasks)
-//     .set({ index: sql`${tasks.index} + 1` })
-//     .where(
-//       and(eq(tasks.columnId, newColumnId), gte(tasks.index, newColumnIndex)),
-//     );
-//   // Switch the task to the new column and put it in its position (index)
-//   await db
-//     .update(tasks)
-//     .set({ columnId: newColumnId, index: newColumnIndex })
-//     .where(eq(tasks.id, taskId));
-
-//   revalidatePath("/");
-// }
-
 export async function switchColumn(
   taskId: string,
   oldColumnId: string,
