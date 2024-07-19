@@ -5,7 +5,7 @@ import { db } from "./db/index";
 import { boards, columns, tasks } from "./db/schema";
 import { v4 as uuid } from "uuid";
 import { revalidatePath } from "next/cache";
-import { and, eq, gt, gte, sql } from "drizzle-orm";
+import { and, eq, gt, gte, lt, lte, ne, sql } from "drizzle-orm";
 import type { BoardType, ColumnType, TaskType } from "~/types";
 
 // ---------- BOARD ----------
@@ -253,27 +253,87 @@ export async function switchColumn(
   const user = auth();
   if (!user.userId) throw new Error("Unauthorized");
 
-  // works
-  try {
-    await db
-      .update(tasks)
-      .set({ index: sql`${tasks.index} - 1` })
-      .where(
-        and(eq(tasks.columnId, oldColumnId), gt(tasks.index, oldColumnIndex)),
-      );
-    await db
-      .update(tasks)
-      .set({ index: sql`${tasks.index} + 1` })
-      .where(
-        and(eq(tasks.columnId, newColumnId), gte(tasks.index, newColumnIndex)),
-      );
+  // check if we are not moving the task at all
 
-    await db
-      .update(tasks)
-      .set({ columnId: newColumnId, index: newColumnIndex })
-      .where(eq(tasks.id, taskId));
-  } catch (error) {
-    console.log(error);
+  // check if we are dragging the task to the same column
+  const inTheSameColumn = oldColumnId === newColumnId;
+  if (inTheSameColumn) {
+    // check which direction we're moving in
+    const movingUp = oldColumnIndex > newColumnIndex;
+    if (movingUp) {
+      try {
+        // update the task index
+        await db
+          .update(tasks)
+          .set({ index: newColumnIndex, updatedAt: new Date() })
+          .where(eq(tasks.id, taskId));
+        // Increment all indices between the old and the new, excluding the dragged task's index
+        await db
+          .update(tasks)
+          .set({ index: sql`${tasks.index} + 1` })
+          .where(
+            and(
+              eq(tasks.columnId, newColumnId),
+              ne(tasks.id, taskId),
+              gte(tasks.index, newColumnIndex),
+              lte(tasks.index, oldColumnIndex),
+            ),
+          );
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      try {
+        // update the task index
+        await db
+          .update(tasks)
+          .set({ index: newColumnIndex - 1, updatedAt: new Date() })
+          .where(eq(tasks.id, taskId));
+        // Decrement all indices between the old and the new, excluding the dragged task's index
+        await db
+          .update(tasks)
+          .set({ index: sql`${tasks.index} - 1` })
+          .where(
+            and(
+              eq(tasks.columnId, newColumnId),
+              ne(tasks.id, taskId),
+              gte(tasks.index, oldColumnIndex),
+              lt(tasks.index, newColumnIndex),
+            ),
+          );
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  } else {
+    // When we are dragging the task to a different column
+    try {
+      await db
+        .update(tasks)
+        .set({ index: sql`${tasks.index} - 1` })
+        .where(
+          and(
+            eq(tasks.columnId, oldColumnId),
+            gte(tasks.index, oldColumnIndex),
+          ),
+        );
+      await db
+        .update(tasks)
+        .set({ index: sql`${tasks.index} + 1` })
+        .where(
+          and(
+            eq(tasks.columnId, newColumnId),
+            gte(tasks.index, newColumnIndex),
+          ),
+        );
+
+      await db
+        .update(tasks)
+        .set({ columnId: newColumnId, index: newColumnIndex })
+        .where(eq(tasks.id, taskId));
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   revalidatePath("/");

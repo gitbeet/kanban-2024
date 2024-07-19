@@ -212,6 +212,13 @@ const switchTaskColumn = (
   );
   const currentTask = currentColumn?.tasks.find((task) => task.id === taskId);
   if (!currentTask) return state;
+
+  if (
+    oldColumnIndex === newColumnIndex ||
+    oldColumnIndex === newColumnIndex - 1
+  )
+    return state;
+
   if (oldColumnId === newColumnId) {
     return state.map((b) => {
       return b.id === boardId

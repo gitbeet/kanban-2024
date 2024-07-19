@@ -64,6 +64,7 @@ const Column = ({
     if (before === taskId) return;
 
     if (!beforeColumnId) return;
+    // fix useTransition only on optimistic
     startTransition(async () => {
       await clientAction(
         taskId,
@@ -83,6 +84,9 @@ const Column = ({
       i.style.opacity = "0";
       i.style.height = "0.375rem";
       i.style.marginBlock = "0";
+      // i.style.opacity = "1";
+      // i.style.height = "4rem";
+      // i.style.marginBlock = "0.5rem";
     });
   };
 

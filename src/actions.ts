@@ -169,6 +169,7 @@ export const switchColumnAction = async (
   if (!result.success) {
     return { error: result.error.issues[0]?.message };
   }
+
   await switchColumn(
     taskId as string,
     oldColumnId as string,

@@ -54,6 +54,7 @@ const Task = ({
           columnId={columnId}
           task={task}
         />
+        <p>index - {task.index}</p>
         <div className="pointer-events-none opacity-0 group-hover:pointer-events-auto group-hover:opacity-100">
           <DeleteTaskForm
             boardId={currentBoardId}
