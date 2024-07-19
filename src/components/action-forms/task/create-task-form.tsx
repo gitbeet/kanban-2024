@@ -82,14 +82,14 @@ const CreateTaskForm = ({
   return (
     <>
       {!active && (
-        <motion.button
-          layout
-          onClick={() => setActive(true)}
-          className="flex items-center gap-2 font-medium text-white"
-        >
-          <FaPlus />
-          <span>Add a card</span>
-        </motion.button>
+        <motion.div layout>
+          <Button onClick={() => setActive(true)} ghost>
+            <div className="flex items-center gap-1">
+              <FaPlus className="h-3 w-3" />
+              <span>Add a task</span>
+            </div>
+          </Button>
+        </motion.div>
       )}
       {active && (
         <form
