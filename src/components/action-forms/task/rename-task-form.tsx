@@ -21,14 +21,6 @@ const RenameTaskForm = ({
   task: TaskType;
   setDraggable: Dispatch<SetStateAction<boolean>>;
 }) => {
-  // Refs3
-  const testRef = useRef<HTMLTextAreaElement | null>(null);
-  const renameTaskRef = useRef<HTMLFormElement>(null);
-  const ref = useClickOutside<HTMLDivElement>(() => {
-    if (error) return;
-    setIsOpen(false);
-  });
-
   // States
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -37,6 +29,23 @@ const RenameTaskForm = ({
   const [isOpen, setIsOpen] = useState(false);
   const { setOptimisticBoards } = useBoards();
   const [pending, startTransition] = useTransition();
+
+  // Refs3
+  const testRef = useRef<HTMLTextAreaElement | null>(null);
+  const renameTaskRef = useRef<HTMLFormElement>(null);
+  const {
+    ref,
+    error: clickOutsideError,
+    loading: clickOutsideLoading,
+  } = useClickOutside<HTMLDivElement>(async () => {
+    if (error) return;
+    await clientAction();
+  });
+
+  useEffect(() => {
+    setError(clickOutsideError);
+    setLoading(clickOutsideLoading);
+  }, [clickOutsideError, clickOutsideLoading]);
 
   // Dynamic height for the textarea
   useEffect(() => resizeTextArea(testRef), [task.name, newTaskName, isOpen]);
@@ -50,8 +59,8 @@ const RenameTaskForm = ({
     setNewTaskName(e.target.value);
   };
 
-  const clientAction = async (e: FormEvent) => {
-    e.preventDefault();
+  const clientAction = async (e?: FormEvent) => {
+    e?.preventDefault();
     setLoading(true);
 
     // Client validation
@@ -71,16 +80,21 @@ const RenameTaskForm = ({
       });
     });
 
+    // Close without waiting for server
+    setIsOpen(false);
+
     // Server
     const response = await renameTaskAction(task.id, newTaskName);
     if (response?.error) {
       setError(response.error);
       setLoading(false);
+      // If server action fails open again
+      setIsOpen(true);
       return;
     }
 
+    // Wait for server to finish then set loading to false
     setLoading(false);
-    setIsOpen(false);
   };
 
   return (

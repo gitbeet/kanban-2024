@@ -1,13 +1,19 @@
-import { useEffect, useRef } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 
-function useClickOutside<T extends HTMLElement>(handler: () => void) {
+function useClickOutside<T extends HTMLElement>(
+  handler: (e?: FormEvent) => Promise<void>,
+) {
   const ref = useRef<T | null>(null);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent | TouchEvent) => {
+      setLoading(true);
       if (ref.current && !ref.current.contains(event.target as Node)) {
-        handler();
+        handler().catch((e) => setError(e as string));
       }
+      setLoading(false);
     };
 
     document.addEventListener("mousedown", handleClickOutside);
@@ -19,7 +25,7 @@ function useClickOutside<T extends HTMLElement>(handler: () => void) {
     };
   }, [handler]);
 
-  return ref;
+  return { ref, error, loading };
 }
 
 export default useClickOutside;
