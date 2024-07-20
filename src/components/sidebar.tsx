@@ -16,7 +16,7 @@ const Sidebar = () => {
       layout
       className={`relative z-10 ${showSidebar ? "ml-0 translate-x-0" : "-mr-64 -translate-x-64"} w-64 shrink-0 border-r transition-all duration-300`}
     >
-      <div className="h-12"></div>
+      <div className="h-8"></div>
       <h2 className="pl-4 text-xl font-medium">
         All boards ({optimisticBoards.length})
       </h2>
@@ -29,14 +29,14 @@ const Sidebar = () => {
               onClick={() => setCurrentBoardId(board.id)}
               layout
               key={board.index}
-              className={`group cursor-pointer`}
+              className={`group cursor-pointer pr-4`}
             >
               <div className="flex items-center justify-between gap-4">
-                <p
-                  className={`w-full px-4 py-3 ${board.id === currentBoardId ? "rounded-r-full bg-white text-black" : ""}`}
+                <span
+                  className={`w-full truncate px-4 py-3 ${board.id === currentBoardId ? "rounded-r-full bg-white text-black" : ""}`}
                 >
                   {board.name}
-                </p>
+                </span>
                 <DeleteBoardForm
                   // className="opacity-0 group-hover:opacity-100"
                   boardId={board.id}

@@ -3,19 +3,18 @@ import type { ChangeEvent, FormEvent } from "react";
 import React, { useRef, useState } from "react";
 import { v4 as uuid } from "uuid";
 import { createColumnAction } from "~/actions";
-import { CancelButton, SaveButton } from "~/components/ui/buttons";
+import { Button, CancelButton, SaveButton } from "~/components/ui/buttons";
 import { ColumnSchema } from "~/zod-schemas";
 import InputField from "~/components/ui/input-field";
 import { useBoards } from "~/context/boards-context";
 import { FaPlus } from "react-icons/fa6";
 import useClickOutside from "~/hooks/useClickOutside";
-const CreateColumnForm = ({
-  boardId,
-  jsx = "input",
-}: {
+
+interface CreateColumnProps extends React.HTMLAttributes<HTMLDivElement> {
   boardId: string;
-  jsx?: "input" | "block";
-}) => {
+}
+
+const CreateColumnForm = ({ boardId, ...props }: CreateColumnProps) => {
   const createColumnRef = useRef<HTMLFormElement>(null);
   const { setOptimisticBoards, optimisticBoards } = useBoards();
 
@@ -78,6 +77,7 @@ const CreateColumnForm = ({
     setIsOpen(false);
     setColumnName("");
     setError("");
+    setLoading(false);
   }
 
   const notOpenJsx = (
@@ -110,17 +110,13 @@ const CreateColumnForm = ({
   );
 
   return (
-    <>
-      {jsx === "block" && (
-        <div
-          ref={ref}
-          className={` ${loading ? "pointer-events-none" : ""} grid h-32 w-80 shrink-0 cursor-pointer place-content-center rounded-md bg-neutral-700 p-4`}
-        >
-          {!isOpen && notOpenJsx}
-          {isOpen && openJsx}
-        </div>
-      )}
-    </>
+    <div
+      ref={ref}
+      className={` ${loading ? "pointer-events-none" : ""} grid h-32 w-80 shrink-0 cursor-pointer place-content-center rounded-md bg-neutral-700 p-4 ${props.className}`}
+    >
+      {!isOpen && notOpenJsx}
+      {isOpen && openJsx}
+    </div>
   );
 };
 

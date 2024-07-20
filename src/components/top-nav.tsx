@@ -4,15 +4,14 @@ import { SignedIn, UserButton } from "@clerk/nextjs";
 import React from "react";
 import { useBoards } from "~/context/boards-context";
 import { useUI } from "~/context/ui-context";
-import DeleteBoardForm from "./action-forms/board/delete-board-form";
 
 const TopNav = () => {
-  const { getCurrentBoard, currentBoardId, optimisticBoards } = useBoards();
+  const { currentBoardId, optimisticBoards } = useBoards();
   const { setShowSidebar } = useUI();
   const currentBoard = optimisticBoards.find((b) => b.id === currentBoardId);
 
   return (
-    <nav className="flex items-center justify-between border-b py-4">
+    <nav className="flex items-center justify-between border border-b px-4 py-4">
       <SignedIn>
         <h1 className="text-2xl font-bold">Kanban</h1>
         {currentBoard && (

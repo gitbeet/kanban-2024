@@ -19,10 +19,6 @@ const DeleteBoardForm = ({
     useBoards();
   const [pending, startTransition] = useTransition();
 
-  const newId = optimisticBoards?.[0]?.id;
-
-  if (!newId) return;
-
   const clientAction = async (e?: FormEvent) => {
     e?.preventDefault();
     // Not completely sure if check is needed
@@ -41,6 +37,10 @@ const DeleteBoardForm = ({
         return setError(response.error);
       }
     });
+
+    const newId = optimisticBoards?.[0]?.id;
+
+    if (!newId) return;
 
     setCurrentBoardId(newId);
   };

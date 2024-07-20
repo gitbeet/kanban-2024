@@ -46,7 +46,6 @@ const Task = ({
           columnId={columnId}
           task={task}
         /> */}
-        {task.index}
         <RenameTaskForm
           setDraggable={setDraggable}
           boardId={currentBoardId}
