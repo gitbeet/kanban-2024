@@ -31,8 +31,9 @@ const Board = () => {
             <Column key={col.index} boardId={currentBoardId} column={col} />
           ))}
 
-        <motion.div className="flex flex-col gap-4" layout>
+        <motion.div layout className="h-96">
           <CreateColumnForm boardId={currentBoardId} jsx="block" />
+          <div className="h-4" />
           <DeleteTaskZone />
         </motion.div>
       </motion.div>

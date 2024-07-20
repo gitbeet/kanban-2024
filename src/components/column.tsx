@@ -199,23 +199,21 @@ const Column = ({
         </h3>
         <DeleteColumnForm boardId={boardId} columnId={column.id} />
       </div>
-      <div>
-        {column.tasks
-          .sort((a, b) => a.index - b.index)
-          .map((task) => (
-            <Task
-              key={task.id}
-              columnId={column.id}
-              task={task}
-              handleDragStart={handleDragStart}
-            />
-          ))}
-        <DropIndicator
-          beforeId="-1"
-          columnId={column.id}
-          beforeIndex={(column.tasks.length + 1).toString()}
-        />
-      </div>
+      {column.tasks
+        .sort((a, b) => a.index - b.index)
+        .map((task) => (
+          <Task
+            key={task.id}
+            columnId={column.id}
+            task={task}
+            handleDragStart={handleDragStart}
+          />
+        ))}
+      <DropIndicator
+        beforeId="-1"
+        columnId={column.id}
+        beforeIndex={(column.tasks.length + 1).toString()}
+      />
 
       <CreateTaskForm boardId={boardId} columnId={column.id} />
     </div>

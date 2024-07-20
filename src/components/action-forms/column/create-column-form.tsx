@@ -100,7 +100,7 @@ const CreateColumnForm = ({
       {jsx === "block" && (
         <div
           ref={ref}
-          className="grid min-h-32 w-80 shrink-0 cursor-pointer place-content-center rounded-md bg-neutral-700 p-4"
+          className="grid h-32 w-80 shrink-0 cursor-pointer place-content-center rounded-md bg-neutral-700 p-4"
         >
           {!isOpen && (
             <div
