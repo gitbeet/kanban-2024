@@ -32,23 +32,8 @@ const RenameTaskForm = ({
 
   // Refs
   const testRef = useRef<HTMLTextAreaElement | null>(null);
-  const renameTaskRef = useRef<HTMLFormElement>(null);
-  // const {
-  //   ref,
-  //   error: useClickOutsideError,
-  //   loading: useClickOutsideLoading,
-  // } = useClickOutside<HTMLDivElement>(async () => {
-  //   if (error) return;
-  //   await clientAction();
-  // });
-
-  // useEffect(() => {
-  //   setError(useClickOutsideError);
-  // }, [useClickOutsideError]);
-
-  // useEffect(() => {
-  //   setLoading(useClickOutsideLoading);
-  // }, [useClickOutsideLoading]);
+  const renameTaskRef = useRef<HTMLFormElement | null>(null);
+  const { ref } = useClickOutside<HTMLDivElement>(handleClickOutside);
 
   // Dynamic height for the textarea
   useEffect(() => resizeTextArea(testRef), [task.name, newTaskName, isOpen]);
@@ -102,9 +87,13 @@ const RenameTaskForm = ({
     // Wait for server to finish then set loading to false
     setLoading(false);
   };
-
+  function handleClickOutside() {
+    setIsOpen(false);
+    setNewTaskName(task.name);
+    setError("");
+  }
   return (
-    <div className={`${loading ? "pointer-events-none" : ""} `}>
+    <div ref={ref} className={`${loading ? "pointer-events-none" : ""} `}>
       <form
         className="flex items-center gap-2"
         ref={renameTaskRef}
@@ -125,7 +114,7 @@ const RenameTaskForm = ({
             rows={1}
             ref={testRef}
             readOnly={!isOpen}
-            className={` ${isOpen ? "input !bg-neutral-800" : "input-readonly"} ${error ? "!border-red-500" : ""} input w-full resize-none overflow-hidden`}
+            className={` ${isOpen ? "input" : "input-readonly"} ${error ? "!border-red-500" : ""} w-full resize-none overflow-hidden`}
             value={newTaskName}
             onChange={isOpen ? handleTaskNameChange : undefined}
           />
@@ -136,14 +125,7 @@ const RenameTaskForm = ({
             className={`${isOpen ? "opacity-100" : "opacity-0"} flex gap-1.5`}
           >
             <SaveButton disabled={!!error} />
-            <CancelButton
-              disabled={!!error}
-              onClick={() => {
-                setError("");
-                setIsOpen(false);
-                setNewTaskName(task.name);
-              }}
-            />
+            <CancelButton onClick={handleClickOutside} />
           </div>
         )}
       </form>

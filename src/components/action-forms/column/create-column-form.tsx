@@ -1,13 +1,18 @@
-import React, { type ChangeEvent, useRef, useState } from "react";
 import type { ColumnType } from "~/types";
+import type { ChangeEvent, FormEvent } from "react";
+import React, { useRef, useState } from "react";
 import { v4 as uuid } from "uuid";
 import { createColumnAction } from "~/actions";
-import { CreateButton, SaveButton } from "~/components/ui/buttons";
+import {
+  CancelButton,
+  CreateButton,
+  SaveButton,
+} from "~/components/ui/buttons";
 import { ColumnSchema } from "~/zod-schemas";
 import InputField from "~/components/ui/input-field";
-import { motion } from "framer-motion";
 import { useBoards } from "~/context/boards-context";
 import { FaPlus } from "react-icons/fa6";
+import useClickOutside from "~/hooks/useClickOutside";
 const CreateColumnForm = ({
   boardId,
   jsx = "input",
@@ -20,13 +25,20 @@ const CreateColumnForm = ({
 
   const [columnName, setColumnName] = useState("");
   const [error, setError] = useState("");
-  const [active, setActive] = useState(false);
-
+  const [isOpen, setIsOpen] = useState(false);
+  const { ref } = useClickOutside<HTMLDivElement>(handleClickOutside);
   const currentBoard = optimisticBoards.find((board) => board.id === boardId);
   if (!currentBoard)
     return <h1>Error finding the current board (placeholder error)</h1>;
 
-  const clientAction = async () => {
+  function handleClickOutside() {
+    setIsOpen(false);
+    setColumnName("");
+    setError("");
+  }
+
+  const clientAction = async (e?: FormEvent) => {
+    e?.preventDefault();
     const maxIndex = Math.max(...currentBoard.columns.map((c) => c.index));
     createColumnRef.current?.reset();
     const newColumn: ColumnType = {
@@ -39,19 +51,26 @@ const CreateColumnForm = ({
       updatedAt: new Date(),
     };
 
+    setIsOpen(false);
+
     const result = ColumnSchema.safeParse(newColumn);
     if (!result.success) {
-      return setError(result.error.issues[0]?.message ?? "An error occured");
+      setIsOpen(true);
+      setError(result.error.issues[0]?.message ?? "An error occured");
+      return;
     }
 
     setOptimisticBoards({ action: "createColumn", boardId, column: newColumn });
 
     const response = await createColumnAction(newColumn);
     if (response?.error) {
-      return setError(response.error);
+      setIsOpen(true);
+      setError(response.error);
+      return;
     }
 
-    setActive(false);
+    setColumnName("");
+    setError("");
   };
 
   const handleColumnName = (
@@ -64,7 +83,7 @@ const CreateColumnForm = ({
   return (
     <>
       {jsx === "input" && (
-        <form className="flex" ref={createColumnRef} action={clientAction}>
+        <form className="flex" ref={createColumnRef} onSubmit={clientAction}>
           <input type="hidden" name="board-id" value={boardId} />
           <InputField
             value={columnName}
@@ -79,32 +98,42 @@ const CreateColumnForm = ({
         </form>
       )}
       {jsx === "block" && (
-        <motion.div
-          layout
-          onClick={() => setActive(true)}
-          className="grid h-max w-80 shrink-0 cursor-pointer place-content-center rounded-md bg-neutral-800 p-4"
+        <div
+          ref={ref}
+          className="grid min-h-32 w-80 shrink-0 cursor-pointer place-content-center rounded-md bg-neutral-700 p-4"
         >
-          {!active && (
-            <div className="flex items-center gap-1.5">
-              <FaPlus />
+          {!isOpen && (
+            <div
+              onClick={() => setIsOpen(true)}
+              className="flex items-center gap-1"
+            >
+              <FaPlus className="h-3 w-3" />
               <span className="text-xl font-medium">Column</span>
             </div>
           )}
-          {active && (
-            <form className="flex" ref={createColumnRef} action={clientAction}>
+
+          {isOpen && (
+            <form
+              ref={createColumnRef}
+              onSubmit={clientAction}
+              className="flex items-center gap-2 p-1.5"
+            >
               <InputField
+                autoFocus
                 value={columnName}
                 onChange={handleColumnName}
                 type="text"
-                name="column-name-input"
-                placeholder="Create column..."
+                placeholder="Enter column name"
+                className="w-full !bg-neutral-900"
                 error={error}
               />
-
-              <SaveButton />
+              <div className="flex gap-1.5">
+                <SaveButton disabled={!!error} />
+                <CancelButton onClick={handleClickOutside} />
+              </div>
             </form>
           )}
-        </motion.div>
+        </div>
       )}
     </>
   );

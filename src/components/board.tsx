@@ -4,8 +4,6 @@ import React from "react";
 import Column from "../components/column";
 import { useUser } from "@clerk/nextjs";
 import DeleteTaskZone from "./delete-task-zone";
-import RenameBoardForm from "./action-forms/board/rename-board-form";
-import DeleteBoardForm from "./action-forms/board/delete-board-form";
 import CreateColumnForm from "./action-forms/column/create-column-form";
 import { motion } from "framer-motion";
 import { useBoards } from "~/context/boards-context";
@@ -26,11 +24,6 @@ const Board = () => {
       key={currentBoardId}
       className="grid flex-1 grow grid-rows-[1fr,100%] overflow-scroll"
     >
-      <div className="flex items-center gap-4 border-b">
-        <RenameBoardForm boardId={currentBoardId} />
-        <DeleteBoardForm boardId={currentBoardId} />
-        <CreateColumnForm boardId={currentBoardId} />
-      </div>
       <motion.div className="flex gap-4 p-8">
         {currentBoard.columns
           .sort((a, b) => a.index - b.index)

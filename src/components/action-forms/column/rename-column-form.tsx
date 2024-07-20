@@ -30,19 +30,13 @@ const RenameColumnForm = ({
   const [isOpen, setIsOpen] = useState(false);
   const renameColumnRef = useRef<HTMLFormElement>(null);
   const [loading, setLoading] = useState(false);
-  // const {
-  //   ref,
-  //   error: useClickOutsideError,
-  //   loading: useClickOutsideLoading,
-  // } = useClickOutside<HTMLDivElement>(async () => {
-  //   if (error) return;
-  //   await clientAction();
-  // });
+  const { ref } = useClickOutside<HTMLDivElement>(handleClickOutside);
 
-  // useEffect(() => {
-  //   setError(useClickOutsideError);
-  //   setLoading(useClickOutsideLoading);
-  // }, [useClickOutsideError, useClickOutsideLoading]);
+  function handleClickOutside() {
+    setIsOpen(false);
+    setNewColumnName(column?.name);
+    setError("");
+  }
 
   const handleColumnNameChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -76,7 +70,7 @@ const RenameColumnForm = ({
   };
 
   return (
-    <div className={`${loading ? "pointer-events-none" : ""}`}>
+    <div ref={ref} className={`${loading ? "pointer-events-none" : ""}`}>
       <form
         ref={renameColumnRef}
         onSubmit={clientAction}

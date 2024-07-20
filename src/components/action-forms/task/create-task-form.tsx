@@ -15,6 +15,7 @@ import { TaskSchema } from "~/zod-schemas";
 import { useBoards } from "~/context/boards-context";
 import { FaPlus } from "react-icons/fa6";
 import { resizeTextArea } from "~/utilities/resizeTextArea";
+import useClickOutside from "~/hooks/useClickOutside";
 
 const CreateTaskForm = ({
   boardId,
@@ -28,13 +29,20 @@ const CreateTaskForm = ({
   const { setOptimisticBoards } = useBoards();
   const [taskName, setTaskName] = useState("");
   const [error, setError] = useState("");
-  const [active, setActive] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const [pending, startTransition] = useTransition();
+  const { ref } = useClickOutside<HTMLDivElement>(handleClickOutside);
 
   const { optimisticBoards } = useBoards();
 
+  function handleClickOutside() {
+    setIsOpen(false);
+    setTaskName("");
+    setError("");
+  }
+
   // Dynamic height for the textarea
-  useEffect(() => resizeTextArea(testRef), [taskName, active]);
+  useEffect(() => resizeTextArea(testRef), [taskName, isOpen]);
 
   const currentColumn = optimisticBoards
     .find((board) => board.id === boardId)
@@ -45,7 +53,7 @@ const CreateTaskForm = ({
 
   const clientAction = async (e?: FormEvent) => {
     e?.preventDefault();
-    setActive(false);
+    setIsOpen(false);
     const maxIndex =
       currentColumn.tasks.length < 1
         ? 0
@@ -64,7 +72,7 @@ const CreateTaskForm = ({
 
     const result = TaskSchema.safeParse(newTask);
     if (!result.success) {
-      setActive(true);
+      setIsOpen(true);
       setError(result.error.issues[0]?.message ?? "An error occured");
       return;
     }
@@ -79,7 +87,7 @@ const CreateTaskForm = ({
 
     const response = await createTaskAction(newTask);
     if (response?.error) {
-      setActive(true);
+      setIsOpen(true);
       setError(response.error);
       return;
     }
@@ -87,7 +95,7 @@ const CreateTaskForm = ({
   };
 
   const handleCancel = () => {
-    setActive(false);
+    setIsOpen(false);
     setError("");
   };
 
@@ -100,9 +108,9 @@ const CreateTaskForm = ({
 
   return (
     <>
-      {!active && (
+      {!isOpen && (
         <motion.div layout>
-          <Button onClick={() => setActive(true)} ghost>
+          <Button onClick={() => setIsOpen(true)} ghost>
             <div className="flex items-center gap-1">
               <FaPlus className="h-3 w-3" />
               <span>Add a task</span>
@@ -110,33 +118,34 @@ const CreateTaskForm = ({
           </Button>
         </motion.div>
       )}
-      {active && (
-        <motion.form
-          layout
-          className="flex flex-col gap-2"
-          ref={createTaskRef}
-          onSubmit={clientAction}
-        >
-          <div className="rounded-md bg-neutral-600 p-1.5">
-            <textarea
-              autoFocus
-              ref={testRef}
-              rows={1}
-              className={` ${error ? "!border-red-500" : ""} input w-full resize-none overflow-hidden`}
-              value={taskName}
-              onChange={handleChange}
-            />
-            <p className="text-right text-sm text-red-500"> {error}</p>
-          </div>
-          <div className="flex items-center gap-2 self-end">
-            <Button ghost onClick={handleCancel} type="button">
-              Cancel
-            </Button>
-            <SubmitButton>
-              <>Add</>
-            </SubmitButton>
-          </div>
-        </motion.form>
+      {isOpen && (
+        <div ref={ref}>
+          <form
+            className="flex flex-col gap-2"
+            ref={createTaskRef}
+            onSubmit={clientAction}
+          >
+            <div className="rounded-md bg-neutral-600 p-1.5">
+              <textarea
+                autoFocus
+                ref={testRef}
+                rows={1}
+                className={` ${error ? "!border-red-500" : ""} input w-full resize-none overflow-hidden !bg-neutral-900`}
+                value={taskName}
+                onChange={handleChange}
+              />
+              <p className="text-right text-sm text-red-500"> {error}</p>
+            </div>
+            <div className="flex items-center gap-2 self-end">
+              <Button ghost onClick={handleCancel} type="button">
+                Cancel
+              </Button>
+              <SubmitButton>
+                <>Add</>
+              </SubmitButton>
+            </div>
+          </form>
+        </div>
       )}
     </>
   );

@@ -10,11 +10,14 @@ textarea {
 
 .input,
 .input-readonly {
-  @apply rounded-md border-2 border-transparent bg-transparent px-2 py-1.5 text-white;
+  @apply rounded-md border-2 border-transparent px-2 py-1.5 text-white;
+}
+.input-readonly {
+  @apply bg-transparent;
 }
 
 .input {
-  @apply focus:border-sky-400;
+  @apply bg-neutral-900 focus:border-sky-400;
 }
 
 /* RESET */
