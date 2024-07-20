@@ -32,17 +32,24 @@ const DeleteBoardForm = ({
     }
     startTransition(async () => {
       setOptimisticBoards({ action: "deleteBoard", boardId });
-      const response = await deleteBoardAction(boardId, boardIndex);
-      if (response?.error) {
-        return setError(response.error);
-      }
     });
 
-    const newId = optimisticBoards?.[0]?.id;
+    const response = await deleteBoardAction(boardId, boardIndex);
+    if (response?.error) {
+      return setError(response.error);
+    }
 
-    if (!newId) return;
-
-    setCurrentBoardId(newId);
+    startTransition(() => {
+      const updatedBoards = optimisticBoards.filter(
+        (board) => board.id !== boardId,
+      );
+      if (updatedBoards.length > 0) {
+        if (!updatedBoards[0]) return;
+        setCurrentBoardId(updatedBoards[0].id);
+      } else {
+        setCurrentBoardId("");
+      }
+    });
   };
 
   return (

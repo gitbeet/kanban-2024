@@ -19,7 +19,9 @@ import { motion } from "framer-motion";
 import { FaPlus } from "react-icons/fa";
 import useClickOutside from "~/hooks/useClickOutside";
 
-const CreateBoardForm = () => {
+const CreateBoardForm = ({
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) => {
   const createBoardRef = useRef<HTMLFormElement>(null);
   const { user } = useUser();
   const { optimisticBoards, setOptimisticBoards, setCurrentBoardId } =
@@ -94,7 +96,7 @@ const CreateBoardForm = () => {
   return (
     <>
       {!isOpen && (
-        <motion.div layout>
+        <motion.div layout className={props.className}>
           <Button
             variant="text"
             onClick={() => setIsOpen(true)}

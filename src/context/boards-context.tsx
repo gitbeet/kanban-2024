@@ -43,7 +43,7 @@ export const BoardsProvider: React.FC<BoardsProviderProps> = ({
   );
 
   const [currentBoardId, setCurrentBoardId] = useState<string | null>(
-    optimisticBoards?.[0]?.id ?? null,
+    optimisticBoards?.[0]?.id ?? "",
   );
 
   const getCurrentBoard = () => {

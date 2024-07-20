@@ -7,14 +7,24 @@ import DeleteTaskZone from "./delete-task-zone";
 import CreateColumnForm from "./action-forms/column/create-column-form";
 import { motion } from "framer-motion";
 import { useBoards } from "~/context/boards-context";
+import CreateBoardForm from "./action-forms/board/create-board-form";
 
 const Board = () => {
-  const { user } = useUser();
-  const { currentBoardId, getCurrentBoard } = useBoards();
+  const { optimisticBoards, getCurrentBoard } = useBoards();
   const currentBoard = getCurrentBoard();
-  if (!user?.id) return <h1>Please log in (placeholder error)</h1>;
-  if (!currentBoard)
-    return <h1>No current board id available (placeholder error)</h1>;
+
+  const noBoards = !optimisticBoards.length;
+
+  const noBoardsJsx = (
+    <section className="grid w-full place-content-center gap-4">
+      <h1 className="w-full text-center text-3xl font-bold">
+        You have no boards
+      </h1>
+      <CreateBoardForm className="text-center" />
+    </section>
+  );
+
+  if (noBoards || !currentBoard) return noBoardsJsx;
 
   const emptyBoardJsx = (
     <section className="grid w-full place-content-center">

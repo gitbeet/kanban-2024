@@ -20,13 +20,13 @@ const Sidebar = () => {
       <h2 className="pl-4 text-xl font-medium">
         All boards ({optimisticBoards.length})
       </h2>
-      <div className="h-16"></div>
+      <div className="h-12"></div>
       <motion.ul>
         <AnimatePresence mode="popLayout">
           {optimisticBoards
             .sort((a, b) => a.index - b.index)
             .map((board) => (
-              <div className="overflow-hidden" key={board.index}>
+              <div className="h-fit overflow-hidden" key={board.index}>
                 <motion.li
                   layout
                   initial={{ y: "-100%", opacity: 0 }}
