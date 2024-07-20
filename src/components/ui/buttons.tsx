@@ -8,18 +8,21 @@ import { FaPlus } from "react-icons/fa6";
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   className?: string;
   ghost?: boolean;
+  variant?: "primary" | "ghost" | "text";
 }
 
 export const Button = ({
   children,
   className,
-  ghost = false,
+  variant = "primary",
   ...props
 }: ButtonProps) => {
+  const variantClasses = `${variant === "primary" ? "border-transparent bg-white text-black shadow-md" : variant === "ghost" ? "border-neutral-300 text-white" : variant === "text" ? "border-transparent" : ""}`;
+
   return (
     <button
       {...props}
-      className={` ${className} rounded border px-2 py-1 font-medium disabled:opacity-20 ${ghost ? "border-neutral-300 text-white" : "border-transparent bg-white text-black shadow-md"}`}
+      className={` ${className} ${variantClasses} rounded border px-2 py-1 font-medium disabled:opacity-20`}
     >
       {children}
     </button>

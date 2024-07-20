@@ -3,11 +3,7 @@ import type { ChangeEvent, FormEvent } from "react";
 import React, { useRef, useState } from "react";
 import { v4 as uuid } from "uuid";
 import { createColumnAction } from "~/actions";
-import {
-  CancelButton,
-  CreateButton,
-  SaveButton,
-} from "~/components/ui/buttons";
+import { CancelButton, SaveButton } from "~/components/ui/buttons";
 import { ColumnSchema } from "~/zod-schemas";
 import InputField from "~/components/ui/input-field";
 import { useBoards } from "~/context/boards-context";
@@ -24,6 +20,8 @@ const CreateColumnForm = ({
   const { setOptimisticBoards, optimisticBoards } = useBoards();
 
   const [columnName, setColumnName] = useState("");
+  const [loading, setLoading] = useState(false);
+
   const [error, setError] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const { ref } = useClickOutside<HTMLDivElement>(handleClickOutside);
@@ -31,14 +29,9 @@ const CreateColumnForm = ({
   if (!currentBoard)
     return <h1>Error finding the current board (placeholder error)</h1>;
 
-  function handleClickOutside() {
-    setIsOpen(false);
-    setColumnName("");
-    setError("");
-  }
-
   const clientAction = async (e?: FormEvent) => {
     e?.preventDefault();
+    setLoading(true);
     const maxIndex = Math.max(...currentBoard.columns.map((c) => c.index));
     createColumnRef.current?.reset();
     const newColumn: ColumnType = {
@@ -71,68 +64,60 @@ const CreateColumnForm = ({
 
     setColumnName("");
     setError("");
+    setLoading(false);
   };
 
-  const handleColumnName = (
+  const handleColumnChangeName = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     setError("");
     setColumnName(e.target.value);
   };
 
+  function handleClickOutside() {
+    setIsOpen(false);
+    setColumnName("");
+    setError("");
+  }
+
+  const notOpenJsx = (
+    <div onClick={() => setIsOpen(true)} className="flex items-center gap-1">
+      <FaPlus className="h-3 w-3" />
+      <span className="text-xl font-medium">Column</span>
+    </div>
+  );
+
+  const openJsx = (
+    <form
+      ref={createColumnRef}
+      onSubmit={clientAction}
+      className="flex items-center gap-2 p-1.5"
+    >
+      <InputField
+        autoFocus
+        value={columnName}
+        onChange={handleColumnChangeName}
+        type="text"
+        placeholder="Enter column name"
+        className="w-full !bg-neutral-900"
+        error={error}
+      />
+      <div className="flex gap-1.5">
+        <SaveButton disabled={!!error} />
+        <CancelButton onClick={handleClickOutside} />
+      </div>
+    </form>
+  );
+
   return (
     <>
-      {jsx === "input" && (
-        <form className="flex" ref={createColumnRef} onSubmit={clientAction}>
-          <input type="hidden" name="board-id" value={boardId} />
-          <InputField
-            value={columnName}
-            onChange={handleColumnName}
-            type="text"
-            name="column-name-input"
-            placeholder="Create column..."
-            error={error}
-          />
-
-          <CreateButton />
-        </form>
-      )}
       {jsx === "block" && (
         <div
           ref={ref}
-          className="grid h-32 w-80 shrink-0 cursor-pointer place-content-center rounded-md bg-neutral-700 p-4"
+          className={` ${loading ? "pointer-events-none" : ""} grid h-32 w-80 shrink-0 cursor-pointer place-content-center rounded-md bg-neutral-700 p-4`}
         >
-          {!isOpen && (
-            <div
-              onClick={() => setIsOpen(true)}
-              className="flex items-center gap-1"
-            >
-              <FaPlus className="h-3 w-3" />
-              <span className="text-xl font-medium">Column</span>
-            </div>
-          )}
-
-          {isOpen && (
-            <form
-              ref={createColumnRef}
-              onSubmit={clientAction}
-              className="flex items-center gap-2 p-1.5"
-            >
-              <InputField
-                autoFocus
-                value={columnName}
-                onChange={handleColumnName}
-                type="text"
-                placeholder="Enter column name"
-                className="w-full !bg-neutral-900"
-                error={error}
-              />
-              <div className="flex gap-1.5">
-                <SaveButton disabled={!!error} />
-                <CancelButton onClick={handleClickOutside} />
-              </div>
-            </form>
-          )}
+          {!isOpen && notOpenJsx}
+          {isOpen && openJsx}
         </div>
       )}
     </>

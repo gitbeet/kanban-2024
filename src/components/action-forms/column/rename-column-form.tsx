@@ -7,6 +7,7 @@ import {
   useTransition,
 } from "react";
 import { renameColumnAction } from "~/actions";
+import InputField from "~/components/ui/input-field";
 import { useBoards } from "~/context/boards-context";
 import useClickOutside from "~/hooks/useClickOutside";
 import { ColumnSchema } from "~/zod-schemas";
@@ -31,12 +32,6 @@ const RenameColumnForm = ({
   const renameColumnRef = useRef<HTMLFormElement>(null);
   const [loading, setLoading] = useState(false);
   const { ref } = useClickOutside<HTMLDivElement>(handleClickOutside);
-
-  function handleClickOutside() {
-    setIsOpen(false);
-    setNewColumnName(column?.name);
-    setError("");
-  }
 
   const handleColumnNameChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -69,6 +64,13 @@ const RenameColumnForm = ({
     setLoading(false);
   };
 
+  function handleClickOutside() {
+    setIsOpen(false);
+    setNewColumnName(column?.name);
+    setError("");
+    setLoading(false);
+  }
+
   return (
     <div ref={ref} className={`${loading ? "pointer-events-none" : ""}`}>
       <form
@@ -89,14 +91,16 @@ const RenameColumnForm = ({
         )}
         {isOpen && (
           <>
-            <input
-              className="input w-full"
+            <InputField
               autoFocus
-              type="text"
               value={newColumnName ?? ""}
               onChange={handleColumnNameChange}
+              type="text"
+              placeholder="Enter column name"
+              className="w-full !bg-neutral-900"
+              error={error}
             />
-            <p>{error}</p>
+
             <button type="submit" className="hidden" />
           </>
         )}

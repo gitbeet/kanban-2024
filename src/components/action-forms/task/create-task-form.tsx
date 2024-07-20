@@ -110,7 +110,7 @@ const CreateTaskForm = ({
     <>
       {!isOpen && (
         <motion.div layout>
-          <Button onClick={() => setIsOpen(true)} ghost>
+          <Button variant="text" onClick={() => setIsOpen(true)} ghost>
             <div className="flex items-center gap-1">
               <FaPlus className="h-3 w-3" />
               <span>Add a task</span>
@@ -137,7 +137,12 @@ const CreateTaskForm = ({
               <p className="text-right text-sm text-red-500"> {error}</p>
             </div>
             <div className="flex items-center gap-2 self-end">
-              <Button ghost onClick={handleCancel} type="button">
+              <Button
+                ghost
+                onClick={handleCancel}
+                type="button"
+                variant="ghost"
+              >
                 Cancel
               </Button>
               <SubmitButton>
