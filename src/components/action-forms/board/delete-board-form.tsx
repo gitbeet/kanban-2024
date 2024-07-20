@@ -1,4 +1,4 @@
-import React, { FormEvent, useState, useTransition } from "react";
+import React, { FormEvent, useEffect, useState, useTransition } from "react";
 import { deleteBoardAction } from "~/actions";
 import { DeleteButton } from "~/components/ui/buttons";
 import { useBoards } from "~/context/boards-context";
@@ -15,9 +15,17 @@ const DeleteBoardForm = ({
   ...props
 }: DeleteTaskFormProps) => {
   const [error, setError] = useState("");
-  const { setOptimisticBoards, setCurrentBoardId, optimisticBoards } =
-    useBoards();
+  const {
+    setOptimisticBoards,
+    setCurrentBoardId,
+    optimisticBoards,
+    setLoading: setBoardsLoading,
+  } = useBoards();
   const [pending, startTransition] = useTransition();
+
+  useEffect(() => {
+    setBoardsLoading((prev) => ({ ...prev, deleteBoard: pending }));
+  }, [pending]);
 
   const clientAction = async (e?: FormEvent) => {
     e?.preventDefault();
@@ -32,14 +40,6 @@ const DeleteBoardForm = ({
     }
     startTransition(async () => {
       setOptimisticBoards({ action: "deleteBoard", boardId });
-    });
-
-    const response = await deleteBoardAction(boardId, boardIndex);
-    if (response?.error) {
-      return setError(response.error);
-    }
-
-    startTransition(() => {
       const updatedBoards = optimisticBoards.filter(
         (board) => board.id !== boardId,
       );
@@ -50,6 +50,23 @@ const DeleteBoardForm = ({
         setCurrentBoardId("");
       }
     });
+
+    const response = await deleteBoardAction(boardId, boardIndex);
+    if (response?.error) {
+      return setError(response.error);
+    }
+
+    // startTransition(() => {
+    //   const updatedBoards = optimisticBoards.filter(
+    //     (board) => board.id !== boardId,
+    //   );
+    //   if (updatedBoards.length > 0) {
+    //     if (!updatedBoards[0]) return;
+    //     setCurrentBoardId(updatedBoards[0].id);
+    //   } else {
+    //     setCurrentBoardId("");
+    //   }
+    // });
   };
 
   return (

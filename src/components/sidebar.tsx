@@ -65,10 +65,8 @@ const Sidebar = () => {
 
       <p className="pl-4">Dark mode button</p>
       <p
-        onClick={() =>
-          showSidebar ? setShowSidebar(false) : setShowSidebar(true)
-        }
-        className="absolute bottom-12 right-0 translate-x-full rounded rounded-r-full border bg-white px-4 py-3 text-xl text-neutral-800"
+        onClick={() => setShowSidebar((prev) => !prev)}
+        className="absolute bottom-12 right-0 translate-x-full cursor-pointer rounded rounded-r-full border bg-white px-4 py-3 text-xl text-neutral-800"
       >
         {showSidebar ? <FaEyeSlash /> : <FaEye />}
       </p>

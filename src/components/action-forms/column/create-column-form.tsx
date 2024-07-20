@@ -16,7 +16,7 @@ interface CreateColumnProps extends React.HTMLAttributes<HTMLDivElement> {
 
 const CreateColumnForm = ({ boardId, ...props }: CreateColumnProps) => {
   const createColumnRef = useRef<HTMLFormElement>(null);
-  const { setOptimisticBoards, optimisticBoards } = useBoards();
+  const { setOptimisticBoards, getCurrentBoard } = useBoards();
 
   const [columnName, setColumnName] = useState("");
   const [loading, setLoading] = useState(false);
@@ -24,7 +24,7 @@ const CreateColumnForm = ({ boardId, ...props }: CreateColumnProps) => {
   const [error, setError] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const { ref } = useClickOutside<HTMLDivElement>(handleClickOutside);
-  const currentBoard = optimisticBoards.find((board) => board.id === boardId);
+  const currentBoard = getCurrentBoard();
   if (!currentBoard)
     return <h1>Error finding the current board (placeholder error)</h1>;
 

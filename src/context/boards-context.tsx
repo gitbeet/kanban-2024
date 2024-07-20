@@ -13,9 +13,17 @@ import type { BoardType, SetOptimisticType } from "~/types";
 interface BoardsContextType {
   optimisticBoards: BoardType[];
   setOptimisticBoards: SetOptimisticType;
-  currentBoardId: string | null;
-  setCurrentBoardId: React.Dispatch<React.SetStateAction<string | null>>;
+  currentBoardId: string;
+  setCurrentBoardId: React.Dispatch<React.SetStateAction<string>>;
   getCurrentBoard: () => BoardType | undefined;
+  loading: {
+    deleteBoard: boolean;
+  };
+  setLoading: React.Dispatch<
+    React.SetStateAction<{
+      deleteBoard: boolean;
+    }>
+  >;
 }
 
 interface BoardsProviderProps {
@@ -41,8 +49,8 @@ export const BoardsProvider: React.FC<BoardsProviderProps> = ({
     boards,
     handleOptimisticUpdate,
   );
-
-  const [currentBoardId, setCurrentBoardId] = useState<string | null>(
+  const [loading, setLoading] = useState({ deleteBoard: false });
+  const [currentBoardId, setCurrentBoardId] = useState<string>(
     optimisticBoards?.[0]?.id ?? "",
   );
 
@@ -62,6 +70,8 @@ export const BoardsProvider: React.FC<BoardsProviderProps> = ({
         currentBoardId,
         setCurrentBoardId,
         getCurrentBoard,
+        loading,
+        setLoading,
       }}
     >
       {children}
