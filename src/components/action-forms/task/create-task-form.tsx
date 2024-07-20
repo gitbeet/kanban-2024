@@ -1,13 +1,20 @@
 import { motion } from "framer-motion";
-import { type ChangeEvent, useRef, useState } from "react";
-import type { BoardType, ColumnType, TaskType } from "~/types";
+import {
+  type ChangeEvent,
+  FormEvent,
+  useEffect,
+  useRef,
+  useState,
+  useTransition,
+} from "react";
+import type { TaskType } from "~/types";
 import { v4 as uuid } from "uuid";
 import { createTaskAction } from "~/actions";
 import { Button, SubmitButton } from "~/components/ui/buttons";
 import { TaskSchema } from "~/zod-schemas";
-import InputField from "~/components/ui/input-field";
 import { useBoards } from "~/context/boards-context";
 import { FaPlus } from "react-icons/fa6";
+import { resizeTextArea } from "~/utilities/resizeTextArea";
 
 const CreateTaskForm = ({
   boardId,
@@ -16,13 +23,18 @@ const CreateTaskForm = ({
   boardId: string;
   columnId: string;
 }) => {
+  const testRef = useRef<HTMLTextAreaElement | null>(null);
   const createTaskRef = useRef<HTMLFormElement>(null);
   const { setOptimisticBoards } = useBoards();
   const [taskName, setTaskName] = useState("");
   const [error, setError] = useState("");
   const [active, setActive] = useState(false);
+  const [pending, startTransition] = useTransition();
 
   const { optimisticBoards } = useBoards();
+
+  // Dynamic height for the textarea
+  useEffect(() => resizeTextArea(testRef), [taskName, active]);
 
   const currentColumn = optimisticBoards
     .find((board) => board.id === boardId)
@@ -31,7 +43,9 @@ const CreateTaskForm = ({
   if (!currentColumn)
     return <h1>Current column not found (placeholder error)</h1>;
 
-  const clientAction = async () => {
+  const clientAction = async (e?: FormEvent) => {
+    e?.preventDefault();
+    setActive(false);
     const maxIndex =
       currentColumn.tasks.length < 1
         ? 0
@@ -50,21 +64,26 @@ const CreateTaskForm = ({
 
     const result = TaskSchema.safeParse(newTask);
     if (!result.success) {
-      return setError(result.error.issues[0]?.message ?? "An error occured");
+      setActive(true);
+      setError(result.error.issues[0]?.message ?? "An error occured");
+      return;
     }
-
-    setOptimisticBoards({
-      action: "createTask",
-      boardId,
-      columnId,
-      task: newTask,
+    startTransition(() => {
+      setOptimisticBoards({
+        action: "createTask",
+        boardId,
+        columnId,
+        task: newTask,
+      });
     });
-    setActive(false);
-    setTaskName("");
+
     const response = await createTaskAction(newTask);
     if (response?.error) {
-      return setError(response.error);
+      setActive(true);
+      setError(response.error);
+      return;
     }
+    setTaskName("");
   };
 
   const handleCancel = () => {
@@ -92,20 +111,23 @@ const CreateTaskForm = ({
         </motion.div>
       )}
       {active && (
-        <form
+        <motion.form
+          layout
           className="flex flex-col gap-2"
           ref={createTaskRef}
-          action={clientAction}
+          onSubmit={clientAction}
         >
-          <InputField
-            textarea
-            type="text"
-            name="task-name-input"
-            value={taskName}
-            onChange={handleChange}
-            error={error}
-            placeholder="New task..."
-          />
+          <div className="rounded-md bg-neutral-600 p-1.5">
+            <textarea
+              autoFocus
+              ref={testRef}
+              rows={1}
+              className={` ${error ? "!border-red-500" : ""} input w-full resize-none overflow-hidden`}
+              value={taskName}
+              onChange={handleChange}
+            />
+            <p className="text-right text-sm text-red-500"> {error}</p>
+          </div>
           <div className="flex items-center gap-2 self-end">
             <Button ghost onClick={handleCancel} type="button">
               Cancel
@@ -114,7 +136,7 @@ const CreateTaskForm = ({
               <>Add</>
             </SubmitButton>
           </div>
-        </form>
+        </motion.form>
       )}
     </>
   );

@@ -215,7 +215,6 @@ const Column = ({
           columnId={column.id}
           beforeIndex={(column.tasks.length + 1).toString()}
         />
-        <div className="h-4"></div>
       </div>
 
       <CreateTaskForm boardId={boardId} columnId={column.id} />

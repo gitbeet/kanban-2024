@@ -131,19 +131,21 @@ const RenameTaskForm = ({
           />
           <p className="text-right text-sm text-red-500"> {error}</p>
         </div>
-        <div
-          className={`${isOpen ? "opacity-100" : "opacity-0"} flex flex-col gap-2`}
-        >
-          <SaveButton disabled={!!error} />
-          <CancelButton
-            disabled={!!error}
-            onClick={() => {
-              setError("");
-              setIsOpen(false);
-              setNewTaskName(task.name);
-            }}
-          />
-        </div>
+        {isOpen && (
+          <div
+            className={`${isOpen ? "opacity-100" : "opacity-0"} flex gap-1.5`}
+          >
+            <SaveButton disabled={!!error} />
+            <CancelButton
+              disabled={!!error}
+              onClick={() => {
+                setError("");
+                setIsOpen(false);
+                setNewTaskName(task.name);
+              }}
+            />
+          </div>
+        )}
       </form>
     </div>
   );

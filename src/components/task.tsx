@@ -39,21 +39,21 @@ const Task = ({
         layoutId={task.id}
         onDragStart={(e) => handleDragStart(e, task, columnId)}
         draggable={draggable}
-        className="group flex shrink-0 cursor-grab items-center justify-between gap-4 rounded-lg border-2 border-neutral-700 border-transparent bg-neutral-700 px-4 py-3 shadow-md hover:border-sky-300"
+        className="group relative flex shrink-0 cursor-grab items-center justify-between gap-4 rounded-lg border-2 border-neutral-700 border-transparent bg-neutral-700 p-1.5 shadow-md hover:border-sky-300"
       >
-        <ToggleTaskForm
+        {/* <ToggleTaskForm
           boardId={currentBoardId}
           columnId={columnId}
           task={task}
-        />
-
+        /> */}
+        {task.index}
         <RenameTaskForm
           setDraggable={setDraggable}
           boardId={currentBoardId}
           columnId={columnId}
           task={task}
         />
-        <div className="pointer-events-none opacity-0 group-hover:pointer-events-auto group-hover:opacity-100">
+        <div className="pointer-events-none z-10 opacity-0 group-hover:pointer-events-auto group-hover:opacity-100">
           <DeleteTaskForm
             boardId={currentBoardId}
             columnId={columnId}
