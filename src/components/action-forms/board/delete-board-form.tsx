@@ -4,13 +4,16 @@ import { DeleteButton } from "~/components/ui/buttons";
 import { useBoards } from "~/context/boards-context";
 import { BoardSchema } from "~/zod-schemas";
 
+interface DeleteTaskFormProps extends React.HTMLAttributes<HTMLDivElement> {
+  boardId: string;
+  boardIndex: number;
+}
+
 const DeleteBoardForm = ({
   boardId,
   boardIndex,
-}: {
-  boardId: string;
-  boardIndex: number;
-}) => {
+  ...props
+}: DeleteTaskFormProps) => {
   const [error, setError] = useState("");
   const { setOptimisticBoards, setCurrentBoardId, optimisticBoards } =
     useBoards();
@@ -43,8 +46,7 @@ const DeleteBoardForm = ({
   };
 
   return (
-    <form onSubmit={clientAction}>
-      <input type="hidden" name="board-id" value={boardId} />
+    <form onSubmit={clientAction} className={props.className}>
       <DeleteButton />
     </form>
   );

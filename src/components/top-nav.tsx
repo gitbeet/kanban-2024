@@ -18,10 +18,9 @@ const TopNav = () => {
         {currentBoard && (
           <h1
             onClick={() => setShowSidebar((prev) => !prev)}
-            className="flex items-center gap-4 text-2xl font-medium"
+            className="w-full cursor-pointer text-center text-2xl font-medium"
           >
             {currentBoard.name}
-            <DeleteBoardForm boardId={currentBoard.id} />
           </h1>
         )}
         {!currentBoard && <h1>Current board not found {currentBoardId} </h1>}
