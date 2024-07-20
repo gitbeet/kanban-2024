@@ -3,7 +3,7 @@
 import React from "react";
 import { useBoards } from "~/context/boards-context";
 import { useUI } from "~/context/ui-context";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { FaEye, FaEyeSlash } from "react-icons/fa6";
 import CreateBoardForm from "./action-forms/board/create-board-form";
 import DeleteBoardForm from "./action-forms/board/delete-board-form";
@@ -22,34 +22,44 @@ const Sidebar = () => {
       </h2>
       <div className="h-16"></div>
       <motion.ul>
-        {optimisticBoards
-          .sort((a, b) => a.index - b.index)
-          .map((board) => (
-            <motion.li
-              onClick={() => setCurrentBoardId(board.id)}
-              layout
-              key={board.index}
-              className={`group cursor-pointer pr-4`}
-            >
-              <div className="flex items-center justify-between gap-4">
-                <span
-                  className={`w-full truncate px-4 py-3 ${board.id === currentBoardId ? "rounded-r-full bg-white text-black" : ""}`}
+        <AnimatePresence mode="popLayout">
+          {optimisticBoards
+            .sort((a, b) => a.index - b.index)
+            .map((board) => (
+              <div className="overflow-hidden" key={board.index}>
+                <motion.li
+                  layout
+                  initial={{ y: "-100%", opacity: 0 }}
+                  animate={{
+                    y: 0,
+                    opacity: 1,
+                    transition: { ease: "easeInOut" },
+                  }}
+                  exit={{ y: "-100%", opacity: 0 }}
+                  className={`group cursor-pointer pr-4`}
                 >
-                  {board.name}
-                </span>
-                <DeleteBoardForm
-                  // className="opacity-0 group-hover:opacity-100"
-                  boardId={board.id}
-                  boardIndex={board.index}
-                />
+                  <div className="flex items-center justify-between gap-4">
+                    <span
+                      onClick={() => setCurrentBoardId(board.id)}
+                      className={`w-full truncate px-4 py-3 ${board.id === currentBoardId ? "rounded-r-full bg-white text-black" : ""}`}
+                    >
+                      {board.name}
+                    </span>
+                    <DeleteBoardForm
+                      // className="opacity-0 group-hover:opacity-100"
+                      boardId={board.id}
+                      boardIndex={board.index}
+                    />
+                  </div>
+                </motion.li>
               </div>
-            </motion.li>
-          ))}
-        <motion.li layout className="px-4">
-          <div className="h-4"></div>
+            ))}
+          <motion.li layout className="px-4">
+            <div className="h-4"></div>
 
-          <CreateBoardForm />
-        </motion.li>
+            <CreateBoardForm />
+          </motion.li>
+        </AnimatePresence>
       </motion.ul>
       <div className="h-16"></div>
 
