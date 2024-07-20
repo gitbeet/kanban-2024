@@ -74,6 +74,7 @@ const CreateBoardForm = () => {
 
     setCurrentBoardId(newBoardId);
     setError("");
+    setBoardName("");
     setLoading(false);
   };
 
