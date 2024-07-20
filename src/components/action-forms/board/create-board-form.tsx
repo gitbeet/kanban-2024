@@ -12,7 +12,7 @@ import { v4 as uuid } from "uuid";
 import { useUser } from "@clerk/nextjs";
 import { createBoardAction } from "~/actions";
 import { BoardSchema } from "~/zod-schemas";
-import { Button, CreateButton } from "~/components/ui/buttons";
+import { Button, CreateButton, SaveButton } from "~/components/ui/buttons";
 import InputField from "~/components/ui/input-field";
 import { useBoards } from "~/context/boards-context";
 import { motion } from "framer-motion";
@@ -27,6 +27,7 @@ const CreateBoardForm = () => {
 
   const [boardName, setBoardName] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [pending, startTransition] = useTransition();
 
@@ -35,6 +36,7 @@ const CreateBoardForm = () => {
   const clientAction = async (e?: FormEvent) => {
     e?.preventDefault();
     if (!user?.id) return;
+    setLoading(true);
 
     const maxIndex = Math.max(...optimisticBoards.map((b) => b.index));
     const newBoardId = uuid();
@@ -48,11 +50,13 @@ const CreateBoardForm = () => {
       updatedAt: new Date(),
     };
 
+    setIsOpen(false);
+
     // Client error check
     const result = BoardSchema.safeParse(newBoard);
     if (!result.success) {
       setError(result.error.issues[0]?.message ?? "An error occured");
-      console.log(error);
+      setIsOpen(true);
       return;
     }
 
@@ -64,9 +68,13 @@ const CreateBoardForm = () => {
     const response = await createBoardAction(boardName, newBoardId);
     if (response?.error) {
       setError(response.error);
+      setIsOpen(true);
+      return;
     }
 
     setCurrentBoardId(newBoardId);
+    setError("");
+    setLoading(false);
   };
 
   const handleBoardName = (
@@ -116,7 +124,7 @@ const CreateBoardForm = () => {
               onChange={handleBoardName}
             />
 
-            <CreateButton />
+            <SaveButton disabled={!!error} />
           </form>
         </div>
       )}
