@@ -29,8 +29,16 @@ const renameBoard = (
 };
 
 const deleteBoard = (state: BoardType[], boardId?: string) => {
+  const board = state.find((board) => board.id === boardId);
+  if (!board) return;
   if (!boardId) return state;
-  return state.filter((b) => b.id !== boardId);
+  return state
+    .filter((b) => b.id !== boardId)
+    .map((b) =>
+      b.index > board?.index
+        ? { ...b, index: b.index - 1, updatedAt: new Date() }
+        : b,
+    );
 };
 
 // Columns

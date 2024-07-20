@@ -35,12 +35,6 @@ const CreateTaskForm = ({
 
   const { optimisticBoards } = useBoards();
 
-  function handleClickOutside() {
-    setIsOpen(false);
-    setTaskName("");
-    setError("");
-  }
-
   // Dynamic height for the textarea
   useEffect(() => resizeTextArea(testRef), [taskName, isOpen]);
 
@@ -94,11 +88,6 @@ const CreateTaskForm = ({
     setTaskName("");
   };
 
-  const handleCancel = () => {
-    setIsOpen(false);
-    setError("");
-  };
-
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
@@ -106,11 +95,17 @@ const CreateTaskForm = ({
     setTaskName(e.target.value);
   };
 
+  function handleClickOutside() {
+    setIsOpen(false);
+    setTaskName("");
+    setError("");
+  }
+
   return (
     <>
       {!isOpen && (
         <motion.div layout>
-          <Button variant="text" onClick={() => setIsOpen(true)} ghost>
+          <Button variant="text" onClick={() => setIsOpen(true)}>
             <div className="flex items-center gap-1">
               <FaPlus className="h-3 w-3" />
               <span>Add a task</span>
@@ -139,7 +134,7 @@ const CreateTaskForm = ({
             <div className="flex items-center gap-2 self-end">
               <Button
                 ghost
-                onClick={handleCancel}
+                onClick={handleClickOutside}
                 type="button"
                 variant="ghost"
               >

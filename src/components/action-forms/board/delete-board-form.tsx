@@ -1,14 +1,27 @@
-import React, { useState } from "react";
+import React, { FormEvent, useState, useTransition } from "react";
 import { deleteBoardAction } from "~/actions";
 import { DeleteButton } from "~/components/ui/buttons";
 import { useBoards } from "~/context/boards-context";
 import { BoardSchema } from "~/zod-schemas";
 
-const DeleteBoardForm = ({ boardId }: { boardId: string }) => {
+const DeleteBoardForm = ({
+  boardId,
+  boardIndex,
+}: {
+  boardId: string;
+  boardIndex: number;
+}) => {
   const [error, setError] = useState("");
-  const { setOptimisticBoards } = useBoards();
+  const { setOptimisticBoards, setCurrentBoardId, optimisticBoards } =
+    useBoards();
+  const [pending, startTransition] = useTransition();
 
-  const clientAction = async () => {
+  const newId = optimisticBoards?.[0]?.id;
+
+  if (!newId) return;
+
+  const clientAction = async (e?: FormEvent) => {
+    e?.preventDefault();
     // Not completely sure if check is needed
     const result = BoardSchema.shape.id.safeParse(boardId);
 
@@ -18,15 +31,19 @@ const DeleteBoardForm = ({ boardId }: { boardId: string }) => {
       console.log(error);
       return;
     }
-    setOptimisticBoards({ action: "deleteBoard", boardId });
-    const response = await deleteBoardAction(boardId);
-    if (response?.error) {
-      return setError(response.error);
-    }
+    startTransition(async () => {
+      setOptimisticBoards({ action: "deleteBoard", boardId });
+      const response = await deleteBoardAction(boardId, boardIndex);
+      if (response?.error) {
+        return setError(response.error);
+      }
+    });
+
+    setCurrentBoardId(newId);
   };
 
   return (
-    <form action={clientAction}>
+    <form onSubmit={clientAction}>
       <input type="hidden" name="board-id" value={boardId} />
       <DeleteButton />
     </form>

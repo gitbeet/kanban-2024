@@ -10,22 +10,20 @@ import { useBoards } from "~/context/boards-context";
 
 const Board = () => {
   const { user } = useUser();
-  const { currentBoardId, optimisticBoards } = useBoards();
-  const currentBoard = optimisticBoards.find(
-    (board) => board.id === currentBoardId,
-  );
+  const { currentBoardId, getCurrentBoard } = useBoards();
+  const currentBoard = getCurrentBoard();
   if (!user?.id) return <h1>Please log in (placeholder error)</h1>;
-  if (!currentBoard || !currentBoardId)
-    return <h1>No current board available (placeholder error)</h1>;
+  if (!currentBoardId)
+    return <h1>No current board id available (placeholder error)</h1>;
   return (
     // Key prop for framer-motion
     <motion.section
       layout
       key={currentBoardId}
-      className="grid flex-1 grow grid-rows-[1fr,100%] overflow-scroll"
+      className="grid grow grid-rows-[1fr,auto] overflow-auto"
     >
       <motion.div className="flex gap-4 p-8">
-        {currentBoard.columns
+        {currentBoard?.columns
           .sort((a, b) => a.index - b.index)
           .map((col) => (
             <Column key={col.index} boardId={currentBoardId} column={col} />

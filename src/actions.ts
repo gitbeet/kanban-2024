@@ -25,14 +25,19 @@ import {
 
 // Not sure if I should use te whole object or just the needed properties to pass to the action
 
-export const createBoardAction = async (boardName: unknown) => {
-  const BoardNameSchema = BoardSchema.shape.name;
-  const result = BoardNameSchema.safeParse(boardName);
+export const createBoardAction = async (
+  boardName: unknown,
+  boardId: unknown,
+) => {
+  const result = BoardSchema.pick({ name: true, id: true }).safeParse({
+    name: boardName,
+    id: boardId,
+  });
   if (!result.success) {
     return { error: result.error.issues[0]?.message };
   }
   // Add try/catch in case insert not successful
-  await createBoard(boardName as string);
+  await createBoard(boardName as string, boardId as string);
 };
 
 export const renameBoardAction = async (
@@ -53,15 +58,21 @@ export const renameBoardAction = async (
   await renameBoard(boardId as string, newBoardName as string);
 };
 
-export const deleteBoardAction = async (boardId: unknown) => {
-  const result = BoardSchema.shape.id.safeParse(boardId);
+export const deleteBoardAction = async (
+  boardId: unknown,
+  boardIndex: unknown,
+) => {
+  const result = BoardSchema.pick({ id: true, index: true }).safeParse({
+    id: boardId,
+    index: boardIndex,
+  });
   if (!result.success) {
     console.log(result.error);
     return { error: result.error.issues[0]?.message };
   }
   // Add try/catch in case insert not successful
 
-  await deleteBoard(boardId as string);
+  await deleteBoard(boardId as string, boardIndex as number);
 };
 
 // ---------- COLUMNS ----------

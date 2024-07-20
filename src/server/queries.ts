@@ -28,7 +28,7 @@ export async function getBoards() {
   return boards;
 }
 
-export async function createBoard(name: string) {
+export async function createBoard(name: string, id: string) {
   const user = auth();
 
   if (!user.userId) throw new Error("Unauthorized");
@@ -44,7 +44,7 @@ export async function createBoard(name: string) {
   if (typeof maxIndex === undefined) throw new Error("No max index");
 
   const newBoard: BoardType = {
-    id: uuid(),
+    id,
     name,
     columns: [],
     userId: user.userId,
@@ -69,13 +69,18 @@ export async function renameBoard(boardId: string, newName: string) {
   revalidatePath("/");
 }
 
-export async function deleteBoard(boardId: string) {
+export async function deleteBoard(boardId: string, boardIndex: number) {
   const user = auth();
   if (!user.userId) throw new Error("Unauthorized");
 
   await db
+    .update(boards)
+    .set({ index: sql`${boards.index} - 1` })
+    .where(and(gt(boards.index, boardIndex), eq(boards.userId, user.userId)));
+  await db
     .delete(boards)
     .where(and(eq(boards.id, boardId), eq(boards.userId, user.userId)));
+
   revalidatePath("/");
 }
 

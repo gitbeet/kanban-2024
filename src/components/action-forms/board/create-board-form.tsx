@@ -1,29 +1,45 @@
 "use client";
 
-import React, { type ChangeEvent, useRef, useState } from "react";
+import React, {
+  type ChangeEvent,
+  FormEvent,
+  useRef,
+  useState,
+  useTransition,
+} from "react";
 import type { BoardType } from "~/types";
 import { v4 as uuid } from "uuid";
 import { useUser } from "@clerk/nextjs";
 import { createBoardAction } from "~/actions";
 import { BoardSchema } from "~/zod-schemas";
-import { CreateButton } from "~/components/ui/buttons";
+import { Button, CreateButton } from "~/components/ui/buttons";
 import InputField from "~/components/ui/input-field";
 import { useBoards } from "~/context/boards-context";
+import { motion } from "framer-motion";
+import { FaPlus } from "react-icons/fa";
+import useClickOutside from "~/hooks/useClickOutside";
 
 const CreateBoardForm = () => {
   const createBoardRef = useRef<HTMLFormElement>(null);
   const { user } = useUser();
-  const { optimisticBoards, setOptimisticBoards } = useBoards();
+  const { optimisticBoards, setOptimisticBoards, setCurrentBoardId } =
+    useBoards();
 
   const [boardName, setBoardName] = useState("");
   const [error, setError] = useState("");
+  const [isOpen, setIsOpen] = useState(false);
+  const [pending, startTransition] = useTransition();
 
-  const clientAction = async () => {
+  const { ref } = useClickOutside<HTMLDivElement>(handleClickOutside);
+
+  const clientAction = async (e?: FormEvent) => {
+    e?.preventDefault();
     if (!user?.id) return;
+
     const maxIndex = Math.max(...optimisticBoards.map((b) => b.index));
-    createBoardRef.current?.reset();
+    const newBoardId = uuid();
     const newBoard: BoardType = {
-      id: uuid(),
+      id: newBoardId,
       index: maxIndex + 1,
       name: boardName,
       columns: [],
@@ -39,13 +55,18 @@ const CreateBoardForm = () => {
       console.log(error);
       return;
     }
-    setOptimisticBoards({ action: "createBoard", board: newBoard });
+
+    startTransition(() => {
+      setOptimisticBoards({ action: "createBoard", board: newBoard });
+    });
 
     // Server error check
-    const response = await createBoardAction(boardName);
+    const response = await createBoardAction(boardName, newBoardId);
     if (response?.error) {
       setError(response.error);
     }
+
+    setCurrentBoardId(newBoardId);
   };
 
   const handleBoardName = (
@@ -55,23 +76,51 @@ const CreateBoardForm = () => {
     setBoardName(e.target.value);
   };
 
-  return (
-    <form
-      ref={createBoardRef}
-      action={clientAction}
-      className="flex items-center gap-2"
-    >
-      <InputField
-        name="board-name-input"
-        type="text"
-        error={error}
-        placeholder="Create board..."
-        value={boardName}
-        onChange={handleBoardName}
-      />
+  function handleClickOutside() {
+    setIsOpen(false);
+    setBoardName("");
+    setError("");
+  }
 
-      <CreateButton />
-    </form>
+  return (
+    <>
+      {!isOpen && (
+        <motion.div layout>
+          <Button
+            variant="text"
+            onClick={() => setIsOpen(true)}
+            className="-ml-2"
+          >
+            <div className="flex items-center gap-1">
+              <FaPlus className="h-3 w-3" />
+              <span>Add a board</span>
+            </div>
+          </Button>
+        </motion.div>
+      )}
+      {isOpen && (
+        <div ref={ref}>
+          <form
+            ref={createBoardRef}
+            onSubmit={clientAction}
+            className="flex items-center gap-2"
+          >
+            <InputField
+              autoFocus
+              name="board-name-input"
+              type="text"
+              error={error}
+              placeholder="Create board..."
+              value={boardName}
+              className="w-full"
+              onChange={handleBoardName}
+            />
+
+            <CreateButton />
+          </form>
+        </div>
+      )}
+    </>
   );
 };
 
