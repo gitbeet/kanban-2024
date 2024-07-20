@@ -30,8 +30,7 @@ const renameBoard = (
 
 const deleteBoard = (state: BoardType[], boardId?: string) => {
   const board = state.find((board) => board.id === boardId);
-  if (!board) return;
-  if (!boardId) return state;
+  if (!board || !boardId) return state;
   return state
     .filter((b) => b.id !== boardId)
     .map((b) =>
