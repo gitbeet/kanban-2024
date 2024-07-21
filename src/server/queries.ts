@@ -408,3 +408,14 @@ export async function deleteSubtask(subtaskId: string) {
   await db.delete(subtasks).where(eq(subtasks.id, subtaskId));
   revalidatePath("/");
 }
+
+export async function renameSubtask(subtaskId: string, newName: string) {
+  const user = auth();
+  if (!user.userId) throw new Error("Unauthorized");
+  // Check if subtask belongs to user?
+  await db
+    .update(subtasks)
+    .set({ name: newName, updatedAt: new Date() })
+    .where(eq(subtasks.id, subtaskId));
+  revalidatePath("/");
+}

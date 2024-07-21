@@ -66,7 +66,7 @@ const Task = ({
         <ul>
           {task.subtasks.map((subtask) => (
             <li key={subtask.index}>
-              <span>{subtask.index}</span>
+              <span>{subtask.name}</span>
               <DeleteSubtaskForm
                 columnId={columnId}
                 taskId={task.id}
