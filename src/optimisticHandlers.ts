@@ -340,6 +340,50 @@ const createSubtask = (
   );
 };
 
+const deleteSubtask = (
+  state: OptimisticBoardType[],
+  boardId?: string,
+  columnId?: string,
+  taskId?: string,
+  subtaskId?: string,
+) => {
+  if (!boardId || !columnId || !taskId || !subtaskId) return state;
+  return state.map((b) =>
+    b.id === boardId
+      ? {
+          ...b,
+          columns: b.columns.map((c) =>
+            c.id === columnId
+              ? {
+                  ...c,
+                  tasks: c.tasks.map((t) => {
+                    if (t.id === taskId) {
+                      const currentSubtaskIndex = t.subtasks.find(
+                        (s) => s.id === subtaskId,
+                      )?.index;
+                      if (!currentSubtaskIndex) return t;
+                      return {
+                        ...t,
+                        subtasks: t.subtasks
+                          .filter((s) => s.id !== subtaskId)
+                          .map((s) =>
+                            s.index > currentSubtaskIndex
+                              ? { ...s, index: s.index - 1 }
+                              : s,
+                          ),
+                      };
+                    } else {
+                      return c;
+                    }
+                  }),
+                }
+              : c,
+          ),
+        }
+      : b,
+  );
+};
+
 export const handleOptimisticUpdate = (
   state: OptimisticBoardType[],
   {
@@ -355,6 +399,7 @@ export const handleOptimisticUpdate = (
     taskId,
     newTaskName,
     subtask,
+    subtaskId,
     oldColumnId,
     newColumnId,
     oldColumnIndex,
@@ -398,6 +443,8 @@ export const handleOptimisticUpdate = (
       );
     case "createSubtask":
       return createSubtask(state, boardId, columnId, taskId, subtask);
+    case "deleteSubtask":
+      return deleteSubtask(state, boardId, columnId, taskId, subtaskId);
     default:
       break;
   }

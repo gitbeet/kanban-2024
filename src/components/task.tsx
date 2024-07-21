@@ -11,6 +11,7 @@ import DeleteTaskForm from "./action-forms/task/delete-task-form";
 import ToggleTaskForm from "./action-forms/task/toggle-task-form";
 import type { TaskType } from "../types";
 import CreateSubtaskForm from "./action-forms/subtask/create-subtask-form";
+import DeleteSubtaskForm from "./action-forms/subtask/delete-subtask-form";
 
 const Task = ({
   columnId,
@@ -64,7 +65,14 @@ const Task = ({
         <CreateSubtaskForm columnId={columnId} taskId={task.id} />
         <ul>
           {task.subtasks.map((subtask) => (
-            <li key={subtask.index}>{subtask.name}</li>
+            <li key={subtask.index}>
+              <span>{subtask.index}</span>
+              <DeleteSubtaskForm
+                columnId={columnId}
+                taskId={task.id}
+                subtaskId={subtask.id}
+              />
+            </li>
           ))}
         </ul>
       </motion.div>

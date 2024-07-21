@@ -25,7 +25,8 @@ export type OptimisticActionType =
   | "deleteTask"
   | "toggleTask"
   | "switchTaskColumn"
-  | "createSubtask";
+  | "createSubtask"
+  | "deleteSubtask";
 
 export interface OptimisticBoardType extends BoardType {
   current: boolean;
@@ -44,6 +45,7 @@ export type OptimisticParams = {
   taskId?: string;
   newTaskName?: string;
   subtask?: SubtaskType;
+  subtaskId?: string;
   oldColumnId?: string;
   newColumnId?: string;
   newColumnIndex?: number;
