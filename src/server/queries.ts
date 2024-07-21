@@ -20,7 +20,11 @@ export async function getBoards() {
     with: {
       columns: {
         with: {
-          tasks: true,
+          tasks: {
+            with: {
+              subtasks: true,
+            },
+          },
         },
       },
     },
