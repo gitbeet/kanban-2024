@@ -84,7 +84,7 @@ export const subtasks = createTable(
     id: varchar("id", { length: 1024 }).primaryKey(),
     name: varchar("name", { length: 256 }).notNull(),
     taskId: varchar("taskId", { length: 1024 })
-      .references(() => columns.id, { onDelete: "cascade" })
+      .references(() => tasks.id, { onDelete: "cascade" })
       .notNull(),
     index: integer("index").notNull(),
     completed: boolean("completed").notNull().default(false),

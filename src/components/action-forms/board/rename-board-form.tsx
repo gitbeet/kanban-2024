@@ -24,7 +24,9 @@ const RenameBoardForm = ({ boardId }: { boardId: string }) => {
     if (!result.success) {
       return setError(result.error.issues[0]?.message ?? "An error occured");
     }
-
+    // 7ed3f027-dae1-4d16-90e9-d9bd7ad28593
+    // 2024-07-21 06:24:45.035+00
+    // 2024-07-21 05:59:49.201+00
     setOptimisticBoards({
       action: "renameBoard",
       boardId: boardId,

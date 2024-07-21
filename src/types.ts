@@ -7,6 +7,9 @@ export type ColumnType = Awaited<
 export type TaskType = Awaited<
   ReturnType<typeof getBoards>
 >[number]["columns"][number]["tasks"][number];
+export type SubtaskType = Awaited<
+  ReturnType<typeof getBoards>
+>[number]["columns"][number]["tasks"][number]["subtasks"][number];
 
 export type OptimisticActionType =
   | "getInitialBoards"

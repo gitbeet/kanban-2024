@@ -60,6 +60,11 @@ const Task = ({
             taskId={task.id}
           />
         </div>
+        <ul>
+          {task.subtasks.map((subtask) => (
+            <li key={subtask.index}>{subtask.name}</li>
+          ))}
+        </ul>
       </motion.div>
     </>
   );

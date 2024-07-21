@@ -2,11 +2,11 @@ import "server-only";
 
 import { db } from "./db/index";
 import { auth } from "@clerk/nextjs/server";
-import { boards, columns, tasks } from "./db/schema";
+import { boards, columns, subtasks, tasks } from "./db/schema";
 import { v4 as uuid } from "uuid";
 import { revalidatePath } from "next/cache";
 import { and, eq, gt, gte, lt, lte, ne, sql } from "drizzle-orm";
-import type { BoardType, ColumnType, TaskType } from "~/types";
+import type { BoardType, ColumnType, SubtaskType, TaskType } from "~/types";
 
 // ---------- BOARD ----------
 
@@ -354,4 +354,36 @@ export async function switchColumn(
   }
 
   revalidatePath("/");
+}
+
+// Subtasks
+
+export async function createSubtask(taskId: string, name: string) {
+  const user = auth();
+  if (!user.userId) throw new Error("Unauthorized");
+  // Check if task belongs to user?
+
+  // calculate current max position
+  const subtasksOrdered = await db.query.subtasks.findMany({
+    where: (model, { eq }) => eq(model.taskId, taskId),
+    orderBy: (model, { desc }) => desc(model.index),
+    limit: 1,
+  });
+  const maxIndex = subtasksOrdered[0]?.index ?? 0;
+
+  if (typeof maxIndex === undefined) throw new Error("No max index");
+
+  const newSubtask: SubtaskType = {
+    id: uuid(),
+    index: maxIndex + 1,
+    name,
+    completed: false,
+    taskId,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  };
+
+  await db.insert(subtasks).values(newSubtask);
+  revalidatePath("/");
+  return newSubtask;
 }
