@@ -12,6 +12,7 @@ import {
   makeBoardCurrent,
   renameBoard,
   renameColumn,
+  renameSubtask,
   renameTask,
   switchColumn,
   toggleTaskCompleted,
@@ -247,4 +248,20 @@ export const deleteSubtaskAction = async (subtaskId: unknown) => {
     return { error: result.error.issues[0]?.message };
   }
   await deleteSubtask(subtaskId as string);
+};
+
+export const renameSubtaskAction = async (
+  subtaskId: unknown,
+  newSubtaskName: unknown,
+) => {
+  const result = SubtaskSchema.pick({ id: true, name: true }).safeParse({
+    id: subtaskId,
+    name: newSubtaskName,
+  });
+  if (!result.success) {
+    console.log(result.error);
+    return { error: result.error.issues[0]?.message };
+  }
+
+  await renameSubtask(subtaskId as string, newSubtaskName as string);
 };
