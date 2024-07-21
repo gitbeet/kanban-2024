@@ -7,6 +7,7 @@ import {
   deleteBoard,
   deleteColumn,
   deleteTask,
+  makeBoardCurrent,
   renameBoard,
   renameColumn,
   renameTask,
@@ -28,6 +29,7 @@ import {
 export const createBoardAction = async (
   boardName: unknown,
   boardId: unknown,
+  oldCurrentBoardId: unknown,
 ) => {
   const result = BoardSchema.pick({ name: true, id: true }).safeParse({
     name: boardName,
@@ -37,7 +39,11 @@ export const createBoardAction = async (
     return { error: result.error.issues[0]?.message };
   }
   // Add try/catch in case insert not successful
-  await createBoard(boardName as string, boardId as string);
+  await createBoard(
+    boardName as string,
+    boardId as string,
+    oldCurrentBoardId as string,
+  );
 };
 
 export const renameBoardAction = async (
@@ -61,6 +67,7 @@ export const renameBoardAction = async (
 export const deleteBoardAction = async (
   boardId: unknown,
   boardIndex: unknown,
+  wasCurrent: unknown,
 ) => {
   const result = BoardSchema.pick({ id: true, index: true }).safeParse({
     id: boardId,
@@ -72,7 +79,34 @@ export const deleteBoardAction = async (
   }
   // Add try/catch in case insert not successful
 
-  await deleteBoard(boardId as string, boardIndex as number);
+  await deleteBoard(
+    boardId as string,
+    boardIndex as number,
+    wasCurrent as boolean,
+  );
+};
+
+export const makeBoardCurrentAction = async (
+  oldCurrentBoardId: unknown,
+  newCurrentBoardId: unknown,
+) => {
+  const result1 = BoardSchema.shape.id.safeParse(oldCurrentBoardId);
+  const result2 = BoardSchema.shape.id.safeParse(newCurrentBoardId);
+  if (!result1.success || !result2.success) {
+    console.log(
+      result1.error?.issues[0]?.message ?? result2.error?.issues[0]?.message,
+    );
+    return {
+      error:
+        result1.error?.issues[0]?.message ?? result2.error?.issues[0]?.message,
+    };
+  }
+  // Add try/catch in case insert not successful
+
+  await makeBoardCurrent(
+    oldCurrentBoardId as string,
+    newCurrentBoardId as string,
+  );
 };
 
 // ---------- COLUMNS ----------

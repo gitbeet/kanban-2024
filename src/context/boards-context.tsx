@@ -8,22 +8,28 @@ import React, {
   useState,
 } from "react";
 import { handleOptimisticUpdate } from "~/optimisticHandlers";
-import type { BoardType, SetOptimisticType } from "~/types";
+import type {
+  BoardType,
+  OptimisticBoardType,
+  SetOptimisticType,
+} from "~/types";
 
 interface BoardsContextType {
-  optimisticBoards: BoardType[];
+  optimisticBoards: OptimisticBoardType[];
   setOptimisticBoards: SetOptimisticType;
-  currentBoardId: string;
-  setCurrentBoardId: React.Dispatch<React.SetStateAction<string>>;
-  getCurrentBoard: () => BoardType | undefined;
   loading: {
     deleteBoard: boolean;
+    createBoard: boolean;
+    makeBoardCurrent: boolean;
   };
   setLoading: React.Dispatch<
     React.SetStateAction<{
       deleteBoard: boolean;
+      createBoard: boolean;
+      makeBoardCurrent: boolean;
     }>
   >;
+  getCurrentBoard: () => OptimisticBoardType | undefined;
 }
 
 interface BoardsProviderProps {
@@ -49,17 +55,14 @@ export const BoardsProvider: React.FC<BoardsProviderProps> = ({
     boards,
     handleOptimisticUpdate,
   );
-  const [loading, setLoading] = useState({ deleteBoard: false });
-  const [currentBoardId, setCurrentBoardId] = useState<string>(
-    optimisticBoards?.[0]?.id ?? "",
-  );
+  const [loading, setLoading] = useState({
+    deleteBoard: false,
+    createBoard: false,
+    makeBoardCurrent: false,
+  });
 
   const getCurrentBoard = () => {
-    const currentBoard = optimisticBoards.find(
-      (board) => board.id === currentBoardId,
-    );
-
-    return currentBoard;
+    return optimisticBoards.find((board) => board.current === true);
   };
 
   return (
@@ -67,11 +70,9 @@ export const BoardsProvider: React.FC<BoardsProviderProps> = ({
       value={{
         optimisticBoards,
         setOptimisticBoards,
-        currentBoardId,
-        setCurrentBoardId,
-        getCurrentBoard,
         loading,
         setLoading,
+        getCurrentBoard,
       }}
     >
       {children}

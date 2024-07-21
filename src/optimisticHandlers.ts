@@ -1,24 +1,32 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type {
-  BoardType,
   ColumnType,
   OptimisticParams,
   TaskType,
+  BoardType,
+  OptimisticBoardType,
 } from "./types";
 
 // Boards
-const getInitialBoards = (state: BoardType[], boards?: BoardType[]) => {
+const getInitialBoards = (
+  state: OptimisticBoardType[],
+  boards?: OptimisticBoardType[],
+) => {
   if (!boards) return state;
   return [...state, ...boards];
 };
 
-const createBoard = (state: BoardType[], board?: BoardType) => {
+const createBoard = (
+  state: OptimisticBoardType[],
+  board?: OptimisticBoardType,
+) => {
   if (!board) return state;
-  return [...state, board];
+  const allfalse = state.map((b) => ({ ...b, current: false }));
+  return [...allfalse, board];
 };
 
 const renameBoard = (
-  state: BoardType[],
+  state: OptimisticBoardType[],
   boardId?: string,
   newBoardName?: string,
 ) => {
@@ -28,21 +36,40 @@ const renameBoard = (
   );
 };
 
-const deleteBoard = (state: BoardType[], boardId?: string) => {
+const deleteBoard = (state: OptimisticBoardType[], boardId?: string) => {
   const board = state.find((board) => board.id === boardId);
+  const wasCurrent = board?.current;
   if (!board || !boardId) return state;
-  return state
+  let updatedBoards = state
+    // filter the deleted board
     .filter((b) => b.id !== boardId)
+    // decrement the index of the tasks below
     .map((b) =>
       b.index > board?.index
         ? { ...b, index: b.index - 1, updatedAt: new Date() }
         : b,
     );
+  // If the deleted board was current , set the first board as current else nothing
+  if (wasCurrent) {
+    updatedBoards = updatedBoards.map((b, i) =>
+      i === 0 ? { ...b, current: true } : { ...b, current: false },
+    );
+  }
+  return updatedBoards;
+};
+
+const makeBoardCurrent = (state: OptimisticBoardType[], boardId?: string) => {
+  if (!boardId) return state;
+  return state
+    .map((b) => ({ ...b, current: false }))
+    .map((b) =>
+      b.id === boardId ? { ...b, current: true, updatedAt: new Date() } : b,
+    );
 };
 
 // Columns
 const createColumn = (
-  state: BoardType[],
+  state: OptimisticBoardType[],
   boardId?: string,
   column?: ColumnType,
 ) => {
@@ -53,7 +80,7 @@ const createColumn = (
 };
 
 const renameColumn = (
-  state: BoardType[],
+  state: OptimisticBoardType[],
   boardId?: string,
   columnId?: string,
   newColumnName?: string,
@@ -72,7 +99,7 @@ const renameColumn = (
 };
 
 const deleteColumn = (
-  state: BoardType[],
+  state: OptimisticBoardType[],
   boardId?: string,
   columnId?: string,
 ) => {
@@ -86,7 +113,7 @@ const deleteColumn = (
 
 // Tasks
 const createTask = (
-  state: BoardType[],
+  state: OptimisticBoardType[],
   boardId?: string,
   columnId?: string,
   task?: TaskType,
@@ -105,7 +132,7 @@ const createTask = (
 };
 
 const renameTask = (
-  state: BoardType[],
+  state: OptimisticBoardType[],
   boardId?: string,
   columnId?: string,
   taskId?: string,
@@ -134,7 +161,7 @@ const renameTask = (
 };
 
 const deleteTask = (
-  state: BoardType[],
+  state: OptimisticBoardType[],
   boardId?: string,
   columnId?: string,
   taskId?: string,
@@ -170,7 +197,7 @@ const deleteTask = (
 };
 
 const toggleTask = (
-  state: BoardType[],
+  state: OptimisticBoardType[],
   boardId?: string,
   columnId?: string,
   taskId?: string,
@@ -196,7 +223,7 @@ const toggleTask = (
 };
 
 const switchTaskColumn = (
-  state: BoardType[],
+  state: OptimisticBoardType[],
   boardId?: string,
   taskId?: string,
   oldColumnId?: string,
@@ -283,7 +310,7 @@ const switchTaskColumn = (
 };
 
 export const handleOptimisticUpdate = (
-  state: BoardType[],
+  state: OptimisticBoardType[],
   {
     action,
     boards,
@@ -311,6 +338,8 @@ export const handleOptimisticUpdate = (
       return renameBoard(state, boardId, newBoardName);
     case "deleteBoard":
       return deleteBoard(state, boardId);
+    case "makeBoardCurrent":
+      return makeBoardCurrent(state, boardId);
     case "createColumn":
       return createColumn(state, boardId, column);
     case "renameColumn":

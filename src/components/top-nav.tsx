@@ -6,9 +6,9 @@ import { useBoards } from "~/context/boards-context";
 import { useUI } from "~/context/ui-context";
 
 const TopNav = () => {
-  const { currentBoardId, optimisticBoards } = useBoards();
+  const { getCurrentBoard, optimisticBoards } = useBoards();
   const { setShowSidebar } = useUI();
-  const currentBoard = optimisticBoards.find((b) => b.id === currentBoardId);
+  const currentBoard = getCurrentBoard();
 
   const noBoards = !optimisticBoards.length;
 

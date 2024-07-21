@@ -3,16 +3,17 @@
 import React, {
   type ChangeEvent,
   FormEvent,
+  useEffect,
   useRef,
   useState,
   useTransition,
 } from "react";
-import type { BoardType } from "~/types";
+import type { BoardType, OptimisticBoardType } from "~/types";
 import { v4 as uuid } from "uuid";
 import { useUser } from "@clerk/nextjs";
-import { createBoardAction } from "~/actions";
+import { createBoardAction, makeBoardCurrentAction } from "~/actions";
 import { BoardSchema } from "~/zod-schemas";
-import { Button, CreateButton, SaveButton } from "~/components/ui/buttons";
+import { Button, SaveButton } from "~/components/ui/buttons";
 import InputField from "~/components/ui/input-field";
 import { useBoards } from "~/context/boards-context";
 import { motion } from "framer-motion";
@@ -24,14 +25,22 @@ const CreateBoardForm = ({
 }: React.HTMLAttributes<HTMLDivElement>) => {
   const createBoardRef = useRef<HTMLFormElement>(null);
   const { user } = useUser();
-  const { optimisticBoards, setOptimisticBoards, setCurrentBoardId } =
-    useBoards();
+  const {
+    optimisticBoards,
+    setOptimisticBoards,
+    setLoading: setBoardsLoading,
+    getCurrentBoard,
+  } = useBoards();
 
   const [boardName, setBoardName] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [pending, startTransition] = useTransition();
+
+  useEffect(() => {
+    setBoardsLoading((prev) => ({ ...prev, createBoard: pending }));
+  }, [pending, setBoardsLoading]);
 
   const { ref } = useClickOutside<HTMLDivElement>(handleClickOutside);
 
@@ -42,8 +51,9 @@ const CreateBoardForm = ({
 
     const maxIndex = Math.max(...optimisticBoards.map((b) => b.index));
     const newBoardId = uuid();
-    const newBoard: BoardType = {
+    const newBoard: OptimisticBoardType = {
       id: newBoardId,
+      current: true,
       index: maxIndex + 1,
       name: boardName,
       columns: [],
@@ -64,17 +74,30 @@ const CreateBoardForm = ({
 
     startTransition(() => {
       setOptimisticBoards({ action: "createBoard", board: newBoard });
+      console.log(optimisticBoards);
     });
 
     // Server error check
-    const response = await createBoardAction(boardName, newBoardId);
+    const currentBoardId = getCurrentBoard()?.id;
+
+    const response = await createBoardAction(
+      boardName,
+      newBoardId,
+      currentBoardId,
+    );
     if (response?.error) {
       setError(response.error);
       setIsOpen(true);
       return;
     }
 
-    setCurrentBoardId(newBoardId);
+    // const response2 = await makeBoardCurrentAction(currentBoardId, newBoardId);
+    // if (response2?.error) {
+    //   setError(response2.error);
+    //   setIsOpen(true);
+    //   return;
+    // }
+
     setError("");
     setBoardName("");
     setLoading(false);

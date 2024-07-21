@@ -28,7 +28,11 @@ export async function getBoards() {
   return boards;
 }
 
-export async function createBoard(name: string, id: string) {
+export async function createBoard(
+  name: string,
+  id: string,
+  oldCurrentBoardId: string,
+) {
   const user = auth();
 
   if (!user.userId) throw new Error("Unauthorized");
@@ -47,12 +51,19 @@ export async function createBoard(name: string, id: string) {
     id,
     name,
     columns: [],
+    current: true,
     userId: user.userId,
     createdAt: new Date(),
     updatedAt: new Date(),
     index: maxIndex + 1,
   };
 
+  await db
+    .update(boards)
+    .set({ current: false })
+    .where(
+      and(eq(boards.id, oldCurrentBoardId), eq(boards.userId, user.userId)),
+    );
   const insertedBoard = await db.insert(boards).values(newBoard);
   revalidatePath("/");
   return insertedBoard;
@@ -69,7 +80,11 @@ export async function renameBoard(boardId: string, newName: string) {
   revalidatePath("/");
 }
 
-export async function deleteBoard(boardId: string, boardIndex: number) {
+export async function deleteBoard(
+  boardId: string,
+  boardIndex: number,
+  wasCurrent: boolean,
+) {
   const user = auth();
   if (!user.userId) throw new Error("Unauthorized");
 
@@ -80,6 +95,33 @@ export async function deleteBoard(boardId: string, boardIndex: number) {
   await db
     .delete(boards)
     .where(and(eq(boards.id, boardId), eq(boards.userId, user.userId)));
+  if (!wasCurrent) return revalidatePath("/");
+  await db
+    .update(boards)
+    .set({ current: true })
+    .where(and(eq(boards.index, 1), eq(boards.userId, user.userId)));
+  revalidatePath("/");
+}
+
+export async function makeBoardCurrent(
+  oldCurrentBoardId: string,
+  newCurrentBoardId: string,
+) {
+  const user = auth();
+  if (!user.userId) throw new Error("Unauthorized");
+
+  await db
+    .update(boards)
+    .set({ current: false, updatedAt: new Date() })
+    .where(
+      and(eq(boards.id, oldCurrentBoardId), eq(boards.userId, user.userId)),
+    );
+  await db
+    .update(boards)
+    .set({ current: true })
+    .where(
+      and(eq(boards.id, newCurrentBoardId), eq(boards.userId, user.userId)),
+    );
 
   revalidatePath("/");
 }

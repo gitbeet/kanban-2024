@@ -13,6 +13,7 @@ export type OptimisticActionType =
   | "createBoard"
   | "renameBoard"
   | "deleteBoard"
+  | "makeBoardCurrent"
   | "createColumn"
   | "renameColumn"
   | "deleteColumn"
@@ -22,13 +23,17 @@ export type OptimisticActionType =
   | "toggleTask"
   | "switchTaskColumn";
 
+export interface OptimisticBoardType extends BoardType {
+  current: boolean;
+}
+
 export type OptimisticParams = {
   action: OptimisticActionType;
-  board?: BoardType;
+  board?: OptimisticBoardType;
   boardId?: string;
   newBoardName?: string;
   newColumnName?: string;
-  boards?: BoardType[];
+  boards?: OptimisticBoardType[];
   column?: ColumnType;
   task?: TaskType;
   columnId?: string;

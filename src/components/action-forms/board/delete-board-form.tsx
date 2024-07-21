@@ -17,15 +17,15 @@ const DeleteBoardForm = ({
   const [error, setError] = useState("");
   const {
     setOptimisticBoards,
-    setCurrentBoardId,
     optimisticBoards,
     setLoading: setBoardsLoading,
+    getCurrentBoard,
   } = useBoards();
   const [pending, startTransition] = useTransition();
 
   useEffect(() => {
     setBoardsLoading((prev) => ({ ...prev, deleteBoard: pending }));
-  }, [pending]);
+  }, [pending, setBoardsLoading]);
 
   const clientAction = async (e?: FormEvent) => {
     e?.preventDefault();
@@ -38,35 +38,15 @@ const DeleteBoardForm = ({
       console.log(error);
       return;
     }
-    startTransition(async () => {
+    startTransition(() => {
       setOptimisticBoards({ action: "deleteBoard", boardId });
-      const updatedBoards = optimisticBoards.filter(
-        (board) => board.id !== boardId,
-      );
-      if (updatedBoards.length > 0) {
-        if (!updatedBoards[0]) return;
-        setCurrentBoardId(updatedBoards[0].id);
-      } else {
-        setCurrentBoardId("");
-      }
     });
 
-    const response = await deleteBoardAction(boardId, boardIndex);
+    const wasCurrent = boardId === getCurrentBoard()?.id;
+    const response = await deleteBoardAction(boardId, boardIndex, wasCurrent);
     if (response?.error) {
       return setError(response.error);
     }
-
-    // startTransition(() => {
-    //   const updatedBoards = optimisticBoards.filter(
-    //     (board) => board.id !== boardId,
-    //   );
-    //   if (updatedBoards.length > 0) {
-    //     if (!updatedBoards[0]) return;
-    //     setCurrentBoardId(updatedBoards[0].id);
-    //   } else {
-    //     setCurrentBoardId("");
-    //   }
-    // });
   };
 
   return (

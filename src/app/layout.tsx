@@ -23,7 +23,7 @@ export default async function RootLayout({
       <UIProvider>
         <BoardsProvider boards={boards}>
           <html lang="en" className={`${GeistSans.variable}`}>
-            <body className="mx-auto grid h-[92dvh] grid-rows-[1fr,100%] bg-neutral-800 text-white">
+            <body className="mx-auto grid h-[100dvh] grid-rows-[1fr,100%] bg-neutral-800 text-white">
               <TopNav />
               {children}
             </body>

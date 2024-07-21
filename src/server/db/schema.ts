@@ -20,6 +20,7 @@ export const boards = createTable(
     name: varchar("name", { length: 256 }).notNull(),
     userId: varchar("userId", { length: 256 }).notNull(),
     index: integer("index").notNull(),
+    current: boolean("current").notNull().default(false),
 
     createdAt: timestamp("created_at", { withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP`)

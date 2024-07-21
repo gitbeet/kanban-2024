@@ -1,6 +1,7 @@
+import { FormEvent } from "react";
 import { renameColumnAction } from "./actions";
 import type { SetOptimisticType } from "./types";
-import { ColumnSchema } from "./zod-schemas";
+import { BoardSchema, ColumnSchema } from "./zod-schemas";
 
 export const renameColumnclientAction = async (
   boardId: string,
