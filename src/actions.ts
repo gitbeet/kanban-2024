@@ -3,6 +3,7 @@
 import {
   createBoard,
   createColumn,
+  createSubtask,
   createTask,
   deleteBoard,
   deleteColumn,
@@ -17,10 +18,11 @@ import {
 import {
   BoardSchema,
   ColumnSchema,
+  SubtaskSchema,
   SwitchTaskActionSchema,
   TaskSchema,
 } from "./zod-schemas";
-import type { ColumnType, TaskType } from "./types";
+import type { ColumnType, SubtaskType, TaskType } from "./types";
 
 // ---------- BOARDS ----------
 
@@ -222,4 +224,17 @@ export const switchColumnAction = async (
     Number(newColumnIndex),
     Number(oldColumnIndex),
   );
+};
+
+// ---------- SUBTASKS ----------
+
+export const createSubtaskAction = async (newSubtask: unknown) => {
+  const result = SubtaskSchema.safeParse(newSubtask);
+  if (!result.success) {
+    console.log(result.error);
+    return { error: result.error.issues[0]?.message };
+  }
+  const { taskId, name: subtaskName } = newSubtask as SubtaskType;
+
+  await createSubtask(taskId, subtaskName);
 };

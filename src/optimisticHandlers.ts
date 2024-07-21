@@ -3,8 +3,8 @@ import type {
   ColumnType,
   OptimisticParams,
   TaskType,
-  BoardType,
   OptimisticBoardType,
+  SubtaskType,
 } from "./types";
 
 // Boards
@@ -309,6 +309,37 @@ const switchTaskColumn = (
   });
 };
 
+// Subtasks
+
+const createSubtask = (
+  state: OptimisticBoardType[],
+  boardId?: string,
+  columnId?: string,
+  taskId?: string,
+  subtask?: SubtaskType,
+) => {
+  if (!boardId || !columnId || !taskId || !subtask) return state;
+  return state.map((b) =>
+    b.id === boardId
+      ? {
+          ...b,
+          columns: b.columns.map((c) =>
+            c.id === columnId
+              ? {
+                  ...c,
+                  tasks: c.tasks.map((task) =>
+                    task.id === taskId
+                      ? { ...task, subtasks: [...task.subtasks, subtask] }
+                      : task,
+                  ),
+                }
+              : c,
+          ),
+        }
+      : b,
+  );
+};
+
 export const handleOptimisticUpdate = (
   state: OptimisticBoardType[],
   {
@@ -323,6 +354,7 @@ export const handleOptimisticUpdate = (
     task,
     taskId,
     newTaskName,
+    subtask,
     oldColumnId,
     newColumnId,
     oldColumnIndex,
@@ -364,6 +396,8 @@ export const handleOptimisticUpdate = (
         newColumnIndex,
         oldColumnIndex,
       );
+    case "createSubtask":
+      return createSubtask(state, boardId, columnId, taskId, subtask);
     default:
       break;
   }
