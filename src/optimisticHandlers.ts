@@ -378,6 +378,48 @@ const deleteSubtask = (
   );
 };
 
+const renameSubtask = (
+  state: BoardType[],
+  boardId?: string,
+  columnId?: string,
+  taskId?: string,
+  subtaskId?: string,
+  newSubtaskName?: string,
+) => {
+  if (!boardId || !columnId || !taskId || !subtaskId || !newSubtaskName)
+    return state;
+  return state.map((b) =>
+    b.id === boardId
+      ? {
+          ...b,
+          columns: b.columns.map((c) =>
+            c.id === columnId
+              ? {
+                  ...c,
+                  tasks: c.tasks.map((t) =>
+                    t.id === taskId
+                      ? {
+                          ...t,
+                          subtasks: t.subtasks.map((s) =>
+                            s.id === subtaskId
+                              ? {
+                                  ...s,
+                                  name: newSubtaskName,
+                                  updatedAt: new Date(),
+                                }
+                              : s,
+                          ),
+                        }
+                      : t,
+                  ),
+                }
+              : c,
+          ),
+        }
+      : b,
+  );
+};
+
 export const handleOptimisticUpdate = (
   state: BoardType[],
   {
@@ -394,6 +436,7 @@ export const handleOptimisticUpdate = (
     newTaskName,
     subtask,
     subtaskId,
+    newSubtaskName,
     oldColumnId,
     newColumnId,
     oldColumnIndex,
@@ -439,6 +482,15 @@ export const handleOptimisticUpdate = (
       return createSubtask(state, boardId, columnId, taskId, subtask);
     case "deleteSubtask":
       return deleteSubtask(state, boardId, columnId, taskId, subtaskId);
+    case "renameSubtask":
+      return renameSubtask(
+        state,
+        boardId,
+        columnId,
+        taskId,
+        subtaskId,
+        newSubtaskName,
+      );
     default:
       break;
   }

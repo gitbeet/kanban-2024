@@ -29,7 +29,8 @@ export type OptimisticActionType =
   | "toggleTask"
   | "switchTaskColumn"
   | "createSubtask"
-  | "deleteSubtask";
+  | "deleteSubtask"
+  | "renameSubtask";
 
 export type OptimisticParams = {
   action: OptimisticActionType;
@@ -45,6 +46,7 @@ export type OptimisticParams = {
   newTaskName?: string;
   subtask?: SubtaskType;
   subtaskId?: string;
+  newSubtaskName?: string;
   oldColumnId?: string;
   newColumnId?: string;
   newColumnIndex?: number;
