@@ -1,5 +1,22 @@
 import { z } from "zod";
 
+export const SubtaskSchema = z.object({
+  id: z.string().uuid({ message: "ID must be a uuid" }),
+  index: z
+    .number({ message: "Index must be a number" })
+    .int({ message: "Index must be a integer" })
+    .positive({ message: "Index must be a positive number" }),
+  name: z
+    .string({ message: "Task name must be a string" })
+    .min(1, { message: "Cannot be blank" })
+    .max(100, { message: "Task name must be at most 100 character long" })
+    .trim(),
+  createdAt: z.date(),
+  updatedAt: z.date(),
+  taskId: z.string().uuid({ message: "Task ID must be a uuid" }),
+  completed: z.boolean(),
+});
+
 export const TaskSchema = z.object({
   id: z.string().uuid({ message: "ID must be a uuid" }),
   index: z
@@ -13,7 +30,9 @@ export const TaskSchema = z.object({
     .trim(),
   createdAt: z.date(),
   updatedAt: z.date(),
+  subtasks: z.array(SubtaskSchema),
   columnId: z.string().uuid({ message: "Column ID must be a uuid" }),
+  completed: z.boolean(),
 });
 
 export const ColumnSchema = z.object({
