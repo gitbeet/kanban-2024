@@ -12,7 +12,7 @@ import { FaPlus } from "react-icons/fa";
 import { Button, SaveButton } from "~/components/ui/buttons";
 import { BoardSchema } from "~/zod-schemas";
 import type { ChangeEvent, FormEvent } from "react";
-import type { OptimisticBoardType } from "~/types";
+import type { BoardType } from "~/types";
 
 const CreateBoardForm = ({
   ...props
@@ -45,7 +45,7 @@ const CreateBoardForm = ({
 
     const maxIndex = Math.max(...optimisticBoards.map((b) => b.index));
     const newBoardId = uuid();
-    const newBoard: OptimisticBoardType = {
+    const newBoard: BoardType = {
       id: newBoardId,
       current: true,
       index: maxIndex + 1,

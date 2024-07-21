@@ -2,15 +2,11 @@
 
 import { createContext, useContext, useOptimistic, useState } from "react";
 import { handleOptimisticUpdate } from "~/optimisticHandlers";
-import type {
-  BoardType,
-  OptimisticBoardType,
-  SetOptimisticType,
-} from "~/types";
+import type { BoardType, SetOptimisticType } from "~/types";
 import type { ReactNode } from "react";
 
 interface BoardsContextType {
-  optimisticBoards: OptimisticBoardType[];
+  optimisticBoards: BoardType[];
   setOptimisticBoards: SetOptimisticType;
   loading: {
     deleteBoard: boolean;
@@ -24,7 +20,7 @@ interface BoardsContextType {
       makeBoardCurrent: boolean;
     }>
   >;
-  getCurrentBoard: () => OptimisticBoardType | undefined;
+  getCurrentBoard: () => BoardType | undefined;
 }
 
 interface BoardsProviderProps {

@@ -1,12 +1,15 @@
 import { type getBoards } from "./server/queries";
 
 export type BoardType = Awaited<ReturnType<typeof getBoards>>[number];
+
 export type ColumnType = Awaited<
   ReturnType<typeof getBoards>
 >[number]["columns"][number];
+
 export type TaskType = Awaited<
   ReturnType<typeof getBoards>
 >[number]["columns"][number]["tasks"][number];
+
 export type SubtaskType = Awaited<
   ReturnType<typeof getBoards>
 >[number]["columns"][number]["tasks"][number]["subtasks"][number];
@@ -28,17 +31,13 @@ export type OptimisticActionType =
   | "createSubtask"
   | "deleteSubtask";
 
-export interface OptimisticBoardType extends BoardType {
-  current: boolean;
-}
-
 export type OptimisticParams = {
   action: OptimisticActionType;
-  board?: OptimisticBoardType;
+  board?: BoardType;
   boardId?: string;
   newBoardName?: string;
   newColumnName?: string;
-  boards?: OptimisticBoardType[];
+  boards?: BoardType[];
   column?: ColumnType;
   task?: TaskType;
   columnId?: string;

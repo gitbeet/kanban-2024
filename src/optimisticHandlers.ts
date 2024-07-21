@@ -3,30 +3,24 @@ import type {
   ColumnType,
   OptimisticParams,
   TaskType,
-  OptimisticBoardType,
+  BoardType,
   SubtaskType,
 } from "./types";
 
 // Boards
-const getInitialBoards = (
-  state: OptimisticBoardType[],
-  boards?: OptimisticBoardType[],
-) => {
+const getInitialBoards = (state: BoardType[], boards?: BoardType[]) => {
   if (!boards) return state;
   return [...state, ...boards];
 };
 
-const createBoard = (
-  state: OptimisticBoardType[],
-  board?: OptimisticBoardType,
-) => {
+const createBoard = (state: BoardType[], board?: BoardType) => {
   if (!board) return state;
   const allfalse = state.map((b) => ({ ...b, current: false }));
   return [...allfalse, board];
 };
 
 const renameBoard = (
-  state: OptimisticBoardType[],
+  state: BoardType[],
   boardId?: string,
   newBoardName?: string,
 ) => {
@@ -36,7 +30,7 @@ const renameBoard = (
   );
 };
 
-const deleteBoard = (state: OptimisticBoardType[], boardId?: string) => {
+const deleteBoard = (state: BoardType[], boardId?: string) => {
   const board = state.find((board) => board.id === boardId);
   const wasCurrent = board?.current;
   if (!board || !boardId) return state;
@@ -58,7 +52,7 @@ const deleteBoard = (state: OptimisticBoardType[], boardId?: string) => {
   return updatedBoards;
 };
 
-const makeBoardCurrent = (state: OptimisticBoardType[], boardId?: string) => {
+const makeBoardCurrent = (state: BoardType[], boardId?: string) => {
   if (!boardId) return state;
   return state
     .map((b) => ({ ...b, current: false }))
@@ -69,7 +63,7 @@ const makeBoardCurrent = (state: OptimisticBoardType[], boardId?: string) => {
 
 // Columns
 const createColumn = (
-  state: OptimisticBoardType[],
+  state: BoardType[],
   boardId?: string,
   column?: ColumnType,
 ) => {
@@ -80,7 +74,7 @@ const createColumn = (
 };
 
 const renameColumn = (
-  state: OptimisticBoardType[],
+  state: BoardType[],
   boardId?: string,
   columnId?: string,
   newColumnName?: string,
@@ -99,7 +93,7 @@ const renameColumn = (
 };
 
 const deleteColumn = (
-  state: OptimisticBoardType[],
+  state: BoardType[],
   boardId?: string,
   columnId?: string,
 ) => {
@@ -113,7 +107,7 @@ const deleteColumn = (
 
 // Tasks
 const createTask = (
-  state: OptimisticBoardType[],
+  state: BoardType[],
   boardId?: string,
   columnId?: string,
   task?: TaskType,
@@ -132,7 +126,7 @@ const createTask = (
 };
 
 const renameTask = (
-  state: OptimisticBoardType[],
+  state: BoardType[],
   boardId?: string,
   columnId?: string,
   taskId?: string,
@@ -161,7 +155,7 @@ const renameTask = (
 };
 
 const deleteTask = (
-  state: OptimisticBoardType[],
+  state: BoardType[],
   boardId?: string,
   columnId?: string,
   taskId?: string,
@@ -197,7 +191,7 @@ const deleteTask = (
 };
 
 const toggleTask = (
-  state: OptimisticBoardType[],
+  state: BoardType[],
   boardId?: string,
   columnId?: string,
   taskId?: string,
@@ -223,7 +217,7 @@ const toggleTask = (
 };
 
 const switchTaskColumn = (
-  state: OptimisticBoardType[],
+  state: BoardType[],
   boardId?: string,
   taskId?: string,
   oldColumnId?: string,
@@ -312,7 +306,7 @@ const switchTaskColumn = (
 // Subtasks
 
 const createSubtask = (
-  state: OptimisticBoardType[],
+  state: BoardType[],
   boardId?: string,
   columnId?: string,
   taskId?: string,
@@ -341,7 +335,7 @@ const createSubtask = (
 };
 
 const deleteSubtask = (
-  state: OptimisticBoardType[],
+  state: BoardType[],
   boardId?: string,
   columnId?: string,
   taskId?: string,
@@ -373,7 +367,7 @@ const deleteSubtask = (
                           ),
                       };
                     } else {
-                      return c;
+                      return t;
                     }
                   }),
                 }
@@ -385,7 +379,7 @@ const deleteSubtask = (
 };
 
 export const handleOptimisticUpdate = (
-  state: OptimisticBoardType[],
+  state: BoardType[],
   {
     action,
     boards,
