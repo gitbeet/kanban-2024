@@ -18,7 +18,6 @@ export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   const boards = await getBoards();
-
   return (
     <ClerkProvider>
       <UIProvider>

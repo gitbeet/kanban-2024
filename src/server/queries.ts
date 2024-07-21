@@ -419,3 +419,21 @@ export async function renameSubtask(subtaskId: string, newName: string) {
     .where(eq(subtasks.id, subtaskId));
   revalidatePath("/");
 }
+
+export async function toggleSubaskCompleted(subtaskId: string) {
+  const user = auth();
+  if (!user.userId) throw new Error("Unauthorized");
+  // Check if task belongs to user?
+
+  const subtask = await db.query.subtasks.findFirst({
+    where: (model, { eq }) => eq(model.id, subtaskId),
+  });
+
+  if (!subtask) throw new Error("Task not found!");
+
+  await db
+    .update(subtasks)
+    .set({ completed: !subtask.completed, updatedAt: new Date() })
+    .where(eq(subtasks.id, subtaskId));
+  revalidatePath("/");
+}

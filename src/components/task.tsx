@@ -69,7 +69,9 @@ const Task = ({
             .sort((a, b) => a.index - b.index)
             .map((subtask) => (
               <li key={subtask.index}>
-                <span>{subtask.name}</span>
+                <span className={subtask.completed ? "line-through" : ""}>
+                  {subtask.name}
+                </span>
                 <DeleteSubtaskForm
                   columnId={columnId}
                   taskId={task.id}
