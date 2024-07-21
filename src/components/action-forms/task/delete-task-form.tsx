@@ -4,21 +4,19 @@ import { deleteTaskAction } from "~/actions";
 import { DeleteButton } from "~/components/ui/buttons";
 
 const DeleteTaskForm = ({
-  boardId,
   columnId,
   taskId,
 }: {
-  boardId: string;
   columnId: string;
   taskId: string;
 }) => {
   const [error, setError] = useState("");
-  const { setOptimisticBoards } = useBoards();
-
+  const { setOptimisticBoards, getCurrentBoard } = useBoards();
+  const currentBoardId = getCurrentBoard()?.id;
   const clientAction = async () => {
     setOptimisticBoards({
       action: "deleteTask",
-      boardId,
+      boardId: currentBoardId,
       columnId,
       taskId,
     });

@@ -14,6 +14,8 @@ import CreateSubtaskForm from "./action-forms/subtask/create-subtask-form";
 import DeleteSubtaskForm from "./action-forms/subtask/delete-subtask-form";
 import RenameSubtaskForm from "./action-forms/subtask/rename-subtask-form";
 import ToggleSubtaskForm from "./action-forms/subtask/toggle-subtask-form";
+import MenuButton from "./ui/menu-button";
+import EditTask from "./menus/edit-task";
 
 const Task = ({
   columnId,
@@ -58,39 +60,9 @@ const Task = ({
           task={task}
         />
         <div className="pointer-events-none z-10 opacity-0 group-hover:pointer-events-auto group-hover:opacity-100">
-          <DeleteTaskForm
-            boardId={currentBoardId}
-            columnId={columnId}
-            taskId={task.id}
-          />
+          {/* <DeleteTaskForm columnId={columnId} taskId={task.id} /> */}
+          <MenuButton columnId={columnId} taskId={task.id} />
         </div>
-        <CreateSubtaskForm columnId={columnId} taskId={task.id} />
-        <ul>
-          {task.subtasks
-            .sort((a, b) => a.index - b.index)
-            .map((subtask) => (
-              <li key={subtask.index}>
-                <span className={subtask.completed ? "line-through" : ""}>
-                  {subtask.name}
-                </span>
-                <DeleteSubtaskForm
-                  columnId={columnId}
-                  taskId={task.id}
-                  subtaskId={subtask.id}
-                />
-                <RenameSubtaskForm
-                  columnId={columnId}
-                  taskId={task.id}
-                  subtaskId={subtask.id}
-                />
-                <ToggleSubtaskForm
-                  columnId={columnId}
-                  taskId={task.id}
-                  subtask={subtask}
-                />
-              </li>
-            ))}
-        </ul>
       </motion.div>
     </>
   );

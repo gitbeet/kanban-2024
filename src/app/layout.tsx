@@ -7,6 +7,7 @@ import TopNav from "~/components/top-nav";
 import { GeistSans } from "geist/font/sans";
 import { type Metadata } from "next";
 import { getBoards } from "~/server/queries";
+import Menus from "~/components/menus/menus";
 
 export const metadata: Metadata = {
   title: "KANBAN 2024",
@@ -26,6 +27,8 @@ export default async function RootLayout({
             <body className="mx-auto flex h-[100dvh] flex-col bg-neutral-800 text-white">
               <TopNav />
               {children}
+              <Menus />
+              <div id="modal-root" className="" />
             </body>
           </html>
         </BoardsProvider>
