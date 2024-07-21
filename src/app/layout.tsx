@@ -6,7 +6,7 @@ import { UIProvider } from "~/context/ui-context";
 import TopNav from "~/components/top-nav";
 import { GeistSans } from "geist/font/sans";
 import { type Metadata } from "next";
-import { deleteSubtask, getBoards } from "~/server/queries";
+import { getBoards } from "~/server/queries";
 
 export const metadata: Metadata = {
   title: "KANBAN 2024",

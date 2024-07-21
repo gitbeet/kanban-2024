@@ -7,6 +7,7 @@ import {
   createTask,
   deleteBoard,
   deleteColumn,
+  deleteSubtask,
   deleteTask,
   makeBoardCurrent,
   renameBoard,
@@ -237,4 +238,13 @@ export const createSubtaskAction = async (newSubtask: unknown) => {
   const { taskId, name: subtaskName } = newSubtask as SubtaskType;
 
   await createSubtask(taskId, subtaskName);
+};
+
+export const deleteSubtaskAction = async (subtaskId: unknown) => {
+  const result = SubtaskSchema.shape.id.safeParse(subtaskId);
+  if (!result.success) {
+    console.log(result.error);
+    return { error: result.error.issues[0]?.message };
+  }
+  await deleteSubtask(subtaskId as string);
 };
