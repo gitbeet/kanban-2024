@@ -205,6 +205,7 @@ export async function createTask(columnId: string, name: string) {
     name,
     completed: false,
     columnId,
+    subtasks: [],
     createdAt: new Date(),
     updatedAt: new Date(),
   };
