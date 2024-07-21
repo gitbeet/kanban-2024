@@ -13,6 +13,7 @@ import type { TaskType } from "../types";
 import CreateSubtaskForm from "./action-forms/subtask/create-subtask-form";
 import DeleteSubtaskForm from "./action-forms/subtask/delete-subtask-form";
 import RenameSubtaskForm from "./action-forms/subtask/rename-subtask-form";
+import ToggleSubtaskForm from "./action-forms/subtask/toggle-subtask-form";
 
 const Task = ({
   columnId,
@@ -81,6 +82,11 @@ const Task = ({
                   columnId={columnId}
                   taskId={task.id}
                   subtaskId={subtask.id}
+                />
+                <ToggleSubtaskForm
+                  columnId={columnId}
+                  taskId={task.id}
+                  subtask={subtask}
                 />
               </li>
             ))}

@@ -15,6 +15,7 @@ import {
   renameSubtask,
   renameTask,
   switchColumn,
+  toggleSubaskCompleted,
   toggleTaskCompleted,
 } from "./server/queries";
 import {
@@ -271,5 +272,5 @@ export const toggleSubtaskCompletedAction = async (subtaskId: unknown) => {
   if (!result.success) {
     return { error: result.error.issues[0]?.message };
   }
-  await toggleTaskCompleted(subtaskId as string);
+  await toggleSubaskCompleted(subtaskId as string);
 };
