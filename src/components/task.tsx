@@ -10,6 +10,7 @@ import RenameTaskForm from "./action-forms/task/rename-task-form";
 import DeleteTaskForm from "./action-forms/task/delete-task-form";
 import ToggleTaskForm from "./action-forms/task/toggle-task-form";
 import type { TaskType } from "../types";
+import CreateSubtaskForm from "./action-forms/subtask/create-subtask-form";
 
 const Task = ({
   columnId,
@@ -60,6 +61,7 @@ const Task = ({
             taskId={task.id}
           />
         </div>
+        <CreateSubtaskForm columnId={columnId} taskId={task.id} />
         <ul>
           {task.subtasks.map((subtask) => (
             <li key={subtask.index}>{subtask.name}</li>
