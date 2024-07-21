@@ -21,8 +21,10 @@ const Task = ({
   task: TaskType;
   handleDragStart: Function;
 }) => {
-  const { currentBoardId } = useBoards();
+  const { getCurrentBoard } = useBoards();
   const [draggable, setDraggable] = useState(false);
+
+  const currentBoardId = getCurrentBoard()?.id;
 
   if (!currentBoardId)
     return <h1>No currentboardId found (placeholder error)</h1>;

@@ -12,7 +12,9 @@ const DeleteTaskZone = () => {
   const [active, setActive] = useState(false);
   const [error, setError] = useState("");
 
-  const { currentBoardId } = useBoards();
+  const { getCurrentBoard } = useBoards();
+
+  const currentBoardId = getCurrentBoard()?.id;
 
   if (!currentBoardId)
     return <h1>currentBoardId not found (placeholder error)</h1>;
