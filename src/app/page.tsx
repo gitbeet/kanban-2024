@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic";
 
 export default function HomePage() {
   return (
-    <motion.main className="flex overflow-hidden">
+    <motion.main className="flex grow overflow-hidden">
       <Sidebar />
       <Board />
     </motion.main>

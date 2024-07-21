@@ -13,7 +13,7 @@ const TopNav = () => {
   const noBoards = !optimisticBoards.length;
 
   return (
-    <nav className="flex items-center justify-between border border-b px-4 py-4">
+    <nav className="flex h-fit items-center justify-between border-b px-4 py-4">
       <SignedIn>
         <h1 className="text-2xl font-bold">Kanban</h1>
 

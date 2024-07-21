@@ -41,10 +41,10 @@ const Board = () => {
   const boardJsx = (
     <motion.section
       layout
+      // Key prop for framer-motion
       key={currentBoard.id}
       className="grid grow grid-rows-[1fr,auto] overflow-auto"
     >
-      {/* key prop for framer-motion */}
       <motion.div className="flex gap-4 p-8">
         {currentBoard?.columns
           .sort((a, b) => a.index - b.index)
