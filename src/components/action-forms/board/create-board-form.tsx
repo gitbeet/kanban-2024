@@ -1,24 +1,18 @@
 "use client";
 
-import React, {
-  type ChangeEvent,
-  FormEvent,
-  useEffect,
-  useRef,
-  useState,
-  useTransition,
-} from "react";
-import type { BoardType, OptimisticBoardType } from "~/types";
-import { v4 as uuid } from "uuid";
+import React, { useEffect, useRef, useState, useTransition } from "react";
 import { useUser } from "@clerk/nextjs";
-import { createBoardAction, makeBoardCurrentAction } from "~/actions";
-import { BoardSchema } from "~/zod-schemas";
-import { Button, SaveButton } from "~/components/ui/buttons";
-import InputField from "~/components/ui/input-field";
 import { useBoards } from "~/context/boards-context";
+import useClickOutside from "~/hooks/useClickOutside";
+import { createBoardAction } from "~/actions";
+import { v4 as uuid } from "uuid";
+import InputField from "~/components/ui/input-field";
 import { motion } from "framer-motion";
 import { FaPlus } from "react-icons/fa";
-import useClickOutside from "~/hooks/useClickOutside";
+import { Button, SaveButton } from "~/components/ui/buttons";
+import { BoardSchema } from "~/zod-schemas";
+import type { ChangeEvent, FormEvent } from "react";
+import type { OptimisticBoardType } from "~/types";
 
 const CreateBoardForm = ({
   ...props

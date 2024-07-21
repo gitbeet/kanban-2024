@@ -1,16 +1,10 @@
-import {
-  type ChangeEvent,
-  FormEvent,
-  useEffect,
-  useRef,
-  useState,
-  useTransition,
-} from "react";
-import { renameColumnAction } from "~/actions";
-import InputField from "~/components/ui/input-field";
+import { useRef, useState, useTransition } from "react";
 import { useBoards } from "~/context/boards-context";
 import useClickOutside from "~/hooks/useClickOutside";
+import { renameColumnAction } from "~/actions";
+import InputField from "~/components/ui/input-field";
 import { ColumnSchema } from "~/zod-schemas";
+import type { ChangeEvent, FormEvent } from "react";
 
 const RenameColumnForm = ({
   boardId,

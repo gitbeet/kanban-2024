@@ -1,14 +1,14 @@
-import type { ColumnType } from "~/types";
-import type { ChangeEvent, FormEvent } from "react";
-import React, { useRef, useState } from "react";
+import { useRef, useState } from "react";
+import useClickOutside from "~/hooks/useClickOutside";
+import { useBoards } from "~/context/boards-context";
 import { v4 as uuid } from "uuid";
 import { createColumnAction } from "~/actions";
-import { Button, CancelButton, SaveButton } from "~/components/ui/buttons";
-import { ColumnSchema } from "~/zod-schemas";
+import { CancelButton, SaveButton } from "~/components/ui/buttons";
 import InputField from "~/components/ui/input-field";
-import { useBoards } from "~/context/boards-context";
+import { ColumnSchema } from "~/zod-schemas";
 import { FaPlus } from "react-icons/fa6";
-import useClickOutside from "~/hooks/useClickOutside";
+import type { ColumnType } from "~/types";
+import type { ChangeEvent, FormEvent } from "react";
 
 interface CreateColumnProps extends React.HTMLAttributes<HTMLDivElement> {
   boardId: string;

@@ -1,7 +1,7 @@
 import "server-only";
 
-import { auth } from "@clerk/nextjs/server";
 import { db } from "./db/index";
+import { auth } from "@clerk/nextjs/server";
 import { boards, columns, tasks } from "./db/schema";
 import { v4 as uuid } from "uuid";
 import { revalidatePath } from "next/cache";

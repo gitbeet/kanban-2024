@@ -2,15 +2,14 @@
 /* eslint-disable @typescript-eslint/ban-types */
 "use client";
 
-import type { TaskType } from "../types";
-
-import DropIndicator from "./drop-indicator";
+import { useState } from "react";
 import { motion } from "framer-motion";
+import { useBoards } from "~/context/boards-context";
+import DropIndicator from "./drop-indicator";
+import RenameTaskForm from "./action-forms/task/rename-task-form";
 import DeleteTaskForm from "./action-forms/task/delete-task-form";
 import ToggleTaskForm from "./action-forms/task/toggle-task-form";
-import { useBoards } from "~/context/boards-context";
-import RenameTaskForm from "./action-forms/task/rename-task-form";
-import { useState } from "react";
+import type { TaskType } from "../types";
 
 const Task = ({
   columnId,

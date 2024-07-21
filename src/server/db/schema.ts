@@ -6,7 +6,6 @@ import {
   varchar,
   boolean,
   integer,
-  serial,
 } from "drizzle-orm/pg-core";
 
 export const createTable = pgTableCreator((name) => `kanban-2024_${name}`);

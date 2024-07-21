@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import { useBoards } from "~/context/boards-context";
 import { toggleTaskCompletedAction } from "~/actions";
 import { ToggleButton } from "~/components/ui/buttons";
-import { useBoards } from "~/context/boards-context";
 import type { TaskType } from "~/types";
 
 const ToggleTaskForm = ({

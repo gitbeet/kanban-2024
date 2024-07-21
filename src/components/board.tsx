@@ -1,13 +1,12 @@
 "use client";
 
-import React from "react";
+import { useBoards } from "~/context/boards-context";
+import { motion } from "framer-motion";
+import CreateBoardForm from "./action-forms/board/create-board-form";
+import { LoadingPage } from "./ui/loading-spinner";
 import Column from "../components/column";
 import DeleteTaskZone from "./delete-task-zone";
 import CreateColumnForm from "./action-forms/column/create-column-form";
-import { motion } from "framer-motion";
-import { useBoards } from "~/context/boards-context";
-import CreateBoardForm from "./action-forms/board/create-board-form";
-import { LoadingPage } from "./ui/loading-spinner";
 
 const Board = () => {
   const { optimisticBoards, loading, getCurrentBoard } = useBoards();

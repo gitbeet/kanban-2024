@@ -1,11 +1,12 @@
 "use client";
 
-import { type ChangeEvent, useRef, useState } from "react";
-import { renameBoardAction } from "~/actions";
-import InputField from "~/components/ui/input-field";
-import { EditButton } from "~/components/ui/buttons";
+import { useRef, useState } from "react";
 import { useBoards } from "~/context/boards-context";
+import { renameBoardAction } from "~/actions";
+import { EditButton } from "~/components/ui/buttons";
+import InputField from "~/components/ui/input-field";
 import { BoardSchema } from "~/zod-schemas";
+import type { ChangeEvent } from "react";
 
 const RenameBoardForm = ({ boardId }: { boardId: string }) => {
   const [newBoardName, setNewBoardName] = useState("");

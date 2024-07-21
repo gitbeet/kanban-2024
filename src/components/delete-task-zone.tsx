@@ -1,9 +1,9 @@
 "use client";
+
 import { useState, useTransition } from "react";
-import { FaTrash } from "react-icons/fa";
-import { deleteTaskAction } from "~/actions";
-import { motion } from "framer-motion";
 import { useBoards } from "~/context/boards-context";
+import { deleteTaskAction } from "~/actions";
+import { FaTrash } from "react-icons/fa";
 
 const DeleteTaskZone = () => {
   const { setOptimisticBoards } = useBoards();

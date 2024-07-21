@@ -1,14 +1,14 @@
 "use client";
 
-import type { ChangeEvent, Dispatch, FormEvent, SetStateAction } from "react";
 import { useEffect, useState, useTransition, useRef } from "react";
-import { renameTaskAction } from "~/actions";
-import { CancelButton, SaveButton } from "~/components/ui/buttons";
 import { useBoards } from "~/context/boards-context";
 import useClickOutside from "~/hooks/useClickOutside";
-import type { TaskType } from "~/types";
-import { TaskSchema } from "~/zod-schemas";
+import { renameTaskAction } from "~/actions";
 import { resizeTextArea } from "~/utilities/resizeTextArea";
+import { CancelButton, SaveButton } from "~/components/ui/buttons";
+import { TaskSchema } from "~/zod-schemas";
+import type { TaskType } from "~/types";
+import type { ChangeEvent, Dispatch, FormEvent, SetStateAction } from "react";
 
 const RenameTaskForm = ({
   boardId,

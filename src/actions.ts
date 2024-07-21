@@ -14,13 +14,13 @@ import {
   switchColumn,
   toggleTaskCompleted,
 } from "./server/queries";
-import type { ColumnType, TaskType } from "./types";
 import {
   BoardSchema,
   ColumnSchema,
   SwitchTaskActionSchema,
   TaskSchema,
 } from "./zod-schemas";
+import type { ColumnType, TaskType } from "./types";
 
 // ---------- BOARDS ----------
 

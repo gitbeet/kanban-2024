@@ -1,18 +1,13 @@
 "use client";
 
-import React, {
-  type ReactNode,
-  createContext,
-  useContext,
-  useOptimistic,
-  useState,
-} from "react";
+import { createContext, useContext, useOptimistic, useState } from "react";
 import { handleOptimisticUpdate } from "~/optimisticHandlers";
 import type {
   BoardType,
   OptimisticBoardType,
   SetOptimisticType,
 } from "~/types";
+import type { ReactNode } from "react";
 
 interface BoardsContextType {
   optimisticBoards: OptimisticBoardType[];

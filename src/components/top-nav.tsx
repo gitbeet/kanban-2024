@@ -1,9 +1,8 @@
 "use client";
 
-import { SignedIn, UserButton } from "@clerk/nextjs";
-import React from "react";
-import { useBoards } from "~/context/boards-context";
 import { useUI } from "~/context/ui-context";
+import { useBoards } from "~/context/boards-context";
+import { SignedIn, UserButton } from "@clerk/nextjs";
 
 const TopNav = () => {
   const { getCurrentBoard, optimisticBoards } = useBoards();

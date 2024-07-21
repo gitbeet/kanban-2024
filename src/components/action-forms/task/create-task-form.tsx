@@ -1,21 +1,15 @@
+import { useEffect, useRef, useState, useTransition } from "react";
+import useClickOutside from "~/hooks/useClickOutside";
+import { useBoards } from "~/context/boards-context";
 import { motion } from "framer-motion";
-import {
-  type ChangeEvent,
-  FormEvent,
-  useEffect,
-  useRef,
-  useState,
-  useTransition,
-} from "react";
-import type { TaskType } from "~/types";
 import { v4 as uuid } from "uuid";
+import { resizeTextArea } from "~/utilities/resizeTextArea";
 import { createTaskAction } from "~/actions";
 import { Button, SubmitButton } from "~/components/ui/buttons";
-import { TaskSchema } from "~/zod-schemas";
-import { useBoards } from "~/context/boards-context";
 import { FaPlus } from "react-icons/fa6";
-import { resizeTextArea } from "~/utilities/resizeTextArea";
-import useClickOutside from "~/hooks/useClickOutside";
+import { TaskSchema } from "~/zod-schemas";
+import type { ChangeEvent, FormEvent } from "react";
+import type { TaskType } from "~/types";
 
 const CreateTaskForm = ({
   boardId,

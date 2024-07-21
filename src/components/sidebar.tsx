@@ -1,22 +1,18 @@
 "use client";
 
-import React, { useTransition } from "react";
 import { useBoards } from "~/context/boards-context";
 import { useUI } from "~/context/ui-context";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
+import useHasMounted from "~/hooks/useHasMounted";
 import { FaEye, FaEyeSlash } from "react-icons/fa6";
 import CreateBoardForm from "./action-forms/board/create-board-form";
 import DeleteBoardForm from "./action-forms/board/delete-board-form";
-import useHasMounted from "~/hooks/useHasMounted";
 import MakeBoardCurrentForm from "./action-forms/board/make-board-current-form";
 
 const Sidebar = () => {
   const { showSidebar, setShowSidebar } = useUI();
-  const { optimisticBoards, loading, getCurrentBoard, setOptimisticBoards } =
-    useBoards();
-  const currentBoard = getCurrentBoard();
+  const { optimisticBoards, loading } = useBoards();
   const hasMounted = useHasMounted();
-  const [pending, startTransition] = useTransition();
 
   return (
     <motion.section
@@ -29,7 +25,6 @@ const Sidebar = () => {
       </h2>
       <div className="h-12"></div>
       <motion.ul>
-        {/* <AnimatePresence mode="popLayout"> */}
         {optimisticBoards
           .sort((a, b) => a.index - b.index)
           .map((board) => (
@@ -65,10 +60,8 @@ const Sidebar = () => {
           ))}
         <motion.li layout className="px-4">
           <div className="h-4"></div>
-
           <CreateBoardForm />
         </motion.li>
-        {/* </AnimatePresence> */}
       </motion.ul>
       <div className="h-16"></div>
 

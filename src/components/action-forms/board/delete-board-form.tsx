@@ -1,8 +1,9 @@
-import React, { FormEvent, useEffect, useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
+import { useBoards } from "~/context/boards-context";
 import { deleteBoardAction } from "~/actions";
 import { DeleteButton } from "~/components/ui/buttons";
-import { useBoards } from "~/context/boards-context";
 import { BoardSchema } from "~/zod-schemas";
+import type { FormEvent } from "react";
 
 interface DeleteTaskFormProps extends React.HTMLAttributes<HTMLDivElement> {
   boardId: string;

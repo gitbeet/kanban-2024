@@ -1,10 +1,8 @@
 "use client";
 
+import { motion } from "framer-motion";
 import Board from "~/components/board";
 import Sidebar from "~/components/sidebar";
-import { motion } from "framer-motion";
-
-export const dynamic = "force-dynamic";
 
 export default function HomePage() {
   return (

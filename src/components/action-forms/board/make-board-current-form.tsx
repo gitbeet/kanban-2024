@@ -1,9 +1,10 @@
 "use client";
-
-import { FormEvent, useEffect, useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { useBoards } from "~/context/boards-context";
 import { makeBoardCurrentAction } from "~/actions";
 import { BoardSchema } from "~/zod-schemas";
+import type { FormEvent } from "react";
+
 const MakeBoardCurrentForm = ({
   boardId,
   boardName,

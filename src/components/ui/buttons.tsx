@@ -1,9 +1,9 @@
 "use client";
 
-import type { ButtonHTMLAttributes } from "react";
 import { useFormStatus } from "react-dom";
 import { FaCheck, FaEdit, FaTrash } from "react-icons/fa";
 import { FaPlus } from "react-icons/fa6";
+import type { ButtonHTMLAttributes } from "react";
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   className?: string;

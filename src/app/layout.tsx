@@ -1,12 +1,12 @@
 import "~/styles/globals.css";
 
-import { GeistSans } from "geist/font/sans";
-import { type Metadata } from "next";
 import { ClerkProvider } from "@clerk/nextjs";
 import { BoardsProvider } from "~/context/boards-context";
-import { getBoards } from "~/server/queries";
-import TopNav from "~/components/top-nav";
 import { UIProvider } from "~/context/ui-context";
+import TopNav from "~/components/top-nav";
+import { GeistSans } from "geist/font/sans";
+import { type Metadata } from "next";
+import { getBoards } from "~/server/queries";
 
 export const metadata: Metadata = {
   title: "KANBAN 2024",
