@@ -387,3 +387,24 @@ export async function createSubtask(taskId: string, name: string) {
   revalidatePath("/");
   return newSubtask;
 }
+
+export async function deleteSubtask(subtaskId: string) {
+  const user = auth();
+  if (!user.userId) throw new Error("Unauthorized");
+  // Check if task belongs to user?
+  const subtask = await db.query.subtasks.findFirst({
+    where: (model, { eq }) => eq(model.id, subtaskId),
+  });
+  if (!subtask) throw new Error("Subtask not found");
+  await db
+    .update(subtasks)
+    .set({ index: sql`${subtasks.index} - 1` })
+    .where(
+      and(
+        eq(subtasks.taskId, subtask.taskId),
+        gt(subtasks.index, subtask.index),
+      ),
+    );
+  await db.delete(subtasks).where(eq(subtasks.id, subtaskId));
+  revalidatePath("/");
+}
