@@ -9,6 +9,7 @@ import { CancelButton, SaveButton } from "~/components/ui/buttons";
 import { TaskSchema } from "~/zod-schemas";
 import type { TaskType } from "~/types";
 import type { ChangeEvent, Dispatch, FormEvent, SetStateAction } from "react";
+import TextArea from "~/components/ui/text-area";
 
 const RenameTaskForm = ({
   boardId,
@@ -110,15 +111,14 @@ const RenameTaskForm = ({
               }}
             ></div>
           )}
-          <textarea
-            rows={1}
+          <TextArea
             ref={testRef}
             readOnly={!isOpen}
-            className={` ${isOpen ? "input" : "input-readonly"} ${error ? "!border-red-500" : ""} w-full resize-none overflow-hidden`}
+            className={` ${isOpen ? "input" : "input-readonly"} `}
             value={newTaskName}
             onChange={isOpen ? handleTaskNameChange : undefined}
+            error={error}
           />
-          <p className="text-right text-sm text-red-500"> {error}</p>
         </div>
         {isOpen && (
           <div

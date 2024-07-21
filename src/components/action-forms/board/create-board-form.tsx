@@ -85,13 +85,6 @@ const CreateBoardForm = ({
       return;
     }
 
-    // const response2 = await makeBoardCurrentAction(currentBoardId, newBoardId);
-    // if (response2?.error) {
-    //   setError(response2.error);
-    //   setIsOpen(true);
-    //   return;
-    // }
-
     setError("");
     setBoardName("");
     setLoading(false);
@@ -135,7 +128,6 @@ const CreateBoardForm = ({
           >
             <InputField
               autoFocus
-              name="board-name-input"
               type="text"
               error={error}
               placeholder="Create board..."

@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useRef, useState, useTransition } from "react";
 import useClickOutside from "~/hooks/useClickOutside";
 import { useBoards } from "~/context/boards-context";
@@ -10,6 +12,7 @@ import { FaPlus } from "react-icons/fa6";
 import { TaskSchema } from "~/zod-schemas";
 import type { ChangeEvent, FormEvent } from "react";
 import type { TaskType } from "~/types";
+import TextArea from "~/components/ui/text-area";
 
 const CreateTaskForm = ({
   boardId,
@@ -18,19 +21,20 @@ const CreateTaskForm = ({
   boardId: string;
   columnId: string;
 }) => {
-  const testRef = useRef<HTMLTextAreaElement | null>(null);
-  const createTaskRef = useRef<HTMLFormElement>(null);
+  const textAreaRef = useRef<HTMLTextAreaElement | null>(null);
+  const formRef = useRef<HTMLFormElement>(null);
   const { setOptimisticBoards } = useBoards();
   const [taskName, setTaskName] = useState("");
   const [error, setError] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [pending, startTransition] = useTransition();
-  const { ref } = useClickOutside<HTMLDivElement>(handleClickOutside);
+  const { ref: clickOutsideRef } =
+    useClickOutside<HTMLDivElement>(handleClickOutside);
 
   const { optimisticBoards } = useBoards();
 
   // Dynamic height for the textarea
-  useEffect(() => resizeTextArea(testRef), [taskName, isOpen]);
+  useEffect(() => resizeTextArea(textAreaRef), [taskName, isOpen]);
 
   const currentColumn = optimisticBoards
     .find((board) => board.id === boardId)
@@ -47,7 +51,6 @@ const CreateTaskForm = ({
         ? 0
         : Math.max(...currentColumn.tasks.map((t) => t.index));
 
-    createTaskRef.current?.reset();
     const newTask: TaskType = {
       id: uuid(),
       index: maxIndex + 1,
@@ -108,22 +111,22 @@ const CreateTaskForm = ({
         </motion.div>
       )}
       {isOpen && (
-        <div ref={ref}>
+        <div ref={clickOutsideRef}>
           <form
             className="flex flex-col gap-2"
-            ref={createTaskRef}
+            ref={formRef}
             onSubmit={clientAction}
           >
             <div className="rounded-md bg-neutral-600 p-1.5">
-              <textarea
+              <TextArea
                 autoFocus
-                ref={testRef}
+                ref={textAreaRef}
+                className="input"
                 rows={1}
-                className={` ${error ? "!border-red-500" : ""} input w-full resize-none overflow-hidden !bg-neutral-900`}
                 value={taskName}
                 onChange={handleChange}
+                error={error}
               />
-              <p className="text-right text-sm text-red-500"> {error}</p>
             </div>
             <div className="flex items-center gap-2 self-end">
               <Button
