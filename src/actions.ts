@@ -265,3 +265,11 @@ export const renameSubtaskAction = async (
 
   await renameSubtask(subtaskId as string, newSubtaskName as string);
 };
+
+export const toggleSubtaskCompletedAction = async (subtaskId: unknown) => {
+  const result = SubtaskSchema.shape.id.safeParse(subtaskId);
+  if (!result.success) {
+    return { error: result.error.issues[0]?.message };
+  }
+  await toggleTaskCompleted(subtaskId as string);
+};
