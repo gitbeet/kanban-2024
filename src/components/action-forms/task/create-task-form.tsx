@@ -57,6 +57,7 @@ const CreateTaskForm = ({
       name: taskName,
       columnId,
       completed: false,
+      subtasks: [],
       createdAt: new Date(),
       updatedAt: new Date(),
     };
