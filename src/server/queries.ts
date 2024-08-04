@@ -316,6 +316,19 @@ export const handleDeleteColumn = async ({
   inTransaction?: boolean;
 }) => {
   try {
+    const column = await tx.query.columns.findFirst({
+      where: (model, { eq }) => eq(model.id, change.columnId),
+    });
+    if (!column) throw new Error("Column not found");
+    await tx
+      .update(columns)
+      .set({ index: sql`${columns.index} - 1` })
+      .where(
+        and(
+          eq(columns.boardId, column.boardId),
+          gt(columns.index, column.index),
+        ),
+      );
     await tx.delete(columns).where(eq(columns.id, change.columnId));
   } catch (error) {
     const errorMessage =

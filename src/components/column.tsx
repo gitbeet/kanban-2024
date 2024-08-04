@@ -197,6 +197,7 @@ const Column = ({
           <span className="w-8 font-normal text-neutral-400">
             ({column.tasks.length})
           </span>
+          {column.index}
           <RenameColumnForm boardId={boardId} columnId={column.id} />
         </h3>
         <DeleteColumnForm boardId={boardId} columnId={column.id} />
