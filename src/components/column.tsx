@@ -189,7 +189,7 @@ const Column = ({
       onDrop={handleDragEnd}
       key={column.id}
       // hard coded width for transition animation
-      className={`${active ? "bg-neutral-800" : ""} min-h-screen w-80 shrink-0 rounded-md px-2`}
+      className={`${active ? "bg-neutral-950/20" : ""} min-h-screen w-80 shrink-0 rounded-md px-3`}
     >
       <div className="flex items-center justify-between gap-4 p-4">
         <h3 className="flex items-center gap-2 font-bold text-neutral-500">

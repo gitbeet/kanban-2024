@@ -44,7 +44,7 @@ const Board = () => {
       key={currentBoard.id}
       className="grid grow grid-rows-[1fr,auto] overflow-auto"
     >
-      <motion.div className="flex gap-4 p-8">
+      <motion.div className="flex p-8">
         {currentBoard?.columns
           .sort((a, b) => a.index - b.index)
           .map((col) => (
