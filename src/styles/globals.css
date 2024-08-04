@@ -24,6 +24,10 @@ textarea {
   @apply transition-colors duration-150;
 }
 
+.menu-bg {
+  @apply transition-colors--default rounded-md border border-transparent bg-neutral-800 shadow-md hover:border-neutral-700;
+}
+
 .text-secondary {
   @apply transition-colors--default text-neutral-350 hover:text-neutral-250;
 }

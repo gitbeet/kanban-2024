@@ -82,8 +82,8 @@ const Column = ({
 
     indicators.forEach((i) => {
       i.style.opacity = "0";
-      i.style.height = "0.375rem";
-      i.style.marginBlock = "0";
+      // i.style.height = "0.375rem";
+      // i.style.marginBlock = "0";
     });
   };
 
@@ -95,8 +95,8 @@ const Column = ({
     const el = getNearestIndicator(e, indicators);
     if (!el.element) return;
     el.element.style.opacity = "1";
-    el.element.style.height = "4rem";
-    el.element.style.marginBlock = "0.5rem";
+    // el.element.style.height = "4rem";
+    // el.element.style.marginBlock = "0.5rem";
   };
 
   const getNearestIndicator = (e: DragEvent, indicators: HTMLElement[]) => {

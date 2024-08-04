@@ -60,13 +60,6 @@ const CreateColumnForm = ({ boardId, ...props }: CreateColumnProps) => {
       });
     });
 
-    // const response = await createColumnAction(newColumn);
-    // if (response?.error) {
-    //   setIsOpen(true);
-    //   setError(response.error);
-    //   return;
-    // }
-
     const response = await handleCreateColumn({
       change: {
         action: "createColumn",
@@ -135,7 +128,7 @@ const CreateColumnForm = ({ boardId, ...props }: CreateColumnProps) => {
   return (
     <div
       ref={ref}
-      className={` ${loading ? "pointer-events-none" : ""} grid h-32 w-80 shrink-0 cursor-pointer place-content-center rounded-md bg-neutral-800 p-4 shadow-md ${props.className}`}
+      className={` ${loading ? "pointer-events-none" : ""} grid cursor-pointer place-content-center p-4 ${props.className}`}
     >
       {!isOpen && notOpenJsx}
       {isOpen && openJsx}

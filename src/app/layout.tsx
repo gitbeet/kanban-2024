@@ -8,7 +8,7 @@ import { type Metadata } from "next";
 import { getBoards } from "~/server/queries";
 import Menus from "~/components/menus/menus";
 import { Plus_Jakarta_Sans } from "next/font/google";
-import { dark, neobrutalism, shadesOfPurple } from "@clerk/themes";
+import { shadesOfPurple } from "@clerk/themes";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   weight: ["400", "500", "700"],
