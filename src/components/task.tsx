@@ -55,9 +55,8 @@ const Task = ({
         layoutId={task.id}
         onDragStart={(e) => handleDragStart(e, task, columnId)}
         draggable={draggable}
-        className="group relative flex shrink-0 cursor-grab flex-col gap-1 rounded-lg border-2 border-neutral-700 border-transparent bg-neutral-700 p-1.5 shadow-md hover:border-sky-300"
+        className="border-neutral-750 group relative flex shrink-0 cursor-grab flex-col gap-1 rounded-lg border border-transparent bg-neutral-800 p-2.5 font-bold shadow-lg transition-colors duration-150 hover:border-neutral-700"
       >
-        {task.index}
         <RenameTaskForm
           setDraggable={setDraggable}
           boardId={currentBoardId}
@@ -67,7 +66,7 @@ const Task = ({
 
         {menuButtonJsx}
         {allSubtasks > 0 && (
-          <div className="pl-2 text-sm text-neutral-400">
+          <div className="pl-2 text-xs text-neutral-500">
             {completedSubtasks} of {allSubtasks} subtasks
           </div>
         )}
