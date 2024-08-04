@@ -124,7 +124,7 @@ const EditTask = ({ columnId, task }: { columnId: string; task: TaskType }) => {
         </ul>
         <div>
           <p>Move to : </p>
-          <select className="bg-neutral-900 p-1 text-white">
+          <select className="bg-neutral-850 p-1 text-white">
             {columns?.map((c) => <option key={c.id}>{c.name}</option>)}
           </select>
         </div>

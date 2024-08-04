@@ -17,7 +17,7 @@ textarea {
 }
 
 .input {
-  @apply bg-neutral-900 focus:border-sky-400;
+  @apply bg-neutral-850 focus:border-primary-600 placeholder:text-neutral-650;
 }
 
 /* RESET */

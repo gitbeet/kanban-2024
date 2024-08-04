@@ -95,7 +95,7 @@ const RenameColumnForm = ({
               onChange={handleColumnNameChange}
               type="text"
               placeholder="Enter column name"
-              className="w-full !bg-neutral-900"
+              className="!bg-neutral-850 w-full"
               error={error}
             />
 

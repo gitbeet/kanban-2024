@@ -4,10 +4,16 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { BoardsProvider } from "~/context/boards-context";
 import { UIProvider } from "~/context/ui-context";
 import TopNav from "~/components/top-nav";
-import { GeistSans } from "geist/font/sans";
 import { type Metadata } from "next";
-import { getBoards, mutateTable } from "~/server/queries";
+import { getBoards } from "~/server/queries";
 import Menus from "~/components/menus/menus";
+import { Plus_Jakarta_Sans } from "next/font/google";
+
+const plusJakartaSans = Plus_Jakarta_Sans({
+  weight: ["400", "500", "700"],
+  subsets: ["latin"],
+  variable: "--font-plus-jakarta-sans",
+});
 
 export const metadata: Metadata = {
   title: "KANBAN 2024",
@@ -24,8 +30,8 @@ export default async function RootLayout({
     <ClerkProvider>
       <UIProvider>
         <BoardsProvider boards={boards}>
-          <html lang="en" className={`${GeistSans.variable}`}>
-            <body className="mx-auto flex h-[100dvh] flex-col bg-neutral-800 text-white">
+          <html lang="en" className={`${plusJakartaSans.variable}`}>
+            <body className="bg-neutral-850 mx-auto flex h-[100dvh] flex-col text-white">
               <TopNav />
               {children}
               <Menus />

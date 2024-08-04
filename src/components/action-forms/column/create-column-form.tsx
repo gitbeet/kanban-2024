@@ -119,7 +119,7 @@ const CreateColumnForm = ({ boardId, ...props }: CreateColumnProps) => {
         onChange={handleColumnChangeName}
         type="text"
         placeholder="Enter column name"
-        className="w-full !bg-neutral-900"
+        className="!bg-neutral-850 w-full"
         error={error}
       />
       <div className="flex gap-1.5">

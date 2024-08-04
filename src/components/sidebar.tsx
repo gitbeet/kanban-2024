@@ -17,13 +17,13 @@ const Sidebar = () => {
   return (
     <motion.section
       layout
-      className={`relative z-10 ${showSidebar ? "ml-0 translate-x-0" : "-mr-64 -translate-x-64"} w-64 shrink-0 border-r transition-all duration-300`}
+      className={`relative z-10 ${showSidebar ? "ml-0 translate-x-0" : "-mr-64 -translate-x-64"} w-64 shrink-0 border-r border-neutral-700 bg-neutral-800 transition-all duration-300`}
     >
       <div className="h-8"></div>
-      <h2 className="pl-4 text-xl font-medium">
+      <h2 className="pl-6 text-sm font-bold uppercase text-neutral-500">
         All boards ({optimisticBoards.length})
       </h2>
-      <div className="h-12"></div>
+      <div className="h-8"></div>
       <motion.ul>
         {optimisticBoards
           .sort((a, b) => a.index - b.index)
@@ -63,12 +63,9 @@ const Sidebar = () => {
           <CreateBoardForm />
         </motion.li>
       </motion.ul>
-      <div className="h-16"></div>
-
-      <p className="pl-4">Dark mode button</p>
       <p
         onClick={() => setShowSidebar((prev) => !prev)}
-        className="absolute bottom-24 right-0 translate-x-full cursor-pointer rounded rounded-r-full border bg-white px-4 py-3 text-xl text-neutral-800"
+        className="bg-primary-700 hover:bg-primary-650 absolute bottom-24 right-0 translate-x-full cursor-pointer rounded rounded-r-full px-5 py-3.5 text-xl text-white transition-colors duration-150"
       >
         {showSidebar ? <FaEyeSlash /> : <FaEye />}
       </p>

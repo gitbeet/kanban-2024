@@ -6,6 +6,7 @@ import { BoardSchema } from "~/zod-schemas";
 import type { FormEvent } from "react";
 import type { MakeBoardCurrentChange } from "~/types";
 import { useUser } from "@clerk/nextjs";
+import { MdDashboard } from "react-icons/md";
 
 const MakeBoardCurrentForm = ({
   boardId,
@@ -66,9 +67,10 @@ const MakeBoardCurrentForm = ({
   return (
     <span
       onClick={clientAction}
-      className={`w-full truncate px-4 py-3 ${boardId === currentBoardId ? "rounded-r-full bg-white text-black" : ""}`}
+      className={`flex w-full items-center gap-2 truncate rounded-r-full px-6 py-3.5 font-bold transition-colors duration-150 ${boardId === currentBoardId ? "bg-primary-700 hover:bg-primary-650 text-white" : "text-neutral-350 hover:text-neutral-250"}`}
     >
-      {boardName}
+      <MdDashboard />
+      <span> {boardName}</span>
     </span>
   );
 };

@@ -358,7 +358,7 @@ export const EditTaskWindow = ({
       <select
         value={temporaryColumnId}
         onChange={handleChangeTaskColumn}
-        className="w-full bg-neutral-900 px-1 py-2 text-white"
+        className="bg-neutral-850 w-full px-1 py-2 text-white"
       >
         {board?.columns.map((c) => (
           <option key={c.id} value={c.id}>
