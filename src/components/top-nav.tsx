@@ -3,7 +3,6 @@
 import { useUI } from "~/context/ui-context";
 import { useBoards } from "~/context/boards-context";
 import { SignedIn, UserButton } from "@clerk/nextjs";
-import RenameBoardForm from "./action-forms/board/rename-board-form";
 
 const TopNav = () => {
   const { getCurrentBoard, optimisticBoards } = useBoards();
@@ -13,13 +12,13 @@ const TopNav = () => {
   const noBoards = !optimisticBoards.length;
 
   return (
-    <nav className="flex h-fit items-center justify-between border-b px-4 py-4">
+    <nav className="border-neutral-750 relative z-20 flex h-fit items-center justify-between border-b bg-neutral-800 px-4 py-6 shadow-md">
       <SignedIn>
-        <h1 className="text-2xl font-bold">Kanban</h1>
+        <h1 className="text-2xl font-bold">kanban</h1>
 
         <h1
           onClick={() => setShowSidebar((prev) => !prev)}
-          className="w-full cursor-pointer text-center text-2xl font-medium"
+          className="w-full cursor-pointer text-center text-xl font-bold"
         >
           {!noBoards && currentBoard?.name}
         </h1>
