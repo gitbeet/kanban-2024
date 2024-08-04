@@ -36,8 +36,8 @@ const Task = ({
 
   // "draggable" is set to false when renaming so the state can be used to hide the menu button while renaming the task
   const menuButtonJsx = draggable && (
-    <div className="pointer-events-none absolute right-2 top-2 z-10 grid place-content-center opacity-0 group-hover:pointer-events-auto group-hover:opacity-100">
-      <EditButton onClick={handleClick} />
+    <div className="bg-neutral-850 pointer-events-none absolute right-2 top-2 z-10 grid place-content-center p-0.5 opacity-0 group-hover:pointer-events-auto group-hover:opacity-100">
+      <EditButton className="!h-5 !w-5" onClick={handleClick} />
     </div>
   );
 
@@ -55,7 +55,7 @@ const Task = ({
         layoutId={task.id}
         onDragStart={(e) => handleDragStart(e, task, columnId)}
         draggable={draggable}
-        className="border-neutral-750 group relative flex shrink-0 cursor-grab flex-col gap-1 rounded-lg border border-transparent bg-neutral-800 p-2.5 font-bold shadow-lg transition-colors duration-150 hover:border-neutral-700"
+        className="border-neutral-750 group relative flex shrink-0 cursor-grab flex-col gap-1 rounded-lg border border-transparent bg-neutral-800 p-2.5 font-bold shadow-md transition-colors duration-150 hover:border-neutral-700"
       >
         <RenameTaskForm
           setDraggable={setDraggable}

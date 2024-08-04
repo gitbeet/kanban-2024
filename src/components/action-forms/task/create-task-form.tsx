@@ -107,7 +107,7 @@ const CreateTaskForm = ({
       {!isOpen && (
         <motion.div layout>
           <Button variant="text" onClick={() => setIsOpen(true)}>
-            <div className="flex items-center gap-1">
+            <div className="text-secondary flex items-center gap-1">
               <FaPlus className="h-3 w-3" />
               <span>Add a task</span>
             </div>

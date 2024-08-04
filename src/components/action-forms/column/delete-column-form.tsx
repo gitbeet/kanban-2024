@@ -39,7 +39,7 @@ const DeleteColumnForm = ({
   };
   return (
     <form action={clientAction}>
-      <DeleteButton />
+      <DeleteButton className="!text-neutral-650" />
     </form>
   );
 };

@@ -47,15 +47,18 @@ const IconButton = ({
   ...props
 }: ButtonHTMLAttributes<HTMLButtonElement> & { className?: string }) => (
   <button
-    className={`0 flex h-6 w-6 items-center justify-center bg-neutral-600 text-white disabled:pointer-events-none disabled:opacity-50 ${className}`}
     {...props}
+    className={`0 flex h-6 w-6 items-center justify-center bg-neutral-600 text-white disabled:pointer-events-none disabled:opacity-50 ${className} transition-colors--default`}
   >
     {children}
   </button>
 );
 
 export const EditButton = (props: ButtonHTMLAttributes<HTMLButtonElement>) => (
-  <IconButton {...props} className="flex h-6 w-6 items-center justify-center">
+  <IconButton
+    {...props}
+    className={` ${props.className} flex h-6 w-6 items-center justify-center`}
+  >
     <MdEdit className="h-full w-full" />
   </IconButton>
 );
@@ -63,8 +66,10 @@ export const EditButton = (props: ButtonHTMLAttributes<HTMLButtonElement>) => (
 export const DeleteButton = (
   props: ButtonHTMLAttributes<HTMLButtonElement>,
 ) => (
-  <IconButton {...props} className="!bg-transparent hover:text-red-400">
-    <FaTrash className="h-4 w-4 shrink-0" />
+  <IconButton {...props}>
+    <FaTrash
+      className={`hover:text-danger-600 text-neutral-650 h-4 w-4 shrink-0 !bg-transparent`}
+    />
   </IconButton>
 );
 

@@ -10,14 +10,22 @@ textarea {
 
 .input,
 .input-readonly {
-  @apply rounded-md border-2 border-transparent px-2 py-1.5 text-white;
+  @apply rounded-md border-2 border-transparent px-2 py-1.5;
 }
 .input-readonly {
   @apply bg-transparent;
 }
 
 .input {
-  @apply bg-neutral-850 focus:border-primary-600 placeholder:text-neutral-650;
+  @apply bg-neutral-850 focus:border-primary-600 placeholder:text-neutral-650 focus:text-white;
+}
+
+.transition-colors--default {
+  @apply transition-colors duration-150;
+}
+
+.text-secondary {
+  @apply text-neutral-350 hover:text-neutral-250 transition-colors--default;
 }
 
 /* RESET */

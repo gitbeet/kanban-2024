@@ -101,8 +101,11 @@ const CreateColumnForm = ({ boardId, ...props }: CreateColumnProps) => {
   }
 
   const notOpenJsx = (
-    <div onClick={() => setIsOpen(true)} className="flex items-center gap-1">
-      <FaPlus className="h-3 w-3" />
+    <div
+      onClick={() => setIsOpen(true)}
+      className="text-secondary flex items-center gap-2"
+    >
+      <FaPlus className="h-3.5 w-3.5" />
       <span className="text-xl font-medium">Column</span>
     </div>
   );
@@ -132,7 +135,7 @@ const CreateColumnForm = ({ boardId, ...props }: CreateColumnProps) => {
   return (
     <div
       ref={ref}
-      className={` ${loading ? "pointer-events-none" : ""} grid h-32 w-80 shrink-0 cursor-pointer place-content-center rounded-md bg-neutral-700 p-4 ${props.className}`}
+      className={` ${loading ? "pointer-events-none" : ""} grid h-32 w-80 shrink-0 cursor-pointer place-content-center rounded-md bg-neutral-800 p-4 shadow-md ${props.className}`}
     >
       {!isOpen && notOpenJsx}
       {isOpen && openJsx}

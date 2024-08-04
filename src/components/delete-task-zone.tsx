@@ -63,10 +63,10 @@ const DeleteTaskZone = () => {
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
       onDrop={handleDragEnd}
-      className={`grid h-48 w-80 place-content-center rounded-md border border-transparent ${active ? "border-red-500 bg-red-500/50" : "bg-neutral-700"}`}
+      className={`grid h-48 w-80 place-content-center rounded-md border border-transparent shadow-md ${active ? "bg-danger-500/10 border-danger-600" : "bg-neutral-800"}`}
     >
       <FaTrash
-        className={`${active ? "text-red-500" : "text-white"} h-6 w-6`}
+        className={`${active ? "text-danger-600" : "text-neutral-500"} h-6 w-6`}
       />
     </div>
   );

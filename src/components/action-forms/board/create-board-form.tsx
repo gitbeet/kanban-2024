@@ -112,7 +112,7 @@ const CreateBoardForm = ({
       {!isOpen && (
         <motion.div layout className={props.className}>
           <Button variant="text" onClick={() => setIsOpen(true)}>
-            <div className="text-neutral-350 hover:text-neutral-250 flex items-center gap-2 transition-colors duration-150">
+            <div className="text-secondary flex items-center gap-2">
               <FaPlus className="h-3 w-3" />
               <span>Add a board</span>
             </div>
