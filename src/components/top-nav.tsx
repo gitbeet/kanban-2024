@@ -23,7 +23,6 @@ const TopNav = () => {
         >
           {!noBoards && currentBoard?.name}
         </h1>
-        <RenameBoardForm boardId={currentBoard?.id ?? ""} />
         <section className="flex items-center gap-4"></section>
         <UserButton />
       </SignedIn>
