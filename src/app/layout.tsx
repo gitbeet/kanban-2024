@@ -8,6 +8,7 @@ import { type Metadata } from "next";
 import { getBoards } from "~/server/queries";
 import Menus from "~/components/menus/menus";
 import { Plus_Jakarta_Sans } from "next/font/google";
+import { dark, neobrutalism, shadesOfPurple } from "@clerk/themes";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   weight: ["400", "500", "700"],
@@ -27,11 +28,15 @@ export default async function RootLayout({
   const boards = await getBoards();
   // await saveEditTaskChanges();
   return (
-    <ClerkProvider>
+    <ClerkProvider
+      appearance={{
+        baseTheme: shadesOfPurple,
+      }}
+    >
       <UIProvider>
         <BoardsProvider boards={boards}>
           <html lang="en" className={`${plusJakartaSans.variable}`}>
-            <body className="bg-neutral-850 mx-auto flex h-[100dvh] flex-col text-white">
+            <body className="mx-auto flex h-[100dvh] flex-col bg-neutral-850 text-white">
               <TopNav />
               {children}
               <Menus />
