@@ -1,5 +1,6 @@
-import { useTransition, type FormEvent } from "react";
-import { toggleSubtaskCompletedAction } from "~/actions";
+import { useTransition } from "react";
+import type { FormEvent } from "react";
+import { handleToggleSubtaskCompleted, mutateTable } from "~/server/queries";
 import { ToggleButton } from "~/components/ui/buttons";
 import { useBoards } from "~/context/boards-context";
 import type { SubtaskType } from "~/types";
@@ -29,7 +30,10 @@ const ToggleSubtaskForm = ({
       });
     });
 
-    const response = await toggleSubtaskCompletedAction(subtask.id);
+    const response = await handleToggleSubtaskCompleted({
+      change: { action: "toggleSubtaskCompleted", subtaskId: subtask.id },
+      revalidate: true,
+    });
     if (response?.error) {
       console.log(response.error);
     }

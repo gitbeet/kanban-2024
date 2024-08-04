@@ -1,14 +1,15 @@
 import { useState } from "react";
 import { useBoards } from "~/context/boards-context";
-import { deleteTaskAction } from "~/actions";
-import { DeleteButton } from "~/components/ui/buttons";
+import { handleDeleteTask } from "~/server/queries";
 
 const DeleteTaskForm = ({
   columnId,
   taskId,
+  children,
 }: {
   columnId: string;
   taskId: string;
+  children: React.ReactNode;
 }) => {
   const [error, setError] = useState("");
   const { setOptimisticBoards, getCurrentBoard } = useBoards();
@@ -21,18 +22,17 @@ const DeleteTaskForm = ({
       taskId,
     });
 
-    const response = await deleteTaskAction(taskId);
+    const response = await handleDeleteTask({
+      change: { action: "deleteTask", taskId },
+      revalidate: true,
+    });
     if (response?.error) {
       setError(response.error);
       console.log(error);
       return;
     }
   };
-  return (
-    <form action={clientAction}>
-      <DeleteButton />
-    </form>
-  );
+  return <form action={clientAction}>{children}</form>;
 };
 
 export default DeleteTaskForm;

@@ -2,7 +2,6 @@
 
 import { useState, useTransition } from "react";
 import { useBoards } from "~/context/boards-context";
-import { switchColumnAction } from "~/actions";
 import RenameColumnForm from "./action-forms/column/rename-column-form";
 import DeleteColumnForm from "./action-forms/column/delete-column-form";
 import CreateTaskForm from "./action-forms/task/create-task-form";
@@ -11,6 +10,7 @@ import DropIndicator from "./drop-indicator";
 import { SwitchTaskActionSchema } from "~/zod-schemas";
 import type { DragEvent } from "react";
 import type { TaskType, ColumnType } from "../types";
+import { handleSwitchTaskColumn } from "~/server/queries";
 
 const Column = ({
   boardId,
@@ -67,15 +67,13 @@ const Column = ({
 
     if (!beforeColumnId) return;
     // fix useTransition only on optimistic
-    startTransition(async () => {
-      await clientAction(
-        taskId,
-        columnId,
-        beforeColumnId,
-        beforeIndex,
-        taskIndex,
-      );
-    });
+    await clientAction(
+      taskId,
+      columnId,
+      beforeColumnId,
+      taskIndex,
+      beforeIndex,
+    );
   };
 
   // Indicators handling
@@ -86,9 +84,6 @@ const Column = ({
       i.style.opacity = "0";
       i.style.height = "0.375rem";
       i.style.marginBlock = "0";
-      // i.style.opacity = "1";
-      // i.style.height = "4rem";
-      // i.style.marginBlock = "0.5rem";
     });
   };
 
@@ -157,24 +152,29 @@ const Column = ({
       console.log(result.error.issues[0]?.message);
       return;
     }
-
-    setOptimisticBoards({
-      action: "switchTaskColumn",
-      boardId,
-      taskId,
-      oldColumnId,
-      newColumnId,
-      oldColumnIndex: Number(oldColumnIndex),
-      newColumnIndex: Number(newColumnIndex),
+    startTransition(() => {
+      setOptimisticBoards({
+        action: "switchTaskColumn",
+        boardId,
+        taskId,
+        oldColumnId,
+        newColumnId,
+        oldColumnIndex: Number(oldColumnIndex),
+        newColumnIndex: Number(newColumnIndex),
+      });
     });
 
-    const response = await switchColumnAction(
-      taskId,
-      oldColumnId,
-      newColumnId,
-      oldColumnIndex,
-      newColumnIndex,
-    );
+    const response = await handleSwitchTaskColumn({
+      change: {
+        action: "switchTaskColumn",
+        taskId,
+        oldColumnId,
+        newColumnId,
+        oldColumnIndex: Number(oldColumnIndex),
+        newColumnIndex: Number(newColumnIndex),
+      },
+      revalidate: true,
+    });
     // TODO: Display the error
     if (response?.error) {
       console.log(response.error);

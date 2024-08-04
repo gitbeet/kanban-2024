@@ -1,5 +1,5 @@
 import React, { useState, useTransition } from "react";
-import { deleteSubtaskAction } from "~/actions";
+import { handleDeleteSubtask, mutateTable } from "~/server/queries";
 import { DeleteButton } from "~/components/ui/buttons";
 import { useBoards } from "~/context/boards-context";
 
@@ -26,8 +26,10 @@ const DeleteSubtaskForm = ({
         subtaskId,
       });
     });
-
-    const response = await deleteSubtaskAction(subtaskId);
+    const response = await handleDeleteSubtask({
+      change: { action: "deleteSubtask", subtaskId },
+      revalidate: true,
+    });
     if (response?.error) {
       setError(response.error);
       console.log(error);

@@ -1,9 +1,11 @@
 "use client";
 import { useEffect, useState, useTransition } from "react";
 import { useBoards } from "~/context/boards-context";
-import { makeBoardCurrentAction } from "~/actions";
+import { handleMakeBoardCurrent } from "~/server/queries";
 import { BoardSchema } from "~/zod-schemas";
 import type { FormEvent } from "react";
+import type { MakeBoardCurrentChange } from "~/types";
+import { useUser } from "@clerk/nextjs";
 
 const MakeBoardCurrentForm = ({
   boardId,
@@ -17,6 +19,8 @@ const MakeBoardCurrentForm = ({
     getCurrentBoard,
     setLoading: setBoardsLoading,
   } = useBoards();
+
+  const { user } = useUser();
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState("");
 
@@ -27,6 +31,8 @@ const MakeBoardCurrentForm = ({
 
   const clientAction = async (e?: FormEvent) => {
     e?.preventDefault();
+    if (!user?.id) return;
+
     // client validation
     const result = BoardSchema.shape.id.safeParse(boardId);
     if (!result.success) {
@@ -41,7 +47,15 @@ const MakeBoardCurrentForm = ({
     // server validation
     // server update
     console.log(currentBoardId, boardId);
-    const response = await makeBoardCurrentAction(currentBoardId, boardId);
+    const response = await handleMakeBoardCurrent({
+      change: {
+        action: "makeBoardCurrent",
+        newCurrentBoardId: boardId,
+        oldCurrentBoardId: currentBoardId!,
+      } as MakeBoardCurrentChange,
+      userId: user?.id,
+      revalidate: true,
+    });
     if (response?.error) {
       setError(response.error);
       console.log("Server error");

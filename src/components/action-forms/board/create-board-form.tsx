@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState, useTransition } from "react";
 import { useUser } from "@clerk/nextjs";
 import { useBoards } from "~/context/boards-context";
 import useClickOutside from "~/hooks/useClickOutside";
-import { createBoardAction } from "~/actions";
+import { handleCreateBoard } from "~/server/queries";
 import { v4 as uuid } from "uuid";
 import InputField from "~/components/ui/input-field";
 import { motion } from "framer-motion";
@@ -12,7 +12,7 @@ import { FaPlus } from "react-icons/fa";
 import { Button, SaveButton } from "~/components/ui/buttons";
 import { BoardSchema } from "~/zod-schemas";
 import type { ChangeEvent, FormEvent } from "react";
-import type { BoardType } from "~/types";
+import type { CreateBoardChange, BoardType } from "~/types";
 
 const CreateBoardForm = ({
   ...props
@@ -68,17 +68,21 @@ const CreateBoardForm = ({
 
     startTransition(() => {
       setOptimisticBoards({ action: "createBoard", board: newBoard });
-      console.log(optimisticBoards);
     });
 
     // Server error check
     const currentBoardId = getCurrentBoard()?.id;
-
-    const response = await createBoardAction(
-      boardName,
-      newBoardId,
-      currentBoardId,
-    );
+    const args = {
+      change: {
+        action: "createBoard",
+        oldCurrentBoardId: currentBoardId!,
+        id: newBoard.id,
+        name: newBoard.name,
+      } as CreateBoardChange,
+      userId: user.id,
+      revalidate: true,
+    };
+    const response = await handleCreateBoard(args);
     if (response?.error) {
       setError(response.error);
       setIsOpen(true);

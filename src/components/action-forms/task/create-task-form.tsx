@@ -6,7 +6,7 @@ import { useBoards } from "~/context/boards-context";
 import { motion } from "framer-motion";
 import { v4 as uuid } from "uuid";
 import { resizeTextArea } from "~/utilities/resizeTextArea";
-import { createTaskAction } from "~/actions";
+import { handleCreateTask } from "~/server/queries";
 import { Button, SubmitButton } from "~/components/ui/buttons";
 import { FaPlus } from "react-icons/fa6";
 import { TaskSchema } from "~/zod-schemas";
@@ -77,7 +77,10 @@ const CreateTaskForm = ({
       });
     });
 
-    const response = await createTaskAction(newTask);
+    const response = await handleCreateTask({
+      change: { action: "createTask", columnId, name: newTask.name },
+      revalidate: true,
+    });
     if (response?.error) {
       setIsOpen(true);
       setError(response.error);
@@ -131,7 +134,6 @@ const CreateTaskForm = ({
             </div>
             <div className="flex items-center gap-2 self-end">
               <Button
-                ghost
                 onClick={handleClickOutside}
                 type="button"
                 variant="ghost"

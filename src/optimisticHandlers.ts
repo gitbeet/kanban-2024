@@ -230,8 +230,8 @@ const switchTaskColumn = (
     !taskId ||
     !oldColumnId ||
     !newColumnId ||
-    !newColumnIndex ||
-    !oldColumnIndex
+    !oldColumnIndex ||
+    !newColumnIndex
   )
     return state;
   const currentBoard = state.find((b) => b.id === boardId);
@@ -511,8 +511,8 @@ export const handleOptimisticUpdate = (
         taskId,
         oldColumnId,
         newColumnId,
-        newColumnIndex,
         oldColumnIndex,
+        newColumnIndex,
       );
     case "createSubtask":
       return createSubtask(state, boardId, columnId, taskId, subtask);

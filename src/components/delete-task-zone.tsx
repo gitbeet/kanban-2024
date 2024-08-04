@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { useBoards } from "~/context/boards-context";
-import { deleteTaskAction } from "~/actions";
+import { mutateTable } from "~/server/queries";
 import { FaTrash } from "react-icons/fa";
 
 const DeleteTaskZone = () => {
@@ -47,7 +47,7 @@ const DeleteTaskZone = () => {
     setActive(false);
 
     // TODO: Display error
-    const response = await deleteTaskAction(taskId);
+    const response = await mutateTable([{ action: "deleteTask", taskId }]);
     if (response?.error) {
       setError(response.error);
       console.log(error);

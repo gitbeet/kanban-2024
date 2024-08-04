@@ -1,9 +1,11 @@
 import { useEffect, useState, useTransition } from "react";
 import { useBoards } from "~/context/boards-context";
-import { deleteBoardAction } from "~/actions";
 import { DeleteButton } from "~/components/ui/buttons";
 import { BoardSchema } from "~/zod-schemas";
 import type { FormEvent } from "react";
+import { handleDeleteBoard } from "~/server/queries";
+import { useUser } from "@clerk/nextjs";
+import type { DeleteBoardChange } from "~/types";
 
 interface DeleteTaskFormProps extends React.HTMLAttributes<HTMLDivElement> {
   boardId: string;
@@ -16,9 +18,9 @@ const DeleteBoardForm = ({
   ...props
 }: DeleteTaskFormProps) => {
   const [error, setError] = useState("");
+  const { user } = useUser();
   const {
     setOptimisticBoards,
-    optimisticBoards,
     setLoading: setBoardsLoading,
     getCurrentBoard,
   } = useBoards();
@@ -30,6 +32,8 @@ const DeleteBoardForm = ({
 
   const clientAction = async (e?: FormEvent) => {
     e?.preventDefault();
+    if (!user?.id) return;
+
     // Not completely sure if check is needed
     const result = BoardSchema.shape.id.safeParse(boardId);
 
@@ -44,7 +48,17 @@ const DeleteBoardForm = ({
     });
 
     const wasCurrent = boardId === getCurrentBoard()?.id;
-    const response = await deleteBoardAction(boardId, boardIndex, wasCurrent);
+    const args = {
+      change: {
+        action: "deleteBoard",
+        boardId,
+        boardIndex,
+        wasCurrent,
+      } as DeleteBoardChange,
+      userId: user.id,
+      revalidate: true,
+    };
+    const response = await handleDeleteBoard(args);
     if (response?.error) {
       return setError(response.error);
     }

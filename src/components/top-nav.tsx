@@ -3,6 +3,7 @@
 import { useUI } from "~/context/ui-context";
 import { useBoards } from "~/context/boards-context";
 import { SignedIn, UserButton } from "@clerk/nextjs";
+import RenameBoardForm from "./action-forms/board/rename-board-form";
 
 const TopNav = () => {
   const { getCurrentBoard, optimisticBoards } = useBoards();
@@ -22,7 +23,7 @@ const TopNav = () => {
         >
           {!noBoards && currentBoard?.name}
         </h1>
-
+        <RenameBoardForm boardId={currentBoard?.id ?? ""} />
         <section className="flex items-center gap-4"></section>
         <UserButton />
       </SignedIn>

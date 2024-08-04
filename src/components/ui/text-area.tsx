@@ -11,7 +11,6 @@ const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
     return (
       <>
         <textarea
-          rows={1}
           ref={ref}
           className={`${className} ${error ? "!border-red-500" : ""} w-full resize-none overflow-hidden`}
           {...props}

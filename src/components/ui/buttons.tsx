@@ -4,27 +4,30 @@ import { useFormStatus } from "react-dom";
 import { FaCheck, FaEdit, FaTrash } from "react-icons/fa";
 import { FaPlus } from "react-icons/fa6";
 import type { ButtonHTMLAttributes } from "react";
+import { MdEdit } from "react-icons/md";
+import LoadingSpinner, { LoadingPage } from "./loading-spinner";
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  className?: string;
   ghost?: boolean;
-  variant?: "primary" | "ghost" | "text";
+  variant?: "primary" | "ghost" | "text" | "danger";
+  loading?: boolean;
 }
 
 export const Button = ({
   children,
-  className,
   variant = "primary",
+  loading,
   ...props
 }: ButtonProps) => {
-  const variantClasses = `${variant === "primary" ? "border-transparent bg-white text-black shadow-md" : variant === "ghost" ? "border-neutral-300 text-white" : variant === "text" ? "border-transparent" : ""}`;
+  const variantClasses = `${variant === "primary" ? "border-transparent bg-white text-black shadow-md" : variant === "ghost" ? "border-neutral-300 text-white" : variant === "text" ? "border-transparent" : variant === "danger" ? "bg-red-500 text-white border-transparent" : ""}`;
 
   return (
     <button
+      disabled={loading}
       {...props}
-      className={` ${className} ${variantClasses} rounded border px-2 py-1 font-medium disabled:opacity-20`}
+      className={` ${props.className} ${variantClasses} rounded border px-2 py-1 font-medium disabled:cursor-wait disabled:opacity-50`}
     >
-      {children}
+      {loading ? <LoadingPage /> : children}
     </button>
   );
 };
@@ -51,15 +54,17 @@ const IconButton = ({
   </button>
 );
 
-export const DeleteButton = () => (
-  <IconButton className="!bg-transparent hover:text-red-400">
-    <FaTrash className="h-4 w-4 shrink-0" />
+export const EditButton = (props: ButtonHTMLAttributes<HTMLButtonElement>) => (
+  <IconButton {...props} className="flex h-6 w-6 items-center justify-center">
+    <MdEdit className="h-full w-full" />
   </IconButton>
 );
 
-export const EditButton = () => (
-  <IconButton className="hover:text-blue-400">
-    <FaEdit className="h-4 w-4 shrink-0" />
+export const DeleteButton = (
+  props: ButtonHTMLAttributes<HTMLButtonElement>,
+) => (
+  <IconButton {...props} className="!bg-transparent hover:text-red-400">
+    <FaTrash className="h-4 w-4 shrink-0" />
   </IconButton>
 );
 
@@ -88,7 +93,7 @@ export const SaveButton = ({
 export const ToggleButton = ({ checked }: { checked: boolean }) => (
   <button
     type="submit"
-    className="flex h-6 w-6 items-center justify-center bg-neutral-600"
+    className="flex h-6 w-6 items-center justify-center bg-neutral-800"
   >
     {checked ? <FaCheck className="h-4 w-4 shrink-0" /> : undefined}
   </button>

@@ -7,15 +7,9 @@ import { motion } from "framer-motion";
 import { useBoards } from "~/context/boards-context";
 import DropIndicator from "./drop-indicator";
 import RenameTaskForm from "./action-forms/task/rename-task-form";
-import DeleteTaskForm from "./action-forms/task/delete-task-form";
-import ToggleTaskForm from "./action-forms/task/toggle-task-form";
+import { useUI } from "~/context/ui-context";
+import { EditButton } from "./ui/buttons";
 import type { TaskType } from "../types";
-import CreateSubtaskForm from "./action-forms/subtask/create-subtask-form";
-import DeleteSubtaskForm from "./action-forms/subtask/delete-subtask-form";
-import RenameSubtaskForm from "./action-forms/subtask/rename-subtask-form";
-import ToggleSubtaskForm from "./action-forms/subtask/toggle-subtask-form";
-import MenuButton from "./ui/menu-button";
-import EditTask from "./menus/edit-task";
 
 const Task = ({
   columnId,
@@ -28,12 +22,27 @@ const Task = ({
 }) => {
   const { getCurrentBoard } = useBoards();
   const [draggable, setDraggable] = useState(false);
+  const { setShowEditTaskMenu, setEditedTask } = useUI();
 
   const currentBoardId = getCurrentBoard()?.id;
 
+  const completedSubtasks = task.subtasks.filter((s) => s.completed).length;
+  const allSubtasks = task.subtasks.length;
+
+  const handleClick = () => {
+    setShowEditTaskMenu(true);
+    setEditedTask({ columnId, taskId: task.id });
+  };
+
+  // "draggable" is set to false when renaming so the state can be used to hide the menu button while renaming the task
+  const menuButtonJsx = draggable && (
+    <div className="pointer-events-none absolute right-2 top-2 z-10 grid place-content-center opacity-0 group-hover:pointer-events-auto group-hover:opacity-100">
+      <EditButton onClick={handleClick} />
+    </div>
+  );
+
   if (!currentBoardId)
     return <h1>No currentboardId found (placeholder error)</h1>;
-
   return (
     <>
       <DropIndicator
@@ -42,27 +51,26 @@ const Task = ({
         columnId={task.columnId}
       />
       <motion.div
-        layout
+        layout="position"
         layoutId={task.id}
         onDragStart={(e) => handleDragStart(e, task, columnId)}
         draggable={draggable}
-        className="group relative flex shrink-0 cursor-grab items-center justify-between gap-4 rounded-lg border-2 border-neutral-700 border-transparent bg-neutral-700 p-1.5 shadow-md hover:border-sky-300"
+        className="group relative flex shrink-0 cursor-grab flex-col gap-1 rounded-lg border-2 border-neutral-700 border-transparent bg-neutral-700 p-1.5 shadow-md hover:border-sky-300"
       >
-        {/* <ToggleTaskForm
-          boardId={currentBoardId}
-          columnId={columnId}
-          task={task}
-        /> */}
+        {task.index}
         <RenameTaskForm
           setDraggable={setDraggable}
           boardId={currentBoardId}
           columnId={columnId}
           task={task}
         />
-        <div className="pointer-events-none z-10 opacity-0 group-hover:pointer-events-auto group-hover:opacity-100">
-          {/* <DeleteTaskForm columnId={columnId} taskId={task.id} /> */}
-          <MenuButton columnId={columnId} taskId={task.id} />
-        </div>
+
+        {menuButtonJsx}
+        {allSubtasks > 0 && (
+          <div className="pl-2 text-sm text-neutral-400">
+            {completedSubtasks} of {allSubtasks} subtasks
+          </div>
+        )}
       </motion.div>
     </>
   );

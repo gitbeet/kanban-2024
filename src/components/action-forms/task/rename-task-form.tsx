@@ -3,7 +3,7 @@
 import { useEffect, useState, useTransition, useRef } from "react";
 import { useBoards } from "~/context/boards-context";
 import useClickOutside from "~/hooks/useClickOutside";
-import { renameTaskAction } from "~/actions";
+import { handleRenameTask } from "~/server/queries";
 import { resizeTextArea } from "~/utilities/resizeTextArea";
 import { CancelButton, SaveButton } from "~/components/ui/buttons";
 import { TaskSchema } from "~/zod-schemas";
@@ -20,7 +20,7 @@ const RenameTaskForm = ({
   boardId: string;
   columnId: string;
   task: TaskType;
-  setDraggable: Dispatch<SetStateAction<boolean>>;
+  setDraggable?: Dispatch<SetStateAction<boolean>>;
 }) => {
   // States
   const [loading, setLoading] = useState(false);
@@ -40,7 +40,7 @@ const RenameTaskForm = ({
   useEffect(() => resizeTextArea(testRef), [task.name, newTaskName, isOpen]);
 
   // Disable draggable when renaming so you can interact with the field
-  useEffect(() => setDraggable(!isOpen), [isOpen, setDraggable]);
+  useEffect(() => setDraggable?.(!isOpen), [isOpen, setDraggable]);
 
   const handleTaskNameChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -75,7 +75,10 @@ const RenameTaskForm = ({
     setIsOpen(false);
 
     // Server
-    const response = await renameTaskAction(task.id, newTaskName);
+    const response = await handleRenameTask({
+      change: { action: "renameTask", newTaskName, taskId: task.id },
+      revalidate: true,
+    });
     if (response?.error) {
       setError(response.error);
       setLoading(false);
@@ -96,7 +99,7 @@ const RenameTaskForm = ({
   return (
     <div ref={ref} className={`${loading ? "pointer-events-none" : ""} `}>
       <form
-        className="flex items-center gap-2"
+        className="flex flex-col gap-2"
         ref={renameTaskRef}
         onSubmit={clientAction}
       >
@@ -113,6 +116,7 @@ const RenameTaskForm = ({
           )}
           <TextArea
             ref={testRef}
+            rows={1}
             readOnly={!isOpen}
             className={` ${isOpen ? "input" : "input-readonly"} `}
             value={newTaskName}
@@ -122,7 +126,7 @@ const RenameTaskForm = ({
         </div>
         {isOpen && (
           <div
-            className={`${isOpen ? "opacity-100" : "opacity-0"} flex gap-1.5`}
+            className={`${isOpen ? "opacity-100" : "opacity-0"} flex gap-1.5 self-end`}
           >
             <SaveButton disabled={!!error} />
             <CancelButton onClick={handleClickOutside} />

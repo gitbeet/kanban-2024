@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import { useBoards } from "~/context/boards-context";
-import { deleteColumnAction } from "~/actions";
+import { handleDeleteColumn } from "~/server/queries";
 import { DeleteButton } from "~/components/ui/buttons";
 import { ColumnSchema } from "~/zod-schemas";
 
@@ -13,6 +13,7 @@ const DeleteColumnForm = ({
 }) => {
   const [error, setError] = useState("");
   const { setOptimisticBoards } = useBoards();
+  const [pending, startTransition] = useTransition();
   const clientAction = async () => {
     // Not completely sure if check is needed
     const result = ColumnSchema.shape.id.safeParse(columnId);
@@ -23,8 +24,15 @@ const DeleteColumnForm = ({
       console.log(error);
       return;
     }
-    setOptimisticBoards({ action: "deleteColumn", boardId, columnId });
-    const response = await deleteColumnAction(columnId);
+
+    startTransition(() =>
+      setOptimisticBoards({ action: "deleteColumn", boardId, columnId }),
+    );
+
+    const response = await handleDeleteColumn({
+      change: { action: "deleteColumn", columnId },
+      revalidate: true,
+    });
     if (response?.error) {
       return setError(response.error);
     }

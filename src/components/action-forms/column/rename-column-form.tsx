@@ -1,7 +1,7 @@
 import { useRef, useState, useTransition } from "react";
 import { useBoards } from "~/context/boards-context";
 import useClickOutside from "~/hooks/useClickOutside";
-import { renameColumnAction } from "~/actions";
+import { handleRenameColumn } from "~/server/queries";
 import InputField from "~/components/ui/input-field";
 import { ColumnSchema } from "~/zod-schemas";
 import type { ChangeEvent, FormEvent } from "react";
@@ -19,7 +19,7 @@ const RenameColumnForm = ({
     .find((board) => board.id === boardId)
     ?.columns.find((col) => col.id === columnId);
 
-  const [newColumnName, setNewColumnName] = useState(column?.name);
+  const [newColumnName, setNewColumnName] = useState(column?.name ?? "");
   const [error, setError] = useState("");
   const [_, startTransition] = useTransition();
   const [isOpen, setIsOpen] = useState(false);
@@ -51,7 +51,11 @@ const RenameColumnForm = ({
     });
     setNewColumnName("");
     setIsOpen(false);
-    const response = await renameColumnAction(columnId, newColumnName);
+
+    const response = await handleRenameColumn({
+      change: { action: "renameColumn", columnId, newName: newColumnName },
+      revalidate: true,
+    });
     if (response?.error) {
       return setError(response.error);
     }
@@ -60,7 +64,7 @@ const RenameColumnForm = ({
 
   function handleClickOutside() {
     setIsOpen(false);
-    setNewColumnName(column?.name);
+    setNewColumnName(column?.name ?? "");
     setError("");
     setLoading(false);
   }
@@ -78,7 +82,7 @@ const RenameColumnForm = ({
             className="input-readonly w-full p-2"
             onClick={() => {
               setIsOpen(true);
-              setNewColumnName(column?.name);
+              setNewColumnName(column?.name ?? "");
             }}
             value={column?.name}
           ></input>

@@ -1,5 +1,6 @@
-import React, { FormEvent, useState, useTransition } from "react";
-import { renameSubtaskAction } from "~/actions";
+import { useState, useTransition } from "react";
+import type { FormEvent } from "react";
+import { handleRenameSubtask } from "~/server/queries";
 import { SaveButton } from "~/components/ui/buttons";
 import { useBoards } from "~/context/boards-context";
 import { SubtaskSchema } from "~/zod-schemas";
@@ -37,7 +38,10 @@ const RenameSubtaskForm = ({
       });
     });
 
-    const response = await renameSubtaskAction(subtaskId, newSubtaskName);
+    const response = await handleRenameSubtask({
+      change: { action: "renameSubtask", subtaskId, newSubtaskName },
+      revalidate: true,
+    });
     if (response?.error) {
       console.log(response.error);
     }

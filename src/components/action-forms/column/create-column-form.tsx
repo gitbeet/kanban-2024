@@ -1,8 +1,8 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useTransition } from "react";
 import useClickOutside from "~/hooks/useClickOutside";
 import { useBoards } from "~/context/boards-context";
 import { v4 as uuid } from "uuid";
-import { createColumnAction } from "~/actions";
+import { handleCreateColumn } from "~/server/queries";
 import { CancelButton, SaveButton } from "~/components/ui/buttons";
 import InputField from "~/components/ui/input-field";
 import { ColumnSchema } from "~/zod-schemas";
@@ -20,6 +20,7 @@ const CreateColumnForm = ({ boardId, ...props }: CreateColumnProps) => {
 
   const [columnName, setColumnName] = useState("");
   const [loading, setLoading] = useState(false);
+  const [pending, startTransition] = useTransition();
 
   const [error, setError] = useState("");
   const [isOpen, setIsOpen] = useState(false);
@@ -51,10 +52,29 @@ const CreateColumnForm = ({ boardId, ...props }: CreateColumnProps) => {
       setError(result.error.issues[0]?.message ?? "An error occured");
       return;
     }
+    startTransition(() => {
+      setOptimisticBoards({
+        action: "createColumn",
+        boardId,
+        column: newColumn,
+      });
+    });
 
-    setOptimisticBoards({ action: "createColumn", boardId, column: newColumn });
+    // const response = await createColumnAction(newColumn);
+    // if (response?.error) {
+    //   setIsOpen(true);
+    //   setError(response.error);
+    //   return;
+    // }
 
-    const response = await createColumnAction(newColumn);
+    const response = await handleCreateColumn({
+      change: {
+        action: "createColumn",
+        boardId: boardId,
+        columnName: newColumn.name,
+      },
+      revalidate: true,
+    });
     if (response?.error) {
       setIsOpen(true);
       setError(response.error);

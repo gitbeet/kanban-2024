@@ -1,9 +1,9 @@
 "use client";
 
 import React from "react";
-import EditTask from "./edit-task";
 import { useUI } from "~/context/ui-context";
 import { useBoards } from "~/context/boards-context";
+import EditTask from "./task";
 
 const Menus = () => {
   const { editedTask } = useUI();

@@ -1,10 +1,11 @@
-import React, { FormEvent, useState, useTransition } from "react";
+import { useState, useTransition } from "react";
+import type { FormEvent } from "react";
 import { SaveButton } from "~/components/ui/buttons";
 import { useBoards } from "~/context/boards-context";
-import { SubtaskType } from "~/types";
+import type { SubtaskType } from "~/types";
 import { SubtaskSchema } from "~/zod-schemas";
 import { v4 as uuid } from "uuid";
-import { createSubtaskAction } from "~/actions";
+import { handleCreateSubtask, mutateTable } from "~/server/queries";
 const CreateSubtaskForm = ({
   columnId,
   taskId,
@@ -63,7 +64,10 @@ const CreateSubtaskForm = ({
     });
 
     // sever validation/state update
-    const response = await createSubtaskAction(newSubtask);
+    const response = await handleCreateSubtask({
+      change: { action: "createSubtask", newSubtask },
+      revalidate: true,
+    });
     if (response?.error) {
       setIsOpen(true);
       setError(response.error);
