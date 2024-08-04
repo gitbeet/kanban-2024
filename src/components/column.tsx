@@ -192,9 +192,9 @@ const Column = ({
       className={`${active ? "bg-neutral-950/20" : ""} min-h-screen w-80 shrink-0 rounded-md px-3`}
     >
       <div className="flex items-center justify-between gap-4 p-4">
-        <h3 className="flex items-center gap-2 font-bold text-neutral-500">
+        <h3 className="flex items-center gap-2 font-bold text-neutral-250">
           {/* hard coded width to avoid shifting of column name */}
-          <span className="shrink-0 text-neutral-400">
+          <span className="shrink-0 text-neutral-500">
             ({column.tasks.length})
           </span>
           <RenameColumnForm boardId={boardId} columnId={column.id} />

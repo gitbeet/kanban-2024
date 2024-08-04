@@ -19,13 +19,13 @@ export const Button = ({
   loading,
   ...props
 }: ButtonProps) => {
-  const variantClasses = `${variant === "primary" ? "border-transparent bg-white text-black shadow-md" : variant === "ghost" ? "border-neutral-300 text-white" : variant === "text" ? "border-transparent" : variant === "danger" ? "bg-red-500 text-white border-transparent" : ""}`;
+  const variantClasses = `${variant === "primary" ? "border-transparent bg-white text-neutral-950 shadow-md" : variant === "ghost" ? "border-neutral-300 text-white" : variant === "text" ? "border-transparent" : variant === "danger" ? "bg-danger-500 text-white border-transparent" : ""}`;
 
   return (
     <button
       disabled={loading}
       {...props}
-      className={` ${props.className} ${variantClasses} rounded border px-2 py-1 font-medium disabled:cursor-wait disabled:opacity-50`}
+      className={` ${props.className} ${variantClasses} rounded border px-2 py-1 text-sm font-bold disabled:cursor-wait disabled:opacity-50`}
     >
       {loading ? <LoadingPage /> : children}
     </button>
@@ -48,7 +48,7 @@ const IconButton = ({
 }: ButtonHTMLAttributes<HTMLButtonElement> & { className?: string }) => (
   <button
     {...props}
-    className={`0 flex h-6 w-6 items-center justify-center bg-neutral-600 text-white disabled:pointer-events-none disabled:opacity-50 ${className} transition-colors--default`}
+    className={`0 bg-neutral-600 flex h-6 w-6 items-center justify-center text-white disabled:pointer-events-none disabled:opacity-50 ${className} transition-colors--default`}
   >
     {children}
   </button>
@@ -68,7 +68,7 @@ export const DeleteButton = (
 ) => (
   <IconButton {...props}>
     <FaTrash
-      className={`hover:text-danger-600 text-neutral-650 h-4 w-4 shrink-0 !bg-transparent`}
+      className={`h-4 w-4 shrink-0 !bg-transparent text-neutral-650 hover:text-danger-600`}
     />
   </IconButton>
 );
@@ -82,7 +82,7 @@ export const CreateButton = () => (
 export const CancelButton = ({
   ...props
 }: ButtonHTMLAttributes<HTMLButtonElement>) => (
-  <IconButton {...props} className="rounded-full hover:bg-red-500">
+  <IconButton {...props} className="hover:bg-red-500 rounded-full">
     <FaPlus className="h-4.5 w-4.5 shrink-0 rotate-45" />
   </IconButton>
 );
@@ -90,7 +90,7 @@ export const CancelButton = ({
 export const SaveButton = ({
   ...props
 }: ButtonHTMLAttributes<HTMLButtonElement>) => (
-  <IconButton {...props} className="rounded-full hover:bg-teal-500">
+  <IconButton {...props} className="hover:bg-teal-500 rounded-full">
     <FaCheck className="h-3.5 w-3.5 shrink-0" />
   </IconButton>
 );

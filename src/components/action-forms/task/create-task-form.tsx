@@ -105,7 +105,7 @@ const CreateTaskForm = ({
   return (
     <>
       {!isOpen && (
-        <motion.div layout>
+        <motion.div layout className="pt-2">
           <Button variant="text" onClick={() => setIsOpen(true)}>
             <div className="text-secondary flex items-center gap-1">
               <FaPlus className="h-3 w-3" />
@@ -121,7 +121,7 @@ const CreateTaskForm = ({
             ref={formRef}
             onSubmit={clientAction}
           >
-            <div className="rounded-md bg-neutral-600 p-1.5">
+            <div className="bg-neutral-600 rounded-md p-1.5">
               <TextArea
                 autoFocus
                 ref={textAreaRef}

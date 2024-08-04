@@ -106,7 +106,7 @@ const CreateColumnForm = ({ boardId, ...props }: CreateColumnProps) => {
       className="text-secondary flex items-center gap-2"
     >
       <FaPlus className="h-3.5 w-3.5" />
-      <span className="text-xl font-medium">Column</span>
+      <span className="text-lg font-bold">Column</span>
     </div>
   );
 
@@ -122,7 +122,7 @@ const CreateColumnForm = ({ boardId, ...props }: CreateColumnProps) => {
         onChange={handleColumnChangeName}
         type="text"
         placeholder="Enter column name"
-        className="!bg-neutral-850 w-full"
+        className="w-full !bg-neutral-850"
         error={error}
       />
       <div className="flex gap-1.5">

@@ -33,7 +33,10 @@ const Board = () => {
       <h1 className="w-full text-center text-3xl font-bold">
         This board is empty
       </h1>
-      <CreateColumnForm boardId={currentBoard.id} className="!bg-transparent" />
+      <CreateColumnForm
+        boardId={currentBoard.id}
+        className="!bg-transparent !shadow-none"
+      />
     </section>
   );
 
@@ -51,7 +54,7 @@ const Board = () => {
             <Column key={col.index} boardId={currentBoard.id} column={col} />
           ))}
 
-        <motion.div layout className="h-96">
+        <motion.div layout className="h-96 px-3">
           <CreateColumnForm boardId={currentBoard.id} />
           <div className="h-4" />
           <DeleteTaskZone />

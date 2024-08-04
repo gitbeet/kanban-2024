@@ -17,7 +17,7 @@ textarea {
 }
 
 .input {
-  @apply bg-neutral-850 focus:border-primary-600 placeholder:text-neutral-650 focus:text-white;
+  @apply bg-neutral-950/50 placeholder:text-neutral-650 focus:border-primary-600 focus:text-white;
 }
 
 .transition-colors--default {
@@ -25,7 +25,7 @@ textarea {
 }
 
 .text-secondary {
-  @apply text-neutral-350 hover:text-neutral-250 transition-colors--default;
+  @apply transition-colors--default text-neutral-350 hover:text-neutral-250;
 }
 
 /* RESET */
