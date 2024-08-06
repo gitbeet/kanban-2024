@@ -3,9 +3,10 @@
 import { useFormStatus } from "react-dom";
 import { FaCheck, FaEdit, FaTrash } from "react-icons/fa";
 import { FaPlus } from "react-icons/fa6";
-import type { ButtonHTMLAttributes } from "react";
+import type { ButtonHTMLAttributes, HTMLAttributes } from "react";
 import { MdEdit } from "react-icons/md";
 import LoadingSpinner, { LoadingPage } from "./loading-spinner";
+import { IoClose } from "react-icons/io5";
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   ghost?: boolean;
@@ -82,9 +83,17 @@ export const CreateButton = () => (
 export const CancelButton = ({
   ...props
 }: ButtonHTMLAttributes<HTMLButtonElement>) => (
-  <IconButton {...props} className="hover:bg-red-500 rounded-full">
+  <IconButton {...props} className={`hover:bg-red-500 rounded-full`}>
     <FaPlus className="h-4.5 w-4.5 shrink-0 rotate-45" />
   </IconButton>
+);
+
+export const CloseButton = ({
+  ...props
+}: HTMLAttributes<HTMLButtonElement>) => (
+  <button {...props}>
+    <IoClose className="h-5 w-5 shrink-0" />
+  </button>
 );
 
 export const SaveButton = ({

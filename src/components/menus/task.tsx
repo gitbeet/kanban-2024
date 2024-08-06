@@ -7,7 +7,7 @@ import { useBoards } from "~/context/boards-context";
 import { createPortal } from "react-dom";
 import ToggleSubtaskForm from "../action-forms/subtask/toggle-subtask-form";
 import DeleteTaskForm from "../action-forms/task/delete-task-form";
-import { Button } from "../ui/buttons";
+import { Button, CancelButton, CloseButton } from "../ui/buttons";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import type { TaskType } from "~/types";
 import { EditTaskWindow } from "./edit-task";
@@ -16,6 +16,7 @@ import { ModalWithBackdrop } from "../ui/modal";
 const EditTask = ({ columnId, task }: { columnId: string; task: TaskType }) => {
   const { showEditTaskMenu, setEditedTask, setShowEditTaskMenu } = useUI();
   const [showEditTaskWindow, setShowEditTaskWindow] = useState(false);
+  const [showConfirmDeleteWindow, setShowConfirmDeleteWindow] = useState(false);
   const [showSmallMenu, setShowSmallMenu] = useState(false);
   const { getCurrentBoard } = useBoards();
 
@@ -115,11 +116,45 @@ const EditTask = ({ columnId, task }: { columnId: string; task: TaskType }) => {
           >
             Edit task
           </Button>
-          <DeleteTaskForm columnId={columnId} taskId={task.id}>
-            <Button type="submit" variant="danger">
-              Delete task
-            </Button>
-          </DeleteTaskForm>
+          <Button
+            onClick={() => setShowConfirmDeleteWindow(true)}
+            variant="danger"
+          >
+            Delete task
+          </Button>
+        </div>
+      </ModalWithBackdrop>
+      {/* Delete confirmation window */}
+      <ModalWithBackdrop
+        className="absolute left-[50dvw] top-[50dvh] w-max -translate-x-1/2 -translate-y-1/2 p-4"
+        showBackdrop={showConfirmDeleteWindow}
+        zIndex={50}
+        onClose={() => setShowConfirmDeleteWindow(false)}
+        show={showConfirmDeleteWindow}
+      >
+        <div className="relative h-full w-full">
+          <CloseButton
+            onClick={() => setShowConfirmDeleteWindow(false)}
+            className="relative left-full -translate-x-full"
+          />
+          <div className="h-4" />
+          <div className="flex flex-col items-center gap-8">
+            <h3>Are you sure you want to delete this task?</h3>
+            <div className="flex items-center gap-2">
+              <DeleteTaskForm columnId={columnId} taskId={task.id}>
+                <Button type="submit" variant="danger">
+                  Delete
+                </Button>
+              </DeleteTaskForm>
+              <Button
+                onClick={() => setShowConfirmDeleteWindow(false)}
+                type="submit"
+                variant="ghost"
+              >
+                Cancel
+              </Button>
+            </div>
+          </div>
         </div>
       </ModalWithBackdrop>
       {/* Edit task menu */}
