@@ -14,7 +14,7 @@ export const Modal = ({ children, zIndex, show, ...props }: ModalProps) => {
     <div
       {...props}
       style={{ zIndex }}
-      className={`absolute transition-opacity duration-1000 ${show ? "opacity-100" : "pointer-events-none opacity-0"} ${props.className}`}
+      className={`menu-bg absolute transition-opacity duration-200 ${show ? "opacity-100" : "pointer-events-none opacity-0"} ${props.className}`}
     >
       {children}
     </div>
@@ -38,16 +38,9 @@ export const ModalWithBackdrop = ({
 
   const jsx = (
     <>
-      <div
-        {...props}
-        style={{ zIndex }}
-        className={`${props.className} absolute transition-opacity duration-200 ${show ? "opacity-100" : "pointer-events-none opacity-0"} `}
-      >
+      <Modal zIndex={zIndex} show={show} {...props}>
         {children}
-      </div>
-      {/* <Modal zIndex={zIndex} show={show} {...props}>
-        {children}
-      </Modal> */}
+      </Modal>
       <Backdrop
         show={showBackdrop}
         onClose={onClose}

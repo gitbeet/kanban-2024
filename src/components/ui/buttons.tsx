@@ -98,7 +98,7 @@ export const SaveButton = ({
 export const ToggleButton = ({ checked }: { checked: boolean }) => (
   <button
     type="submit"
-    className="flex h-6 w-6 items-center justify-center bg-neutral-800"
+    className="flex h-6 w-6 items-center justify-center bg-neutral-850"
   >
     {checked ? <FaCheck className="h-4 w-4 shrink-0" /> : undefined}
   </button>

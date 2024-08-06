@@ -49,12 +49,13 @@ const EditTask = ({ columnId, task }: { columnId: string; task: TaskType }) => {
 
   const jsx = (
     <>
+      {/* Main menu */}
       <ModalWithBackdrop
         zIndex={20}
         show={showEditTaskMenu}
         showBackdrop={showEditTaskMenu && !showSmallMenu && !showEditTaskWindow}
         onClose={handleClickOutsideMenu}
-        className={`menu-bg absolute left-[50dvw] top-[50dvh] flex min-w-80 -translate-x-1/2 -translate-y-1/2 flex-col gap-4 p-6`}
+        className={`absolute left-[50dvw] top-[50dvh] flex min-w-80 -translate-x-1/2 -translate-y-1/2 flex-col gap-4 p-6`}
       >
         <div>
           <div className="flex justify-between">
@@ -69,20 +70,24 @@ const EditTask = ({ columnId, task }: { columnId: string; task: TaskType }) => {
           Subtasks ({completedSubtasks} of {allSubtasks})
         </h4>
 
-        <ul className="p-2">
+        <ul>
           {task.subtasks
             .sort((a, b) => a.index - b.index)
             .map((subtask) => (
-              <li key={subtask.index} className="flex justify-between py-1">
-                <span className={subtask.completed ? "line-through" : ""}>
-                  {subtask.name}
-                </span>
-
+              <li key={subtask.index} className="flex items-center gap-4 py-1">
                 <ToggleSubtaskForm
                   columnId={columnId}
                   taskId={task.id}
                   subtask={subtask}
                 />
+
+                <span
+                  className={
+                    subtask.completed ? "text-secondary line-through" : ""
+                  }
+                >
+                  {subtask.name}
+                </span>
               </li>
             ))}
         </ul>
@@ -94,13 +99,13 @@ const EditTask = ({ columnId, task }: { columnId: string; task: TaskType }) => {
           </select>
         </div>
       </ModalWithBackdrop>
-
+      {/* Small menu (edit and delete) */}
       <ModalWithBackdrop
         zIndex={30}
         show={showSmallMenu}
         showBackdrop={showSmallMenu && showEditTaskMenu && !showEditTaskWindow}
         onClose={handleClickOutsideSmallMenu}
-        className="menu-bg absolute left-[50dvw] top-[50dvh] -translate-y-full translate-x-full p-3"
+        className="absolute left-[50dvw] top-[50dvh] -translate-y-full translate-x-full p-4"
       >
         <div className="flex w-max flex-col gap-2">
           <Button
@@ -117,12 +122,13 @@ const EditTask = ({ columnId, task }: { columnId: string; task: TaskType }) => {
           </DeleteTaskForm>
         </div>
       </ModalWithBackdrop>
+      {/* Edit task menu */}
       <ModalWithBackdrop
         zIndex={40}
         show={showEditTaskWindow}
         showBackdrop={showSmallMenu && showEditTaskMenu && showEditTaskWindow}
         onClose={handleClickOutsideEditWindow}
-        className={`menu-bg left-[50dvw] top-[50dvh] min-w-64 -translate-x-1/2 -translate-y-1/2 space-y-4 p-6`}
+        className={`left-[50dvw] top-[50dvh] min-w-64 -translate-x-1/2 -translate-y-1/2 space-y-4 p-6`}
       >
         <EditTaskWindow
           columnId={columnId}
