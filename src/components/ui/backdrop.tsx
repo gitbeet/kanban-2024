@@ -1,18 +1,18 @@
 import type { HTMLAttributes } from "react";
-import { createPortal } from "react-dom";
-import useHasMounted from "~/hooks/useHasMounted";
-const Backdrop = ({ ...props }: HTMLAttributes<HTMLDivElement>) => {
-  const hasMounted = useHasMounted();
 
-  const jsx = (
+interface BackdropProps extends HTMLAttributes<HTMLDivElement> {
+  show: boolean;
+  onClose: () => void;
+}
+
+const Backdrop = ({ show, onClose, ...props }: BackdropProps) => {
+  return (
     <div
+      onClick={onClose}
       {...props}
-      className={`absolute inset-0 h-screen w-screen bg-black/30 ${props.className}`}
+      className={` ${show ? "opacity-100" : "pointer-events-none opacity-0"} absolute inset-0 h-screen w-screen bg-[rgb(0,0,0)]/20 ${props.className}`}
     />
   );
-  return hasMounted
-    ? createPortal(jsx, document.getElementById("modal-root")!)
-    : null;
 };
 
 export default Backdrop;

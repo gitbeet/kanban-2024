@@ -17,7 +17,7 @@ const Sidebar = () => {
   return (
     <motion.section
       layout
-      className={`relative z-10 ${showSidebar ? "ml-0 translate-x-0" : "-mr-64 -translate-x-64"} w-64 shrink-0 border-r border-neutral-700 bg-neutral-800 transition-all duration-300`}
+      className={`relative z-[5] ${showSidebar ? "ml-0 translate-x-0" : "-mr-64 -translate-x-64"} w-64 shrink-0 border-r border-neutral-700 bg-neutral-800 transition-all duration-300`}
     >
       <div className="h-8"></div>
       <h2 className="pl-6 text-sm font-bold uppercase text-neutral-500">
@@ -65,7 +65,7 @@ const Sidebar = () => {
       </motion.ul>
       <p
         onClick={() => setShowSidebar((prev) => !prev)}
-        className="bg-primary-700 hover:bg-primary-650 absolute bottom-24 right-0 translate-x-full cursor-pointer rounded rounded-r-full px-5 py-3.5 text-xl text-white transition-colors duration-150"
+        className="absolute bottom-24 right-0 translate-x-full cursor-pointer rounded rounded-r-full bg-primary-700 px-5 py-3.5 text-xl text-white transition-colors duration-150 hover:bg-primary-650"
       >
         {showSidebar ? <FaEyeSlash /> : <FaEye />}
       </p>

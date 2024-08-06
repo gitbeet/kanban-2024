@@ -13,7 +13,11 @@ const Menus = () => {
     ?.tasks.find((t) => t.id === editedTask.taskId);
 
   if (!editedTask.columnId || !task) return null;
-  return <EditTask columnId={editedTask.columnId} task={task} />;
+  return (
+    <>
+      <EditTask columnId={editedTask.columnId} task={task} />
+    </>
+  );
 };
 
 export default Menus;

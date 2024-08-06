@@ -8,11 +8,7 @@ interface SmallMenuProps extends HTMLAttributes<HTMLDivElement> {
 export const SmallMenu = forwardRef<HTMLDivElement, SmallMenuProps>(
   ({ children, ...props }, ref) => {
     return (
-      <div
-        ref={ref}
-        {...props}
-        className={`w-fit rounded border bg-neutral-600 p-2 ${props.className}`}
-      >
+      <div ref={ref} {...props} className={`menu-bg p-3 ${props.className}`}>
         {children}
       </div>
     );

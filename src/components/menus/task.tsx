@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 import useHasMounted from "~/hooks/useHasMounted";
-import useClickOutside from "~/hooks/useClickOutside";
 import { useUI } from "~/context/ui-context";
 import { useBoards } from "~/context/boards-context";
 import { createPortal } from "react-dom";
@@ -11,23 +10,14 @@ import DeleteTaskForm from "../action-forms/task/delete-task-form";
 import { Button } from "../ui/buttons";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import type { TaskType } from "~/types";
-import { SmallMenu } from "./SmallMenu";
 import { EditTaskWindow } from "./edit-task";
+import { ModalWithBackdrop } from "../ui/modal";
 
 const EditTask = ({ columnId, task }: { columnId: string; task: TaskType }) => {
   const { showEditTaskMenu, setEditedTask, setShowEditTaskMenu } = useUI();
   const [showEditTaskWindow, setShowEditTaskWindow] = useState(false);
   const [showSmallMenu, setShowSmallMenu] = useState(false);
   const { getCurrentBoard } = useBoards();
-
-  // useClickOutside to close the small menu and backdrop onclick to close the big menu
-  const { ref: smallMenuRef } = useClickOutside<HTMLDivElement>(
-    handleClickOutsideSmallMenu,
-  );
-
-  const { ref: menuRef } = useClickOutside<HTMLDivElement>(
-    handleClickOutsideMenu,
-  );
 
   // for the createPortal
   const hasMounted = useHasMounted();
@@ -59,53 +49,27 @@ const EditTask = ({ columnId, task }: { columnId: string; task: TaskType }) => {
 
   const jsx = (
     <>
-      <div
-        ref={menuRef}
-        className={`absolute left-[50dvw] top-[50dvh] z-20 flex -translate-x-1/2 -translate-y-1/2 flex-col gap-4 border bg-neutral-600 p-4 ${showEditTaskMenu ? "opacity-100" : "pointer-events-none opacity-0"} min-w-56`}
+      <ModalWithBackdrop
+        zIndex={20}
+        show={showEditTaskMenu}
+        showBackdrop={showEditTaskMenu && !showSmallMenu && !showEditTaskWindow}
+        onClose={handleClickOutsideMenu}
+        className={`menu-bg absolute left-[50dvw] top-[50dvh] flex min-w-80 -translate-x-1/2 -translate-y-1/2 flex-col gap-4 p-6`}
       >
-        <div className="">
+        <div>
           <div className="flex justify-between">
             <h3>{task.name}</h3>{" "}
             <BsThreeDotsVertical
               onClick={() => setShowSmallMenu(true)}
               className="h-6 w-6 shrink-0 cursor-pointer"
             />
-            {showSmallMenu && (
-              <>
-                <SmallMenu
-                  ref={smallMenuRef}
-                  className="absolute left-full top-0 z-30"
-                >
-                  <div className="flex w-max flex-col gap-2">
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      onClick={handleShowEditTaskWindow}
-                    >
-                      Edit task
-                    </Button>
-                    <DeleteTaskForm columnId={columnId} taskId={task.id}>
-                      <Button type="submit" variant="danger">
-                        Delete task
-                      </Button>
-                    </DeleteTaskForm>
-                  </div>
-                  <EditTaskWindow
-                    columnId={columnId}
-                    task={task}
-                    show={showEditTaskWindow}
-                    onClose={handleClickOutsideEditWindow}
-                  />
-                </SmallMenu>
-              </>
-            )}
           </div>
         </div>
         <h4>
           Subtasks ({completedSubtasks} of {allSubtasks})
         </h4>
 
-        <ul className="border p-2">
+        <ul className="p-2">
           {task.subtasks
             .sort((a, b) => a.index - b.index)
             .map((subtask) => (
@@ -123,16 +87,50 @@ const EditTask = ({ columnId, task }: { columnId: string; task: TaskType }) => {
             ))}
         </ul>
         <div>
-          <p>Move to : </p>
-          <select className="bg-neutral-850 p-1 text-white">
+          <p>Current status</p>
+          <div className="h-4" />
+          <select className="w-full bg-neutral-850 px-1 py-2 text-white">
             {columns?.map((c) => <option key={c.id}>{c.name}</option>)}
           </select>
         </div>
-      </div>
-      {/* <Backdrop
-        onClick={handleClickOutsideMenu}
-        className={`z-10 ${showSmallMenu ? "pointer-events-none" : ""}`}
-      /> */}
+      </ModalWithBackdrop>
+
+      <ModalWithBackdrop
+        zIndex={30}
+        show={showSmallMenu}
+        showBackdrop={showSmallMenu && showEditTaskMenu && !showEditTaskWindow}
+        onClose={handleClickOutsideSmallMenu}
+        className="menu-bg absolute left-[50dvw] top-[50dvh] -translate-y-full translate-x-full p-3"
+      >
+        <div className="flex w-max flex-col gap-2">
+          <Button
+            type="button"
+            variant="ghost"
+            onClick={handleShowEditTaskWindow}
+          >
+            Edit task
+          </Button>
+          <DeleteTaskForm columnId={columnId} taskId={task.id}>
+            <Button type="submit" variant="danger">
+              Delete task
+            </Button>
+          </DeleteTaskForm>
+        </div>
+      </ModalWithBackdrop>
+      <ModalWithBackdrop
+        zIndex={40}
+        show={showEditTaskWindow}
+        showBackdrop={showSmallMenu && showEditTaskMenu && showEditTaskWindow}
+        onClose={handleClickOutsideEditWindow}
+        className={`menu-bg left-[50dvw] top-[50dvh] min-w-64 -translate-x-1/2 -translate-y-1/2 space-y-4 p-6`}
+      >
+        <EditTaskWindow
+          columnId={columnId}
+          task={task}
+          show={showEditTaskWindow}
+          onClose={handleClickOutsideEditWindow}
+        />
+      </ModalWithBackdrop>
     </>
   );
 

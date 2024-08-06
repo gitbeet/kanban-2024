@@ -4,26 +4,28 @@ import React, { useEffect, useState } from "react";
 import useHasMounted from "~/hooks/useHasMounted";
 import useClickOutside from "~/hooks/useClickOutside";
 import { useBoards } from "~/context/boards-context";
-import { createPortal } from "react-dom";
 import { v4 as uuid } from "uuid";
 import { mutateTable } from "~/server/queries";
 import InputField from "../ui/input-field";
 import { Button, DeleteButton } from "../ui/buttons";
 import { SubtaskSchema, TaskSchema } from "~/zod-schemas";
-import type { ChangeEvent } from "react";
+import type { ChangeEvent, HTMLAttributes } from "react";
 import type { SubtaskType, TaskChange, TaskType } from "~/types";
+
+interface Props extends HTMLAttributes<HTMLDivElement> {
+  show: boolean;
+  onClose: () => void;
+  columnId: string;
+  task: TaskType;
+}
 
 export const EditTaskWindow = ({
   show,
   onClose,
   columnId,
   task,
-}: {
-  show: boolean;
-  onClose: () => void;
-  columnId: string;
-  task: TaskType;
-}) => {
+  ...props
+}: Props) => {
   // Initial state values
   const initialTemporarySubtasks = task.subtasks.map(({ id, index, name }) => ({
     id,
@@ -312,10 +314,7 @@ export const EditTaskWindow = ({
   };
 
   const jsx = (
-    <div
-      ref={clickOutsideRef}
-      className={` ${show ? "opacity-100" : "pointer-events-none opacity-0"} absolute left-[50dvw] top-[50dvh] z-50 min-w-64 -translate-x-1/2 -translate-y-1/2 space-y-4 border bg-neutral-600 p-6`}
-    >
+    <>
       <h1>Edit Task</h1>
       {/* ----- */}
       <label htmlFor="task-title">Title</label>
@@ -358,7 +357,7 @@ export const EditTaskWindow = ({
       <select
         value={temporaryColumnId}
         onChange={handleChangeTaskColumn}
-        className="bg-neutral-850 w-full px-1 py-2 text-white"
+        className="w-full bg-neutral-850 px-1 py-2 text-white"
       >
         {board?.columns.map((c) => (
           <option key={c.id} value={c.id}>
@@ -375,9 +374,7 @@ export const EditTaskWindow = ({
       >
         Save changes
       </Button>
-    </div>
+    </>
   );
-  return hasMounted
-    ? createPortal(jsx, document.getElementById("modal-root")!)
-    : null;
+  return jsx;
 };

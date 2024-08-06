@@ -38,8 +38,10 @@ export default async function RootLayout({
           <html lang="en" className={`${plusJakartaSans.variable}`}>
             <body className="mx-auto flex h-[100dvh] flex-col bg-neutral-850 text-white">
               <TopNav />
+
               {children}
               <Menus />
+
               <div id="modal-root" className="absolute h-0 w-0" />
             </body>
           </html>
