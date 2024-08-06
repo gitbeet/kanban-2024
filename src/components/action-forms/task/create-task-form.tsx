@@ -10,7 +10,7 @@ import { handleCreateTask } from "~/server/queries";
 import { Button, SubmitButton } from "~/components/ui/buttons";
 import { FaPlus } from "react-icons/fa6";
 import { TaskSchema } from "~/zod-schemas";
-import type { ChangeEvent, FormEvent } from "react";
+import type { ChangeEvent, FormEvent, KeyboardEvent } from "react";
 import type { TaskType } from "~/types";
 import TextArea from "~/components/ui/text-area";
 
@@ -102,6 +102,13 @@ const CreateTaskForm = ({
     setError("");
   }
 
+  const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      clientAction();
+    }
+  };
+
   return (
     <>
       {!isOpen && (
@@ -129,6 +136,7 @@ const CreateTaskForm = ({
                 rows={1}
                 value={taskName}
                 onChange={handleChange}
+                onKeyDown={handleKeyDown}
                 error={error}
               />
             </div>
