@@ -20,7 +20,7 @@ export const Button = ({
   loading,
   ...props
 }: ButtonProps) => {
-  const variantClasses = `${variant === "primary" ? "border-transparent bg-white text-neutral-950 shadow-md" : variant === "ghost" ? "border-neutral-300 text-white" : variant === "text" ? "border-transparent" : variant === "danger" ? "bg-danger-500 text-white border-transparent" : ""}`;
+  const variantClasses = `${variant === "primary" ? "border-transparent bg-neutral-100 hover:bg-white text-neutral-950 shadow-md" : variant === "ghost" ? "border-neutral-250 text-white hover:border-neutral-100" : variant === "text" ? "border-transparent" : variant === "danger" ? "bg-danger-400 text-white border-transparent hover:bg-danger-300" : ""} transition-colors--default`;
 
   return (
     <button
@@ -69,7 +69,7 @@ export const DeleteButton = (
 ) => (
   <IconButton {...props}>
     <FaTrash
-      className={`h-4 w-4 shrink-0 !bg-transparent text-neutral-650 hover:text-danger-600`}
+      className={`hover:text-danger-300 h-4 w-4 shrink-0 !bg-transparent text-neutral-650`}
     />
   </IconButton>
 );

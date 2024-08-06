@@ -24,8 +24,13 @@ textarea {
   @apply transition-colors duration-150;
 }
 
+.task-bg,
 .menu-bg {
-  @apply rounded-md border border-transparent bg-neutral-800 shadow-md hover:border-neutral-700;
+  @apply rounded-md bg-neutral-800 shadow-md;
+}
+
+.task-bg {
+  @apply border border-transparent hover:border-neutral-700;
 }
 
 .text-secondary {

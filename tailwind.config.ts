@@ -11,8 +11,8 @@ export default {
     colors: {
       "neutral-950": "hsl(237, 50%, 4%)",
       "neutral-850": "hsl(235, 16%, 15%)",
-      "neutral-800": "hsl(235, 12%, 19%)",
-      "neutral-750": "hsl(235, 12%, 22%)",
+      "neutral-800": "hsl(235, 14%, 20%)",
+      "neutral-750": "hsl(235, 15%, 23%)",
       "neutral-700": "hsl(236, 11%, 27%)",
       "neutral-650": "hsl(216, 15%, 37%)",
       "neutral-500": "hsl(216, 15%, 57%)",
@@ -27,9 +27,9 @@ export default {
       "primary-650": "hsl(243, 54%, 61%)",
       "primary-600": "hsl(243, 54%, 64%)",
 
-      "danger-400": "hsl(0, 78%, 45%)",
-      "danger-500": "hsl(0, 78%, 63%)",
-      "danger-600": "hsl(0, 100%, 70%)",
+      "danger-600": "hsl(0, 78%, 45%)",
+      "danger-400": "hsl(0, 78%, 62%)",
+      "danger-300": "hsl(0, 100%, 70%)",
 
       "backdrop-500": "hsla(237, 20%, 4%,.3)",
       transparent: "hsla(0, 0%, 100%,0)",

@@ -56,7 +56,7 @@ const EditTask = ({ columnId, task }: { columnId: string; task: TaskType }) => {
         show={showEditTaskMenu}
         showBackdrop={showEditTaskMenu && !showSmallMenu && !showEditTaskWindow}
         onClose={handleClickOutsideMenu}
-        className={`absolute left-[50dvw] top-[50dvh] flex min-w-80 -translate-x-1/2 -translate-y-1/2 flex-col gap-4 p-6`}
+        className={`absolute left-[50dvw] top-[50dvh] flex min-w-80 -translate-x-1/2 -translate-y-1/2 flex-col gap-4`}
       >
         <div>
           <div className="flex justify-between">
@@ -106,7 +106,7 @@ const EditTask = ({ columnId, task }: { columnId: string; task: TaskType }) => {
         show={showSmallMenu}
         showBackdrop={showSmallMenu && showEditTaskMenu && !showEditTaskWindow}
         onClose={handleClickOutsideSmallMenu}
-        className="absolute left-[50dvw] top-[50dvh] -translate-y-full translate-x-full p-4"
+        className="absolute left-[50dvw] top-[50dvh] -translate-y-full translate-x-full !p-4"
       >
         <div className="flex w-max flex-col gap-2">
           <Button
@@ -126,7 +126,7 @@ const EditTask = ({ columnId, task }: { columnId: string; task: TaskType }) => {
       </ModalWithBackdrop>
       {/* Delete confirmation window */}
       <ModalWithBackdrop
-        className="absolute left-[50dvw] top-[50dvh] w-max -translate-x-1/2 -translate-y-1/2 p-4"
+        className="absolute left-[50dvw] top-[50dvh] w-max -translate-x-1/2 -translate-y-1/2"
         showBackdrop={showConfirmDeleteWindow}
         zIndex={50}
         onClose={() => setShowConfirmDeleteWindow(false)}
@@ -163,7 +163,7 @@ const EditTask = ({ columnId, task }: { columnId: string; task: TaskType }) => {
         show={showEditTaskWindow}
         showBackdrop={showSmallMenu && showEditTaskMenu && showEditTaskWindow}
         onClose={handleClickOutsideEditWindow}
-        className={`left-[50dvw] top-[50dvh] min-w-64 -translate-x-1/2 -translate-y-1/2 space-y-4 p-6`}
+        className={`left-[50dvw] top-[50dvh] min-w-64 -translate-x-1/2 -translate-y-1/2 space-y-4`}
       >
         <EditTaskWindow
           columnId={columnId}
