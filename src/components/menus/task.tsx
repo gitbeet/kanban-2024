@@ -1,31 +1,78 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { ChangeEvent, useTransition, useState, useRef } from "react";
 import useHasMounted from "~/hooks/useHasMounted";
 import { useUI } from "~/context/ui-context";
 import { useBoards } from "~/context/boards-context";
 import { createPortal } from "react-dom";
 import ToggleSubtaskForm from "../action-forms/subtask/toggle-subtask-form";
 import DeleteTaskForm from "../action-forms/task/delete-task-form";
-import { Button, CancelButton, CloseButton } from "../ui/buttons";
+import { Button, CloseButton } from "../ui/buttons";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import type { TaskType } from "~/types";
 import { EditTaskWindow } from "./edit-task";
 import { ModalWithBackdrop } from "../ui/modal";
+import { handleSwitchTaskColumn } from "~/server/queries";
 
 const EditTask = ({ columnId, task }: { columnId: string; task: TaskType }) => {
+  const { setOptimisticBoards } = useBoards();
   const { showEditTaskMenu, setEditedTask, setShowEditTaskMenu } = useUI();
+
   const [showEditTaskWindow, setShowEditTaskWindow] = useState(false);
   const [showConfirmDeleteWindow, setShowConfirmDeleteWindow] = useState(false);
   const [showSmallMenu, setShowSmallMenu] = useState(false);
+
   const { getCurrentBoard } = useBoards();
+
+  const [pending, startTransition] = useTransition();
+
+  const [currentColumnId, setCurrentColumnId] = useState(columnId);
 
   // for the createPortal
   const hasMounted = useHasMounted();
-  const columns = getCurrentBoard()?.columns;
+  const board = getCurrentBoard();
+
+  const handleColumnChange = async (e: ChangeEvent<HTMLSelectElement>) => {
+    e.preventDefault();
+    setCurrentColumnId(e.target.value);
+    const newColumnIndex =
+      (board?.columns.find((col) => col.id === e.target.value)?.tasks.length ??
+        0) + 1;
+
+    setEditedTask((prev) => ({ ...prev, columnId: e.target.value }));
+
+    startTransition(() => {
+      setOptimisticBoards({
+        action: "switchTaskColumn",
+        boardId: board?.id,
+        taskId: task.id,
+        oldColumnId: columnId,
+        newColumnId: e.target.value,
+        oldColumnIndex: task.index,
+        newColumnIndex,
+      });
+    });
+
+    const response = await handleSwitchTaskColumn({
+      change: {
+        action: "switchTaskColumn",
+        taskId: task.id,
+        oldColumnId: columnId,
+        newColumnId: e.target.value,
+        oldColumnIndex: task.index,
+        newColumnIndex,
+      },
+      revalidate: true,
+    });
+
+    if (response?.error) {
+      console.log(response.error);
+    }
+  };
 
   // for the big menu
   function handleClickOutsideMenu() {
+    console.log("In handleClickOutsideMenu");
     if (showEditTaskWindow || showSmallMenu) return;
     setEditedTask({ columnId: null, taskId: null });
     setShowEditTaskMenu(false);
@@ -59,8 +106,8 @@ const EditTask = ({ columnId, task }: { columnId: string; task: TaskType }) => {
         className={`absolute left-[50dvw] top-[50dvh] flex min-w-80 -translate-x-1/2 -translate-y-1/2 flex-col gap-4`}
       >
         <div>
-          <div className="flex justify-between">
-            <h3>{task.name}</h3>{" "}
+          <div className="flex justify-between gap-4">
+            <h3 className="truncate">{task.name}</h3>
             <BsThreeDotsVertical
               onClick={() => setShowSmallMenu(true)}
               className="h-6 w-6 shrink-0 cursor-pointer"
@@ -95,8 +142,16 @@ const EditTask = ({ columnId, task }: { columnId: string; task: TaskType }) => {
         <div>
           <p>Current status</p>
           <div className="h-4" />
-          <select className="w-full bg-neutral-850 px-1 py-2 text-white">
-            {columns?.map((c) => <option key={c.id}>{c.name}</option>)}
+          <select
+            onChange={(e) => handleColumnChange(e)}
+            className="w-full bg-neutral-850 px-1 py-2 text-white"
+            value={currentColumnId}
+          >
+            {board?.columns?.map((c) => (
+              <option key={c.id} value={c.id}>
+                {c.name}
+              </option>
+            ))}
           </select>
         </div>
       </ModalWithBackdrop>

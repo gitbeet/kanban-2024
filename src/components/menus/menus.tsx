@@ -12,7 +12,10 @@ const Menus = () => {
     ?.columns.find((c) => c.id === editedTask.columnId)
     ?.tasks.find((t) => t.id === editedTask.taskId);
 
-  if (!editedTask.columnId || !task) return null;
+  if (!editedTask.columnId || !task) {
+    console.log("In if");
+    return null;
+  }
   return (
     <>
       <EditTask columnId={editedTask.columnId} task={task} />
