@@ -16,6 +16,7 @@ import type {
   SetStateAction,
 } from "react";
 import TextArea from "~/components/ui/text-area";
+import { handlePressEnterToSubmit } from "~/utilities/handlePressEnterToSubmit";
 
 const RenameTaskForm = ({
   boardId,
@@ -103,12 +104,6 @@ const RenameTaskForm = ({
     setError("");
   }
 
-  const handleKeyDown = async (e: KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      await clientAction();
-    }
-  };
   return (
     <div ref={ref} className={`${loading ? "pointer-events-none" : ""} `}>
       <form
@@ -135,7 +130,7 @@ const RenameTaskForm = ({
             value={newTaskName}
             onChange={isOpen ? handleTaskNameChange : undefined}
             error={error}
-            onKeyDown={handleKeyDown}
+            onKeyDown={(e) => handlePressEnterToSubmit(e, clientAction)}
           />
         </div>
         {isOpen && (

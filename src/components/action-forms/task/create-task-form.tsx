@@ -13,6 +13,7 @@ import { TaskSchema } from "~/zod-schemas";
 import type { ChangeEvent, FormEvent, KeyboardEvent } from "react";
 import type { TaskType } from "~/types";
 import TextArea from "~/components/ui/text-area";
+import { handlePressEnterToSubmit } from "~/utilities/handlePressEnterToSubmit";
 
 const CreateTaskForm = ({
   boardId,
@@ -102,13 +103,6 @@ const CreateTaskForm = ({
     setError("");
   }
 
-  const handleKeyDown = async (e: KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      await clientAction();
-    }
-  };
-
   return (
     <>
       {!isOpen && (
@@ -136,7 +130,7 @@ const CreateTaskForm = ({
                 rows={1}
                 value={taskName}
                 onChange={handleChange}
-                onKeyDown={handleKeyDown}
+                onKeyDown={(e) => handlePressEnterToSubmit(e, clientAction)}
                 error={error}
               />
             </div>
