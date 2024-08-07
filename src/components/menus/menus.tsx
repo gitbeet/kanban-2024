@@ -3,7 +3,7 @@
 import React from "react";
 import { useUI } from "~/context/ui-context";
 import { useBoards } from "~/context/boards-context";
-import EditTask from "./task";
+import EditTask from "./edit-task/task-window";
 
 const Menus = () => {
   const { editedTask } = useUI();
@@ -12,13 +12,11 @@ const Menus = () => {
     ?.columns.find((c) => c.id === editedTask.columnId)
     ?.tasks.find((t) => t.id === editedTask.taskId);
 
-  if (!editedTask.columnId || !task) {
-    console.log("In if");
-    return null;
-  }
   return (
     <>
-      <EditTask columnId={editedTask.columnId} task={task} />
+      {editedTask.columnId && task && (
+        <EditTask columnId={editedTask.columnId} task={task} />
+      )}
     </>
   );
 };

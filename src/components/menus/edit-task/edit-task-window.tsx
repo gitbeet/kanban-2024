@@ -6,11 +6,11 @@ import useClickOutside from "~/hooks/useClickOutside";
 import { useBoards } from "~/context/boards-context";
 import { v4 as uuid } from "uuid";
 import { mutateTable } from "~/server/queries";
-import InputField from "../ui/input-field";
-import { Button, DeleteButton } from "../ui/buttons";
 import { SubtaskSchema, TaskSchema } from "~/zod-schemas";
 import type { ChangeEvent, HTMLAttributes } from "react";
 import type { SubtaskType, TaskChange, TaskType } from "~/types";
+import InputField from "~/components/ui/input-field";
+import { Button, DeleteButton } from "~/components/ui/buttons";
 
 interface Props extends HTMLAttributes<HTMLDivElement> {
   show: boolean;
@@ -36,9 +36,6 @@ export const EditTaskWindow = ({
     id: subtask.id,
     errorMessage: "",
   }));
-
-  const hasMounted = useHasMounted();
-  const { ref: clickOutsideRef } = useClickOutside<HTMLDivElement>(onClose);
 
   const { getCurrentBoard } = useBoards();
   const board = getCurrentBoard();
@@ -313,7 +310,7 @@ export const EditTaskWindow = ({
     handleCloseWindow();
   };
 
-  const jsx = (
+  return (
     <>
       <h1>Edit Task</h1>
       {/* ----- */}
@@ -376,5 +373,4 @@ export const EditTaskWindow = ({
       </Button>
     </>
   );
-  return jsx;
 };

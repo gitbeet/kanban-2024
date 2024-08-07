@@ -2,10 +2,15 @@ import { KeyboardEvent } from "react";
 
 export const handlePressEnterToSubmit = async (
   e: KeyboardEvent<HTMLTextAreaElement>,
-  action: () => Promise<void> | void,
+  submitAction: () => Promise<void> | void,
+  cancelAction: () => void,
 ) => {
   if (e.key === "Enter" && !e.shiftKey) {
     e.preventDefault();
-    await action();
+    await submitAction();
+  }
+  if (e.key === "Escape") {
+    e.preventDefault();
+    await cancelAction();
   }
 };

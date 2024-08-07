@@ -98,6 +98,7 @@ const RenameTaskForm = ({
     // Wait for server to finish then set loading to false
     setLoading(false);
   };
+
   function handleClickOutside() {
     setIsOpen(false);
     setNewTaskName(task.name);
@@ -130,7 +131,9 @@ const RenameTaskForm = ({
             value={newTaskName}
             onChange={isOpen ? handleTaskNameChange : undefined}
             error={error}
-            onKeyDown={(e) => handlePressEnterToSubmit(e, clientAction)}
+            onKeyDown={(e) =>
+              handlePressEnterToSubmit(e, clientAction, handleClickOutside)
+            }
           />
         </div>
         {isOpen && (

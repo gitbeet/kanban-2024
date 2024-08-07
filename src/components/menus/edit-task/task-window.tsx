@@ -5,14 +5,15 @@ import useHasMounted from "~/hooks/useHasMounted";
 import { useUI } from "~/context/ui-context";
 import { useBoards } from "~/context/boards-context";
 import { createPortal } from "react-dom";
-import ToggleSubtaskForm from "../action-forms/subtask/toggle-subtask-form";
-import DeleteTaskForm from "../action-forms/task/delete-task-form";
-import { Button, CloseButton } from "../ui/buttons";
+import ToggleSubtaskForm from "../../action-forms/subtask/toggle-subtask-form";
+import DeleteTaskForm from "../../action-forms/task/delete-task-form";
+import { Button, CloseButton } from "../../ui/buttons";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import type { TaskType } from "~/types";
-import { EditTaskWindow } from "./edit-task";
-import { ModalWithBackdrop } from "../ui/modal";
+import { EditTaskWindow } from "./edit-task-window";
+import { ModalWithBackdrop } from "../../ui/modal";
 import { handleSwitchTaskColumn } from "~/server/queries";
+import PromptWindow from "../prompt-window";
 
 const EditTask = ({ columnId, task }: { columnId: string; task: TaskType }) => {
   const { setOptimisticBoards } = useBoards();
@@ -95,7 +96,7 @@ const EditTask = ({ columnId, task }: { columnId: string; task: TaskType }) => {
   const completedSubtasks = task.subtasks.filter((s) => s.completed).length;
   const allSubtasks = task.subtasks.length;
 
-  const jsx = (
+  return (
     <>
       {/* Main menu */}
       <ModalWithBackdrop
@@ -103,7 +104,7 @@ const EditTask = ({ columnId, task }: { columnId: string; task: TaskType }) => {
         show={showEditTaskMenu}
         showBackdrop={showEditTaskMenu && !showSmallMenu && !showEditTaskWindow}
         onClose={handleClickOutsideMenu}
-        className={`absolute left-[50dvw] top-[50dvh] flex min-w-80 -translate-x-1/2 -translate-y-1/2 flex-col gap-4`}
+        className={`absolute left-[50dvw] top-[50dvh] flex w-[min(calc(100dvw-2rem),25rem)] -translate-x-1/2 -translate-y-1/2 flex-col gap-4`}
       >
         <div>
           <div className="flex justify-between gap-4">
@@ -180,38 +181,35 @@ const EditTask = ({ columnId, task }: { columnId: string; task: TaskType }) => {
         </div>
       </ModalWithBackdrop>
       {/* Delete confirmation window */}
-      <ModalWithBackdrop
-        className="absolute left-[50dvw] top-[50dvh] w-max -translate-x-1/2 -translate-y-1/2"
-        showBackdrop={showConfirmDeleteWindow}
+      <PromptWindow
         zIndex={50}
-        onClose={() => setShowConfirmDeleteWindow(false)}
+        showBackdrop={showConfirmDeleteWindow}
         show={showConfirmDeleteWindow}
-      >
-        <div className="relative h-full w-full">
-          <CloseButton
+        onClose={() => setShowConfirmDeleteWindow(false)}
+        message={
+          <span>
+            Are you sure you want to delete the ‘
+            <span className="font-bold">{task.name}</span>’ task and its
+            subtasks? This action cannot be reversed.
+          </span>
+        }
+        confirmButton={
+          <DeleteTaskForm columnId={columnId} taskId={task.id}>
+            <Button type="submit" variant="danger">
+              Delete
+            </Button>
+          </DeleteTaskForm>
+        }
+        cancelButton={
+          <Button
             onClick={() => setShowConfirmDeleteWindow(false)}
-            className="relative left-full -translate-x-full"
-          />
-          <div className="h-4" />
-          <div className="flex flex-col items-center gap-8">
-            <h3>Are you sure you want to delete this task?</h3>
-            <div className="flex items-center gap-2">
-              <DeleteTaskForm columnId={columnId} taskId={task.id}>
-                <Button type="submit" variant="danger">
-                  Delete
-                </Button>
-              </DeleteTaskForm>
-              <Button
-                onClick={() => setShowConfirmDeleteWindow(false)}
-                type="submit"
-                variant="ghost"
-              >
-                Cancel
-              </Button>
-            </div>
-          </div>
-        </div>
-      </ModalWithBackdrop>
+            type="submit"
+            variant="ghost"
+          >
+            Cancel
+          </Button>
+        }
+      />
       {/* Edit task menu */}
       <ModalWithBackdrop
         zIndex={40}
@@ -229,10 +227,6 @@ const EditTask = ({ columnId, task }: { columnId: string; task: TaskType }) => {
       </ModalWithBackdrop>
     </>
   );
-
-  return hasMounted
-    ? createPortal(jsx, document.getElementById("modal-root")!)
-    : null;
 };
 
 export default EditTask;

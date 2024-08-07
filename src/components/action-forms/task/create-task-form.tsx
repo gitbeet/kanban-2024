@@ -130,7 +130,9 @@ const CreateTaskForm = ({
                 rows={1}
                 value={taskName}
                 onChange={handleChange}
-                onKeyDown={(e) => handlePressEnterToSubmit(e, clientAction)}
+                onKeyDown={(e) =>
+                  handlePressEnterToSubmit(e, clientAction, handleClickOutside)
+                }
                 error={error}
               />
             </div>
