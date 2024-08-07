@@ -8,7 +8,13 @@ import { resizeTextArea } from "~/utilities/resizeTextArea";
 import { CancelButton, SaveButton } from "~/components/ui/buttons";
 import { TaskSchema } from "~/zod-schemas";
 import type { TaskType } from "~/types";
-import type { ChangeEvent, Dispatch, FormEvent, SetStateAction } from "react";
+import type {
+  ChangeEvent,
+  Dispatch,
+  FormEvent,
+  KeyboardEvent,
+  SetStateAction,
+} from "react";
 import TextArea from "~/components/ui/text-area";
 
 const RenameTaskForm = ({
@@ -96,6 +102,13 @@ const RenameTaskForm = ({
     setNewTaskName(task.name);
     setError("");
   }
+
+  const handleKeyDown = async (e: KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      await clientAction();
+    }
+  };
   return (
     <div ref={ref} className={`${loading ? "pointer-events-none" : ""} `}>
       <form
@@ -122,6 +135,7 @@ const RenameTaskForm = ({
             value={newTaskName}
             onChange={isOpen ? handleTaskNameChange : undefined}
             error={error}
+            onKeyDown={handleKeyDown}
           />
         </div>
         {isOpen && (
