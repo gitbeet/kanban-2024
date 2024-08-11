@@ -1,30 +1,33 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import useHasMounted from "~/hooks/useHasMounted";
-import useClickOutside from "~/hooks/useClickOutside";
 import { useBoards } from "~/context/boards-context";
 import { v4 as uuid } from "uuid";
 import { mutateTable } from "~/server/queries";
 import { SubtaskSchema, TaskSchema } from "~/zod-schemas";
-import type { ChangeEvent, HTMLAttributes } from "react";
+import type { ChangeEvent } from "react";
 import type { SubtaskType, TaskChange, TaskType } from "~/types";
 import InputField from "~/components/ui/input-field";
-import { Button, DeleteButton } from "~/components/ui/buttons";
+import { Button, CloseButton, DeleteButton } from "~/components/ui/buttons";
+import { ModalWithBackdrop } from "~/components/ui/modal";
+import PromptWindow from "../prompt-window";
 
-interface Props extends HTMLAttributes<HTMLDivElement> {
+interface Props {
   show: boolean;
-  onClose: () => void;
-  columnId: string;
+  showBackdrop: boolean;
+  zIndex: number;
   task: TaskType;
+  columnId: string;
+  onClose: () => void;
 }
 
 export const EditTaskWindow = ({
+  zIndex,
   show,
+  showBackdrop,
   onClose,
   columnId,
   task,
-  ...props
 }: Props) => {
   // Initial state values
   const initialTemporarySubtasks = task.subtasks.map(({ id, index, name }) => ({
@@ -37,8 +40,12 @@ export const EditTaskWindow = ({
     errorMessage: "",
   }));
 
+  const initialErrors = { name: "", subtasks: initialSubtaskErrors };
+
   const { getCurrentBoard } = useBoards();
   const board = getCurrentBoard();
+
+  const [showConfirmCancelWindow, setShowConfirmCancelWindow] = useState(false);
 
   const [temporaryTaskName, setTemporaryName] = useState(task.name);
   const [temporarySubtasks, setTemporarySubtasks] = useState<
@@ -50,19 +57,25 @@ export const EditTaskWindow = ({
   const [error, setError] = useState<{
     name: string;
     subtasks: { id: string; errorMessage: string }[];
-  }>({ name: "", subtasks: initialSubtaskErrors });
+  }>(initialErrors);
 
   // Changes are used for the db transaction query
   const [changes, setChanges] = useState<TaskChange[]>([]);
   useEffect(() => console.log(changes), [changes]);
 
   const handleCloseWindow = () => {
+    setShowConfirmCancelWindow(false);
+    onClose();
+    setTemporarySubtasks(initialTemporarySubtasks);
+    setTemporaryColumnId(columnId);
+    setTemporaryName(task.name);
+    setLoading(false);
     setChanges([]);
     setError({ name: "", subtasks: [] });
-    onClose();
   };
 
   const handleChangeTaskName = (e: ChangeEvent<HTMLInputElement>) => {
+    setError((prev) => ({ ...prev, name: "" }));
     setTemporaryName(e.target.value);
     setChanges((prev) => {
       const actionIndex = prev.findIndex(
@@ -172,6 +185,13 @@ export const EditTaskWindow = ({
     e: ChangeEvent<HTMLInputElement>,
     subtaskId: string,
   ) => {
+    setError((prev) => ({
+      ...prev,
+      subtasks: prev.subtasks.map((s) =>
+        s.id === subtaskId ? { ...s, errorMessage: "" } : s,
+      ),
+    }));
+
     setTemporarySubtasks((prev) =>
       prev.map((s) =>
         s.id === subtaskId ? { ...s, name: e.target.value } : s,
@@ -310,67 +330,128 @@ export const EditTaskWindow = ({
     handleCloseWindow();
   };
 
+  const confirmCancelWindowJSX = (
+    <>
+      <PromptWindow
+        zIndex={50}
+        show={showConfirmCancelWindow}
+        showBackdrop={show && showConfirmCancelWindow}
+        onClose={() => setShowConfirmCancelWindow(false)}
+        message={
+          <span>
+            Are you sure you want to cancel your changes? All unsaved progress
+            will be lost.
+          </span>
+        }
+        confirmButton={
+          <Button onClick={handleCloseWindow} type="submit" variant="danger">
+            Yes
+          </Button>
+        }
+        cancelButton={
+          <Button
+            onClick={() => setShowConfirmCancelWindow(false)}
+            variant="ghost"
+          >
+            No
+          </Button>
+        }
+      />
+    </>
+  );
+
   return (
     <>
-      <h1>Edit Task</h1>
-      {/* ----- */}
-      <label htmlFor="task-title">Title</label>
-      <InputField
-        error={error.name}
-        value={temporaryTaskName}
-        onChange={handleChangeTaskName}
-      />
-      {/* ----- */}
-      <h3>Subtasks</h3>
-      <ul className="space-y-2">
-        {temporarySubtasks.map((subtask) => {
-          const errorIndex = error.subtasks.findIndex(
-            (s) => s.id === subtask.id,
-          );
-          return (
-            <div key={subtask.index} className="flex items-center">
-              <InputField
-                value={subtask.name}
-                error={error.subtasks[errorIndex]?.errorMessage ?? ""}
-                onChange={(e) => handleChangeSubtaskName(e, subtask.id)}
-              />
-              <DeleteButton
-                type="button"
-                onClick={() => handleDeleteSubtask(subtask.id, subtask.index)}
-              />
-            </div>
-          );
-        })}
-      </ul>
-      <Button
-        variant="primary"
-        className="w-full"
-        onClick={handlecreateSubtask}
+      {confirmCancelWindowJSX}{" "}
+      <ModalWithBackdrop
+        zIndex={40}
+        show={show}
+        showBackdrop={showBackdrop}
+        onClose={() => setShowConfirmCancelWindow(true)}
       >
-        Add new subtask
-      </Button>
-      {/* ----- */}
-      <h3>Column</h3>
-      <select
-        value={temporaryColumnId}
-        onChange={handleChangeTaskColumn}
-        className="w-full bg-neutral-850 px-1 py-2 text-white"
-      >
-        {board?.columns.map((c) => (
-          <option key={c.id} value={c.id}>
-            {c.name}
-          </option>
-        ))}
-      </select>
-      <Button
-        loading={loading}
-        type="button"
-        variant="primary"
-        className="w-full"
-        onClick={handleSaveChanges}
-      >
-        Save changes
-      </Button>
+        <div className="relative space-y-8">
+          <div className="flex items-center justify-between">
+            <h1>Edit Task</h1>
+            <CloseButton onClick={() => setShowConfirmCancelWindow(true)} />
+          </div>
+          {/* -----  ----- */}
+          <div>
+            <InputField
+              error={error.name}
+              value={temporaryTaskName}
+              labelText="Title"
+              id="task-title"
+              onChange={handleChangeTaskName}
+              className="w-full"
+            />
+          </div>
+          {/* -----  ----- */}
+          <div className="space-y-4">
+            <h3>Subtasks</h3>
+            <ul className="space-y-2">
+              {temporarySubtasks.map((subtask) => {
+                const errorIndex = error.subtasks.findIndex(
+                  (s) => s.id === subtask.id,
+                );
+                return (
+                  <div key={subtask.index} className="flex items-center gap-2">
+                    <InputField
+                      className="w-full"
+                      value={subtask.name}
+                      error={error.subtasks[errorIndex]?.errorMessage ?? ""}
+                      onChange={(e) => handleChangeSubtaskName(e, subtask.id)}
+                    />
+                    <DeleteButton
+                      type="button"
+                      onClick={() =>
+                        handleDeleteSubtask(subtask.id, subtask.index)
+                      }
+                    />
+                  </div>
+                );
+              })}
+            </ul>
+          </div>
+          <Button
+            variant="primary"
+            className="w-full"
+            onClick={handlecreateSubtask}
+          >
+            Add new subtask
+          </Button>
+          {/* -----  ----- */}
+          <h3>Column</h3>
+          <select
+            value={temporaryColumnId}
+            onChange={handleChangeTaskColumn}
+            className="w-full bg-neutral-850 px-1 py-2 text-white"
+          >
+            {board?.columns.map((c) => (
+              <option key={c.id} value={c.id}>
+                {c.name}
+              </option>
+            ))}
+          </select>
+          <Button
+            loading={loading}
+            type="button"
+            variant="primary"
+            className="w-full"
+            onClick={handleSaveChanges}
+          >
+            Save changes
+          </Button>
+          <Button
+            loading={loading}
+            type="button"
+            variant="danger"
+            className="w-full"
+            onClick={() => setShowConfirmCancelWindow(true)}
+          >
+            Cancel
+          </Button>
+        </div>
+      </ModalWithBackdrop>
     </>
   );
 };

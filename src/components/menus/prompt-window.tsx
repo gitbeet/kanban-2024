@@ -1,5 +1,6 @@
 import { ModalWithBackdrop } from "../ui/modal";
 import { CloseButton } from "../ui/buttons";
+import { useEffect } from "react";
 
 interface Props {
   show: boolean;
@@ -22,7 +23,7 @@ const PromptWindow = ({
 }: Props) => {
   return (
     <ModalWithBackdrop
-      className="absolute left-[50dvw] top-[50dvh] w-[min(calc(100dvw-2rem),25rem)] -translate-x-1/2 -translate-y-1/2"
+      className="menu"
       show={show}
       showBackdrop={showBackdrop}
       zIndex={zIndex}
