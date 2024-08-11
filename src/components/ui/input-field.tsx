@@ -1,5 +1,5 @@
 import { KeyboardEvent, useRef, type InputHTMLAttributes } from "react";
-import { handlePressEnterToSubmit } from "~/utilities/handlePressEnterToSubmit";
+import { handlePressEnterToSubmit } from "~/utilities/handlePressEnterOrEscape";
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   className?: string;

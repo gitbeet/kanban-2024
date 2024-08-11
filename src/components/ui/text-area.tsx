@@ -1,6 +1,6 @@
 import { forwardRef } from "react";
 import type { TextareaHTMLAttributes } from "react";
-import { handlePressEnterToSubmit } from "~/utilities/handlePressEnterToSubmit";
+import { handlePressEnterToSubmit } from "~/utilities/handlePressEnterOrEscape";
 
 interface TextAreaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
   className?: string;

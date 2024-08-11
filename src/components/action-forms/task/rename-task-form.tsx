@@ -16,7 +16,10 @@ import type {
   SetStateAction,
 } from "react";
 import TextArea from "~/components/ui/text-area";
-import { handlePressEnterToSubmit } from "~/utilities/handlePressEnterToSubmit";
+import { handlePressEnterToSubmit } from "~/utilities/handlePressEnterOrEscape";
+import FocusTrap from "focus-trap-react";
+import { handlePressEscape } from "~/utilities/handlePressEscape";
+import { handlePressEnter } from "~/utilities/handlePressEnter";
 
 const RenameTaskForm = ({
   boardId,
@@ -39,12 +42,15 @@ const RenameTaskForm = ({
   const [pending, startTransition] = useTransition();
 
   // Refs
-  const testRef = useRef<HTMLTextAreaElement | null>(null);
+  const textAreaRef = useRef<HTMLTextAreaElement | null>(null);
   const renameTaskRef = useRef<HTMLFormElement | null>(null);
   const { ref } = useClickOutside<HTMLDivElement>(handleClickOutside);
 
   // Dynamic height for the textarea
-  useEffect(() => resizeTextArea(testRef), [task.name, newTaskName, isOpen]);
+  useEffect(
+    () => resizeTextArea(textAreaRef),
+    [task.name, newTaskName, isOpen],
+  );
 
   // Disable draggable when renaming so you can interact with the field
   useEffect(() => setDraggable?.(!isOpen), [isOpen, setDraggable]);
@@ -97,56 +103,77 @@ const RenameTaskForm = ({
 
     // Wait for server to finish then set loading to false
     setLoading(false);
-    testRef.current?.blur();
+    textAreaRef.current?.blur();
   };
 
   function handleClickOutside() {
     setIsOpen(false);
     setNewTaskName(task.name);
     setError("");
-    testRef.current?.blur();
+    textAreaRef.current?.blur();
   }
 
+  const handlePressEnterToEdit = async (e: KeyboardEvent) => {
+    if (isOpen) {
+      handlePressEscape(e, handleClickOutside);
+    } else {
+      await handlePressEnter(e, () => {
+        setIsOpen(true);
+        setNewTaskName(task.name);
+      });
+    }
+  };
+
   return (
-    <div ref={ref} className={`${loading ? "pointer-events-none" : ""} `}>
-      <form
-        className="flex flex-col gap-2"
-        ref={renameTaskRef}
-        onSubmit={clientAction}
-      >
-        <div className="relative">
-          {!isOpen && (
-            <div
-              className="absolute z-10 h-full w-full opacity-0"
-              onClick={() => {
-                setIsOpen(true);
-                setNewTaskName(task.name);
-                testRef.current?.focus();
+    <div
+      onKeyDown={handlePressEnterToEdit}
+      ref={ref}
+      className={`${loading ? "pointer-events-none" : ""} `}
+    >
+      <FocusTrap active={isOpen}>
+        <form
+          className="flex flex-col gap-2"
+          ref={renameTaskRef}
+          onSubmit={clientAction}
+        >
+          <div className="relative">
+            {!isOpen && (
+              <div
+                className="absolute z-10 h-full w-full opacity-0"
+                onClick={() => {
+                  setIsOpen(true);
+                  setNewTaskName(task.name);
+                }}
+              ></div>
+            )}
+            <TextArea
+              ref={textAreaRef}
+              rows={1}
+              readOnly={!isOpen}
+              className={` ${isOpen ? "input" : "input-readonly"} `}
+              value={newTaskName}
+              onChange={isOpen ? handleTaskNameChange : undefined}
+              error={error}
+              onKeyDown={async (e) => {
+                if (!isOpen) return;
+                await handlePressEnterToSubmit(
+                  e,
+                  clientAction,
+                  handleClickOutside,
+                );
               }}
-            ></div>
-          )}
-          <TextArea
-            ref={testRef}
-            rows={1}
-            readOnly={!isOpen}
-            className={` ${isOpen ? "input" : "input-readonly"} `}
-            value={newTaskName}
-            onChange={isOpen ? handleTaskNameChange : undefined}
-            error={error}
-            onKeyDown={(e) =>
-              handlePressEnterToSubmit(e, clientAction, handleClickOutside)
-            }
-          />
-        </div>
-        {isOpen && (
-          <div
-            className={`${isOpen ? "opacity-100" : "opacity-0"} flex gap-1.5 self-end`}
-          >
-            <SaveButton disabled={!!error} />
-            <CancelButton onClick={handleClickOutside} />
+            />
           </div>
-        )}
-      </form>
+          {isOpen && (
+            <div
+              className={`${isOpen ? "opacity-100" : "opacity-0"} flex gap-1.5 self-end`}
+            >
+              <SaveButton disabled={!!error} />
+              <CancelButton onClick={handleClickOutside} />
+            </div>
+          )}
+        </form>
+      </FocusTrap>
     </div>
   );
 };

@@ -9,6 +9,7 @@ import { ColumnSchema } from "~/zod-schemas";
 import { FaPlus } from "react-icons/fa6";
 import type { ColumnType } from "~/types";
 import type { ChangeEvent, FormEvent } from "react";
+import FocusTrap from "focus-trap-react";
 
 interface CreateColumnProps extends React.HTMLAttributes<HTMLDivElement> {
   boardId: string;
@@ -96,13 +97,13 @@ const CreateColumnForm = ({ boardId, ...props }: CreateColumnProps) => {
   }
 
   const notOpenJsx = (
-    <div
+    <button
       onClick={() => setIsOpen(true)}
       className="text-secondary flex items-center gap-2"
     >
       <FaPlus className="h-3.5 w-3.5" />
       <span className="text-lg font-bold">Column</span>
-    </div>
+    </button>
   );
 
   const openJsx = (
@@ -117,7 +118,7 @@ const CreateColumnForm = ({ boardId, ...props }: CreateColumnProps) => {
         onChange={handleColumnChangeName}
         type="text"
         placeholder="Enter column name"
-        className="w-full !bg-neutral-850"
+        className="w-full"
         error={error}
         handleCancel={handleClickOutside}
         handleSubmit={clientAction}
@@ -130,13 +131,15 @@ const CreateColumnForm = ({ boardId, ...props }: CreateColumnProps) => {
   );
 
   return (
-    <div
-      ref={ref}
-      className={` ${loading ? "pointer-events-none" : ""} grid cursor-pointer place-content-center p-4 ${props.className}`}
-    >
-      {!isOpen && notOpenJsx}
-      {isOpen && openJsx}
-    </div>
+    <FocusTrap active={isOpen}>
+      <div
+        ref={ref}
+        className={` ${loading ? "pointer-events-none" : ""} grid cursor-pointer place-content-center p-4 ${props.className}`}
+      >
+        {!isOpen && notOpenJsx}
+        {isOpen && openJsx}
+      </div>
+    </FocusTrap>
   );
 };
 

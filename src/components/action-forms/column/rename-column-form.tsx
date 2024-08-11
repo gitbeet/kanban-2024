@@ -5,7 +5,6 @@ import { handleRenameColumn } from "~/server/queries";
 import InputField from "~/components/ui/input-field";
 import { ColumnSchema } from "~/zod-schemas";
 import type { ChangeEvent, FormEvent } from "react";
-import { handlePressEnterToSubmit } from "~/utilities/handlePressEnterToSubmit";
 
 const RenameColumnForm = ({
   boardId,

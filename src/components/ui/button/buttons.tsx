@@ -71,7 +71,7 @@ const IconButton = ({
 };
 
 export const EditButton = (props: ButtonHTMLAttributes<HTMLButtonElement>) => (
-  <IconButton {...props} className={` ${props.className}`}>
+  <IconButton {...props}>
     <MdEdit className="h-full w-full" />
   </IconButton>
 );

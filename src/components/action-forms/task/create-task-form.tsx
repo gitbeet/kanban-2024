@@ -10,10 +10,11 @@ import { handleCreateTask } from "~/server/queries";
 import { Button, SubmitButton } from "~/components/ui/button/buttons";
 import { FaPlus } from "react-icons/fa6";
 import { TaskSchema } from "~/zod-schemas";
-import type { ChangeEvent, FormEvent } from "react";
+import type { ChangeEvent, FormEvent, KeyboardEvent } from "react";
 import type { TaskType } from "~/types";
 import TextArea from "~/components/ui/text-area";
-import { handlePressEnterToSubmit } from "~/utilities/handlePressEnterToSubmit";
+import FocusTrap from "focus-trap-react";
+import { handlePressEscape } from "~/utilities/handlePressEscape";
 
 const CreateTaskForm = ({
   boardId,
@@ -118,37 +119,44 @@ const CreateTaskForm = ({
         </motion.div>
       )}
       {isOpen && (
-        <div ref={clickOutsideRef}>
-          <form
-            className="flex flex-col gap-2"
-            ref={formRef}
-            onSubmit={clientAction}
+        <FocusTrap active={isOpen}>
+          <div
+            ref={clickOutsideRef}
+            onKeyDown={(e: KeyboardEvent<Element>) =>
+              handlePressEscape(e, handleClickOutside)
+            }
           >
-            <div className="bg-neutral-600 rounded-md p-1.5">
-              <TextArea
-                autoFocus
-                ref={textAreaRef}
-                className="input"
-                rows={1}
-                value={taskName}
-                onChange={handleChange}
-                handleCancel={handleClickOutside}
-                handleSubmit={clientAction}
-                error={error}
-              />
-            </div>
-            <div className="flex items-center gap-2 self-end">
-              <Button
-                onClick={handleClickOutside}
-                type="button"
-                variant="ghost"
-              >
-                Cancel
-              </Button>
-              <SubmitButton>Add</SubmitButton>
-            </div>
-          </form>
-        </div>
+            <form
+              className="flex flex-col gap-2"
+              ref={formRef}
+              onSubmit={clientAction}
+            >
+              <div className="bg-neutral-600 rounded-md p-1.5">
+                <TextArea
+                  autoFocus
+                  ref={textAreaRef}
+                  className="input"
+                  rows={1}
+                  value={taskName}
+                  onChange={handleChange}
+                  handleCancel={handleClickOutside}
+                  handleSubmit={clientAction}
+                  error={error}
+                />
+              </div>
+              <div className="flex items-center gap-2 self-end">
+                <Button
+                  onClick={handleClickOutside}
+                  type="button"
+                  variant="ghost"
+                >
+                  Cancel
+                </Button>
+                <SubmitButton>Add</SubmitButton>
+              </div>
+            </form>
+          </div>
+        </FocusTrap>
       )}
     </>
   );
