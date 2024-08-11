@@ -5,7 +5,7 @@ import { useBoards } from "~/context/boards-context";
 import type { SubtaskType } from "~/types";
 import { SubtaskSchema } from "~/zod-schemas";
 import { v4 as uuid } from "uuid";
-import { handleCreateSubtask, mutateTable } from "~/server/queries";
+import { handleCreateSubtask } from "~/server/queries";
 const CreateSubtaskForm = ({
   columnId,
   taskId,
@@ -14,8 +14,7 @@ const CreateSubtaskForm = ({
   taskId: string;
 }) => {
   const [pending, startTransition] = useTransition();
-  const { setOptimisticBoards, getCurrentBoard, optimisticBoards } =
-    useBoards();
+  const { setOptimisticBoards, getCurrentBoard } = useBoards();
   const currentBoard = getCurrentBoard();
 
   const [subtaskName, setSubtaskName] = useState("");

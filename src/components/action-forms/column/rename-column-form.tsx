@@ -21,7 +21,7 @@ const RenameColumnForm = ({
 
   const [newColumnName, setNewColumnName] = useState(column?.name ?? "");
   const [error, setError] = useState("");
-  const [_, startTransition] = useTransition();
+  const [pending, startTransition] = useTransition();
   const [isOpen, setIsOpen] = useState(false);
   const renameColumnRef = useRef<HTMLFormElement>(null);
   const [loading, setLoading] = useState(false);
@@ -95,7 +95,7 @@ const RenameColumnForm = ({
               onChange={handleColumnNameChange}
               type="text"
               placeholder="Enter column name"
-              className="!bg-neutral-850 w-full"
+              className="w-full !bg-neutral-850"
               error={error}
             />
 

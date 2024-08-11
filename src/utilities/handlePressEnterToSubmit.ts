@@ -1,4 +1,4 @@
-import { KeyboardEvent } from "react";
+import type { KeyboardEvent } from "react";
 
 export const handlePressEnterToSubmit = async (
   e: KeyboardEvent<HTMLTextAreaElement>,
@@ -11,6 +11,6 @@ export const handlePressEnterToSubmit = async (
   }
   if (e.key === "Escape") {
     e.preventDefault();
-    await cancelAction();
+    cancelAction();
   }
 };

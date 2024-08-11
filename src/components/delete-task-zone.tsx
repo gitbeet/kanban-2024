@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { useBoards } from "~/context/boards-context";
-import { handleDeleteTask, mutateTable } from "~/server/queries";
+import { handleDeleteTask } from "~/server/queries";
 import { FaTrash } from "react-icons/fa";
 
 const DeleteTaskZone = () => {

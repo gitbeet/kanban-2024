@@ -1,5 +1,5 @@
 import React, { useState, useTransition } from "react";
-import { handleDeleteSubtask, mutateTable } from "~/server/queries";
+import { handleDeleteSubtask } from "~/server/queries";
 import { DeleteButton } from "~/components/ui/buttons";
 import { useBoards } from "~/context/boards-context";
 
