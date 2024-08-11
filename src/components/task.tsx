@@ -8,7 +8,7 @@ import { useBoards } from "~/context/boards-context";
 import DropIndicator from "./drop-indicator";
 import RenameTaskForm from "./action-forms/task/rename-task-form";
 import { useUI } from "~/context/ui-context";
-import { EditButton } from "./ui/buttons";
+import { EditButton } from "./ui/button/buttons";
 import type { TaskType } from "../types";
 
 const Task = ({

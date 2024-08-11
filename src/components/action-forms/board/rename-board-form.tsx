@@ -3,7 +3,7 @@
 import { useRef, useState, useTransition } from "react";
 import { useBoards } from "~/context/boards-context";
 import { handleRenameBoard } from "~/server/queries";
-import { EditButton } from "~/components/ui/buttons";
+import { EditButton } from "~/components/ui/button/buttons";
 import InputField from "~/components/ui/input-field";
 import { BoardSchema } from "~/zod-schemas";
 import type { ChangeEvent } from "react";
@@ -67,6 +67,8 @@ const RenameBoardForm = ({ boardId }: { boardId: string }) => {
         name="board-name-input"
         placeholder="Board name..."
         error={error}
+        handleCancel={() => console.log("Clicked outside")}
+        handleSubmit={clientAction}
       />
 
       <EditButton />

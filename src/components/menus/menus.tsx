@@ -3,7 +3,7 @@
 import React from "react";
 import { useUI } from "~/context/ui-context";
 import { useBoards } from "~/context/boards-context";
-import EditTask from "./edit-task/task-window";
+import TaskMenu from "./edit-task/task-menu";
 
 const Menus = () => {
   const { editedTask } = useUI();
@@ -15,7 +15,7 @@ const Menus = () => {
   return (
     <>
       {editedTask.columnId && task && (
-        <EditTask columnId={editedTask.columnId} task={task} />
+        <TaskMenu columnId={editedTask.columnId} task={task} />
       )}
     </>
   );

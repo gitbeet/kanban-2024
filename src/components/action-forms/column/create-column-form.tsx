@@ -3,7 +3,7 @@ import useClickOutside from "~/hooks/useClickOutside";
 import { useBoards } from "~/context/boards-context";
 import { v4 as uuid } from "uuid";
 import { handleCreateColumn } from "~/server/queries";
-import { CancelButton, SaveButton } from "~/components/ui/buttons";
+import { CancelButton, SaveButton } from "~/components/ui/button/buttons";
 import InputField from "~/components/ui/input-field";
 import { ColumnSchema } from "~/zod-schemas";
 import { FaPlus } from "react-icons/fa6";
@@ -44,12 +44,11 @@ const CreateColumnForm = ({ boardId, ...props }: CreateColumnProps) => {
       updatedAt: new Date(),
     };
 
-    setIsOpen(false);
-
     const result = ColumnSchema.safeParse(newColumn);
     if (!result.success) {
-      setIsOpen(true);
       setError(result.error.issues[0]?.message ?? "An error occured");
+      setLoading(false);
+
       return;
     }
     startTransition(() => {
@@ -70,10 +69,13 @@ const CreateColumnForm = ({ boardId, ...props }: CreateColumnProps) => {
     });
     if (response?.error) {
       setIsOpen(true);
+      setLoading(false);
+
       setError(response.error);
       return;
     }
 
+    setIsOpen(false);
     setColumnName("");
     setError("");
     setLoading(false);
@@ -117,6 +119,8 @@ const CreateColumnForm = ({ boardId, ...props }: CreateColumnProps) => {
         placeholder="Enter column name"
         className="w-full !bg-neutral-850"
         error={error}
+        handleCancel={handleClickOutside}
+        handleSubmit={clientAction}
       />
       <div className="flex gap-1.5">
         <SaveButton disabled={!!error} />

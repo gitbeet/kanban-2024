@@ -1,24 +1,21 @@
 "use client";
 
-import React, { ChangeEvent, useTransition, useState, useRef } from "react";
+import React, { useTransition, useState, useRef } from "react";
+import type { ChangeEvent } from "react";
 import useHasMounted from "~/hooks/useHasMounted";
 import { useUI } from "~/context/ui-context";
 import { useBoards } from "~/context/boards-context";
-import { createPortal } from "react-dom";
 import ToggleSubtaskForm from "../../action-forms/subtask/toggle-subtask-form";
 import DeleteTaskForm from "../../action-forms/task/delete-task-form";
-import { Button, CloseButton } from "../../ui/buttons";
-import { BsThreeDotsVertical } from "react-icons/bs";
+import { Button, MoreButton } from "../../ui/button/buttons";
 import type { TaskType } from "~/types";
-import { EditTaskWindow } from "./edit-task-window";
-import {
-  ModalWithBackdrop,
-  ModalWithBackdropAndPosition,
-} from "../../ui/modal";
+import { EditTaskMenu } from "./edit-task-menu";
+import { ModalWithBackdrop } from "../../ui/modal/modal";
 import { handleSwitchTaskColumn } from "~/server/queries";
-import PromptWindow from "../prompt-window";
+import PromptWindow from "~/components/ui/modal/prompt-window";
+import MoreButtonMenu from "~/components/ui/modal/more-button-menu";
 
-const EditTask = ({ columnId, task }: { columnId: string; task: TaskType }) => {
+const TaskMenu = ({ columnId, task }: { columnId: string; task: TaskType }) => {
   const { setOptimisticBoards } = useBoards();
   const { showEditTaskMenu, setEditedTask, setShowEditTaskMenu } = useUI();
 
@@ -114,9 +111,10 @@ const EditTask = ({ columnId, task }: { columnId: string; task: TaskType }) => {
     >
       <div className="flex justify-between gap-4">
         <h3 className="truncate">{task.name}</h3>
-        <button onClick={() => setShowSmallMenu(true)} ref={moreButtonRef}>
-          <BsThreeDotsVertical className="h-6 w-6 shrink-0 cursor-pointer" />
-        </button>
+        <MoreButton
+          ref={moreButtonRef}
+          onClick={() => setShowSmallMenu(true)}
+        />
       </div>
       <h4>
         Subtasks ({completedSubtasks} of {allSubtasks})
@@ -161,8 +159,8 @@ const EditTask = ({ columnId, task }: { columnId: string; task: TaskType }) => {
       <Button onClick={handleClickOutsideMenu}>Close</Button>
     </ModalWithBackdrop>
   );
-  const smallMenuJSX = (
-    <ModalWithBackdropAndPosition
+  const moreButtonMenuJSX = (
+    <MoreButtonMenu
       position={{
         x: moreButtonRef.current?.getBoundingClientRect().left ?? 0,
         y: moreButtonRef.current?.getBoundingClientRect().top ?? 0,
@@ -179,7 +177,7 @@ const EditTask = ({ columnId, task }: { columnId: string; task: TaskType }) => {
       onClose={handleClickOutsideSmallMenu}
       className="!w-fit !p-4"
     >
-      <div className="flex w-max flex-col gap-2">
+      <>
         <Button
           type="button"
           variant="ghost"
@@ -193,8 +191,8 @@ const EditTask = ({ columnId, task }: { columnId: string; task: TaskType }) => {
         >
           Delete task
         </Button>
-      </div>
-    </ModalWithBackdropAndPosition>
+      </>
+    </MoreButtonMenu>
   );
   const confirmDeleteTaskMenuJSX = (
     <>
@@ -231,7 +229,7 @@ const EditTask = ({ columnId, task }: { columnId: string; task: TaskType }) => {
     </>
   );
   const editTaskWindowJSX = (
-    <EditTaskWindow
+    <EditTaskMenu
       columnId={columnId}
       task={task}
       show={showEditTaskWindow}
@@ -243,11 +241,11 @@ const EditTask = ({ columnId, task }: { columnId: string; task: TaskType }) => {
   return (
     <>
       {mainMenuJSX}
-      {smallMenuJSX}
+      {moreButtonMenuJSX}
       {confirmDeleteTaskMenuJSX}
       {editTaskWindowJSX}
     </>
   );
 };
 
-export default EditTask;
+export default TaskMenu;

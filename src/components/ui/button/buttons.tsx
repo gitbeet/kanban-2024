@@ -1,12 +1,13 @@
 "use client";
 
 import { useFormStatus } from "react-dom";
-import { FaCheck, FaEdit, FaTrash } from "react-icons/fa";
+import { FaCheck, FaTrash } from "react-icons/fa";
 import { FaPlus } from "react-icons/fa6";
-import type { ButtonHTMLAttributes, HTMLAttributes } from "react";
+import { forwardRef, type ButtonHTMLAttributes } from "react";
 import { MdEdit } from "react-icons/md";
-import LoadingSpinner, { LoadingPage } from "./loading-spinner";
+import { LoadingPage } from "../loading-spinner";
 import { IoClose } from "react-icons/io5";
+import { BsThreeDotsVertical } from "react-icons/bs";
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   ghost?: boolean;
@@ -42,24 +43,35 @@ export const SubmitButton = ({ children, ...props }: ButtonProps) => {
   );
 };
 
+// ---------- ICON BUTTONS ----------
+
 const IconButton = ({
   children,
-  className,
+  variant = "primary",
   ...props
-}: ButtonHTMLAttributes<HTMLButtonElement> & { className?: string }) => (
-  <button
-    {...props}
-    className={`0 bg-neutral-600 flex h-6 w-6 items-center justify-center text-white disabled:pointer-events-none disabled:opacity-50 ${className} transition-colors--default`}
-  >
-    {children}
-  </button>
-);
+}: ButtonHTMLAttributes<HTMLButtonElement> & {
+  variant?: "primary" | "danger" | "success";
+}) => {
+  const variantColor =
+    variant === "primary"
+      ? "hover:text-neutral-50"
+      : variant === "danger"
+        ? "hover:text-danger-300"
+        : variant === "success"
+          ? "hover:text-success-400"
+          : "";
+  return (
+    <button
+      {...props}
+      className={`bg-neutral-600 transition-colors--default flex h-6 w-6 shrink-0 items-center justify-center text-neutral-250 ${variantColor} disabled:pointer-events-none disabled:opacity-50 ${props.className}`}
+    >
+      {children}
+    </button>
+  );
+};
 
 export const EditButton = (props: ButtonHTMLAttributes<HTMLButtonElement>) => (
-  <IconButton
-    {...props}
-    className={` ${props.className} flex h-6 w-6 items-center justify-center`}
-  >
+  <IconButton {...props} className={` ${props.className}`}>
     <MdEdit className="h-full w-full" />
   </IconButton>
 );
@@ -67,30 +79,22 @@ export const EditButton = (props: ButtonHTMLAttributes<HTMLButtonElement>) => (
 export const DeleteButton = (
   props: ButtonHTMLAttributes<HTMLButtonElement>,
 ) => (
-  <IconButton {...props}>
-    <FaTrash
-      className={`hover:text-danger-300 h-4 w-4 shrink-0 !bg-transparent text-neutral-650`}
-    />
-  </IconButton>
-);
-
-export const CreateButton = () => (
-  <IconButton className="hover:text-teal-400">
-    <FaPlus className="h-4 w-4 shrink-0" />
+  <IconButton {...props} variant="danger">
+    <FaTrash />
   </IconButton>
 );
 
 export const CancelButton = ({
   ...props
 }: ButtonHTMLAttributes<HTMLButtonElement>) => (
-  <IconButton {...props} className={`hover:bg-red-500 rounded-full`}>
-    <FaPlus className="h-4.5 w-4.5 shrink-0 rotate-45" />
+  <IconButton {...props} variant="danger">
+    <FaPlus className="rotate-45" />
   </IconButton>
 );
 
 export const CloseButton = ({
   ...props
-}: HTMLAttributes<HTMLButtonElement>) => (
+}: ButtonHTMLAttributes<HTMLButtonElement>) => (
   <button {...props}>
     <IoClose className="h-5 w-5 shrink-0" />
   </button>
@@ -99,10 +103,25 @@ export const CloseButton = ({
 export const SaveButton = ({
   ...props
 }: ButtonHTMLAttributes<HTMLButtonElement>) => (
-  <IconButton {...props} className="hover:bg-teal-500 rounded-full">
+  <IconButton {...props} variant="success">
     <FaCheck className="h-3.5 w-3.5 shrink-0" />
   </IconButton>
 );
+
+export const MoreButton = forwardRef<
+  HTMLButtonElement,
+  ButtonHTMLAttributes<HTMLButtonElement>
+>(({ ...props }, ref) => (
+  <button
+    {...props}
+    ref={ref}
+    className="hover:bg-teal-500 h-6 w-6 shrink-0 rounded-full"
+  >
+    <BsThreeDotsVertical className="h-full w-full" />
+  </button>
+));
+
+MoreButton.displayName = "MoreButton";
 
 export const ToggleButton = ({ checked }: { checked: boolean }) => (
   <button

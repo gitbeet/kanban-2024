@@ -1,7 +1,5 @@
-import { ModalWithBackdrop } from "../ui/modal";
-import { CloseButton } from "../ui/buttons";
-import { useEffect } from "react";
-
+import { ModalWithBackdrop } from "./modal";
+import { CloseButton } from "../button/buttons";
 interface Props {
   show: boolean;
   showBackdrop: boolean;

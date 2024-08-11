@@ -1,6 +1,6 @@
 import { useEffect, useState, useTransition } from "react";
 import { useBoards } from "~/context/boards-context";
-import { DeleteButton } from "~/components/ui/buttons";
+import { DeleteButton } from "~/components/ui/button/buttons";
 import { BoardSchema } from "~/zod-schemas";
 import type { FormEvent } from "react";
 import { handleDeleteBoard } from "~/server/queries";

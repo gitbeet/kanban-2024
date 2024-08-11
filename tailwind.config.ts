@@ -31,6 +31,8 @@ export default {
       "danger-400": "hsl(0, 78%, 62%)",
       "danger-300": "hsl(0, 100%, 70%)",
 
+      "success-400": "#34d399",
+
       "backdrop-500": "hsla(237, 20%, 4%,.3)",
       transparent: "hsla(0, 0%, 100%,0)",
     },

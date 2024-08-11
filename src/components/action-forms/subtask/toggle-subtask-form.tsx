@@ -1,7 +1,7 @@
 import { useTransition } from "react";
 import type { FormEvent } from "react";
 import { handleToggleSubtaskCompleted } from "~/server/queries";
-import { ToggleButton } from "~/components/ui/buttons";
+import { ToggleButton } from "~/components/ui/button/buttons";
 import { useBoards } from "~/context/boards-context";
 import type { SubtaskType } from "~/types";
 

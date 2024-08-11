@@ -5,6 +5,7 @@ import { handleRenameColumn } from "~/server/queries";
 import InputField from "~/components/ui/input-field";
 import { ColumnSchema } from "~/zod-schemas";
 import type { ChangeEvent, FormEvent } from "react";
+import { handlePressEnterToSubmit } from "~/utilities/handlePressEnterToSubmit";
 
 const RenameColumnForm = ({
   boardId,
@@ -77,7 +78,8 @@ const RenameColumnForm = ({
         className="flex flex-col"
       >
         {!isOpen && (
-          <input
+          <InputField
+            error=""
             readOnly
             className="input-readonly w-full p-2"
             onClick={() => {
@@ -85,7 +87,7 @@ const RenameColumnForm = ({
               setNewColumnName(column?.name ?? "");
             }}
             value={column?.name}
-          ></input>
+          />
         )}
         {isOpen && (
           <>
@@ -95,8 +97,10 @@ const RenameColumnForm = ({
               onChange={handleColumnNameChange}
               type="text"
               placeholder="Enter column name"
-              className="w-full !bg-neutral-850"
+              className="w-full"
               error={error}
+              handleCancel={handleClickOutside}
+              handleSubmit={clientAction}
             />
 
             <button type="submit" className="hidden" />

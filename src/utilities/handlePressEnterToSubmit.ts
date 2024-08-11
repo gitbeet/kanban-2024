@@ -1,7 +1,7 @@
 import type { KeyboardEvent } from "react";
 
 export const handlePressEnterToSubmit = async (
-  e: KeyboardEvent<HTMLTextAreaElement>,
+  e: KeyboardEvent<HTMLTextAreaElement | HTMLInputElement>,
   submitAction: () => Promise<void> | void,
   cancelAction: () => void,
 ) => {

@@ -82,7 +82,8 @@ export const ModalWithBackdrop = ({
     : null;
 };
 
-interface ModalWithBackdropAndPositionProps extends ModalWithBackdropProps {
+export interface ModalWithBackdropAndPositionProps
+  extends ModalWithBackdropProps {
   position: {
     x: number;
     y: number;

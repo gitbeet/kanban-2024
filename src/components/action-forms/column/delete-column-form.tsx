@@ -1,7 +1,7 @@
 import { useState, useTransition } from "react";
 import { useBoards } from "~/context/boards-context";
 import { handleDeleteColumn } from "~/server/queries";
-import { DeleteButton } from "~/components/ui/buttons";
+import { DeleteButton } from "~/components/ui/button/buttons";
 import { ColumnSchema } from "~/zod-schemas";
 
 const DeleteColumnForm = ({
@@ -39,7 +39,7 @@ const DeleteColumnForm = ({
   };
   return (
     <form action={clientAction}>
-      <DeleteButton className="!text-neutral-650" />
+      <DeleteButton />
     </form>
   );
 };

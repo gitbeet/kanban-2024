@@ -5,7 +5,7 @@ import { useBoards } from "~/context/boards-context";
 import useClickOutside from "~/hooks/useClickOutside";
 import { handleRenameTask } from "~/server/queries";
 import { resizeTextArea } from "~/utilities/resizeTextArea";
-import { CancelButton, SaveButton } from "~/components/ui/buttons";
+import { CancelButton, SaveButton } from "~/components/ui/button/buttons";
 import { TaskSchema } from "~/zod-schemas";
 import type { TaskType } from "~/types";
 import type {
@@ -97,12 +97,14 @@ const RenameTaskForm = ({
 
     // Wait for server to finish then set loading to false
     setLoading(false);
+    testRef.current?.blur();
   };
 
   function handleClickOutside() {
     setIsOpen(false);
     setNewTaskName(task.name);
     setError("");
+    testRef.current?.blur();
   }
 
   return (

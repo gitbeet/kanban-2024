@@ -7,10 +7,10 @@ import { motion } from "framer-motion";
 import { v4 as uuid } from "uuid";
 import { resizeTextArea } from "~/utilities/resizeTextArea";
 import { handleCreateTask } from "~/server/queries";
-import { Button, SubmitButton } from "~/components/ui/buttons";
+import { Button, SubmitButton } from "~/components/ui/button/buttons";
 import { FaPlus } from "react-icons/fa6";
 import { TaskSchema } from "~/zod-schemas";
-import type { ChangeEvent, FormEvent, KeyboardEvent } from "react";
+import type { ChangeEvent, FormEvent } from "react";
 import type { TaskType } from "~/types";
 import TextArea from "~/components/ui/text-area";
 import { handlePressEnterToSubmit } from "~/utilities/handlePressEnterToSubmit";
@@ -87,6 +87,7 @@ const CreateTaskForm = ({
       setError(response.error);
       return;
     }
+    textAreaRef.current?.blur();
     setTaskName("");
   };
 
@@ -101,6 +102,7 @@ const CreateTaskForm = ({
     setIsOpen(false);
     setTaskName("");
     setError("");
+    textAreaRef.current?.blur();
   }
 
   return (
@@ -130,9 +132,8 @@ const CreateTaskForm = ({
                 rows={1}
                 value={taskName}
                 onChange={handleChange}
-                onKeyDown={(e) =>
-                  handlePressEnterToSubmit(e, clientAction, handleClickOutside)
-                }
+                handleCancel={handleClickOutside}
+                handleSubmit={clientAction}
                 error={error}
               />
             </div>
@@ -144,9 +145,7 @@ const CreateTaskForm = ({
               >
                 Cancel
               </Button>
-              <SubmitButton>
-                <>Add</>
-              </SubmitButton>
+              <SubmitButton>Add</SubmitButton>
             </div>
           </form>
         </div>

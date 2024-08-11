@@ -1,6 +1,6 @@
 import React, { useState, useTransition } from "react";
 import { handleDeleteSubtask } from "~/server/queries";
-import { DeleteButton } from "~/components/ui/buttons";
+import { DeleteButton } from "~/components/ui/button/buttons";
 import { useBoards } from "~/context/boards-context";
 
 const DeleteSubtaskForm = ({

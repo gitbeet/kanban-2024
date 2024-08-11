@@ -8,9 +8,13 @@ import { SubtaskSchema, TaskSchema } from "~/zod-schemas";
 import type { ChangeEvent } from "react";
 import type { SubtaskType, TaskChange, TaskType } from "~/types";
 import InputField from "~/components/ui/input-field";
-import { Button, CloseButton, DeleteButton } from "~/components/ui/buttons";
-import { ModalWithBackdrop } from "~/components/ui/modal";
-import PromptWindow from "../prompt-window";
+import {
+  Button,
+  CloseButton,
+  DeleteButton,
+} from "~/components/ui/button/buttons";
+import { ModalWithBackdrop } from "~/components/ui/modal/modal";
+import PromptWindow from "~/components/ui/modal/prompt-window";
 
 interface Props {
   show: boolean;
@@ -21,7 +25,7 @@ interface Props {
   onClose: () => void;
 }
 
-export const EditTaskWindow = ({
+export const EditTaskMenu = ({
   zIndex,
   show,
   showBackdrop,

@@ -1,6 +1,6 @@
 import { useState, useTransition } from "react";
 import type { FormEvent } from "react";
-import { SaveButton } from "~/components/ui/buttons";
+import { SaveButton } from "~/components/ui/button/buttons";
 import { useBoards } from "~/context/boards-context";
 import type { SubtaskType } from "~/types";
 import { SubtaskSchema } from "~/zod-schemas";
