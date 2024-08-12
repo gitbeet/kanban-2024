@@ -107,46 +107,55 @@ const TaskMenu = ({ columnId, task }: { columnId: string; task: TaskType }) => {
       show={showEditTaskMenu}
       showBackdrop={showEditTaskMenu && !showSmallMenu && !showEditTaskWindow}
       onClose={handleClickOutsideMenu}
-      className="flex flex-col gap-4"
+      className="flex flex-col gap-8"
     >
-      <div className="flex justify-between gap-4">
+      <div className="flex items-center justify-between gap-4">
         <h3 className="truncate text-xl font-bold">{task.name}</h3>
         <MoreButton
           ref={moreButtonRef}
           onClick={() => setShowSmallMenu(true)}
         />
       </div>
-      <h4>
-        {allSubtasks < 1
-          ? "No subtasks"
-          : `Subtasks (${completedSubtasks} of ${allSubtasks})`}
-      </h4>
+      <div className="space-y-4">
+        <h4 className="text-sm font-bold">
+          {allSubtasks < 1
+            ? "No subtasks"
+            : `Subtasks ( ${completedSubtasks} of ${allSubtasks} )`}
+        </h4>
 
-      <ul>
-        {task.subtasks
-          .sort((a, b) => a.index - b.index)
-          .map((subtask) => (
-            <li key={subtask.index} className="flex items-center gap-4 py-1">
-              <ToggleSubtaskForm
-                columnId={columnId}
-                taskId={task.id}
-                subtask={subtask}
-              />
-
-              <span
-                className={
-                  subtask.completed ? "text-secondary line-through" : ""
-                }
+        <ul className="space-y-2">
+          {task.subtasks
+            .sort((a, b) => a.index - b.index)
+            .map((subtask) => (
+              <li
+                key={subtask.index}
+                className="flex items-center gap-3 bg-neutral-850 p-3 text-sm font-bold"
               >
-                {subtask.name}
-              </span>
-            </li>
-          ))}
-      </ul>
+                <ToggleSubtaskForm
+                  columnId={columnId}
+                  taskId={task.id}
+                  subtask={subtask}
+                />
+
+                <span
+                  className={
+                    subtask.completed ? "text-secondary line-through" : ""
+                  }
+                >
+                  {subtask.name}
+                </span>
+              </li>
+            ))}
+        </ul>
+      </div>
       <div>
-        <p>Current status</p>
+        <h4 className="text-sm font-bold">Current status</h4>
         <div className="h-4" />
-        <select onChange={(e) => handleColumnChange(e)} value={currentColumnId}>
+        <select
+          className="text-sm font-bold"
+          onChange={(e) => handleColumnChange(e)}
+          value={currentColumnId}
+        >
           {board?.columns?.map((c) => (
             <option key={c.id} value={c.id}>
               {c.name}

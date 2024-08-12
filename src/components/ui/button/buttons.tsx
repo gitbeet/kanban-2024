@@ -4,7 +4,7 @@ import { useFormStatus } from "react-dom";
 import { FaCheck, FaTrash } from "react-icons/fa";
 import { FaPlus } from "react-icons/fa6";
 import { forwardRef, type ButtonHTMLAttributes } from "react";
-import { MdEdit } from "react-icons/md";
+import { MdClose, MdEdit } from "react-icons/md";
 import { LoadingPage } from "../loading-spinner";
 import { IoClose } from "react-icons/io5";
 import { BsThreeDotsVertical } from "react-icons/bs";
@@ -95,9 +95,9 @@ export const CancelButton = ({
 export const CloseButton = ({
   ...props
 }: ButtonHTMLAttributes<HTMLButtonElement>) => (
-  <button {...props}>
-    <IoClose className="h-5 w-5 shrink-0" />
-  </button>
+  <IconButton {...props}>
+    <MdClose className="h-6 w-6 shrink-0" />
+  </IconButton>
 );
 
 export const SaveButton = ({
@@ -126,8 +126,8 @@ MoreButton.displayName = "MoreButton";
 export const ToggleButton = ({ checked }: { checked: boolean }) => (
   <button
     type="submit"
-    className="flex h-6 w-6 items-center justify-center bg-neutral-850"
+    className={`flex h-5 w-5 items-center justify-center rounded-sm ${checked ? "bg-primary-700" : "bg-neutral-750"} text-white`}
   >
-    {checked ? <FaCheck className="h-4 w-4 shrink-0" /> : undefined}
+    {checked ? <FaCheck className="h-3.5 w-3.5 shrink-0" /> : undefined}
   </button>
 );
