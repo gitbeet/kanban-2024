@@ -49,11 +49,6 @@ const Sidebar = () => {
                     boardName={board.name}
                     boardId={board.id}
                   />
-                  <DeleteBoardForm
-                    className="opacity-0 group-hover:opacity-100"
-                    boardId={board.id}
-                    boardIndex={board.index}
-                  />
                 </div>
               </motion.li>
             </div>

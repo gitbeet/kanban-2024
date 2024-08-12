@@ -115,7 +115,7 @@ export const MoreButton = forwardRef<
   <button
     {...props}
     ref={ref}
-    className="hover:bg-teal-500 h-6 w-6 shrink-0 rounded-full"
+    className="transition-colors--default h-6 w-6 shrink-0 rounded-full text-neutral-250 hover:text-neutral-50"
   >
     <BsThreeDotsVertical className="h-full w-full" />
   </button>

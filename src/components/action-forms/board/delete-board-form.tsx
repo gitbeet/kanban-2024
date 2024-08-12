@@ -10,11 +10,15 @@ import type { DeleteBoardChange } from "~/types";
 interface DeleteTaskFormProps extends React.HTMLAttributes<HTMLDivElement> {
   boardId: string;
   boardIndex: number;
+  button?: React.ReactElement<JSX.IntrinsicElements["button"]>;
+  externalAction?: () => void;
 }
 
 const DeleteBoardForm = ({
   boardId,
   boardIndex,
+  button,
+  externalAction,
   ...props
 }: DeleteTaskFormProps) => {
   const [error, setError] = useState("");
@@ -32,6 +36,7 @@ const DeleteBoardForm = ({
 
   const clientAction = async (e?: FormEvent) => {
     e?.preventDefault();
+    externalAction?.();
     if (!user?.id) return;
 
     // Not completely sure if check is needed
@@ -66,7 +71,7 @@ const DeleteBoardForm = ({
 
   return (
     <form onSubmit={clientAction} className={props.className}>
-      <DeleteButton />
+      {button ?? <DeleteButton />}
     </form>
   );
 };

@@ -2,16 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
-input,
-select,
-textarea {
-  /* @apply focus:outline-none; */
+select {
+  @apply w-full rounded-sm bg-neutral-850 px-2 py-3 text-white;
 }
 
 .input,
 .input-readonly {
   @apply rounded-md border-2 border-transparent px-2 py-1.5;
 }
+
 .input-readonly {
   @apply bg-transparent;
 }
@@ -37,8 +36,13 @@ textarea {
   @apply border border-transparent hover:border-neutral-700;
 }
 
-.text-secondary {
-  @apply transition-colors--default text-neutral-350 hover:text-neutral-250;
+.text-secondary,
+.text-secondary--hoverable {
+  @apply transition-colors--default text-neutral-350;
+}
+
+.text-secondary--hoverable {
+  @apply hover:text-neutral-250;
 }
 
 /* RESET */

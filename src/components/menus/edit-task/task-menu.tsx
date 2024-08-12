@@ -110,14 +110,16 @@ const TaskMenu = ({ columnId, task }: { columnId: string; task: TaskType }) => {
       className="flex flex-col gap-4"
     >
       <div className="flex justify-between gap-4">
-        <h3 className="truncate">{task.name}</h3>
+        <h3 className="truncate text-xl font-bold">{task.name}</h3>
         <MoreButton
           ref={moreButtonRef}
           onClick={() => setShowSmallMenu(true)}
         />
       </div>
       <h4>
-        Subtasks ({completedSubtasks} of {allSubtasks})
+        {allSubtasks < 1
+          ? "No subtasks"
+          : `Subtasks (${completedSubtasks} of ${allSubtasks})`}
       </h4>
 
       <ul>
@@ -144,11 +146,7 @@ const TaskMenu = ({ columnId, task }: { columnId: string; task: TaskType }) => {
       <div>
         <p>Current status</p>
         <div className="h-4" />
-        <select
-          onChange={(e) => handleColumnChange(e)}
-          className="w-full bg-neutral-850 px-1 py-2 text-white"
-          value={currentColumnId}
-        >
+        <select onChange={(e) => handleColumnChange(e)} value={currentColumnId}>
           {board?.columns?.map((c) => (
             <option key={c.id} value={c.id}>
               {c.name}
@@ -213,7 +211,7 @@ const TaskMenu = ({ columnId, task }: { columnId: string; task: TaskType }) => {
         confirmButton={
           <DeleteTaskForm columnId={columnId} taskId={task.id}>
             <Button type="submit" variant="danger">
-              Delete
+              Delete Task
             </Button>
           </DeleteTaskForm>
         }
