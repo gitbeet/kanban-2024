@@ -2,13 +2,28 @@
 @tailwind components;
 @tailwind utilities;
 
+select,
+button,
+.input,
+.input-readonly,
+textarea {
+  @apply focus:outline-1 focus:outline-neutral-25 focus:ring-4 focus:ring-primary-600;
+}
+
+select,
+.input,
+textarea,
+option {
+  @apply bg-neutral-850 focus:bg-neutral-950/50;
+}
+
 select {
-  @apply w-full rounded-sm bg-neutral-850 px-2 py-3 text-white;
+  @apply w-full rounded-sm px-2 py-3 text-sm font-bold text-white;
 }
 
 .input,
 .input-readonly {
-  @apply rounded-md border-2 border-transparent px-2 py-1.5;
+  @apply rounded-sm px-2 py-1.5;
 }
 
 .input-readonly {
@@ -16,7 +31,7 @@ select {
 }
 
 .input {
-  @apply bg-neutral-950/50 placeholder:text-neutral-650 focus:border-primary-600 focus:text-white;
+  @apply placeholder:text-neutral-650 focus:text-white;
 }
 
 .transition-colors--default {

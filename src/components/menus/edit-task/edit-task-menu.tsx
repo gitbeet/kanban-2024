@@ -75,7 +75,7 @@ export const EditTaskMenu = ({
     setTemporaryName(task.name);
     setLoading(false);
     setChanges([]);
-    setError({ name: "", subtasks: [] });
+    setError({ name: "", subtasks: initialSubtaskErrors });
   };
 
   const handleChangeTaskName = (e: ChangeEvent<HTMLInputElement>) => {
@@ -349,7 +349,7 @@ export const EditTaskMenu = ({
         }
         confirmButton={
           <Button onClick={handleCloseWindow} type="submit" variant="danger">
-            Yes
+            Discard Changes
           </Button>
         }
         cancelButton={
@@ -357,7 +357,7 @@ export const EditTaskMenu = ({
             onClick={() => setShowConfirmCancelWindow(false)}
             variant="ghost"
           >
-            No
+            Go Back
           </Button>
         }
       />
@@ -366,7 +366,7 @@ export const EditTaskMenu = ({
 
   return (
     <>
-      {confirmCancelWindowJSX}{" "}
+      {confirmCancelWindowJSX}
       <ModalWithBackdrop
         zIndex={40}
         show={show}
@@ -375,24 +375,25 @@ export const EditTaskMenu = ({
       >
         <div className="relative space-y-8">
           <div className="flex items-center justify-between">
-            <h1>Edit Task</h1>
+            <h1 className="text-lg font-bold">Edit Task</h1>
             <CloseButton onClick={() => setShowConfirmCancelWindow(true)} />
           </div>
           {/* -----  ----- */}
-          <div>
+          <div className="space-y-4">
+            <h4 className="text-sm font-bold">Title</h4>
             <InputField
               error={error.name}
               value={temporaryTaskName}
-              labelText="Title"
               id="task-title"
               onChange={handleChangeTaskName}
               className="w-full"
+              errorPlacement="bottom"
             />
           </div>
           {/* -----  ----- */}
           <div className="space-y-4">
-            <h3>Subtasks</h3>
-            <ul className="space-y-2">
+            <h3 className="text-sm font-bold">Subtasks</h3>
+            <ul className="space-y-2.5">
               {temporarySubtasks.map((subtask) => {
                 const errorIndex = error.subtasks.findIndex(
                   (s) => s.id === subtask.id,
@@ -404,8 +405,11 @@ export const EditTaskMenu = ({
                       value={subtask.name}
                       error={error.subtasks[errorIndex]?.errorMessage ?? ""}
                       onChange={(e) => handleChangeSubtaskName(e, subtask.id)}
+                      errorPlacement="bottom"
+                      shiftLayout
                     />
                     <DeleteButton
+                      className={`${error.subtasks[errorIndex]?.errorMessage ? "relative -top-2.5" : ""}`}
                       type="button"
                       onClick={() =>
                         handleDeleteSubtask(subtask.id, subtask.index)
@@ -415,45 +419,46 @@ export const EditTaskMenu = ({
                 );
               })}
             </ul>
+            <Button
+              variant="primary"
+              className="w-full"
+              onClick={handlecreateSubtask}
+            >
+              Add new subtask
+            </Button>
           </div>
-          <Button
-            variant="primary"
-            className="w-full"
-            onClick={handlecreateSubtask}
-          >
-            Add new subtask
-          </Button>
+
           {/* -----  ----- */}
-          <h3>Column</h3>
-          <select
-            value={temporaryColumnId}
-            onChange={handleChangeTaskColumn}
-            className="w-full bg-neutral-850 px-1 py-2 text-white"
-          >
-            {board?.columns.map((c) => (
-              <option key={c.id} value={c.id}>
-                {c.name}
-              </option>
-            ))}
-          </select>
-          <Button
-            loading={loading}
-            type="button"
-            variant="primary"
-            className="w-full"
-            onClick={handleSaveChanges}
-          >
-            Save changes
-          </Button>
-          <Button
-            loading={loading}
-            type="button"
-            variant="danger"
-            className="w-full"
-            onClick={() => setShowConfirmCancelWindow(true)}
-          >
-            Cancel
-          </Button>
+          <div className="space-y-4">
+            <h3 className="text-sm font-bold">Column</h3>
+            <select value={temporaryColumnId} onChange={handleChangeTaskColumn}>
+              {board?.columns.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.name}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="space-y-4">
+            <Button
+              loading={loading}
+              type="button"
+              variant="primary"
+              className="w-full"
+              onClick={handleSaveChanges}
+            >
+              Save changes
+            </Button>
+            <Button
+              loading={loading}
+              type="button"
+              variant="danger"
+              className="w-full"
+              onClick={() => setShowConfirmCancelWindow(true)}
+            >
+              Cancel
+            </Button>
+          </div>
         </div>
       </ModalWithBackdrop>
     </>

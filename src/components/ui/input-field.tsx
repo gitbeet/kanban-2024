@@ -8,6 +8,7 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   errorPlacement?: "top" | "bottom";
   handleSubmit?: () => void | Promise<void>;
   handleCancel?: () => void;
+  shiftLayout?: boolean;
 }
 
 const InputField = ({
@@ -17,6 +18,7 @@ const InputField = ({
   errorPlacement = "top",
   handleSubmit,
   handleCancel,
+  shiftLayout = false,
   ...props
 }: InputProps) => {
   const inputField = (
@@ -48,10 +50,21 @@ const InputField = ({
       )}
       {errorPlacement === "bottom" && (
         <>
+          {labelText && (
+            <label className="text-sm" htmlFor={props.id}>
+              {labelText}
+            </label>
+          )}
+          <div className="h-1" />
           {inputField}
           <div className="h-1" />
+          {shiftLayout && error && (
+            <div className="h-5 text-right text-sm">{errorJSX}</div>
+          )}
 
-          <div className="h-5 text-right text-sm">{error && errorJSX}</div>
+          {!shiftLayout && (
+            <div className="h-5 text-right text-sm">{error && errorJSX}</div>
+          )}
         </>
       )}
     </div>

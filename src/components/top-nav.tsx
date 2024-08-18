@@ -39,7 +39,7 @@ const TopNav = () => {
     </MoreButtonMenu>
   );
 
-  const confirmDeleteBoardWindowJSX = (
+  const confirmDeleteBoardWindowJSX = currentBoard && (
     <PromptWindow
       cancelButton={
         <Button onClick={() => setShowConfirmDeleteWindow(false)}>
@@ -84,10 +84,12 @@ const TopNav = () => {
       >
         <h1>{!noBoards && currentBoard?.name}</h1>
       </button>
-      <MoreButton
-        onClick={() => setShowEditBoardWindow(true)}
-        ref={moreButtonRef}
-      />
+      {currentBoard && (
+        <MoreButton
+          onClick={() => setShowEditBoardWindow(true)}
+          ref={moreButtonRef}
+        />
+      )}
       {moreButtonMenuJSX}
       {currentBoard && confirmDeleteBoardWindowJSX}
       <UserButton />

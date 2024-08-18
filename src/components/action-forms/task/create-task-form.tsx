@@ -110,7 +110,11 @@ const CreateTaskForm = ({
     <>
       {!isOpen && (
         <motion.div layout className="pt-2">
-          <Button variant="text" onClick={() => setIsOpen(true)}>
+          <Button
+            variant="text"
+            onClick={() => setIsOpen(true)}
+            className="!px-0"
+          >
             <div className="text-secondary--hoverable flex items-center gap-1">
               <FaPlus className="h-3 w-3" />
               <span>Add a task</span>
@@ -135,7 +139,7 @@ const CreateTaskForm = ({
                 <TextArea
                   autoFocus
                   ref={textAreaRef}
-                  className="input"
+                  className="input !bg-neutral-950/50"
                   rows={1}
                   value={taskName}
                   onChange={handleChange}

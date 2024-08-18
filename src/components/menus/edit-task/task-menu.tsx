@@ -151,11 +151,7 @@ const TaskMenu = ({ columnId, task }: { columnId: string; task: TaskType }) => {
       <div>
         <h4 className="text-sm font-bold">Current status</h4>
         <div className="h-4" />
-        <select
-          className="text-sm font-bold"
-          onChange={(e) => handleColumnChange(e)}
-          value={currentColumnId}
-        >
+        <select onChange={(e) => handleColumnChange(e)} value={currentColumnId}>
           {board?.columns?.map((c) => (
             <option key={c.id} value={c.id}>
               {c.name}
