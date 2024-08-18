@@ -4,7 +4,9 @@ import useClickOutside from "~/hooks/useClickOutside";
 import { handleRenameColumn } from "~/server/queries";
 import InputField from "~/components/ui/input-field";
 import { ColumnSchema } from "~/zod-schemas";
-import type { ChangeEvent, FormEvent } from "react";
+import type { ChangeEvent, FormEvent, KeyboardEvent } from "react";
+import { handlePressEscape } from "~/utilities/handlePressEscape";
+import { handlePressEnter } from "~/utilities/handlePressEnter";
 
 const RenameColumnForm = ({
   boardId,
@@ -69,8 +71,23 @@ const RenameColumnForm = ({
     setLoading(false);
   }
 
+  const handlePressEnterToEdit = async (e: KeyboardEvent) => {
+    if (isOpen) {
+      handlePressEscape(e, handleClickOutside);
+    } else {
+      await handlePressEnter(e, () => {
+        setIsOpen(true);
+        setNewColumnName(column!.name);
+      });
+    }
+  };
+
   return (
-    <div ref={ref} className={`${loading ? "pointer-events-none" : ""}`}>
+    <div
+      onKeyDown={handlePressEnterToEdit}
+      ref={ref}
+      className={`${loading ? "pointer-events-none" : ""}`}
+    >
       <form
         ref={renameColumnRef}
         onSubmit={clientAction}
