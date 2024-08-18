@@ -32,11 +32,11 @@ const CreateColumnForm = ({ boardId, ...props }: CreateColumnProps) => {
   const { ref } = useClickOutside<HTMLDivElement>(handleClickOutside);
   const currentBoard = getCurrentBoard();
 
-  useEffect(() => {
-    if (!isOpen && notOpenJsxRef.current) {
-      notOpenJsxRef.current.focus(); // Focus the button when isOpen becomes false
-    }
-  }, [isOpen]);
+  // useEffect(() => {
+  //   if (!isOpen && notOpenJsxRef.current) {
+  //     notOpenJsxRef.current.focus(); // Focus the button when isOpen becomes false
+  //   }
+  // }, [isOpen]);
 
   if (!currentBoard)
     return <h1>Error finding the current board (placeholder error)</h1>;
@@ -105,6 +105,7 @@ const CreateColumnForm = ({ boardId, ...props }: CreateColumnProps) => {
     setColumnName("");
     setError("");
     setLoading(false);
+    notOpenJsxRef.current!.focus();
   }
 
   const handlePressEnterToEdit = async (e: KeyboardEvent) => {
@@ -122,7 +123,7 @@ const CreateColumnForm = ({ boardId, ...props }: CreateColumnProps) => {
     <button
       ref={notOpenJsxRef}
       onClick={() => setIsOpen(true)}
-      className="text-secondary flex items-center gap-2"
+      className={` ${isOpen ? "pointer-events-none h-0 w-0 opacity-0" : "opacity-100"} text-secondary flex items-center gap-2`}
     >
       <FaPlus className="h-3.5 w-3.5" />
       <span className="text-lg font-bold">Column</span>
@@ -161,7 +162,7 @@ const CreateColumnForm = ({ boardId, ...props }: CreateColumnProps) => {
       ref={ref}
       className={` ${loading ? "pointer-events-none" : ""} grid cursor-pointer place-content-center p-4 ${props.className}`}
     >
-      {!isOpen && notOpenJsx}
+      {notOpenJsx}
       {isOpen && openJsx}
     </div>
   );
