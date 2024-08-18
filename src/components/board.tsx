@@ -57,6 +57,7 @@ const Board = () => {
       // Key prop for framer-motion
       key={currentBoard.id}
       className="grid grow grid-rows-[1fr,auto] overflow-auto"
+      tabIndex={-1}
     >
       <motion.div className="flex p-8">
         {currentBoard?.columns
