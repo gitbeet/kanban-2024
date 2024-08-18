@@ -8,18 +8,26 @@ import { FaEye, FaEyeSlash } from "react-icons/fa6";
 import CreateBoardForm from "./action-forms/board/create-board-form";
 import MakeBoardCurrentForm from "./action-forms/board/make-board-current-form";
 import FocusTrap from "focus-trap-react";
+import { useRef, useState } from "react";
 
 const Sidebar = () => {
   const { showSidebar, setShowSidebar } = useUI();
   const { optimisticBoards, loading } = useBoards();
+  const [animating, setAnimating] = useState(false);
   const hasMounted = useHasMounted();
+  const toggleButtonRef = useRef<HTMLButtonElement | null>(null);
 
   return (
     <FocusTrap
       active={showSidebar}
-      focusTrapOptions={{ escapeDeactivates: false }}
+      focusTrapOptions={{
+        escapeDeactivates: false,
+        initialFocus: () => toggleButtonRef.current,
+      }}
     >
       <motion.section
+        onTransitionStart={() => setAnimating(true)}
+        onTransitionEnd={() => setAnimating(false)}
         layout
         className={`relative z-[5] ${showSidebar ? "ml-0 translate-x-0" : "-mr-64 -translate-x-64"} w-64 shrink-0 border-r border-neutral-700 bg-neutral-800 transition-all duration-300`}
       >
@@ -64,6 +72,8 @@ const Sidebar = () => {
           </motion.li>
         </motion.ul>
         <button
+          disabled={animating}
+          ref={toggleButtonRef}
           onClick={() => setShowSidebar((prev) => !prev)}
           className="absolute bottom-24 right-0 translate-x-full cursor-pointer rounded rounded-r-full bg-primary-700 px-5 py-3.5 text-xl text-white transition-colors duration-150 hover:bg-primary-650"
         >
