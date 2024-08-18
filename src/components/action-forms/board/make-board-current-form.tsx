@@ -3,18 +3,17 @@ import { useEffect, useState, useTransition } from "react";
 import { useBoards } from "~/context/boards-context";
 import { handleMakeBoardCurrent } from "~/server/queries";
 import { BoardSchema } from "~/zod-schemas";
-import type { FormEvent } from "react";
+import type { FormEvent, HTMLAttributes } from "react";
 import type { MakeBoardCurrentChange } from "~/types";
 import { useUser } from "@clerk/nextjs";
 import { MdDashboard } from "react-icons/md";
 
-const MakeBoardCurrentForm = ({
-  boardId,
-  boardName,
-}: {
+interface Props extends HTMLAttributes<HTMLSpanElement> {
   boardId: string;
   boardName: string;
-}) => {
+}
+
+const MakeBoardCurrentForm = ({ boardId, boardName, ...props }: Props) => {
   const {
     setOptimisticBoards,
     getCurrentBoard,
@@ -67,10 +66,12 @@ const MakeBoardCurrentForm = ({
   return (
     <span
       onClick={clientAction}
-      className={`flex w-full items-center gap-2 truncate rounded-r-full px-6 py-3.5 font-bold transition-colors duration-150 ${boardId === currentBoardId ? "bg-primary-700 hover:bg-primary-650 text-white" : "text-neutral-350 hover:text-neutral-250"}`}
+      className={`w-full truncate rounded-r-full px-6 py-3.5 font-bold transition-colors duration-150 ${boardId === currentBoardId ? "bg-primary-700 text-white hover:bg-primary-650" : "text-neutral-350 hover:text-neutral-250"}`}
     >
-      <MdDashboard />
-      <span> {boardName}</span>
+      <button className="flex items-center gap-2" {...props}>
+        <MdDashboard />
+        <span> {boardName}</span>
+      </button>
     </span>
   );
 };

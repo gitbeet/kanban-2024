@@ -111,7 +111,11 @@ const CreateBoardForm = ({
     <>
       {!isOpen && (
         <motion.div layout className={props.className}>
-          <Button variant="text" onClick={() => setIsOpen(true)}>
+          <Button
+            variant="text"
+            onClick={() => setIsOpen(true)}
+            tabIndex={props.tabIndex}
+          >
             <div className="text-secondary--hoverable flex items-center gap-2">
               <FaPlus className="h-3 w-3" />
               <span>Add a board</span>

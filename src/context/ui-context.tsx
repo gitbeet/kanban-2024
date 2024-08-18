@@ -35,7 +35,7 @@ export const useUI = () => {
 };
 
 export const UIProvider: React.FC<UIProviderProps> = ({ children }) => {
-  const [showSidebar, setShowSidebar] = useState(true);
+  const [showSidebar, setShowSidebar] = useState(false);
   const [showEditTaskMenu, setShowEditTaskMenu] = useState(true);
 
   const [editedTask, setEditedTask] = useState<{
