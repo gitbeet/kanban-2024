@@ -1,4 +1,4 @@
-import { useRef, useState, useTransition } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 import useClickOutside from "~/hooks/useClickOutside";
 import { useBoards } from "~/context/boards-context";
 import { v4 as uuid } from "uuid";
@@ -8,15 +8,19 @@ import InputField from "~/components/ui/input-field";
 import { ColumnSchema } from "~/zod-schemas";
 import { FaPlus } from "react-icons/fa6";
 import type { ColumnType } from "~/types";
-import type { ChangeEvent, FormEvent } from "react";
+import type { ChangeEvent, FormEvent, KeyboardEvent } from "react";
 import FocusTrap from "focus-trap-react";
+import { handlePressEscape } from "~/utilities/handlePressEscape";
+import { handlePressEnter } from "~/utilities/handlePressEnter";
 
 interface CreateColumnProps extends React.HTMLAttributes<HTMLDivElement> {
   boardId: string;
 }
 
 const CreateColumnForm = ({ boardId, ...props }: CreateColumnProps) => {
-  const createColumnRef = useRef<HTMLFormElement>(null);
+  const createColumnRef = useRef<HTMLFormElement | null>(null);
+  const notOpenJsxRef = useRef<HTMLButtonElement | null>(null);
+
   const { setOptimisticBoards, getCurrentBoard } = useBoards();
 
   const [columnName, setColumnName] = useState("");
@@ -27,6 +31,13 @@ const CreateColumnForm = ({ boardId, ...props }: CreateColumnProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const { ref } = useClickOutside<HTMLDivElement>(handleClickOutside);
   const currentBoard = getCurrentBoard();
+
+  useEffect(() => {
+    if (!isOpen && notOpenJsxRef.current) {
+      notOpenJsxRef.current.focus(); // Focus the button when isOpen becomes false
+    }
+  }, [isOpen]);
+
   if (!currentBoard)
     return <h1>Error finding the current board (placeholder error)</h1>;
 
@@ -96,8 +107,20 @@ const CreateColumnForm = ({ boardId, ...props }: CreateColumnProps) => {
     setLoading(false);
   }
 
+  const handlePressEnterToEdit = async (e: KeyboardEvent) => {
+    if (isOpen) {
+      handlePressEscape(e, handleClickOutside);
+    } else {
+      await handlePressEnter(e, () => {
+        setIsOpen(true);
+        setColumnName("");
+      });
+    }
+  };
+
   const notOpenJsx = (
     <button
+      ref={notOpenJsxRef}
       onClick={() => setIsOpen(true)}
       className="text-secondary flex items-center gap-2"
     >
@@ -107,39 +130,40 @@ const CreateColumnForm = ({ boardId, ...props }: CreateColumnProps) => {
   );
 
   const openJsx = (
-    <form
-      ref={createColumnRef}
-      onSubmit={clientAction}
-      className="flex items-center gap-2 p-1.5"
-    >
-      <InputField
-        autoFocus
-        value={columnName}
-        onChange={handleColumnChangeName}
-        type="text"
-        placeholder="Enter column name"
-        className="w-full"
-        error={error}
-        handleCancel={handleClickOutside}
-        handleSubmit={clientAction}
-      />
-      <div className="flex gap-1.5">
-        <SaveButton disabled={!!error} />
-        <CancelButton onClick={handleClickOutside} />
-      </div>
-    </form>
+    <FocusTrap active={isOpen} focusTrapOptions={{ escapeDeactivates: false }}>
+      <form
+        ref={createColumnRef}
+        onSubmit={clientAction}
+        className="flex items-center gap-2 p-1.5"
+      >
+        <InputField
+          autoFocus
+          value={columnName}
+          onChange={handleColumnChangeName}
+          type="text"
+          placeholder="Enter column name"
+          className="w-full"
+          error={error}
+          // handleCancel={handleClickOutside}
+          // handleSubmit={clientAction}
+        />
+        <div className="flex gap-1.5">
+          <SaveButton disabled={!!error} />
+          <CancelButton onClick={handleClickOutside} />
+        </div>
+      </form>
+    </FocusTrap>
   );
 
   return (
-    <FocusTrap active={isOpen}>
-      <div
-        ref={ref}
-        className={` ${loading ? "pointer-events-none" : ""} grid cursor-pointer place-content-center p-4 ${props.className}`}
-      >
-        {!isOpen && notOpenJsx}
-        {isOpen && openJsx}
-      </div>
-    </FocusTrap>
+    <div
+      onKeyDown={handlePressEnterToEdit}
+      ref={ref}
+      className={` ${loading ? "pointer-events-none" : ""} grid cursor-pointer place-content-center p-4 ${props.className}`}
+    >
+      {!isOpen && notOpenJsx}
+      {isOpen && openJsx}
+    </div>
   );
 };
 
