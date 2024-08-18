@@ -2,7 +2,7 @@
 
 import { useUI } from "~/context/ui-context";
 import { useBoards } from "~/context/boards-context";
-import { SignedIn, UserButton } from "@clerk/nextjs";
+import { UserButton } from "@clerk/nextjs";
 import { Button, MoreButton } from "./ui/button/buttons";
 import MoreButtonMenu from "./ui/modal/more-button-menu";
 import { useRef, useState } from "react";
@@ -48,8 +48,8 @@ const TopNav = () => {
       }
       confirmButton={
         <DeleteBoardForm
-          boardId={currentBoard!.id}
-          boardIndex={currentBoard!.index}
+          boardId={currentBoard.id}
+          boardIndex={currentBoard.index}
           button={
             <Button type="submit" variant="danger">
               Delete Board
