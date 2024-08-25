@@ -76,6 +76,7 @@ const CreateColumnForm = ({ boardId, ...props }: CreateColumnProps) => {
         action: "createColumn",
         boardId: boardId,
         columnName: newColumn.name,
+        columnId: newColumn.id,
       },
       revalidate: true,
     });

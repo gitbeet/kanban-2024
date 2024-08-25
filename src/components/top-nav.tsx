@@ -8,6 +8,7 @@ import MoreButtonMenu from "./ui/modal/more-button-menu";
 import { useRef, useState } from "react";
 import PromptWindow from "./ui/modal/prompt-window";
 import DeleteBoardForm from "./action-forms/board/delete-board-form";
+import EditBoard from "./menus/edit-board/edit-board";
 const TopNav = () => {
   const { getCurrentBoard, optimisticBoards } = useBoards();
   const { setShowSidebar } = useUI();
@@ -16,6 +17,8 @@ const TopNav = () => {
   const [showConfirmDeleteWindow, setShowConfirmDeleteWindow] = useState(false);
   const moreButtonRef = useRef<HTMLButtonElement | null>(null);
   const noBoards = !optimisticBoards.length;
+
+  const { setShowEditBoardMenu } = useUI();
 
   const handleToggleShowSidebar = () => {
     setShowSidebar((prev) => !prev);
@@ -32,7 +35,9 @@ const TopNav = () => {
       onClose={() => setShowEditBoardWindow(false)}
       zIndex={40}
     >
-      <Button variant="ghost">Edit Board</Button>
+      <Button onClick={() => setShowEditBoardMenu(true)} variant="ghost">
+        Edit Board
+      </Button>
       <Button onClick={() => setShowConfirmDeleteWindow(true)} variant="danger">
         Delete Board
       </Button>
@@ -92,6 +97,7 @@ const TopNav = () => {
       )}
       {moreButtonMenuJSX}
       {currentBoard && confirmDeleteBoardWindowJSX}
+      {currentBoard && <EditBoard board={currentBoard} />}
       <UserButton />
     </nav>
   );

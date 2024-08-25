@@ -22,6 +22,8 @@ interface UIContextType {
       taskId: string | null;
     }>
   >;
+  showEditBoardMenu: boolean;
+  setShowEditBoardMenu: Dispatch<SetStateAction<boolean>>;
 }
 
 const UIContext = createContext<UIContextType | undefined>(undefined);
@@ -29,14 +31,15 @@ const UIContext = createContext<UIContextType | undefined>(undefined);
 export const useUI = () => {
   const context = useContext(UIContext);
   if (!context) {
-    throw new Error("Boards context not found.");
+    throw new Error("UI context not found.");
   }
   return context;
 };
 
 export const UIProvider: React.FC<UIProviderProps> = ({ children }) => {
   const [showSidebar, setShowSidebar] = useState(false);
-  const [showEditTaskMenu, setShowEditTaskMenu] = useState(true);
+  const [showEditTaskMenu, setShowEditTaskMenu] = useState(false);
+  const [showEditBoardMenu, setShowEditBoardMenu] = useState(false);
 
   const [editedTask, setEditedTask] = useState<{
     columnId: string | null;
@@ -52,6 +55,8 @@ export const UIProvider: React.FC<UIProviderProps> = ({ children }) => {
         setShowEditTaskMenu,
         editedTask,
         setEditedTask,
+        showEditBoardMenu,
+        setShowEditBoardMenu,
       }}
     >
       {children}

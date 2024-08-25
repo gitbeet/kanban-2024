@@ -55,6 +55,7 @@ export type MakeBoardCurrentChange = {
 export type CreateColumnChange = {
   action: "createColumn";
   boardId: string;
+  columnId: string;
   columnName: string;
 };
 
@@ -123,7 +124,7 @@ export type ToggleSubtaskCompletedChange = {
   subtaskId: string;
 };
 
-export type TaskChange =
+export type Change =
   // Boards
   | CreateBoardChange
   | RenameBoardChange

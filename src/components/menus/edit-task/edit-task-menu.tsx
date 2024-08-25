@@ -6,7 +6,7 @@ import { v4 as uuid } from "uuid";
 import { mutateTable } from "~/server/queries";
 import { SubtaskSchema, TaskSchema } from "~/zod-schemas";
 import type { ChangeEvent } from "react";
-import type { SubtaskType, TaskChange, TaskType } from "~/types";
+import type { SubtaskType, Change, TaskType } from "~/types";
 import InputField from "~/components/ui/input-field";
 import {
   Button,
@@ -64,8 +64,7 @@ export const EditTaskMenu = ({
   }>(initialErrors);
 
   // Changes are used for the db transaction query
-  const [changes, setChanges] = useState<TaskChange[]>([]);
-  useEffect(() => console.log(changes), [changes]);
+  const [changes, setChanges] = useState<Change[]>([]);
 
   const handleCloseWindow = () => {
     setShowConfirmCancelWindow(false);
@@ -334,6 +333,11 @@ export const EditTaskMenu = ({
     handleCloseWindow();
   };
 
+  const handleShowConfirmationWindow = () => {
+    if (!changes.length) return handleCloseWindow();
+    setShowConfirmCancelWindow(true);
+  };
+
   const confirmCancelWindowJSX = (
     <>
       <PromptWindow
@@ -371,12 +375,12 @@ export const EditTaskMenu = ({
         zIndex={40}
         show={show}
         showBackdrop={showBackdrop}
-        onClose={() => setShowConfirmCancelWindow(true)}
+        onClose={handleShowConfirmationWindow}
       >
         <div className="relative space-y-8">
           <div className="flex items-center justify-between">
             <h1 className="text-lg font-bold">Edit Task</h1>
-            <CloseButton onClick={() => setShowConfirmCancelWindow(true)} />
+            <CloseButton onClick={handleShowConfirmationWindow} />
           </div>
           {/* -----  ----- */}
           <div className="space-y-4">
@@ -394,30 +398,35 @@ export const EditTaskMenu = ({
           <div className="space-y-4">
             <h3 className="text-sm font-bold">Subtasks</h3>
             <ul className="space-y-2.5">
-              {temporarySubtasks.map((subtask) => {
-                const errorIndex = error.subtasks.findIndex(
-                  (s) => s.id === subtask.id,
-                );
-                return (
-                  <div key={subtask.index} className="flex items-center gap-2">
-                    <InputField
-                      className="w-full"
-                      value={subtask.name}
-                      error={error.subtasks[errorIndex]?.errorMessage ?? ""}
-                      onChange={(e) => handleChangeSubtaskName(e, subtask.id)}
-                      errorPlacement="bottom"
-                      shiftLayout
-                    />
-                    <DeleteButton
-                      className={`${error.subtasks[errorIndex]?.errorMessage ? "relative -top-2.5" : ""}`}
-                      type="button"
-                      onClick={() =>
-                        handleDeleteSubtask(subtask.id, subtask.index)
-                      }
-                    />
-                  </div>
-                );
-              })}
+              {temporarySubtasks
+                .sort((a, b) => a.index - b.index)
+                .map((subtask) => {
+                  const errorIndex = error.subtasks.findIndex(
+                    (s) => s.id === subtask.id,
+                  );
+                  return (
+                    <div
+                      key={subtask.index}
+                      className="flex items-center gap-2"
+                    >
+                      <InputField
+                        className="w-full"
+                        value={subtask.name}
+                        error={error.subtasks[errorIndex]?.errorMessage ?? ""}
+                        onChange={(e) => handleChangeSubtaskName(e, subtask.id)}
+                        errorPlacement="bottom"
+                        shiftLayout
+                      />
+                      <DeleteButton
+                        className={`${error.subtasks[errorIndex]?.errorMessage ? "relative -top-2.5" : ""}`}
+                        type="button"
+                        onClick={() =>
+                          handleDeleteSubtask(subtask.id, subtask.index)
+                        }
+                      />
+                    </div>
+                  );
+                })}
             </ul>
             <Button
               variant="primary"
@@ -454,7 +463,7 @@ export const EditTaskMenu = ({
               type="button"
               variant="danger"
               className="w-full"
-              onClick={() => setShowConfirmCancelWindow(true)}
+              onClick={handleShowConfirmationWindow}
             >
               Cancel
             </Button>

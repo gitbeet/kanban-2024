@@ -25,7 +25,7 @@ import type {
   RenameTaskChange,
   SubtaskType,
   SwitchTaskColumnChange,
-  TaskChange,
+  Change,
   TaskType,
   ToggleSubtaskCompletedChange,
   ToggleTaskCompletedChange,
@@ -237,7 +237,7 @@ export const handleCreateColumn = async ({
   revalidate?: boolean;
   inTransaction?: boolean;
 }) => {
-  const { boardId, columnName } = change;
+  const { boardId, columnName, columnId } = change;
   // calculate current max position
   const columnsOrdered = await tx.query.columns.findMany({
     where: (model, { eq }) => eq(model.boardId, boardId),
@@ -250,7 +250,7 @@ export const handleCreateColumn = async ({
   if (typeof maxIndex === undefined) throw new Error("No max index");
 
   const newColumn: ColumnType = {
-    id: uuid(),
+    id: columnId,
     index: maxIndex + 1,
     tasks: [],
     name: columnName,
@@ -749,7 +749,7 @@ export const handleToggleSubtaskCompleted = async ({
 };
 
 // ------ Transaction ------
-export async function mutateTable(changes: TaskChange[]) {
+export async function mutateTable(changes: Change[]) {
   const user = auth();
   if (!user.userId) throw new Error("Unauthorized");
   try {
