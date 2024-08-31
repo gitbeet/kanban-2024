@@ -23,6 +23,7 @@ const Sidebar = () => {
       focusTrapOptions={{
         escapeDeactivates: false,
         initialFocus: () => toggleButtonRef.current,
+        allowOutsideClick: true,
       }}
     >
       <motion.section

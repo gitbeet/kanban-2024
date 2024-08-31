@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useBoards } from "~/context/boards-context";
 import { v4 as uuid } from "uuid";
 import { mutateTable } from "~/server/queries";
@@ -26,7 +26,6 @@ interface Props {
 }
 
 export const EditTaskMenu = ({
-  zIndex,
   show,
   showBackdrop,
   onClose,

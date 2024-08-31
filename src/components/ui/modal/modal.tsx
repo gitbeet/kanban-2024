@@ -20,18 +20,20 @@ export const Modal = ({
   ...props
 }: ModalProps) => {
   return (
-    <FocusTrap
-      active={show}
-      focusTrapOptions={{ allowOutsideClick: true, escapeDeactivates: false }}
-    >
-      <div
-        {...props}
-        style={{ zIndex, ...props.style }}
-        className={`menu-bg ${centered ? "menu" : ""} absolute p-6 transition-opacity duration-200 ${show ? "opacity-100" : "pointer-events-none opacity-0"} ${props.className}`}
+    show && (
+      <FocusTrap
+        active={show}
+        focusTrapOptions={{ allowOutsideClick: true, escapeDeactivates: false }}
       >
-        {children}
-      </div>
-    </FocusTrap>
+        <div
+          {...props}
+          style={{ zIndex, ...props.style }}
+          className={`menu-bg ${centered ? "menu" : ""} absolute p-6 transition-opacity duration-200 ${show ? "opacity-100" : "pointer-events-none opacity-0"} ${props.className}`}
+        >
+          {children}
+        </div>
+      </FocusTrap>
+    )
   );
 };
 
