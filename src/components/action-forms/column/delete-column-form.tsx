@@ -7,9 +7,13 @@ import { ColumnSchema } from "~/zod-schemas";
 const DeleteColumnForm = ({
   boardId,
   columnId,
+  button,
+  extraAction,
 }: {
   boardId: string;
   columnId: string;
+  button?: JSX.Element;
+  extraAction?: () => void;
 }) => {
   const [error, setError] = useState("");
   const { setOptimisticBoards } = useBoards();
@@ -36,12 +40,9 @@ const DeleteColumnForm = ({
     if (response?.error) {
       return setError(response.error);
     }
+    extraAction?.();
   };
-  return (
-    <form action={clientAction}>
-      <DeleteButton />
-    </form>
-  );
+  return <form action={clientAction}>{button ?? <DeleteButton />}</form>;
 };
 
 export default DeleteColumnForm;

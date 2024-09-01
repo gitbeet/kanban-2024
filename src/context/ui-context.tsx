@@ -2,6 +2,7 @@
 
 import { useContext, createContext, useState } from "react";
 import type { ReactNode, SetStateAction, Dispatch } from "react";
+import { ColumnType } from "~/types";
 
 interface UIProviderProps {
   children: ReactNode;
@@ -24,8 +25,8 @@ interface UIContextType {
   >;
   showEditBoardMenu: boolean;
   setShowEditBoardMenu: Dispatch<SetStateAction<boolean>>;
-  columnToDeleteId: string;
-  setColumnToDeleteId: Dispatch<SetStateAction<string>>;
+  columnToDelete: ColumnType | null;
+  setColumnToDelete: Dispatch<SetStateAction<ColumnType | null>>;
   showConfirmDeleteColumnWindow: boolean;
   setShowConfirmDeleteColumnWindow: Dispatch<SetStateAction<boolean>>;
 }
@@ -45,7 +46,7 @@ export const UIProvider: React.FC<UIProviderProps> = ({ children }) => {
   const [showEditTaskMenu, setShowEditTaskMenu] = useState(false);
   const [showEditBoardMenu, setShowEditBoardMenu] = useState(false);
 
-  const [columnToDeleteId, setColumnToDeleteId] = useState("");
+  const [columnToDelete, setColumnToDelete] = useState<ColumnType | null>(null);
   const [showConfirmDeleteColumnWindow, setShowConfirmDeleteColumnWindow] =
     useState(false);
 
@@ -65,8 +66,8 @@ export const UIProvider: React.FC<UIProviderProps> = ({ children }) => {
         setEditedTask,
         showEditBoardMenu,
         setShowEditBoardMenu,
-        columnToDeleteId,
-        setColumnToDeleteId,
+        columnToDelete,
+        setColumnToDelete,
         showConfirmDeleteColumnWindow,
         setShowConfirmDeleteColumnWindow,
       }}

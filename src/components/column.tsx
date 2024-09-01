@@ -11,6 +11,8 @@ import { SwitchTaskActionSchema } from "~/zod-schemas";
 import type { DragEvent } from "react";
 import type { TaskType, ColumnType } from "../types";
 import { handleSwitchTaskColumn } from "~/server/queries";
+import { useUI } from "~/context/ui-context";
+import { DeleteButton } from "./ui/button/buttons";
 
 const Column = ({
   boardId,
@@ -19,6 +21,7 @@ const Column = ({
   boardId: string;
   column: ColumnType;
 }) => {
+  const { setShowConfirmDeleteColumnWindow, setColumnToDelete } = useUI();
   const [active, setActive] = useState(false);
   // TODO : Disable dragging when pending ?
   const [isPending, startTransition] = useTransition();
@@ -199,7 +202,13 @@ const Column = ({
           </span>
           <RenameColumnForm boardId={boardId} columnId={column.id} />
         </h3>
-        <DeleteColumnForm boardId={boardId} columnId={column.id} />
+        <DeleteButton
+          onClick={() => {
+            setColumnToDelete(column);
+            setShowConfirmDeleteColumnWindow(true);
+          }}
+        />
+        {/* <DeleteColumnForm boardId={boardId} columnId={column.id} /> */}
       </div>
       {column.tasks
         .sort((a, b) => a.index - b.index)

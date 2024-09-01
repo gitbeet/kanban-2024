@@ -4,6 +4,7 @@ import React from "react";
 import { useUI } from "~/context/ui-context";
 import { useBoards } from "~/context/boards-context";
 import TaskMenu from "./edit-task/task-menu";
+import ConfirmDeleteColumn from "./confirm-delete-column";
 
 const Menus = () => {
   const { editedTask } = useUI();
@@ -17,6 +18,7 @@ const Menus = () => {
       {editedTask.columnId && task && (
         <TaskMenu columnId={editedTask.columnId} task={task} />
       )}
+      <ConfirmDeleteColumn />
     </>
   );
 };
