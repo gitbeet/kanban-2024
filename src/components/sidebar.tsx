@@ -8,13 +8,13 @@ import { FaEye, FaEyeSlash } from "react-icons/fa6";
 import CreateBoardForm from "./action-forms/board/create-board-form";
 import MakeBoardCurrentForm from "./action-forms/board/make-board-current-form";
 import FocusTrap from "focus-trap-react";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import ThemeSwitch from "./ui/theme-switch";
 
 const Sidebar = () => {
-  const { showSidebar, setShowSidebar } = useUI();
+  const { showSidebar, setShowSidebar, setSidebarAnimating, sidebarAnimating } =
+    useUI();
   const { optimisticBoards, loading } = useBoards();
-  const [animating, setAnimating] = useState(false);
   const hasMounted = useHasMounted();
 
   const toggleButtonRef = useRef<HTMLButtonElement | null>(null);
@@ -22,10 +22,11 @@ const Sidebar = () => {
 
   const toggleButton = (
     <button
+      disabled={sidebarAnimating}
       tabIndex={showSidebar ? 0 : -1}
       ref={toggleButtonRef}
       onClick={() => setShowSidebar((prev) => !prev)}
-      className="text-secondary--hoverable flex items-center gap-2 pl-5 text-lg"
+      className="text-secondary--hoverable flex items-center gap-2 pl-5 text-lg disabled:bg-white"
     >
       <FaEyeSlash />
       <span>Hide sidebar</span>
@@ -36,9 +37,9 @@ const Sidebar = () => {
     <button
       tabIndex={showSidebar ? -1 : 0}
       ref={outsideButtonRef}
-      disabled={animating}
+      disabled={sidebarAnimating}
       onClick={() => setShowSidebar((prev) => !prev)}
-      className={` ${showSidebar ? "hidden" : ""} absolute bottom-24 right-0 translate-x-full cursor-pointer rounded rounded-r-full bg-primary-700 px-5 py-3.5 text-xl text-white transition-colors duration-150 hover:bg-primary-650`}
+      className={` ${showSidebar ? "hidden" : ""} transitionz-colors absolute bottom-24 right-0 translate-x-full cursor-pointer rounded rounded-r-full bg-primary-700 px-5 py-3.5 text-xl text-white duration-150 hover:bg-primary-650`}
     >
       <FaEye />
     </button>
@@ -74,9 +75,8 @@ const Sidebar = () => {
 
   return (
     <motion.section
-      onTransitionStart={() => setAnimating(true)}
-      onTransitionEnd={() => setAnimating(false)}
-      layout
+      onTransitionStart={() => setSidebarAnimating(true)}
+      onTransitionEnd={() => setSidebarAnimating(false)}
       className={`relative z-[5] ${showSidebar ? "ml-0 translate-x-0" : "-mr-64 -translate-x-64"} bg-light w-64 shrink-0 border-b border-r shadow-md transition-all duration-300 dark:border-neutral-750`}
     >
       <FocusTrap

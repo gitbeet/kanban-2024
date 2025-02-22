@@ -2,7 +2,7 @@
 
 import { useContext, createContext, useState } from "react";
 import type { ReactNode, SetStateAction, Dispatch } from "react";
-import { ColumnType } from "~/types";
+import { type ColumnType } from "~/types";
 
 interface UIProviderProps {
   children: ReactNode;
@@ -11,6 +11,8 @@ interface UIProviderProps {
 interface UIContextType {
   showSidebar: boolean;
   setShowSidebar: Dispatch<SetStateAction<boolean>>;
+  sidebarAnimating: boolean;
+  setSidebarAnimating: Dispatch<SetStateAction<boolean>>;
   showEditTaskMenu: boolean;
   setShowEditTaskMenu: Dispatch<SetStateAction<boolean>>;
   editedTask: {
@@ -45,7 +47,7 @@ export const UIProvider: React.FC<UIProviderProps> = ({ children }) => {
   const [showSidebar, setShowSidebar] = useState(false);
   const [showEditTaskMenu, setShowEditTaskMenu] = useState(false);
   const [showEditBoardMenu, setShowEditBoardMenu] = useState(false);
-
+  const [sidebarAnimating, setSidebarAnimating] = useState(false);
   const [columnToDelete, setColumnToDelete] = useState<ColumnType | null>(null);
   const [showConfirmDeleteColumnWindow, setShowConfirmDeleteColumnWindow] =
     useState(false);
@@ -60,6 +62,8 @@ export const UIProvider: React.FC<UIProviderProps> = ({ children }) => {
       value={{
         showSidebar,
         setShowSidebar,
+        sidebarAnimating,
+        setSidebarAnimating,
         showEditTaskMenu,
         setShowEditTaskMenu,
         editedTask,

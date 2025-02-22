@@ -11,7 +11,7 @@ import DeleteBoardForm from "./action-forms/board/delete-board-form";
 import EditBoard from "./menus/edit-board/edit-board";
 const TopNav = () => {
   const { getCurrentBoard, optimisticBoards } = useBoards();
-  const { setShowSidebar } = useUI();
+  const { setShowSidebar, sidebarAnimating } = useUI();
   const currentBoard = getCurrentBoard();
   const [showEditBoardWindow, setShowEditBoardWindow] = useState(false);
   const [showConfirmDeleteWindow, setShowConfirmDeleteWindow] = useState(false);
@@ -83,12 +83,15 @@ const TopNav = () => {
   return (
     <nav className="bg-light relative z-10 flex h-fit items-center justify-between gap-8 border-b border-transparent px-4 py-6 shadow-md dark:border-neutral-750">
       <h1 className="text-dark w-60 text-center text-2xl font-bold">kanban</h1>
-      <button
-        onClick={handleToggleShowSidebar}
-        className="mr-auto cursor-pointer text-center text-xl font-bold"
-      >
-        <h1 className="text-dark">{!noBoards && currentBoard?.name}</h1>
-      </button>
+      {!noBoards && (
+        <button
+          disabled={sidebarAnimating}
+          onClick={handleToggleShowSidebar}
+          className="mr-auto cursor-pointer text-center text-xl font-bold"
+        >
+          <h1 className="text-dark">{!noBoards && currentBoard?.name}</h1>
+        </button>
+      )}
       {currentBoard && (
         <MoreButton
           onClick={() => setShowEditBoardWindow(true)}

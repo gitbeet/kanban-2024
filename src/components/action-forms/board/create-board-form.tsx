@@ -86,6 +86,7 @@ const CreateBoardForm = ({
     if (response?.error) {
       setError(response.error);
       setIsOpen(true);
+      setLoading(false);
       return;
     }
 
@@ -143,7 +144,10 @@ const CreateBoardForm = ({
               handleCancel={handleClickOutside}
             />
 
-            <SaveButton disabled={!!error} className="relative -top-2.5" />
+            <SaveButton
+              disabled={!!error || loading}
+              className="relative -top-2.5"
+            />
           </form>
         </div>
       )}

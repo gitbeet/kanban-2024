@@ -44,7 +44,7 @@ const Board = () => {
 
   const emptyBoardJsx = (
     <section className="grid w-full place-content-center">
-      <h1 className="w-full text-center text-3xl font-bold">
+      <h1 className="text-dark w-full text-center text-3xl font-bold">
         This board is empty
       </h1>
       <CreateColumnForm boardId={currentBoard.id} className="h-32 w-80" />
