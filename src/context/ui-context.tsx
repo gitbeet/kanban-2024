@@ -25,8 +25,14 @@ interface UIContextType {
   showConfirmDeleteColumnWindow: boolean;
   setShowConfirmDeleteColumnWindow: Dispatch<SetStateAction<boolean>>;
   //task menus
+  showEditTaskWindow: boolean;
+  setShowEditTaskWindow: Dispatch<SetStateAction<boolean>>;
   showEditTaskMenu: boolean;
   setShowEditTaskMenu: Dispatch<SetStateAction<boolean>>;
+  showEditTaskSmallMenu: boolean;
+  setShowEditTaskSmallMenu: Dispatch<SetStateAction<boolean>>;
+  showConfirmDeleteTaskWindow: boolean;
+  setShowConfirmDeleteTaskWindow: Dispatch<SetStateAction<boolean>>;
   editedTask: {
     columnId: string | null;
     taskId: string | null;
@@ -61,7 +67,11 @@ export const UIProvider: React.FC<UIProviderProps> = ({ children }) => {
   const [showConfirmDeleteColumnWindow, setShowConfirmDeleteColumnWindow] =
     useState(false);
   // task menus
+  const [showEditTaskWindow, setShowEditTaskWindow] = useState(false);
   const [showEditTaskMenu, setShowEditTaskMenu] = useState(false);
+  const [showEditTaskSmallMenu, setShowEditTaskSmallMenu] = useState(false);
+  const [showConfirmDeleteTaskWindow, setShowConfirmDeleteTaskWindow] =
+    useState(false);
   const [editedTask, setEditedTask] = useState<{
     columnId: string | null;
     taskId: string | null;
@@ -86,8 +96,14 @@ export const UIProvider: React.FC<UIProviderProps> = ({ children }) => {
         showConfirmDeleteColumnWindow,
         setShowConfirmDeleteColumnWindow,
         // task menus
+        showEditTaskWindow,
+        setShowEditTaskWindow,
         showEditTaskMenu,
         setShowEditTaskMenu,
+        showEditTaskSmallMenu,
+        setShowEditTaskSmallMenu,
+        showConfirmDeleteTaskWindow,
+        setShowConfirmDeleteTaskWindow,
         editedTask,
         setEditedTask,
       }}

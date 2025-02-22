@@ -13,18 +13,19 @@ const Board = () => {
   const { optimisticBoards, loading, getCurrentBoard } = useBoards();
   const currentBoard = getCurrentBoard();
 
-  useEffect(() => {
-    const handleFocusIn = (event: FocusEvent) => {
-      console.log("Focused element:", event.target);
-    };
+  // useEffect(() => {
+  //   const handleFocusIn = (event: FocusEvent) => {
+  //     console.log("Focused element:", event.target);
+  //   };
 
-    document.addEventListener("focusin", handleFocusIn);
+  //   document.addEventListener("focusin", handleFocusIn);
 
-    // Cleanup the event listener on unmount
-    return () => {
-      document.removeEventListener("focusin", handleFocusIn);
-    };
-  }, []);
+  //   // Cleanup the event listener on unmount
+  //   return () => {
+  //     document.removeEventListener("focusin", handleFocusIn);
+  //   };
+  // }, []);
+
   if (loading.deleteBoard || loading.createBoard) return <LoadingPage />;
 
   const noBoards = !optimisticBoards.length;

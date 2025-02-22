@@ -6,10 +6,12 @@ const DeleteTaskForm = ({
   columnId,
   taskId,
   children,
+  extraAction,
 }: {
   columnId: string;
   taskId: string;
   children: React.ReactNode;
+  extraAction?: () => void;
 }) => {
   const [error, setError] = useState("");
   const { setOptimisticBoards, getCurrentBoard } = useBoards();
@@ -31,6 +33,7 @@ const DeleteTaskForm = ({
       console.log(error);
       return;
     }
+    extraAction?.();
   };
   return <form action={clientAction}>{children}</form>;
 };

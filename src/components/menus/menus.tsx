@@ -3,7 +3,7 @@
 import React from "react";
 import { useUI } from "~/context/ui-context";
 import { useBoards } from "~/context/boards-context";
-import TaskMenu from "./edit-task/task-menu";
+import EditTaskMenus from "./edit-task/task-menus";
 import ConfirmDeleteColumn from "./confirm-delete-column";
 
 const Menus = () => {
@@ -16,7 +16,7 @@ const Menus = () => {
   return (
     <>
       {editedTask.columnId && task && (
-        <TaskMenu columnId={editedTask.columnId} task={task} />
+        <EditTaskMenus columnId={editedTask.columnId} task={task} />
       )}
       <ConfirmDeleteColumn />
     </>

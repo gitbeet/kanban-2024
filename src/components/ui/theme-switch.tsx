@@ -25,7 +25,7 @@ export default function ThemeSwitch({ tabIndex = 0 }: { tabIndex?: number }) {
       <div
         role="status"
         aria-busy="true"
-        aria-label={`Switch to ${isDarkMode ? "light" : "dark"} mode`}
+        aria-label="Theme switch button placeholder"
         tabIndex={0}
         className={`relative h-6 w-[2.75rem] cursor-pointer rounded-full bg-neutral-100 px-[0.125rem] opacity-10 transition-all`}
       >

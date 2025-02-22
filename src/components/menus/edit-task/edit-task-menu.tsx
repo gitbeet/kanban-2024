@@ -15,23 +15,14 @@ import {
 } from "~/components/ui/button/buttons";
 import { ModalWithBackdrop } from "~/components/ui/modal/modal";
 import PromptWindow from "~/components/ui/modal/prompt-window";
+import { useUI } from "~/context/ui-context";
 
 interface Props {
-  show: boolean;
-  showBackdrop: boolean;
-  zIndex: number;
   task: TaskType;
   columnId: string;
-  onClose: () => void;
 }
 
-export const EditTaskMenu = ({
-  show,
-  showBackdrop,
-  onClose,
-  columnId,
-  task,
-}: Props) => {
+export const EditTaskMenu = ({ columnId, task }: Props) => {
   // Initial state values
   const initialTemporarySubtasks = task.subtasks.map(({ id, index, name }) => ({
     id,
@@ -45,6 +36,14 @@ export const EditTaskMenu = ({
 
   const initialErrors = { name: "", subtasks: initialSubtaskErrors };
 
+  const {
+    showEditTaskSmallMenu,
+    showEditTaskMenu,
+    showEditTaskWindow,
+    setShowEditTaskWindow,
+    setShowEditTaskSmallMenu,
+    setShowEditTaskMenu,
+  } = useUI();
   const { getCurrentBoard } = useBoards();
   const board = getCurrentBoard();
 
@@ -65,15 +64,27 @@ export const EditTaskMenu = ({
   // Changes are used for the db transaction query
   const [changes, setChanges] = useState<Change[]>([]);
 
-  const handleCloseWindow = () => {
-    setShowConfirmCancelWindow(false);
-    onClose();
+  const handleResetChanges = () => {
     setTemporarySubtasks(initialTemporarySubtasks);
     setTemporaryColumnId(columnId);
     setTemporaryName(task.name);
     setLoading(false);
     setChanges([]);
     setError({ name: "", subtasks: initialSubtaskErrors });
+  };
+
+  const handleCloseAllWindows = () => {
+    setShowConfirmCancelWindow(false);
+    setShowEditTaskWindow(false);
+    setShowEditTaskSmallMenu(false);
+    setShowEditTaskMenu(false);
+    handleResetChanges();
+  };
+
+  const handleCloseTaskEditWindow = () => {
+    setShowConfirmCancelWindow(false);
+    setShowEditTaskWindow(false);
+    handleResetChanges();
   };
 
   const handleChangeTaskName = (e: ChangeEvent<HTMLInputElement>) => {
@@ -293,7 +304,6 @@ export const EditTaskMenu = ({
   };
 
   const handleSaveChanges = async () => {
-    if (!changes.length) return onClose();
     setLoading(true);
     // -------------- CLIENT VALIDATION START --------------
 
@@ -329,11 +339,11 @@ export const EditTaskMenu = ({
       console.log(response.error);
     }
     setLoading(false);
-    handleCloseWindow();
+    handleCloseAllWindows();
   };
 
   const handleShowConfirmationWindow = () => {
-    if (!changes.length) return handleCloseWindow();
+    if (!changes.length) return handleCloseTaskEditWindow();
     setShowConfirmCancelWindow(true);
   };
 
@@ -342,7 +352,7 @@ export const EditTaskMenu = ({
       <PromptWindow
         zIndex={50}
         show={showConfirmCancelWindow}
-        showBackdrop={show && showConfirmCancelWindow}
+        showBackdrop={showEditTaskWindow && showConfirmCancelWindow}
         onClose={() => setShowConfirmCancelWindow(false)}
         message={
           <span>
@@ -351,7 +361,11 @@ export const EditTaskMenu = ({
           </span>
         }
         confirmButton={
-          <Button onClick={handleCloseWindow} type="submit" variant="danger">
+          <Button
+            onClick={handleCloseTaskEditWindow}
+            type="submit"
+            variant="danger"
+          >
             Discard Changes
           </Button>
         }
@@ -372,8 +386,10 @@ export const EditTaskMenu = ({
       {confirmCancelWindowJSX}
       <ModalWithBackdrop
         zIndex={40}
-        show={show}
-        showBackdrop={showBackdrop}
+        show={showEditTaskWindow}
+        showBackdrop={
+          showEditTaskSmallMenu && showEditTaskMenu && showEditTaskWindow
+        }
         onClose={handleShowConfirmationWindow}
       >
         <div className="relative space-y-8">
@@ -449,6 +465,7 @@ export const EditTaskMenu = ({
           </div>
           <div className="space-y-4">
             <Button
+              disabled={!changes.length || loading}
               loading={loading}
               type="button"
               variant="primary"
