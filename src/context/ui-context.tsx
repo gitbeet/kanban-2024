@@ -19,6 +19,8 @@ interface UIContextType {
   setShowEditBoardMenu: Dispatch<SetStateAction<boolean>>;
   showEditBoardWindow: boolean;
   setShowEditBoardWindow: Dispatch<SetStateAction<boolean>>;
+  showConfirmDeleteBoardWindow: boolean;
+  setShowConfirmDeleteBoardWindow: Dispatch<SetStateAction<boolean>>;
   // column menus
   columnToDelete: ColumnType | null;
   setColumnToDelete: Dispatch<SetStateAction<ColumnType | null>>;
@@ -62,6 +64,8 @@ export const UIProvider: React.FC<UIProviderProps> = ({ children }) => {
   // board menus
   const [showEditBoardWindow, setShowEditBoardWindow] = useState(false);
   const [showEditBoardMenu, setShowEditBoardMenu] = useState(false);
+  const [showConfirmDeleteBoardWindow, setShowConfirmDeleteBoardWindow] =
+    useState(false);
   // column menus
   const [columnToDelete, setColumnToDelete] = useState<ColumnType | null>(null);
   const [showConfirmDeleteColumnWindow, setShowConfirmDeleteColumnWindow] =
@@ -90,6 +94,8 @@ export const UIProvider: React.FC<UIProviderProps> = ({ children }) => {
         setShowEditBoardWindow,
         showEditBoardMenu,
         setShowEditBoardMenu,
+        showConfirmDeleteBoardWindow,
+        setShowConfirmDeleteBoardWindow,
         // column menus
         columnToDelete,
         setColumnToDelete,

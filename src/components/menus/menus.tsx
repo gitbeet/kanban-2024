@@ -3,8 +3,9 @@
 import React from "react";
 import { useUI } from "~/context/ui-context";
 import { useBoards } from "~/context/boards-context";
-import EditTaskMenus from "./edit-task/task-menus";
+import EditTaskMenus from "./edit-task/edit-task-menus";
 import ConfirmDeleteColumn from "./confirm-delete-column";
+import EditBoardMenus from "./edit-board/edit-board-menus";
 
 const Menus = () => {
   const { editedTask } = useUI();
@@ -18,6 +19,7 @@ const Menus = () => {
       {editedTask.columnId && task && (
         <EditTaskMenus columnId={editedTask.columnId} task={task} />
       )}
+      <EditBoardMenus />
       <ConfirmDeleteColumn />
     </>
   );
