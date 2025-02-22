@@ -21,7 +21,7 @@ export const Button = ({
   loading,
   ...props
 }: ButtonProps) => {
-  const variantClasses = `${variant === "primary" ? "border-transparent bg-neutral-100 hover:bg-white text-neutral-950 shadow-md" : variant === "ghost" ? "border-neutral-250 text-white hover:border-neutral-100" : variant === "text" ? "border-transparent" : variant === "danger" ? "bg-danger-400 text-white border-transparent hover:bg-danger-300" : ""} transition-colors--default`;
+  const variantClasses = `${variant === "primary" ? "border-transparent bg-primary-700 hover:bg-primary-650 text-neutral-50 hover:text-white shadow-md" : variant === "ghost" ? "border-neutral-350 bg-transparent text-neutral-850 hover:text-neutral-950 hover:border-neutral-500 dark:border-neutral-650 dark:text-neutral-50 dark:hover:border-neutral-500" : variant === "text" ? "border-transparent" : variant === "danger" ? "bg-danger-400 text-white border-transparent hover:bg-danger-300" : ""} transition-colors--default`;
 
   return (
     <button
@@ -54,7 +54,7 @@ const IconButton = ({
 }) => {
   const variantColor =
     variant === "primary"
-      ? "hover:text-neutral-50"
+      ? "hover:text-neutral-850 dark:hover:text-neutral-50"
       : variant === "danger"
         ? "hover:text-danger-300"
         : variant === "success"
@@ -63,7 +63,7 @@ const IconButton = ({
   return (
     <button
       {...props}
-      className={`bg-neutral-600 transition-colors--default flex h-6 w-6 shrink-0 items-center justify-center text-neutral-250 ${variantColor} disabled:pointer-events-none disabled:opacity-50 ${props.className}`}
+      className={`bg-neutral-600 transition-colors--default flex h-6 w-6 shrink-0 items-center justify-center text-neutral-700 dark:text-neutral-250 ${variantColor} disabled:pointer-events-none disabled:opacity-50 ${props.className}`}
     >
       {children}
     </button>
@@ -115,7 +115,7 @@ export const MoreButton = forwardRef<
   <button
     {...props}
     ref={ref}
-    className="transition-colors--default h-6 w-6 shrink-0 rounded-full text-neutral-250 hover:text-neutral-50"
+    className="transition-colors--default h-6 w-6 shrink-0 rounded-full text-neutral-650 hover:text-neutral-850 dark:text-neutral-250 dark:hover:text-neutral-50"
   >
     <BsThreeDotsVertical className="h-full w-full" />
   </button>

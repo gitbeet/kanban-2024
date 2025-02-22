@@ -26,6 +26,7 @@ const TaskMenu = ({ columnId, task }: { columnId: string; task: TaskType }) => {
   const { getCurrentBoard } = useBoards();
 
   const [pending, startTransition] = useTransition();
+  const [loading, setLoading] = useState(false);
 
   const [currentColumnId, setCurrentColumnId] = useState(columnId);
 
@@ -35,6 +36,7 @@ const TaskMenu = ({ columnId, task }: { columnId: string; task: TaskType }) => {
 
   const handleColumnChange = async (e: ChangeEvent<HTMLSelectElement>) => {
     e.preventDefault();
+    setLoading(true);
     setCurrentColumnId(e.target.value);
     const newColumnIndex =
       (board?.columns.find((col) => col.id === e.target.value)?.tasks.length ??
@@ -68,7 +70,9 @@ const TaskMenu = ({ columnId, task }: { columnId: string; task: TaskType }) => {
 
     if (response?.error) {
       console.log(response.error);
+      return setLoading(false);
     }
+    setLoading(false);
   };
 
   // for the big menu
@@ -110,14 +114,14 @@ const TaskMenu = ({ columnId, task }: { columnId: string; task: TaskType }) => {
       className="flex flex-col gap-8"
     >
       <div className="flex items-center justify-between gap-4">
-        <h3 className="truncate text-xl font-bold">{task.name}</h3>
+        <h3 className="text-dark truncate text-xl font-bold">{task.name}</h3>
         <MoreButton
           ref={moreButtonRef}
           onClick={() => setShowSmallMenu(true)}
         />
       </div>
       <div className="space-y-4">
-        <h4 className="text-sm font-bold">
+        <h4 className="text-light text-sm font-bold">
           {allSubtasks < 1
             ? "No subtasks"
             : `Subtasks ( ${completedSubtasks} of ${allSubtasks} )`}
@@ -129,7 +133,7 @@ const TaskMenu = ({ columnId, task }: { columnId: string; task: TaskType }) => {
             .map((subtask) => (
               <li
                 key={subtask.index}
-                className="flex items-center gap-3 bg-neutral-850 p-3 text-sm font-bold"
+                className="bg-dark flex items-center gap-3 p-3 text-sm font-bold"
               >
                 <ToggleSubtaskForm
                   columnId={columnId}
@@ -138,9 +142,11 @@ const TaskMenu = ({ columnId, task }: { columnId: string; task: TaskType }) => {
                 />
 
                 <span
-                  className={
-                    subtask.completed ? "text-secondary line-through" : ""
-                  }
+                  className={`${
+                    subtask.completed
+                      ? "text-secondary line-through"
+                      : "text-dark"
+                  } `}
                 >
                   {subtask.name}
                 </span>
@@ -149,9 +155,13 @@ const TaskMenu = ({ columnId, task }: { columnId: string; task: TaskType }) => {
         </ul>
       </div>
       <div>
-        <h4 className="text-sm font-bold">Current status</h4>
+        <h4 className="text-dark text-sm font-bold">Current status</h4>
         <div className="h-4" />
-        <select onChange={(e) => handleColumnChange(e)} value={currentColumnId}>
+        <select
+          disabled={pending || loading}
+          onChange={(e) => handleColumnChange(e)}
+          value={currentColumnId}
+        >
           {board?.columns?.map((c) => (
             <option key={c.id} value={c.id}>
               {c.name}

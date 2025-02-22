@@ -139,7 +139,7 @@ const CreateTaskForm = ({
                 <TextArea
                   autoFocus
                   ref={textAreaRef}
-                  className="input !bg-neutral-950/50"
+                  className="input"
                   rows={1}
                   value={taskName}
                   onChange={handleChange}

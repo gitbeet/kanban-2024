@@ -1,14 +1,10 @@
 import "~/styles/globals.css";
-
-import { ClerkProvider } from "@clerk/nextjs";
-import { BoardsProvider } from "~/context/boards-context";
-import { UIProvider } from "~/context/ui-context";
 import TopNav from "~/components/top-nav";
 import { type Metadata } from "next";
 import { getBoards } from "~/server/queries";
 import Menus from "~/components/menus/menus";
 import { Plus_Jakarta_Sans } from "next/font/google";
-import { shadesOfPurple } from "@clerk/themes";
+import Providers from "./providers";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   weight: ["400", "500", "700"],
@@ -27,25 +23,19 @@ export default async function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   const boards = await getBoards();
   return (
-    <ClerkProvider
-      appearance={{
-        baseTheme: shadesOfPurple,
-      }}
+    <html
+      lang="en"
+      className={`${plusJakartaSans.variable}`}
+      suppressHydrationWarning
     >
-      <UIProvider>
-        <BoardsProvider boards={boards}>
-          <html lang="en" className={`${plusJakartaSans.variable}`}>
-            <body className="mx-auto flex h-[100dvh] flex-col bg-neutral-850 text-white">
-              <TopNav />
-
-              {children}
-              <Menus />
-
-              <div id="modal-root" className="absolute h-0 w-0" />
-            </body>
-          </html>
-        </BoardsProvider>
-      </UIProvider>
-    </ClerkProvider>
+      <body className="bg-dark mx-auto flex h-[100dvh] flex-col text-white">
+        <Providers boards={boards}>
+          <TopNav />
+          {children}
+          <Menus />
+          <div id="modal-root" className="absolute h-0 w-0" />
+        </Providers>
+      </body>
+    </html>
   );
 }

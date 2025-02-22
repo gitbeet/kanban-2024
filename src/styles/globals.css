@@ -2,6 +2,31 @@
 @tailwind components;
 @tailwind utilities;
 
+.text-dark {
+  @apply text-neutral-850 dark:text-neutral-50;
+}
+
+.text-light {
+  @apply text-neutral-650 dark:text-neutral-350;
+}
+
+.text-secondary,
+.text-secondary--hoverable {
+  @apply transition-colors--default text-light;
+}
+
+.text-secondary--hoverable {
+  @apply hover:text-neutral-700 dark:hover:text-neutral-250;
+}
+
+.bg-dark {
+  @apply bg-neutral-100 dark:bg-neutral-850;
+}
+
+.bg-light {
+  @apply bg-neutral-50 dark:bg-neutral-800;
+}
+
 select,
 button,
 .input,
@@ -14,11 +39,15 @@ select,
 .input,
 textarea,
 option {
-  @apply bg-neutral-850 focus:bg-neutral-950/50;
+  @apply dark:bg-neutral-850 dark:focus:bg-neutral-950/50;
 }
 
 select {
-  @apply w-full rounded-sm px-2 py-3 text-sm font-bold text-white;
+  @apply bg-dark w-full rounded-sm px-2 py-3 text-sm font-bold text-neutral-800 dark:text-white;
+}
+
+select option {
+  @apply bg-light;
 }
 
 .input,
@@ -26,12 +55,12 @@ select {
   @apply rounded-sm px-2 py-1.5;
 }
 
-.input-readonly {
-  @apply bg-transparent;
+.input {
+  @apply placeholder:text-neutral-650 focus:text-neutral-950 dark:focus:text-white;
 }
 
-.input {
-  @apply placeholder:text-neutral-650 focus:text-white;
+.input-readonly {
+  @apply text-light bg-transparent;
 }
 
 .transition-colors--default {
@@ -40,7 +69,7 @@ select {
 
 .task-bg,
 .menu-bg {
-  @apply rounded-md bg-neutral-800 shadow-md;
+  @apply bg-light rounded-md shadow-md;
 }
 
 .menu {
@@ -48,16 +77,7 @@ select {
 }
 
 .task-bg {
-  @apply border border-transparent hover:border-neutral-700;
-}
-
-.text-secondary,
-.text-secondary--hoverable {
-  @apply transition-colors--default text-neutral-350;
-}
-
-.text-secondary--hoverable {
-  @apply hover:text-neutral-250;
+  @apply border border-transparent hover:border-neutral-250 dark:hover:border-neutral-700;
 }
 
 /* RESET */

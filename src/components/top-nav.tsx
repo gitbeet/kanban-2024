@@ -81,13 +81,13 @@ const TopNav = () => {
   );
 
   return (
-    <nav className="relative z-10 flex h-fit items-center justify-between gap-8 border-b border-neutral-750 bg-neutral-800 px-4 py-6 shadow-md">
-      <h1 className="w-60 text-center text-2xl font-bold">kanban</h1>
+    <nav className="bg-light relative z-10 flex h-fit items-center justify-between gap-8 border-b border-transparent px-4 py-6 shadow-md dark:border-neutral-750">
+      <h1 className="text-dark w-60 text-center text-2xl font-bold">kanban</h1>
       <button
         onClick={handleToggleShowSidebar}
         className="mr-auto cursor-pointer text-center text-xl font-bold"
       >
-        <h1>{!noBoards && currentBoard?.name}</h1>
+        <h1 className="text-dark">{!noBoards && currentBoard?.name}</h1>
       </button>
       {currentBoard && (
         <MoreButton

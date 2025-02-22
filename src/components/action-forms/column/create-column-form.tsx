@@ -124,7 +124,7 @@ const CreateColumnForm = ({ boardId, ...props }: CreateColumnProps) => {
     <button
       ref={notOpenJsxRef}
       onClick={() => setIsOpen(true)}
-      className={` ${isOpen ? "pointer-events-none h-0 w-0 opacity-0" : "opacity-100"} text-secondary flex items-center gap-2`}
+      className={` ${isOpen ? "pointer-events-none h-0 w-0 opacity-0" : "opacity-100"} text-secondary--hoverable flex items-center gap-2`}
     >
       <FaPlus className="h-3.5 w-3.5" />
       <span className="text-lg font-bold">Column</span>
