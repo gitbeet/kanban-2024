@@ -25,9 +25,8 @@ export const Button = ({
 
   return (
     <button
-      disabled={loading}
       {...props}
-      className={` ${props.className} ${variantClasses} rounded border px-2 py-1 text-sm font-bold disabled:cursor-wait disabled:opacity-50`}
+      className={` ${props.className} ${variantClasses} rounded border px-2 py-1 text-sm font-bold ${loading ? "cursor-wait" : ""} disabled:opacity-50`}
     >
       {loading ? <LoadingPage /> : children}
     </button>

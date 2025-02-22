@@ -34,7 +34,8 @@ const getInitialTemporaryColumns = (columns: ColumnType[]) => {
 };
 
 const EditBoard = ({ board }: { board: BoardType }) => {
-  const { showEditBoardMenu, setShowEditBoardMenu } = useUI();
+  const { showEditBoardMenu, setShowEditBoardMenu, setShowEditBoardWindow } =
+    useUI();
   const [showConfirmCancelWindow, setShowConfirmCancelWindow] = useState(false);
   const [boardName, setBoardName] = useState(board.name);
   const [temporaryColumns, setTemporaryColumns] = useState(
@@ -229,7 +230,11 @@ const EditBoard = ({ board }: { board: BoardType }) => {
   };
 
   const handleSaveChanges = async () => {
-    if (!changes.length) return setShowEditBoardMenu(false);
+    if (!changes.length) {
+      setShowEditBoardMenu(false);
+      setShowEditBoardWindow(false);
+      return;
+    }
     setLoading(true);
     // -------------- CLIENT VALIDATION START --------------
 
@@ -265,6 +270,8 @@ const EditBoard = ({ board }: { board: BoardType }) => {
     }
     setLoading(false);
     handleCloseWindow();
+    // when saving close the small menu aswell
+    setShowEditBoardWindow(false);
   };
 
   const handleCloseWindow = () => {
@@ -377,6 +384,7 @@ const EditBoard = ({ board }: { board: BoardType }) => {
 
           <div className="space-y-4">
             <Button
+              disabled={!changes.length || loading}
               loading={loading}
               type="button"
               variant="primary"
@@ -387,6 +395,7 @@ const EditBoard = ({ board }: { board: BoardType }) => {
             </Button>
             <Button
               loading={loading}
+              disabled={loading}
               type="button"
               variant="danger"
               className="w-full"

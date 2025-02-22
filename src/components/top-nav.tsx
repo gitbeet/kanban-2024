@@ -13,12 +13,12 @@ const TopNav = () => {
   const { getCurrentBoard, optimisticBoards } = useBoards();
   const { setShowSidebar, sidebarAnimating } = useUI();
   const currentBoard = getCurrentBoard();
-  const [showEditBoardWindow, setShowEditBoardWindow] = useState(false);
   const [showConfirmDeleteWindow, setShowConfirmDeleteWindow] = useState(false);
   const moreButtonRef = useRef<HTMLButtonElement | null>(null);
   const noBoards = !optimisticBoards.length;
 
-  const { setShowEditBoardMenu } = useUI();
+  const { setShowEditBoardMenu, showEditBoardWindow, setShowEditBoardWindow } =
+    useUI();
 
   const handleToggleShowSidebar = () => {
     setShowSidebar((prev) => !prev);
