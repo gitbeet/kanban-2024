@@ -102,6 +102,7 @@ const CreateColumnForm = ({ boardId, ...props }: CreateColumnProps) => {
   };
 
   function handleClickOutside() {
+    if (!isOpen) return;
     setIsOpen(false);
     setColumnName("");
     setError("");
