@@ -5,7 +5,7 @@ import { shadesOfPurple } from "@clerk/themes";
 import { ThemeProvider } from "next-themes";
 import { BoardsProvider } from "~/context/boards-context";
 import { UIProvider } from "~/context/ui-context";
-import type { BoardType } from "~/types";
+import { type BoardType } from "~/types";
 
 const Providers = ({
   boards,

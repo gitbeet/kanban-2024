@@ -35,7 +35,7 @@ import { BoardSchema } from "~/zod-schemas";
 // ------ Board ------
 export async function getBoards() {
   const user = auth();
-  if (!user.userId) throw new Error("Unauthorized");
+  if (!user.userId) return [];
   const boards = await db.query.boards.findMany({
     where: (model, { eq }) => eq(model.userId, user.userId),
     with: {

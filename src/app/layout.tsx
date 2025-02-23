@@ -1,13 +1,12 @@
 import "~/styles/globals.css";
-import TopNav from "~/components/top-nav";
 import { type Metadata } from "next";
 import { getBoards } from "~/server/queries";
-import Menus from "~/components/menus/menus";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import Providers from "./providers";
+import ClientLayout from "~/components/client-layout";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
-  weight: ["400", "500", "700"],
+  weight: ["400", "500", "700", "800"],
   subsets: ["latin"],
   variable: "--font-plus-jakarta-sans",
 });
@@ -28,12 +27,9 @@ export default async function RootLayout({
       className={`${plusJakartaSans.variable}`}
       suppressHydrationWarning
     >
-      <body className="bg-dark mx-auto flex h-[100dvh] flex-col text-white">
+      <body className="h-full w-full">
         <Providers boards={boards}>
-          <TopNav />
-          {children}
-          <Menus />
-          <div id="modal-root" className="absolute h-0 w-0" />
+          <ClientLayout>{children}</ClientLayout>
         </Providers>
       </body>
     </html>
