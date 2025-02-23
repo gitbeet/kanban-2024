@@ -59,7 +59,7 @@ export const useUI = () => {
 
 export const UIProvider: React.FC<UIProviderProps> = ({ children }) => {
   // sidebar
-  const [showSidebar, setShowSidebar] = useState(false);
+  const [showSidebar, setShowSidebar] = useState(true);
   const [sidebarAnimating, setSidebarAnimating] = useState(false);
   // board menus
   const [showEditBoardWindow, setShowEditBoardWindow] = useState(false);
