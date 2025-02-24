@@ -1,5 +1,5 @@
-import ThemeSwitch from "./ui/theme-switch";
-import Logo from "./logo";
+import ThemeSwitch from "../theme-switch";
+import Logo from "../logo";
 
 const Footer = () => {
   return (

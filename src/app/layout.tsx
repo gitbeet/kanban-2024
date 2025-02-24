@@ -3,7 +3,8 @@ import { type Metadata } from "next";
 import { getBoards } from "~/server/queries";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import Providers from "./providers";
-import ClientLayout from "~/components/client-layout";
+import ClientLayout from "~/components/layout/client-layout";
+import Menus from "~/components/menus/menus";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   weight: ["400", "500", "700", "800"],
@@ -27,7 +28,7 @@ export default async function RootLayout({
       className={`${plusJakartaSans.variable}`}
       suppressHydrationWarning
     >
-      <body className="h-full w-full">
+      <body className="">
         <Providers boards={boards}>
           <ClientLayout>{children}</ClientLayout>
         </Providers>

@@ -3,14 +3,14 @@
 import { useUI } from "~/context/ui-context";
 import { useBoards } from "~/context/boards-context";
 import { SignedIn, SignedOut, useClerk } from "@clerk/nextjs";
-import { Button, MoreButton } from "./ui/button/buttons";
-import MoreButtonMenu from "./ui/modal/more-button-menu";
+import { Button, MoreButton } from "../ui/button/buttons";
+import MoreButtonMenu from "../ui/modal/more-button-menu";
 import { useRef } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import Logo from "./logo";
+import Logo from "../logo";
 
-const TopNav = () => {
+const Nav = () => {
   // eslint-disable-next-line @typescript-eslint/unbound-method
   const { signOut, redirectToSignIn } = useClerk();
   const handleSignOut = async () => await signOut();
@@ -59,9 +59,8 @@ const TopNav = () => {
     </MoreButtonMenu>
   );
 
-  return (
-    <nav className="bg-light relative z-10 flex h-fit items-center justify-between gap-8 border-b border-transparent px-8 py-6 shadow-md dark:border-neutral-750">
-      <Logo />
+  const boardsPageContent = (
+    <>
       {isBoardsPage && !noBoards && (
         <button
           disabled={sidebarAnimating}
@@ -73,13 +72,23 @@ const TopNav = () => {
       )}
 
       {isBoardsPage && currentBoard && (
-        <MoreButton
-          onClick={() => setShowEditBoardWindow(true)}
-          ref={moreButtonRef}
-        />
+        <>
+          <MoreButton
+            onClick={() => setShowEditBoardWindow(true)}
+            ref={moreButtonRef}
+          />
+          {moreButtonMenuJSX}
+        </>
       )}
+    </>
+  );
+
+  return (
+    <nav className="bg-light relative z-10 flex h-fit items-center justify-between gap-8 border-b border-transparent px-8 py-6 shadow-md dark:border-neutral-750">
+      <Logo />
+      {boardsPageContent}
       <SignedIn>
-        {pathname !== "/boards" && (
+        {!isBoardsPage && (
           <Link href="/boards" className="text-dark font-bold">
             Boards
           </Link>
@@ -95,4 +104,4 @@ const TopNav = () => {
   );
 };
 
-export default TopNav;
+export default Nav;
