@@ -12,7 +12,7 @@ import EditBoardSmallMenu from "../menus/edit-board/edit-board-small-menu";
 
 const Nav = () => {
   // eslint-disable-next-line @typescript-eslint/unbound-method
-  const { signOut, redirectToSignIn } = useClerk();
+  const { signOut, redirectToSignIn, user } = useClerk();
   const handleSignOut = async () => await signOut();
   const handleRedirectToSignIn = async () => await redirectToSignIn();
   const pathname = usePathname();
@@ -74,7 +74,12 @@ const Nav = () => {
         <Button onClick={handleRedirectToSignIn}>Sign in</Button>
       </SignedOut>
       <SignedIn>
-        <Button onClick={handleSignOut}>Sign out</Button>
+        <div className="space-x-4">
+          <span className="text-light">
+            Hello, <b className="text-dark">{user?.firstName ?? "user"}</b>
+          </span>
+          <Button onClick={handleSignOut}>Sign out</Button>
+        </div>
       </SignedIn>
     </nav>
   );

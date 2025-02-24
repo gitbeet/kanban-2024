@@ -10,6 +10,7 @@ import MakeBoardCurrentForm from "./action-forms/board/make-board-current-form";
 import FocusTrap from "focus-trap-react";
 import { useRef } from "react";
 import ThemeSwitch from "./theme-switch";
+import ThemeSwitchUpdated from "./theme-switch-updated";
 
 const Sidebar = () => {
   const { showSidebar, setShowSidebar, setSidebarAnimating, sidebarAnimating } =
@@ -103,12 +104,7 @@ const Sidebar = () => {
               </motion.li>
             </motion.ul>
           </div>
-          <div className="px-2 py-16">
-            <ThemeSwitch tabIndex={showSidebar ? 0 : -1} />
-            <div className="h-8" />
-            {toggleButton}
-            <div className="h-16" />
-          </div>
+          <div className="px-2 pb-28 pt-16">{toggleButton}</div>
         </div>
       </FocusTrap>
       {outsideButton}

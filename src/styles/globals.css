@@ -32,7 +32,7 @@ button,
 .input,
 .input-readonly,
 textarea {
-  @apply focus:outline-1 focus:outline-neutral-25 focus:ring-4 focus:ring-primary-600;
+  @apply focus-visible:outline-1 focus-visible:outline-neutral-25 focus-visible:ring-4 focus-visible:ring-primary-600;
 }
 
 select,
