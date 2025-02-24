@@ -4,11 +4,11 @@ import { useUI } from "~/context/ui-context";
 import { useBoards } from "~/context/boards-context";
 import { SignedIn, SignedOut, useClerk } from "@clerk/nextjs";
 import { Button, MoreButton } from "../ui/button/buttons";
-import MoreButtonMenu from "../ui/modal/more-button-menu";
 import { useRef } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import Logo from "../logo";
+import EditBoardSmallMenu from "../menus/edit-board/edit-board-small-menu";
 
 const Nav = () => {
   // eslint-disable-next-line @typescript-eslint/unbound-method
@@ -19,15 +19,7 @@ const Nav = () => {
   const isBoardsPage = pathname === "/boards";
 
   const { getCurrentBoard, optimisticBoards } = useBoards();
-  const {
-    setShowSidebar,
-    sidebarAnimating,
-    setShowEditBoardMenu,
-    showEditBoardWindow,
-    setShowEditBoardWindow,
-    showConfirmDeleteBoardWindow,
-    setShowConfirmDeleteBoardWindow,
-  } = useUI();
+  const { setShowSidebar, sidebarAnimating, setShowEditBoardWindow } = useUI();
   const currentBoard = getCurrentBoard();
   const moreButtonRef = useRef<HTMLButtonElement | null>(null);
   const noBoards = !optimisticBoards.length;
@@ -36,31 +28,9 @@ const Nav = () => {
     setShowSidebar((prev) => !prev);
   };
 
-  const moreButtonMenuJSX = (
-    <MoreButtonMenu
-      position={{
-        x: moreButtonRef.current?.getBoundingClientRect().left ?? 0,
-        y: moreButtonRef.current?.getBoundingClientRect().top ?? 0,
-      }}
-      show={showEditBoardWindow}
-      showBackdrop={showEditBoardWindow && !showConfirmDeleteBoardWindow}
-      onClose={() => setShowEditBoardWindow(false)}
-      zIndex={40}
-    >
-      <Button onClick={() => setShowEditBoardMenu(true)} variant="ghost">
-        Edit Board
-      </Button>
-      <Button
-        onClick={() => setShowConfirmDeleteBoardWindow(true)}
-        variant="danger"
-      >
-        Delete Board
-      </Button>
-    </MoreButtonMenu>
-  );
-
   const boardsPageContent = (
     <>
+      {/* Board name button */}
       {isBoardsPage && !noBoards && (
         <button
           disabled={sidebarAnimating}
@@ -70,14 +40,20 @@ const Nav = () => {
           <h1 className="text-dark">{!noBoards && currentBoard?.name}</h1>
         </button>
       )}
-
       {isBoardsPage && currentBoard && (
         <>
+          {/* 3 dots button */}
           <MoreButton
             onClick={() => setShowEditBoardWindow(true)}
             ref={moreButtonRef}
           />
-          {moreButtonMenuJSX}
+
+          <EditBoardSmallMenu
+            position={{
+              x: moreButtonRef.current?.getBoundingClientRect().left ?? 0,
+              y: moreButtonRef.current?.getBoundingClientRect().top ?? 0,
+            }}
+          />
         </>
       )}
     </>
