@@ -1,8 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import "./blobs.css";
 
-.blob {
+/* .blob {
   position: absolute;
   width: 40dvw;
   height: 40dvh;
@@ -11,7 +12,7 @@
     rgba(255, 0, 150, 0.6),
     rgba(0, 204, 255, 0.6)
   );
-  filter: blur(15px);
+  filter: blur(25px);
   border-radius: 40% 60% 70% 30% / 30% 40% 60% 70%;
   animation: moveBlob 15s ease-in-out infinite;
   z-index: 1;
@@ -30,7 +31,7 @@
     border-radius: 90% 30% 20% 70% / 90% 70% 30% 50%;
     transform: translate(-60%, -40%) scale(1.4);
   }
-}
+} */
 
 .no-scroll {
   overflow: hidden;
@@ -117,7 +118,7 @@ button,
 .input,
 .input-readonly,
 textarea {
-  @apply focus-visible:outline-1 focus-visible:outline-neutral-25 focus-visible:ring-4 focus-visible:ring-primary-600;
+  @apply text-dark focus-visible:outline-1 focus-visible:outline-neutral-25 focus-visible:ring-4 focus-visible:ring-primary-600;
 }
 
 select,

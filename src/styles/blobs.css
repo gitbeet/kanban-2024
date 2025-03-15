@@ -1,0 +1,90 @@
+.blob,
+.blob__2,
+.blob__3 {
+  position: absolute;
+  z-index: 1;
+}
+
+.blob {
+  width: 35dvw;
+  height: 40dvh;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 0, 150, 0.6),
+    rgba(0, 204, 255, 0.6)
+  );
+  filter: blur(25px);
+  border-radius: 40% 60% 70% 30% / 30% 40% 60% 70%;
+  animation: moveBlob 15s ease-in-out infinite;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.blob__2 {
+  width: 25dvw;
+  height: 20dvh;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 200, 222, 0.6),
+    rgba(255, 0, 150, 0.4)
+  );
+  filter: blur(25px);
+  border-radius: 40% 60% 70% 30% / 30% 40% 60% 70%;
+  animation: moveBlobAlt 18s ease-in-out infinite;
+  top: 30%;
+  left: 80%;
+}
+
+.blob__3 {
+  width: 12dvw;
+  height: 14dvh;
+  background: linear-gradient(
+    135deg,
+    rgba(0, 255, 190, 0.5),
+    rgba(0, 204, 255, 0.4)
+  );
+  filter: blur(45px);
+  border-radius: 40% 60% 70% 30% / 30% 40% 60% 70%;
+  animation: moveBlobAlt2 20s ease-in-out infinite;
+  top: 40%;
+  left: 15%;
+}
+
+/* Keyframes for main blob */
+@keyframes moveBlob {
+  0%,
+  100% {
+    border-radius: 40% 60% 70% 30% / 30% 40% 60% 70%;
+    transform: translate(-40%, -60%) scale(1);
+  }
+  50% {
+    border-radius: 80% 30% 20% 70% / 80% 70% 30% 50%;
+    transform: translate(-60%, -40%) scale(1.4);
+  }
+}
+
+/* Alternate keyframes for variety */
+@keyframes moveBlobAlt {
+  0%,
+  100% {
+    border-radius: 70% 30% 60% 40% / 40% 60% 30% 70%;
+    transform: translate(-30%, -50%) scale(1);
+  }
+  50% {
+    border-radius: 40% 60% 30% 70% / 70% 30% 60% 40%;
+    transform: translate(-40%, -60%) scale(1.3);
+  }
+}
+
+@keyframes moveBlobAlt2 {
+  0%,
+  100% {
+    border-radius: 50% 50% 70% 30% / 30% 70% 50% 50%;
+    transform: translate(-20%, -40%) scale(1);
+  }
+  50% {
+    border-radius: 60% 40% 40% 60% / 60% 40% 40% 60%;
+    transform: translate(-30%, -30%) scale(1.2);
+  }
+}

@@ -28,7 +28,7 @@ export const Modal = ({
         <div
           {...props}
           style={{ zIndex, ...props.style }}
-          className={`menu-bg ${centered ? "menu" : ""} absolute p-6 transition-opacity duration-200 ${show ? "opacity-100" : "pointer-events-none opacity-0"} ${props.className}`}
+          className={`menu-bg ${centered ? "menu" : ""} absolute p-6 transition-opacity duration-200 ${show ? "opacity-100" : "pointer-events-none opacity-0"} text-dark ${props.className}`}
         >
           {children}
         </div>

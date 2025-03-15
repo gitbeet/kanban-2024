@@ -392,7 +392,7 @@ export const EditTaskMenu = ({ columnId, task }: Props) => {
         }
         onClose={handleShowConfirmationWindow}
       >
-        <div className="relative space-y-8">
+        <div className="text-dark relative space-y-8">
           <div className="flex items-center justify-between">
             <h1 className="text-lg font-bold">Edit Task</h1>
             <CloseButton onClick={handleShowConfirmationWindow} />

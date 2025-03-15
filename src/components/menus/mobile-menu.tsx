@@ -1,6 +1,6 @@
 import { SignedIn, SignedOut, useClerk } from "@clerk/nextjs";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+// import { usePathname } from "next/navigation";
 import React from "react";
 import { useUI } from "~/context/ui-context";
 import { Button } from "../ui/button/buttons";
@@ -10,8 +10,8 @@ const MobileMenu = () => {
   const { signOut, redirectToSignIn, user } = useClerk();
   const handleSignOut = async () => await signOut();
   const handleRedirectToSignIn = async () => await redirectToSignIn();
-  const pathname = usePathname();
-  const isBoardsPage = pathname === "/boards";
+  //   const pathname = usePathname();
+  //   const isBoardsPage = pathname === "/boards";
   const { showMobileMenu, setShowMobileMenu } = useUI();
   return (
     <div

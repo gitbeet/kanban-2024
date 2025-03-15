@@ -327,7 +327,7 @@ const EditBoard = ({ board }: { board: BoardType }) => {
         showBackdrop={showEditBoardMenu}
         onClose={handleShowConfirmationWindow}
       >
-        <div className="relative space-y-8">
+        <div className="text-dark relative space-y-8">
           <div className="flex items-center justify-between">
             <h1 className="text-lg font-bold">Edit Board</h1>
             <CloseButton onClick={handleShowConfirmationWindow} />

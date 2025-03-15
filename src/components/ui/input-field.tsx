@@ -1,4 +1,4 @@
-import { KeyboardEvent, useRef, type InputHTMLAttributes } from "react";
+import { type InputHTMLAttributes } from "react";
 import { handlePressEnterToSubmit } from "~/utilities/handlePressEnterOrEscape";
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
@@ -40,7 +40,11 @@ const InputField = ({
       {errorPlacement === "top" && (
         <>
           <div className="flex h-5 justify-between text-sm">
-            {labelText && <label htmlFor={props.id}>{labelText}</label>}
+            {labelText && (
+              <label className="text-dark" htmlFor={props.id}>
+                {labelText}
+              </label>
+            )}
             {error && errorJSX}
           </div>
           <div className="h-1" />
@@ -51,7 +55,7 @@ const InputField = ({
       {errorPlacement === "bottom" && (
         <>
           {labelText && (
-            <label className="text-sm" htmlFor={props.id}>
+            <label className="text-dark text-sm" htmlFor={props.id}>
               {labelText}
             </label>
           )}
