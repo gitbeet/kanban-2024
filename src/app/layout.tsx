@@ -27,7 +27,7 @@ export default async function RootLayout({
       className={`${plusJakartaSans.variable}`}
       suppressHydrationWarning
     >
-      <body>
+      <body className="no-scroll">
         <Providers boards={boards}>
           <ClientLayout>{children}</ClientLayout>
         </Providers>
