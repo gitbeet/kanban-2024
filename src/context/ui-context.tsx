@@ -1,7 +1,8 @@
 "use client";
 
-import { useContext, createContext, useState } from "react";
+import { useContext, createContext, useState, useEffect } from "react";
 import type { ReactNode, SetStateAction, Dispatch } from "react";
+import { disableScrolling, enableScrolling } from "~/utilities/scroll";
 import { type ColumnType } from "~/types";
 
 interface UIProviderProps {
@@ -85,6 +86,16 @@ export const UIProvider: React.FC<UIProviderProps> = ({ children }) => {
     columnId: string | null;
     taskId: string | null;
   }>({ columnId: null, taskId: null });
+
+  useEffect(() => {
+    if (showMobileMenu) {
+      disableScrolling();
+      return;
+    } else {
+      enableScrolling();
+      return;
+    }
+  }, [showMobileMenu]);
 
   return (
     <UIContext.Provider
