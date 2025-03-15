@@ -3,10 +3,13 @@ import ThemeSwitchUpdated from "../theme-switch-updated";
 
 const Footer = () => {
   return (
-    <footer className="bg-light min-h-[300px] border-t border-neutral-250 p-8 dark:border-neutral-650">
-      <div className="flex items-center justify-between">
+    <footer className="section-light flex min-h-[300px] flex-col justify-between border-t pt-8">
+      <div className="container flex items-center justify-between px-8">
         <Logo />
         <ThemeSwitchUpdated />
+      </div>
+      <div className="bg-dark py-1 text-center">
+        <span className="font-bold">taskly </span>
       </div>
     </footer>
   );

@@ -17,7 +17,7 @@ export default function ThemeSwitchUpdated({
 
   if (!mounted)
     return (
-      <div className="bg-dark flex w-fit rounded-full border border-neutral-250 p-1 opacity-50 dark:border-neutral-650">
+      <div className="bg-dark border-color flex w-fit rounded-full border p-1 opacity-50">
         <div
           role="status"
           aria-busy="true"
@@ -46,11 +46,11 @@ export default function ThemeSwitchUpdated({
     );
 
   return (
-    <div className="bg-dark w-fit rounded-full border border-neutral-250 p-1 shadow-sm dark:border-neutral-650">
+    <div className="bg-dark border-color w-fit rounded-full border p-1.5 shadow-sm">
       <button
         tabIndex={tabIndex}
         onClick={() => setTheme("system")}
-        className={` ${theme === "system" ? "border-neutral-250 dark:border-neutral-650" : "border-transparent"} rounded-full border p-1.5`}
+        className={` ${theme === "system" ? "border-color bg-light" : "border-transparent"} rounded-full border p-1.5`}
       >
         <FaLaptopCode className="text-light h-4 w-4 shrink-0" />
       </button>
@@ -58,14 +58,14 @@ export default function ThemeSwitchUpdated({
       <button
         tabIndex={tabIndex}
         onClick={() => setTheme("light")}
-        className={` ${theme === "light" ? "border-neutral-250 dark:border-neutral-650" : "border-transparent"} rounded-full border p-1.5`}
+        className={` ${theme === "light" ? "border-color bg-light" : "border-transparent"} rounded-full border p-1.5`}
       >
         <IoMdSunny className="text-light h-4 w-4 shrink-0" />
       </button>
       <button
         tabIndex={tabIndex}
         onClick={() => setTheme("dark")}
-        className={` ${theme === "dark" ? "border-neutral-250 dark:border-neutral-650" : "border-transparent"} rounded-full border p-1.5`}
+        className={` ${theme === "dark" ? "border-color bg-light" : "border-transparent"} rounded-full border p-1.5`}
       >
         <IoMdMoon className="text-light h-4 w-4 shrink-0" />
       </button>

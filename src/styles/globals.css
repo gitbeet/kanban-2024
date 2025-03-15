@@ -2,12 +2,30 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ***** TEXT *****  */
+
 .text-dark {
   @apply text-neutral-850 dark:text-neutral-50;
 }
 
 .text-light {
   @apply text-neutral-650 dark:text-neutral-350;
+}
+
+.text-heading {
+  @apply text-6xl font-black;
+}
+
+.text-subheading {
+  @apply text-3xl font-bold;
+}
+
+.text-body {
+  @apply text-base;
+}
+
+.text-caption {
+  @apply text-sm;
 }
 
 .text-secondary,
@@ -19,12 +37,41 @@
   @apply hover:text-neutral-700 dark:hover:text-neutral-250;
 }
 
+/* ***** BACKGROUND ***** */
+
+.border-color {
+  @apply border-neutral-250 dark:border-neutral-700;
+}
+
 .bg-dark {
   @apply bg-neutral-100 dark:bg-neutral-850;
 }
 
 .bg-light {
   @apply bg-neutral-50 dark:bg-neutral-800;
+}
+
+.task-bg,
+.menu-bg {
+  @apply bg-light rounded-md shadow-md;
+}
+
+.task-bg {
+  @apply border border-transparent hover:border-neutral-250 dark:hover:border-neutral-700;
+}
+
+.section-light {
+  @apply bg-light border-color border-y;
+}
+
+/* ***** ELEMENTS ***** */
+
+.container {
+  @apply mx-auto max-w-[1400px];
+}
+
+.menu {
+  @apply absolute left-[50dvw] top-[50dvh] w-[min(calc(100dvw-2rem),25rem)] -translate-x-1/2 -translate-y-1/2;
 }
 
 select,
@@ -67,20 +114,7 @@ select option {
   @apply transition-colors duration-150;
 }
 
-.task-bg,
-.menu-bg {
-  @apply bg-light rounded-md shadow-md;
-}
-
-.menu {
-  @apply absolute left-[50dvw] top-[50dvh] w-[min(calc(100dvw-2rem),25rem)] -translate-x-1/2 -translate-y-1/2;
-}
-
-.task-bg {
-  @apply border border-transparent hover:border-neutral-250 dark:hover:border-neutral-700;
-}
-
-/* RESET */
+/* ***** RESET ***** */
 
 *,
 *::before,

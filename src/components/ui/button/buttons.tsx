@@ -6,11 +6,9 @@ import { FaPlus } from "react-icons/fa6";
 import { forwardRef, type ButtonHTMLAttributes } from "react";
 import { MdClose, MdEdit } from "react-icons/md";
 import { LoadingPage } from "../loading-spinner";
-import { IoClose } from "react-icons/io5";
 import { BsThreeDotsVertical } from "react-icons/bs";
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  ghost?: boolean;
   variant?: "primary" | "ghost" | "text" | "danger";
   loading?: boolean;
 }

@@ -29,15 +29,15 @@ const Nav = () => {
   };
 
   const boardsPageContent = (
-    <>
+    <div className="flex grow items-center justify-between">
       {/* Board name button */}
       {isBoardsPage && !noBoards && (
         <button
           disabled={sidebarAnimating}
           onClick={handleToggleShowSidebar}
-          className="ml-32 mr-auto cursor-pointer text-center text-xl font-bold"
+          className="text-dark ml-32 cursor-pointer text-center text-xl font-bold"
         >
-          <h1 className="text-dark">{!noBoards && currentBoard?.name}</h1>
+          {!noBoards && currentBoard?.name}
         </button>
       )}
       {isBoardsPage && currentBoard && (
@@ -56,31 +56,56 @@ const Nav = () => {
           />
         </>
       )}
-    </>
+    </div>
   );
 
   return (
-    <nav className="bg-light relative z-10 flex h-fit items-center justify-between gap-8 border-b border-transparent px-8 py-6 shadow-md dark:border-neutral-750">
-      <Logo />
-      {boardsPageContent}
-      <SignedIn>
+    <nav className="bg-light border-b border-transparent shadow-sm">
+      <div
+        className={` ${isBoardsPage ? "" : "container"} relative z-10 flex h-fit items-center justify-between gap-8 px-8 py-5`}
+      >
+        <Logo />
+        {isBoardsPage && boardsPageContent}
         {!isBoardsPage && (
-          <Link href="/boards" className="text-dark font-bold">
-            Boards
-          </Link>
+          <ul className="absolute left-1/2 flex -translate-x-1/2 gap-8">
+            <li>
+              <Link className="text-dark" href="/">
+                Home
+              </Link>
+            </li>
+            <SignedIn>
+              <li>
+                <Link href="/boards" className="text-dark">
+                  Boards
+                </Link>
+              </li>
+            </SignedIn>
+            <li>
+              <Link className="text-dark" href="/about">
+                About
+              </Link>
+            </li>
+            <li>
+              <Link className="text-dark" href="/contact">
+                Contact
+              </Link>
+            </li>
+          </ul>
         )}
-      </SignedIn>
-      <SignedOut>
-        <Button onClick={handleRedirectToSignIn}>Sign in</Button>
-      </SignedOut>
-      <SignedIn>
-        <div className="space-x-4">
-          <span className="text-light">
-            Hello, <b className="text-dark">{user?.firstName ?? "user"}</b>
-          </span>
-          <Button onClick={handleSignOut}>Sign out</Button>
-        </div>
-      </SignedIn>
+        <SignedOut>
+          <Button onClick={handleRedirectToSignIn}>Sign in</Button>
+        </SignedOut>
+        <SignedIn>
+          <div className="space-x-4">
+            <span className="text-light">
+              Hello, <b className="text-dark">{user?.firstName ?? "user"}</b>
+            </span>
+            <Button variant="ghost" onClick={handleSignOut}>
+              Sign out
+            </Button>
+          </div>
+        </SignedIn>
+      </div>
     </nav>
   );
 };
