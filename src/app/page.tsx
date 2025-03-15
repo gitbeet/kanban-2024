@@ -11,8 +11,8 @@ export default function HomePage() {
   return (
     <>
       <section className="section-light relative flex h-[50dvh] flex-col items-center justify-center gap-6 overflow-hidden">
-        <div className="blob" />
-        <div className="z-10 flex flex-col items-center gap-6 rounded-md bg-white/30 px-16 py-8 drop-shadow-lg backdrop-blur-lg">
+        <div className="blob opacity-40 dark:opacity-10" />
+        <div className="z-10 flex flex-col items-center gap-6 rounded-md bg-white/30 px-16 py-8 drop-shadow-lg backdrop-blur-lg dark:bg-neutral-700/30">
           <h1 className="text-dark z-10 text-center text-6xl font-black">
             <span className="text-primary-600">Organize</span> Your work, Your
             Way
