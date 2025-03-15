@@ -10,15 +10,19 @@ export default function HomePage() {
   const handleRedirectToSignIn = async () => await redirectToSignIn();
   return (
     <>
-      <section className="relative flex h-[50dvh] flex-col items-center justify-center gap-6">
-        <h1 className="text-dark z-10 text-center text-6xl font-black">
-          <span className="text-primary-600">Organize</span> Your work, Your Way
-        </h1>
-        <p className="text-light z-10 max-w-[700px] text-center text-lg font-light">
-          Streamline tasks, collaborate effortlessly, and boost productivity
-          with our Trello-inspired project management tool. Visualize your
-          workflow and get things done—faster and smarter!
-        </p>
+      <section className="section-light relative flex h-[50dvh] flex-col items-center justify-center gap-6 overflow-hidden">
+        <div className="blob" />
+        <div className="z-10 flex flex-col items-center gap-6 rounded-md bg-white/30 px-16 py-8 drop-shadow-lg backdrop-blur-lg">
+          <h1 className="text-dark z-10 text-center text-6xl font-black">
+            <span className="text-primary-600">Organize</span> Your work, Your
+            Way
+          </h1>
+          <p className="text-light z-10 max-w-[700px] text-center text-lg font-light">
+            Streamline tasks, collaborate effortlessly, and boost productivity
+            with our Trello-inspired project management tool. Visualize your
+            workflow and get things done—faster and smarter!
+          </p>
+        </div>
         <div className="z-10 flex gap-4">
           <SignedOut>
             <Button onClick={handleRedirectToSignUp} variant="ghost">

@@ -60,7 +60,7 @@ const Nav = () => {
   );
 
   return (
-    <nav className="bg-light border-b border-transparent shadow-sm">
+    <nav className="bg-light border-color border-b shadow-sm">
       <div
         className={` ${isBoardsPage ? "" : "container"} relative z-10 flex h-fit items-center justify-between gap-8 px-8 py-5`}
       >
