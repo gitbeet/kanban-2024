@@ -9,6 +9,7 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 import Logo from "../logo";
 import EditBoardSmallMenu from "../menus/edit-board/edit-board-small-menu";
+import MobileMenuButton from "../ui/mobile-menu-button";
 
 const Nav = () => {
   // eslint-disable-next-line @typescript-eslint/unbound-method
@@ -67,7 +68,7 @@ const Nav = () => {
         <Logo />
         {isBoardsPage && boardsPageContent}
         {!isBoardsPage && (
-          <ul className="absolute left-1/2 flex -translate-x-1/2 gap-8">
+          <ul className="absolute left-1/2 hidden -translate-x-1/2 gap-8 lg:flex">
             <li>
               <Link className="text-dark" href="/">
                 Home
@@ -93,10 +94,12 @@ const Nav = () => {
           </ul>
         )}
         <SignedOut>
-          <Button onClick={handleRedirectToSignIn}>Sign in</Button>
+          <div className="hidden lg:block">
+            <Button onClick={handleRedirectToSignIn}>Sign in</Button>
+          </div>
         </SignedOut>
         <SignedIn>
-          <div className="space-x-4">
+          <div className="hidden space-x-4 lg:block">
             <span className="text-light">
               Hello, <b className="text-dark">{user?.firstName ?? "user"}</b>
             </span>
@@ -105,6 +108,7 @@ const Nav = () => {
             </Button>
           </div>
         </SignedIn>
+        <MobileMenuButton />
       </div>
     </nav>
   );

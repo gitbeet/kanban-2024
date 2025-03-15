@@ -9,6 +9,9 @@ interface UIProviderProps {
 }
 
 interface UIContextType {
+  //mobile menu
+  showMobileMenu: boolean;
+  setShowMobileMenu: Dispatch<SetStateAction<boolean>>;
   //sidebar
   showSidebar: boolean;
   setShowSidebar: Dispatch<SetStateAction<boolean>>;
@@ -58,6 +61,8 @@ export const useUI = () => {
 };
 
 export const UIProvider: React.FC<UIProviderProps> = ({ children }) => {
+  // mobile menu
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
   // sidebar
   const [showSidebar, setShowSidebar] = useState(true);
   const [sidebarAnimating, setSidebarAnimating] = useState(false);
@@ -84,6 +89,9 @@ export const UIProvider: React.FC<UIProviderProps> = ({ children }) => {
   return (
     <UIContext.Provider
       value={{
+        // mobile menu
+        showMobileMenu,
+        setShowMobileMenu,
         // sidebar
         showSidebar,
         setShowSidebar,
