@@ -36,7 +36,7 @@ const Nav = () => {
         <button
           disabled={sidebarAnimating}
           onClick={handleToggleShowSidebar}
-          className="text-dark ml-32 cursor-pointer text-center text-xl font-bold"
+          className="text-dark cursor-pointer text-center text-xl font-bold md:ml-32"
         >
           {!noBoards && currentBoard?.name}
         </button>

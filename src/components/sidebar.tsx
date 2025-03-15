@@ -27,7 +27,7 @@ const Sidebar = () => {
       tabIndex={showSidebar ? 0 : -1}
       ref={toggleButtonRef}
       onClick={() => setShowSidebar((prev) => !prev)}
-      className="text-secondary--hoverable flex items-center gap-2 pl-5 text-lg disabled:bg-white"
+      className="text-secondary--hoverable flex items-center gap-2 py-3.5 pl-5 text-lg disabled:bg-white"
     >
       <FaEyeSlash />
       <span>Hide sidebar</span>
@@ -40,7 +40,7 @@ const Sidebar = () => {
       ref={outsideButtonRef}
       disabled={sidebarAnimating}
       onClick={() => setShowSidebar((prev) => !prev)}
-      className={` ${showSidebar ? "hidden" : ""} transitionz-colors absolute bottom-24 right-0 translate-x-full cursor-pointer rounded rounded-r-full bg-primary-700 px-5 py-3.5 text-xl text-white duration-150 hover:bg-primary-650`}
+      className={` ${showSidebar ? "hidden" : ""} transitionz-colors absolute bottom-[7dvh] right-0 translate-x-full cursor-pointer rounded rounded-r-full bg-primary-700 px-5 py-3.5 text-xl text-white duration-150 hover:bg-primary-650`}
     >
       <FaEye />
     </button>
@@ -65,7 +65,7 @@ const Sidebar = () => {
         >
           <div className="flex items-center justify-between gap-4">
             <MakeBoardCurrentForm
-              tabIndex={showSidebar ? 1 : -1}
+              tabIndex={showSidebar ? 0 : -1}
               boardName={board.name}
               boardId={board.id}
             />
@@ -89,7 +89,7 @@ const Sidebar = () => {
           clickOutsideDeactivates: true,
         }}
       >
-        <div className="flex h-full flex-col justify-between">
+        <div className="relative flex h-full flex-col justify-between">
           <div>
             <div className="h-8"></div>
             <h2 className="pl-6 text-sm font-bold uppercase text-neutral-500">
@@ -100,11 +100,11 @@ const Sidebar = () => {
               {boards}
               <motion.li layout className="px-4">
                 <div className="h-4"></div>
-                <CreateBoardForm tabIndex={showSidebar ? 1 : -1} />
+                <CreateBoardForm tabIndex={showSidebar ? 0 : -1} />
               </motion.li>
             </motion.ul>
           </div>
-          <div className="px-2 pb-28 pt-16">{toggleButton}</div>
+          <div className="absolute bottom-[7dvh] px-2">{toggleButton}</div>
         </div>
       </FocusTrap>
       {outsideButton}

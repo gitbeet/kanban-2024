@@ -11,9 +11,9 @@ export default function HomePage() {
   const handleRedirectToSignIn = async () => await redirectToSignIn();
   return (
     <>
-      <section className="section-light section-padding relative flex h-[50dvh] flex-col items-center justify-center gap-6 overflow-hidden">
+      <section className="section-light section-padding relative flex min-h-[65dvh] flex-col items-center justify-center gap-8 overflow-hidden py-8">
         <Blobs />
-        <div className="z-[2] flex flex-col items-center gap-6 rounded-md bg-white/5 px-20 py-12 drop-shadow-2xl backdrop-blur-lg dark:bg-neutral-700/15">
+        <div className="z-[2] flex flex-col items-center gap-6 md:rounded-md md:bg-white/5 md:px-20 md:py-12 md:drop-shadow-2xl md:backdrop-blur-lg md:dark:bg-neutral-700/15">
           <h1 className="text-dark text-heading z-10 text-center font-black">
             <span className="text-primary-600">Organize</span> Your work, Your
             Way

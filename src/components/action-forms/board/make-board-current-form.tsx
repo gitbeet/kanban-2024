@@ -8,7 +8,7 @@ import type { MakeBoardCurrentChange } from "~/types";
 import { useUser } from "@clerk/nextjs";
 import { MdDashboard } from "react-icons/md";
 
-interface Props extends HTMLAttributes<HTMLSpanElement> {
+interface Props extends HTMLAttributes<HTMLButtonElement> {
   boardId: string;
   boardName: string;
 }
@@ -64,15 +64,16 @@ const MakeBoardCurrentForm = ({ boardId, boardName, ...props }: Props) => {
   };
 
   return (
-    <span
+    <button
       onClick={clientAction}
-      className={`w-full truncate rounded-r-full px-6 py-3.5 font-bold transition-colors duration-150 ${boardId === currentBoardId ? "bg-primary-700 text-white hover:bg-primary-650" : "text-neutral-350 hover:text-neutral-250"}`}
+      className={`w-full truncate rounded-r-full px-6 py-3.5 font-bold transition-colors duration-150 ${boardId === currentBoardId ? "bg-primary-700 text-white hover:bg-primary-650" : "text-light"} `}
+      {...props}
     >
-      <button className="flex items-center gap-2" {...props}>
+      <p className="flex items-center gap-2">
         <MdDashboard />
         <span> {boardName}</span>
-      </button>
-    </span>
+      </p>
+    </button>
   );
 };
 
