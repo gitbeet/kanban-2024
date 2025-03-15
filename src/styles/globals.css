@@ -32,6 +32,10 @@
   }
 }
 
+.no-scroll {
+  overflow: hidden;
+}
+
 /* ***** TEXT *****  */
 
 .text-dark {
