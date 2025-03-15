@@ -10,10 +10,10 @@ export default function HomePage() {
   const handleRedirectToSignIn = async () => await redirectToSignIn();
   return (
     <>
-      <section className="section-light relative flex h-[50dvh] flex-col items-center justify-center gap-6 overflow-hidden">
-        <div className="blob opacity-40 dark:opacity-10" />
+      <section className="section-light section-padding relative flex h-[50dvh] flex-col items-center justify-center gap-6 overflow-hidden">
+        <div className="blob opacity-20 dark:opacity-10" />
         <div className="z-10 flex flex-col items-center gap-6 rounded-md bg-white/30 px-16 py-8 drop-shadow-lg backdrop-blur-lg dark:bg-neutral-700/30">
-          <h1 className="text-dark z-10 text-center text-6xl font-black">
+          <h1 className="text-dark text-heading z-10 text-center font-black">
             <span className="text-primary-600">Organize</span> Your work, Your
             Way
           </h1>
@@ -32,7 +32,7 @@ export default function HomePage() {
           </SignedOut>
         </div>
       </section>
-      <section className="section-light py-16 text-center">
+      <section className="section-light section-padding py-16 text-center">
         <div className="mx-auto max-w-[1200px] space-y-4">
           <h2 className="text-dark text-3xl font-bold">
             Lorem ipsum dolor sit amet.
@@ -65,7 +65,7 @@ export default function HomePage() {
           </p>
         </div>
       </section>
-      <section className="py-16 text-center">
+      <section className="section-padding py-16 text-center">
         <div className="mx-auto max-w-[1200px] space-y-4">
           <h2 className="text-dark text-3xl font-bold">
             Lorem ipsum dolor sit amet.

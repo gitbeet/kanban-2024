@@ -43,7 +43,7 @@
 }
 
 .text-heading {
-  @apply text-6xl font-black;
+  @apply text-5xl font-black md:text-6xl;
 }
 
 .text-subheading {
@@ -91,7 +91,11 @@
 }
 
 .section-light {
-  @apply bg-light border-color border-y px-8;
+  @apply bg-light border-color border-y;
+}
+
+.section-padding {
+  @apply px-8;
 }
 
 /* ***** ELEMENTS ***** */
