@@ -1,7 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, useTransition } from "react";
-import useClickOutside from "~/hooks/useClickOutside";
+import { useEffect, useRef, useState } from "react";
 import { useBoards } from "~/context/boards-context";
 import { motion } from "framer-motion";
 import { v4 as uuid } from "uuid";
@@ -10,11 +9,10 @@ import { handleCreateTask } from "~/server/queries";
 import { Button, SubmitButton } from "~/components/ui/button/buttons";
 import { FaPlus } from "react-icons/fa6";
 import { TaskSchema } from "~/zod-schemas";
-import type { ChangeEvent, FormEvent, KeyboardEvent } from "react";
+import type { ChangeEvent, FormEvent } from "react";
 import type { TaskType } from "~/types";
 import TextArea from "~/components/ui/text-area";
 import FocusTrap from "focus-trap-react";
-import { handlePressEscape } from "~/utilities/handlePressEscape";
 
 const CreateTaskForm = ({
   boardId,
@@ -29,13 +27,8 @@ const CreateTaskForm = ({
   const [taskName, setTaskName] = useState("");
   const [error, setError] = useState("");
   const [isOpen, setIsOpen] = useState(false);
-  // const [pending, startTransition] = useTransition();
-  // const { ref: clickOutsideRef } =
-  //   useClickOutside<HTMLDivElement>(handleClickOutside);
-
   const { optimisticBoards } = useBoards();
 
-  // Dynamic height for the textarea
   useEffect(() => resizeTextArea(textAreaRef), [taskName, isOpen]);
 
   const currentColumn = optimisticBoards
@@ -47,7 +40,6 @@ const CreateTaskForm = ({
 
   const clientAction = async (e?: FormEvent) => {
     e?.preventDefault();
-    // setIsOpen(false);
     const maxIndex =
       currentColumn.tasks.length < 1
         ? 0
@@ -66,7 +58,6 @@ const CreateTaskForm = ({
 
     const result = TaskSchema.safeParse(newTask);
     if (!result.success) {
-      // setIsOpen(true);
       setError(result.error.issues[0]?.message ?? "An error occured");
       return;
     }
@@ -82,11 +73,9 @@ const CreateTaskForm = ({
       revalidate: true,
     });
     if (response?.error) {
-      // setIsOpen(true);
       setError(response.error);
       return;
     }
-    // textAreaRef.current?.blur();
     setTaskName("");
   };
 
@@ -131,42 +120,35 @@ const CreateTaskForm = ({
           </motion.div>
         )}
         {isOpen && (
-          <div
-          // ref={clickOutsideRef}
-          // onKeyDown={(e: KeyboardEvent<Element>) =>
-          //   handlePressEscape(e, handleClickOutside)
-          // }
+          <form
+            className="flex flex-col gap-2"
+            ref={formRef}
+            onSubmit={clientAction}
           >
-            <form
-              className="flex flex-col gap-2"
-              ref={formRef}
-              onSubmit={clientAction}
-            >
-              <div className="bg-neutral-600 rounded-md p-1.5">
-                <TextArea
-                  autoFocus
-                  ref={textAreaRef}
-                  className="input"
-                  rows={1}
-                  value={taskName}
-                  onChange={handleChange}
-                  handleCancel={handleClickOutside}
-                  handleSubmit={clientAction}
-                  error={error}
-                />
-              </div>
-              <div className="flex items-center gap-2 self-end">
-                <Button
-                  onClick={handleClickOutside}
-                  type="button"
-                  variant="ghost"
-                >
-                  Cancel
-                </Button>
-                <SubmitButton>Add</SubmitButton>
-              </div>
-            </form>
-          </div>
+            <div className="bg-neutral-600 rounded-md p-1.5">
+              <TextArea
+                autoFocus
+                ref={textAreaRef}
+                className="input"
+                rows={1}
+                value={taskName}
+                onChange={handleChange}
+                handleCancel={handleClickOutside}
+                handleSubmit={clientAction}
+                error={error}
+              />
+            </div>
+            <div className="flex items-center gap-2 self-end">
+              <Button
+                onClick={handleClickOutside}
+                type="button"
+                variant="ghost"
+              >
+                Cancel
+              </Button>
+              <SubmitButton>Add</SubmitButton>
+            </div>
+          </form>
         )}
       </div>
     </FocusTrap>
