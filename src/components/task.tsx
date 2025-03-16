@@ -37,7 +37,7 @@ const Task = ({
   // "draggable" is set to false when renaming so the state can be used to hide the menu button while renaming the task
   const menuButtonJsx = draggable && (
     <EditButton
-      className="bg-dark text-light absolute right-2 top-2 z-10 flex !h-6 !w-6 items-center justify-center p-0.5 focus-visible:opacity-100"
+      className="bg-dark text-light absolute right-2 top-2 z-[2] flex !h-6 !w-6 items-center justify-center p-0.5 focus-visible:opacity-100"
       onClick={handleClick}
     />
   );

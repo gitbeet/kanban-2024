@@ -139,7 +139,7 @@ const RenameTaskForm = ({
           <div className="relative">
             {!isOpen && (
               <div
-                className="absolute z-10 h-full w-full opacity-0"
+                className="absolute z-[1] h-full w-full opacity-0"
                 onClick={() => {
                   setIsOpen(true);
                   setNewTaskName(task.name);

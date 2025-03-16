@@ -43,6 +43,10 @@ const EditTaskWindow = ({
     setLoading(true);
     if (newColumnId === columnId && newTaskIndex === task.index)
       return handleClickOutside();
+    const adjustedNewIndex =
+      task.index < newTaskIndex && columnId === newColumnId
+        ? newTaskIndex + 1
+        : newTaskIndex;
     setOptimisticBoards({
       action: "switchTaskColumn",
       boardId: board?.id,
@@ -50,7 +54,7 @@ const EditTaskWindow = ({
       oldColumnId: columnId,
       newColumnId: newColumnId,
       oldColumnIndex: task.index,
-      newColumnIndex: newTaskIndex,
+      newColumnIndex: adjustedNewIndex,
     });
     handleClickOutside();
     const response = await handleSwitchTaskColumn({
@@ -60,7 +64,7 @@ const EditTaskWindow = ({
         oldColumnId: columnId,
         newColumnId: newColumnId,
         oldColumnIndex: task.index,
-        newColumnIndex: newTaskIndex,
+        newColumnIndex: adjustedNewIndex,
       },
       revalidate: true,
     });

@@ -78,6 +78,7 @@ const CreateTaskForm = ({
     }
     setTaskName("");
     formRef.current?.scrollIntoView({ block: "end" });
+    textAreaRef.current?.focus();
   };
 
   const handleChange = (

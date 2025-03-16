@@ -17,8 +17,8 @@ const DropIndicator = ({
       data-before-index={beforeIndex}
       // data-column --> for specifying which indicators we should get (by column)
       data-column-id={columnId}
-      className="h-1.5 w-full rounded-sm bg-primary-600 py-1 opacity-0"
-    />
+      className="relative h-1.5 w-full rounded-sm bg-primary-600 py-1 opacity-0"
+    ></motion.div>
   );
 };
 
