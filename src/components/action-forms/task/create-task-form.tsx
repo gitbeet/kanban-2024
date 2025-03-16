@@ -77,6 +77,7 @@ const CreateTaskForm = ({
       return;
     }
     setTaskName("");
+    formRef.current?.scrollIntoView({ block: "end" });
   };
 
   const handleChange = (
@@ -98,10 +99,9 @@ const CreateTaskForm = ({
       active={isOpen}
       focusTrapOptions={{
         escapeDeactivates: true,
-        onDeactivate: () => {
-          handleClickOutside();
-        },
+        onDeactivate: handleClickOutside,
         allowOutsideClick: true,
+        clickOutsideDeactivates: true,
       }}
     >
       <div>
