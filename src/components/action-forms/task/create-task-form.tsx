@@ -23,15 +23,15 @@ const CreateTaskForm = ({
   boardId: string;
   columnId: string;
 }) => {
-  const textAreaRef = useRef<HTMLTextAreaElement | null>(null);
+  const textAreaRef = useRef<HTMLTextAreaElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
   const { setOptimisticBoards } = useBoards();
   const [taskName, setTaskName] = useState("");
   const [error, setError] = useState("");
   const [isOpen, setIsOpen] = useState(false);
-  const [pending, startTransition] = useTransition();
-  const { ref: clickOutsideRef } =
-    useClickOutside<HTMLDivElement>(handleClickOutside);
+  // const [pending, startTransition] = useTransition();
+  // const { ref: clickOutsideRef } =
+  //   useClickOutside<HTMLDivElement>(handleClickOutside);
 
   const { optimisticBoards } = useBoards();
 
@@ -47,7 +47,7 @@ const CreateTaskForm = ({
 
   const clientAction = async (e?: FormEvent) => {
     e?.preventDefault();
-    setIsOpen(false);
+    // setIsOpen(false);
     const maxIndex =
       currentColumn.tasks.length < 1
         ? 0
@@ -66,17 +66,15 @@ const CreateTaskForm = ({
 
     const result = TaskSchema.safeParse(newTask);
     if (!result.success) {
-      setIsOpen(true);
+      // setIsOpen(true);
       setError(result.error.issues[0]?.message ?? "An error occured");
       return;
     }
-    startTransition(() => {
-      setOptimisticBoards({
-        action: "createTask",
-        boardId,
-        columnId,
-        task: newTask,
-      });
+    setOptimisticBoards({
+      action: "createTask",
+      boardId,
+      columnId,
+      task: newTask,
     });
 
     const response = await handleCreateTask({
@@ -84,11 +82,11 @@ const CreateTaskForm = ({
       revalidate: true,
     });
     if (response?.error) {
-      setIsOpen(true);
+      // setIsOpen(true);
       setError(response.error);
       return;
     }
-    textAreaRef.current?.blur();
+    // textAreaRef.current?.blur();
     setTaskName("");
   };
 
@@ -107,28 +105,37 @@ const CreateTaskForm = ({
   }
 
   return (
-    <>
-      {!isOpen && (
-        <motion.div layout className="pt-2">
-          <Button
-            variant="text"
-            onClick={() => setIsOpen(true)}
-            className="!px-0"
-          >
-            <div className="text-secondary--hoverable flex items-center gap-1">
-              <FaPlus className="h-3 w-3" />
-              <span>Add a task</span>
-            </div>
-          </Button>
-        </motion.div>
-      )}
-      {isOpen && (
-        <FocusTrap active={isOpen}>
+    <FocusTrap
+      active={isOpen}
+      focusTrapOptions={{
+        escapeDeactivates: true,
+        onDeactivate: () => {
+          handleClickOutside();
+        },
+        allowOutsideClick: true,
+      }}
+    >
+      <div>
+        {!isOpen && (
+          <motion.div layout className="pt-2">
+            <Button
+              variant="text"
+              onClick={() => setIsOpen(true)}
+              className="!px-0"
+            >
+              <div className="text-secondary--hoverable flex items-center gap-1">
+                <FaPlus className="h-3 w-3" />
+                <span>Add a task</span>
+              </div>
+            </Button>
+          </motion.div>
+        )}
+        {isOpen && (
           <div
-            ref={clickOutsideRef}
-            onKeyDown={(e: KeyboardEvent<Element>) =>
-              handlePressEscape(e, handleClickOutside)
-            }
+          // ref={clickOutsideRef}
+          // onKeyDown={(e: KeyboardEvent<Element>) =>
+          //   handlePressEscape(e, handleClickOutside)
+          // }
           >
             <form
               className="flex flex-col gap-2"
@@ -160,9 +167,9 @@ const CreateTaskForm = ({
               </div>
             </form>
           </div>
-        </FocusTrap>
-      )}
-    </>
+        )}
+      </div>
+    </FocusTrap>
   );
 };
 
