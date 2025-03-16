@@ -43,7 +43,14 @@ const MobileMenu = () => {
       </ul>
       <SignedOut>
         <div>
-          <Button onClick={handleRedirectToSignIn}>Sign in</Button>
+          <Button
+            onClick={async () => {
+              setShowMobileMenu(false);
+              await handleRedirectToSignIn();
+            }}
+          >
+            Sign in
+          </Button>
         </div>
       </SignedOut>
       <SignedIn>
@@ -51,7 +58,13 @@ const MobileMenu = () => {
           <span className="text-light">
             Hello, <b className="text-dark">{user?.firstName ?? "user"}</b>
           </span>
-          <Button variant="ghost" onClick={handleSignOut}>
+          <Button
+            variant="ghost"
+            onClick={async () => {
+              setShowMobileMenu(false);
+              await handleSignOut();
+            }}
+          >
             Sign out
           </Button>
         </div>
