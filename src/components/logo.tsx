@@ -1,6 +1,5 @@
-import Link from "next/link";
 import { usePathname } from "next/navigation";
-import React from "react";
+import Link from "next/link";
 
 const Logo = () => {
   const pathname = usePathname();
@@ -19,7 +18,7 @@ const Logo = () => {
           className="text-dark grid h-8 w-8 place-content-center rounded bg-primary-650 text-center text-2xl font-extrabold md:hidden"
         >
           <div>
-            <h1>t</h1>
+            <h1 className="text-white">t</h1>
           </div>
         </Link>
       )}
