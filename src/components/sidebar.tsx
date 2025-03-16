@@ -9,8 +9,6 @@ import CreateBoardForm from "./action-forms/board/create-board-form";
 import MakeBoardCurrentForm from "./action-forms/board/make-board-current-form";
 import FocusTrap from "focus-trap-react";
 import { useRef } from "react";
-import ThemeSwitch from "./theme-switch";
-import ThemeSwitchUpdated from "./theme-switch-updated";
 
 const Sidebar = () => {
   const { showSidebar, setShowSidebar, setSidebarAnimating, sidebarAnimating } =

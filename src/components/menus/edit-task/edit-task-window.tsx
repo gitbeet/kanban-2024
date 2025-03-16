@@ -28,7 +28,8 @@ const EditTaskWindow = ({
   } = useUI();
 
   const moreButtonRef = useRef<HTMLButtonElement>(null);
-  const [currentColumnId, setCurrentColumnId] = useState(columnId);
+  const [newColumnId, setNewColumnId] = useState(columnId);
+  const [newTaskIndex, setNewTaskIndex] = useState(task.index);
 
   const board = getCurrentBoard();
 
@@ -38,36 +39,28 @@ const EditTaskWindow = ({
     setShowEditTaskMenu(false);
   };
 
-  const handleColumnChange = async (e: ChangeEvent<HTMLSelectElement>) => {
-    e.preventDefault();
+  const handleColumnChange = async () => {
     setLoading(true);
-    setCurrentColumnId(e.target.value);
-    const newColumnIndex =
-      (board?.columns.find((col) => col.id === e.target.value)?.tasks.length ??
-        0) + 1;
-
-    setEditedTask((prev) => ({ ...prev, columnId: e.target.value }));
-
-    startTransition(() => {
-      setOptimisticBoards({
-        action: "switchTaskColumn",
-        boardId: board?.id,
-        taskId: task.id,
-        oldColumnId: columnId,
-        newColumnId: e.target.value,
-        oldColumnIndex: task.index,
-        newColumnIndex,
-      });
+    if (newColumnId === columnId && newTaskIndex === task.index)
+      return handleClickOutside();
+    setOptimisticBoards({
+      action: "switchTaskColumn",
+      boardId: board?.id,
+      taskId: task.id,
+      oldColumnId: columnId,
+      newColumnId: newColumnId,
+      oldColumnIndex: task.index,
+      newColumnIndex: newTaskIndex,
     });
-
+    handleClickOutside();
     const response = await handleSwitchTaskColumn({
       change: {
         action: "switchTaskColumn",
         taskId: task.id,
         oldColumnId: columnId,
-        newColumnId: e.target.value,
+        newColumnId: newColumnId,
         oldColumnIndex: task.index,
-        newColumnIndex,
+        newColumnIndex: newTaskIndex,
       },
       revalidate: true,
     });
@@ -89,6 +82,19 @@ const EditTaskWindow = ({
         y: moreButtonRef.current?.getBoundingClientRect().top ?? 0,
       }}
     />
+  );
+
+  let positionsAvailable = board?.columns.find((col) => col.id === newColumnId)
+    ?.tasks.length;
+  if (
+    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+    (newColumnId !== task.columnId && positionsAvailable) ||
+    positionsAvailable === 0
+  )
+    positionsAvailable++;
+  const positionsArr = Array.from(
+    { length: positionsAvailable ?? 1 },
+    (e, i) => i,
   );
 
   return (
@@ -149,8 +155,8 @@ const EditTaskWindow = ({
           <div className="h-4" />
           <select
             disabled={pending || loading}
-            onChange={(e) => handleColumnChange(e)}
-            value={currentColumnId}
+            onChange={(e) => setNewColumnId(e.target.value)}
+            value={newColumnId}
           >
             {board?.columns?.map((c) => (
               <option key={c.id} value={c.id}>
@@ -159,7 +165,27 @@ const EditTaskWindow = ({
             ))}
           </select>
         </div>
-        <Button onClick={handleClickOutside}>Close</Button>
+        <div>
+          <h4 className="text-dark text-sm font-bold">Position</h4>
+          <div className="h-4" />
+          <select
+            disabled={pending || loading}
+            onChange={(e) => setNewTaskIndex(parseInt(e.target.value))}
+            value={newTaskIndex}
+          >
+            {positionsArr.map((c) => (
+              <option key={c + 1} value={c + 1}>
+                {c + 1}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="flex flex-col gap-4">
+          <Button onClick={handleColumnChange}>Save changes</Button>
+          <Button variant="danger" onClick={handleClickOutside}>
+            Close
+          </Button>
+        </div>
       </ModalWithBackdrop>
     </>
   );
