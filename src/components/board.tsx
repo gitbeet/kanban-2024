@@ -7,6 +7,8 @@ import { LoadingPage } from "./ui/loading-spinner";
 import Column from "../components/column";
 import DeleteTaskZone from "./delete-task-zone";
 import CreateColumnForm from "./action-forms/column/create-column-form";
+import { BoardsNav } from "./layout/boards-nav";
+import BoardsSettings from "./menus/boards-settings";
 
 const Board = () => {
   const { optimisticBoards, loading, getCurrentBoard } = useBoards();
@@ -30,7 +32,7 @@ const Board = () => {
   if (!currentBoard?.id) return <LoadingPage />;
 
   const emptyBoardJsx = (
-    <section className="grid w-full place-content-center">
+    <section className="relative z-[2] grid w-full place-content-center">
       <h1 className="text-dark w-full text-center text-3xl font-bold">
         This board is empty
       </h1>
@@ -39,30 +41,34 @@ const Board = () => {
   );
 
   const boardJsx = (
-    <motion.section
-      layout
-      // Key prop for framer-motion
-      key={currentBoard.id}
-      className="grid grow grid-rows-[1fr,auto] overflow-auto"
-      tabIndex={-1}
-    >
-      <motion.div className="flex p-8">
-        {currentBoard?.columns
-          .sort((a, b) => a.index - b.index)
-          .map((col) => (
-            <Column key={col.index} boardId={currentBoard.id} column={col} />
-          ))}
+    <motion.div className="relative grow overflow-hidden">
+      <BoardsNav />
+      <BoardsSettings />
+      <motion.section
+        layout
+        // Key prop for framer-motion
+        key={currentBoard.id}
+        className="grid h-full grow grid-rows-[1fr,auto] overflow-auto pt-12"
+        tabIndex={-1}
+      >
+        <motion.div className="flex items-start gap-4 p-8">
+          {currentBoard?.columns
+            .sort((a, b) => a.index - b.index)
+            .map((col) => (
+              <Column key={col.index} boardId={currentBoard.id} column={col} />
+            ))}
 
-        <motion.div layout className="h-96 px-3">
-          <CreateColumnForm
-            className="menu-bg h-32 w-80 shrink-0"
-            boardId={currentBoard.id}
-          />
-          <div className="h-4" />
-          <DeleteTaskZone />
+          <motion.div layout className="relative z-[2] h-96 px-3">
+            <CreateColumnForm
+              className="bg-light__test h-32 w-80 shrink-0 overflow-hidden rounded-md"
+              boardId={currentBoard.id}
+            />
+            <div className="h-4" />
+            <DeleteTaskZone />
+          </motion.div>
         </motion.div>
-      </motion.div>
-    </motion.section>
+      </motion.section>
+    </motion.div>
   );
 
   const isBoardEmpty = currentBoard?.columns.length === 0;

@@ -48,12 +48,24 @@
   @apply border-neutral-100 dark:border-neutral-700;
 }
 
+.border-color__test {
+  @apply border-neutral-100 dark:border-neutral-700;
+}
+
 .bg-dark {
-  @apply bg-neutral-100 dark:bg-neutral-850;
+  @apply bg-neutral-100 dark:bg-neutral-800;
 }
 
 .bg-light {
-  @apply bg-neutral-50 dark:bg-neutral-800;
+  @apply bg-neutral-50 dark:bg-neutral-750;
+}
+
+.bg-light__test {
+  @apply bg-neutral-50/60 backdrop-blur dark:bg-neutral-950/85;
+}
+
+.bg-light__test-2 {
+  @apply bg-neutral-50/80 backdrop-blur-sm dark:bg-neutral-850/90;
 }
 
 .task-bg,

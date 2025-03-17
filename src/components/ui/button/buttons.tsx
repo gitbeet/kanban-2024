@@ -7,6 +7,7 @@ import { forwardRef, type ButtonHTMLAttributes } from "react";
 import { MdClose, MdEdit } from "react-icons/md";
 import { LoadingPage } from "../loading-spinner";
 import { BsThreeDotsVertical } from "react-icons/bs";
+import { IoSettingsSharp } from "react-icons/io5";
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: "primary" | "ghost" | "text" | "danger";
@@ -67,6 +68,13 @@ const IconButton = ({
   );
 };
 
+export const SettingsButton = (
+  props: ButtonHTMLAttributes<HTMLButtonElement>,
+) => (
+  <IconButton {...props}>
+    <IoSettingsSharp className="h-full w-full" />
+  </IconButton>
+);
 export const EditButton = (props: ButtonHTMLAttributes<HTMLButtonElement>) => (
   <IconButton {...props}>
     <MdEdit className="h-full w-full" />

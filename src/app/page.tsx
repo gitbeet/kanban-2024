@@ -33,7 +33,7 @@ export default function HomePage() {
           </SignedOut>
         </div>
       </section>
-      <section className="section-light section-padding py-16 text-center">
+      <section className="section-padding py-16 text-center">
         <div className="mx-auto max-w-[1200px] space-y-4">
           <h2 className="text-dark text-3xl font-bold">
             Lorem ipsum dolor sit amet.
@@ -66,7 +66,7 @@ export default function HomePage() {
           </p>
         </div>
       </section>
-      <section className="section-padding py-16 text-center">
+      <section className="section-light section-padding py-16 text-center">
         <div className="mx-auto max-w-[1200px] space-y-4">
           <h2 className="text-dark text-3xl font-bold">
             Lorem ipsum dolor sit amet.

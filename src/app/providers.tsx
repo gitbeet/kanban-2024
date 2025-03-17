@@ -3,6 +3,7 @@
 import { ClerkProvider } from "@clerk/nextjs";
 import { shadesOfPurple } from "@clerk/themes";
 import { ThemeProvider } from "next-themes";
+import { BackgroundProvider } from "~/context/bg-context";
 import { BoardsProvider } from "~/context/boards-context";
 import { UIProvider } from "~/context/ui-context";
 import { type BoardType } from "~/types";
@@ -21,9 +22,11 @@ const Providers = ({
       }}
     >
       <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-        <UIProvider>
-          <BoardsProvider boards={boards}>{children}</BoardsProvider>
-        </UIProvider>
+        <BackgroundProvider>
+          <UIProvider>
+            <BoardsProvider boards={boards}>{children}</BoardsProvider>
+          </UIProvider>
+        </BackgroundProvider>
       </ThemeProvider>
     </ClerkProvider>
   );

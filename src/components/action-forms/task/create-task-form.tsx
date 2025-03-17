@@ -105,7 +105,7 @@ const CreateTaskForm = ({
         clickOutsideDeactivates: true,
       }}
     >
-      <div>
+      <div className="relative z-[1]">
         {!isOpen && (
           <motion.div layout className="pt-2">
             <Button

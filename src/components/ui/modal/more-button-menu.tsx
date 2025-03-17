@@ -19,6 +19,7 @@ const MoreButtonMenu = ({
       showBackdrop={showBackdrop}
       onClose={onClose}
       className="!w-fit !p-4"
+      {...props}
     >
       <div className="flex w-max flex-col gap-2">{props.children}</div>
     </ModalWithBackdropAndPosition>

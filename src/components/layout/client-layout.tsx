@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import Menus from "../menus/menus";
 import Nav from "./nav";
 import Footer from "./footer";
+import Background from "../background";
 
 const ClientLayout = ({ children }: { children: React.ReactNode }) => {
   const pathname = usePathname();
@@ -13,6 +14,7 @@ const ClientLayout = ({ children }: { children: React.ReactNode }) => {
       <div
         className={` ${isBoardsPage ? "flex h-[100dvh] flex-col" : "mx-auto flex min-h-screen flex-col justify-between"} bg-dark text-white`}
       >
+        <Background />
         <Nav />
         {children}
         {!isBoardsPage && <Footer />}

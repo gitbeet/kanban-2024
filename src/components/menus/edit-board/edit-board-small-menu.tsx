@@ -25,6 +25,7 @@ const EditBoardSmallMenu = ({
       showBackdrop={showEditBoardWindow && !showConfirmDeleteBoardWindow}
       onClose={() => setShowEditBoardWindow(false)}
       zIndex={40}
+      align="right"
     >
       <Button onClick={() => setShowEditBoardMenu(true)} variant="ghost">
         Edit Board

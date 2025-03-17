@@ -10,6 +10,7 @@ export default {
   theme: {
     colors: {
       "neutral-950": "hsl(237, 50%, 4%)",
+      "neutral-900": "hsl(235, 16%, 13%)",
       "neutral-850": "hsl(235, 16%, 15%)",
       "neutral-800": "hsl(235, 14%, 20%)",
       "neutral-750": "hsl(235, 15%, 23%)",

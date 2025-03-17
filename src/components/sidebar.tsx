@@ -9,6 +9,7 @@ import CreateBoardForm from "./action-forms/board/create-board-form";
 import MakeBoardCurrentForm from "./action-forms/board/make-board-current-form";
 import FocusTrap from "focus-trap-react";
 import { useRef } from "react";
+import { FaChevronRight } from "react-icons/fa";
 
 const Sidebar = () => {
   const { showSidebar, setShowSidebar, setSidebarAnimating, sidebarAnimating } =
@@ -25,7 +26,7 @@ const Sidebar = () => {
       tabIndex={showSidebar ? 0 : -1}
       ref={toggleButtonRef}
       onClick={() => setShowSidebar((prev) => !prev)}
-      className="text-secondary--hoverable flex items-center gap-2 py-3.5 pl-5 text-lg disabled:bg-white"
+      className="text-secondary--hoverable flex items-center gap-2 py-3.5 text-lg disabled:bg-white"
     >
       <FaEyeSlash />
       <span>Hide sidebar</span>
@@ -34,15 +35,27 @@ const Sidebar = () => {
 
   const outsideButton = (
     <button
-      tabIndex={showSidebar ? -1 : 0}
+      // tabIndex={showSidebar ? -1 : 0}
       ref={outsideButtonRef}
       disabled={sidebarAnimating}
       onClick={() => setShowSidebar((prev) => !prev)}
-      className={` ${showSidebar ? "hidden" : ""} transitionz-colors absolute bottom-[7dvh] right-0 translate-x-full cursor-pointer rounded rounded-r-full bg-primary-700 px-5 py-3.5 text-xl text-white duration-150 hover:bg-primary-650`}
+      className={`transitionz-colors absolute right-2 top-1.5 translate-x-full cursor-pointer rounded bg-primary-700 p-2 text-white`}
     >
-      <FaEye />
+      <FaChevronRight className={showSidebar ? "rotate-180" : ""} />
     </button>
   );
+
+  // const outsideButton = (
+  //   <button
+  //     tabIndex={showSidebar ? -1 : 0}
+  //     ref={outsideButtonRef}
+  //     disabled={sidebarAnimating}
+  //     onClick={() => setShowSidebar((prev) => !prev)}
+  //     className={` ${showSidebar ? "hidden" : ""} transitionz-colors absolute bottom-[7dvh] right-0 translate-x-full cursor-pointer rounded rounded-r-full bg-primary-700 px-5 py-3.5 text-xl text-white duration-150 hover:bg-primary-650`}
+  //   >
+  //     <FaEye />
+  //   </button>
+  // );
 
   const boards = optimisticBoards
     .sort((a, b) => a.index - b.index)
@@ -76,13 +89,13 @@ const Sidebar = () => {
     <motion.section
       onTransitionStart={() => setSidebarAnimating(true)}
       onTransitionEnd={() => setSidebarAnimating(false)}
-      className={`relative z-[5] ${showSidebar ? "ml-0 translate-x-0" : "-mr-64 -translate-x-64"} bg-light w-64 shrink-0 border-b border-r shadow-md transition-all duration-300 dark:border-neutral-750`}
+      className={`relative z-[5] ${showSidebar ? "ml-0 translate-x-0" : "-mr-60 -translate-x-60"} bg-light__test-2 border-color__test w-64 shrink-0 border-r shadow-md transition-all duration-300 dark:border-neutral-750`}
     >
       <FocusTrap
         active={showSidebar}
         focusTrapOptions={{
           escapeDeactivates: true,
-          initialFocus: () => toggleButtonRef.current,
+          initialFocus: () => outsideButtonRef.current,
           allowOutsideClick: true,
           clickOutsideDeactivates: true,
         }}
@@ -102,10 +115,12 @@ const Sidebar = () => {
               </motion.li>
             </motion.ul>
           </div>
-          <div className="absolute bottom-[7dvh] px-2">{toggleButton}</div>
+          {/* <div className="absolute bottom-[7dvh] space-y-4 pl-5 pr-2">
+            {toggleButton}
+          </div> */}
+          {outsideButton}
         </div>
       </FocusTrap>
-      {outsideButton}
     </motion.section>
   );
 };
