@@ -21,7 +21,7 @@ const Background = () => {
       {resolvedBackground?.type === "image" && (
         <Image
           style={{ opacity: imageOpacity / 100 }}
-          className="z-10 object-cover opacity-80 dark:opacity-60"
+          className="z-10 h-full object-cover object-center opacity-80 dark:opacity-60"
           src={resolvedBackground.value ?? ""}
           alt="text for the image"
         />
