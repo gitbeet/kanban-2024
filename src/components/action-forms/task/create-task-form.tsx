@@ -112,6 +112,7 @@ const CreateTaskForm = ({
               variant="text"
               onClick={() => setIsOpen(true)}
               className="!px-0"
+              size="small"
             >
               <div className="text-secondary--hoverable flex items-center gap-1">
                 <FaPlus className="h-3 w-3" />
@@ -141,13 +142,14 @@ const CreateTaskForm = ({
             </div>
             <div className="flex items-center gap-2 self-end">
               <Button
+                size="small"
                 onClick={handleClickOutside}
                 type="button"
                 variant="ghost"
               >
                 Cancel
               </Button>
-              <SubmitButton>Add</SubmitButton>
+              <SubmitButton size="small">Add</SubmitButton>
             </div>
           </form>
         )}

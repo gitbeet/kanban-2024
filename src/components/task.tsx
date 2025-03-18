@@ -56,7 +56,7 @@ const Task = ({
         layoutId={task.id}
         onDragStart={(e) => handleDragStart(e, task, columnId)}
         draggable={draggable}
-        className="task-bg group relative flex shrink-0 cursor-grab flex-col gap-1 rounded-lg p-2.5 font-bold"
+        className="task-bg group relative flex shrink-0 cursor-grab flex-col gap-1 rounded-lg p-1.5"
       >
         <RenameTaskForm
           setDraggable={setDraggable}

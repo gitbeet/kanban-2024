@@ -35,7 +35,7 @@ const Board = () => {
     <section className="relative z-[2] grid w-full place-content-center">
       <BoardsNav />
       <BoardsSettings />
-      <div className="bg-light__test rounded-md px-4 pt-8">
+      <div className="bg-light__test rounded-md px-4 pt-8 drop-shadow-lg">
         <h1 className="text-dark w-full text-center text-3xl font-bold">
           This board is empty
         </h1>
@@ -62,9 +62,9 @@ const Board = () => {
               <Column key={col.index} boardId={currentBoard.id} column={col} />
             ))}
 
-          <motion.div layout className="relative z-[2] h-96 px-3">
+          <motion.div layout className="relative z-[2] h-96">
             <CreateColumnForm
-              className="bg-light__test h-32 w-80 shrink-0 overflow-hidden rounded-md"
+              className="bg-light__test h-32 w-80 shrink-0 overflow-hidden rounded-md drop-shadow-lg"
               boardId={currentBoard.id}
             />
             <div className="h-4" />

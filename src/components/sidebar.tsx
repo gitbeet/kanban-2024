@@ -4,7 +4,7 @@ import { useBoards } from "~/context/boards-context";
 import { useUI } from "~/context/ui-context";
 import { motion } from "framer-motion";
 import useHasMounted from "~/hooks/useHasMounted";
-import { FaEye, FaEyeSlash } from "react-icons/fa6";
+import { FaEyeSlash } from "react-icons/fa6";
 import CreateBoardForm from "./action-forms/board/create-board-form";
 import MakeBoardCurrentForm from "./action-forms/board/make-board-current-form";
 import FocusTrap from "focus-trap-react";
@@ -39,7 +39,7 @@ const Sidebar = () => {
       ref={outsideButtonRef}
       disabled={sidebarAnimating}
       onClick={() => setShowSidebar((prev) => !prev)}
-      className={`transitionz-colors absolute right-2 top-1.5 translate-x-full cursor-pointer rounded bg-primary-700 p-2 text-white`}
+      className={`transitionz-colors bg-dark text-dark absolute right-2 top-1.5 translate-x-full cursor-pointer rounded border border-neutral-250 p-2 text-sm text-white shadow dark:border-neutral-500`}
     >
       <FaChevronRight className={showSidebar ? "rotate-180" : ""} />
     </button>
@@ -89,7 +89,7 @@ const Sidebar = () => {
     <motion.section
       onTransitionStart={() => setSidebarAnimating(true)}
       onTransitionEnd={() => setSidebarAnimating(false)}
-      className={`relative z-[5] ${showSidebar ? "ml-0 translate-x-0" : "-mr-60 -translate-x-60"} bg-light__test-2 border-color__test w-64 shrink-0 border-r shadow-md transition-all duration-300 dark:border-neutral-750`}
+      className={`relative z-[5] ${showSidebar ? "ml-0 translate-x-0" : "-mr-52 -translate-x-52"} bg-light__test-2 border-color__test w-56 shrink-0 border-r shadow-md transition-all duration-300 dark:border-neutral-750`}
     >
       <FocusTrap
         active={showSidebar}

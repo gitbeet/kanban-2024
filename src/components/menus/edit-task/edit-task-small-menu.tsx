@@ -46,7 +46,9 @@ const EditTaskSmallMenu = ({
           Edit task
         </Button>
         <Button
-          onClick={() => setShowConfirmDeleteTaskWindow(true)}
+          onClick={() => {
+            setShowConfirmDeleteTaskWindow(true);
+          }}
           variant="danger"
         >
           Delete task

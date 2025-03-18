@@ -12,15 +12,17 @@ import { IoSettingsSharp } from "react-icons/io5";
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: "primary" | "ghost" | "text" | "danger";
   loading?: boolean;
+  size?: "small" | "base";
 }
 
 export const Button = ({
   children,
   variant = "primary",
+  size = "base",
   loading,
   ...props
 }: ButtonProps) => {
-  const variantClasses = `${variant === "primary" ? "border-transparent bg-primary-700 hover:bg-primary-650 text-neutral-50 hover:text-white shadow-md" : variant === "ghost" ? "border-neutral-350 bg-transparent text-neutral-850 hover:text-neutral-950 hover:border-neutral-500 dark:border-neutral-650 dark:text-neutral-50 dark:hover:border-neutral-500" : variant === "text" ? "border-transparent" : variant === "danger" ? "bg-danger-400 text-white border-transparent hover:bg-danger-300" : ""} transition-colors--default`;
+  const variantClasses = `${variant === "primary" ? "border-transparent bg-primary-700 hover:bg-primary-650 text-neutral-50 hover:text-white shadow-md" : variant === "ghost" ? "border-neutral-350 bg-transparent text-neutral-850 hover:text-neutral-950 hover:border-neutral-500 dark:border-neutral-650 dark:text-neutral-50 dark:hover:border-neutral-500" : variant === "text" ? "border-transparent" : variant === "danger" ? "bg-danger-400 text-white border-transparent hover:bg-danger-300" : ""} ${size === "small" ? "text-sm" : ""} transition-colors--default `;
 
   return (
     <button

@@ -43,7 +43,7 @@ export const colorBackgrounds: ColorBackground[] = [
     type: "color",
     slug: "default",
     title: "Default",
-    value: "bg-neutral-250 dark:bg-neutral-950/30",
+    value: "bg-neutral-250 dark:bg-neutral-750",
     alt: "Default color",
   },
   {
@@ -102,8 +102,8 @@ export const useBackground = () => {
 };
 
 export const BackgroundProvider: React.FC<UIProviderProps> = ({ children }) => {
-  const [background, setBackground] = useState("aurora");
-  const [imageOpacity, setImageOpacity] = useState(75);
+  const [background, setBackground] = useState("taskly");
+  const [imageOpacity, setImageOpacity] = useState(100);
 
   return (
     <BackgoundContext.Provider

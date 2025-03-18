@@ -46,7 +46,7 @@ export default function ThemeSwitchUpdated({
     );
 
   return (
-    <div className="bg-dark border-color w-fit rounded-full border p-1.5 shadow-sm">
+    <div className="bg-dark border-color w-fit rounded-full border p-1.5 drop-shadow">
       <button
         tabIndex={tabIndex}
         onClick={() => setTheme("system")}

@@ -4,17 +4,15 @@ import { useState, useTransition } from "react";
 import { useBoards } from "~/context/boards-context";
 import { handleDeleteTask } from "~/server/queries";
 import { FaTrash } from "react-icons/fa";
+import { useUI } from "~/context/ui-context";
 
 const DeleteTaskZone = () => {
-  const { setOptimisticBoards } = useBoards();
-  const [isPending, startTransition] = useTransition();
-
-  const [active, setActive] = useState(false);
-  const [error, setError] = useState("");
-
   const { getCurrentBoard } = useBoards();
+  const [active, setActive] = useState(false);
 
   const currentBoardId = getCurrentBoard()?.id;
+
+  const { setShowConfirmDeleteTaskWindow, setEditedTask } = useUI();
 
   if (!currentBoardId)
     return <h1>currentBoardId not found (placeholder error)</h1>;
@@ -32,30 +30,11 @@ const DeleteTaskZone = () => {
   const handleDragEnd = async (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     const taskId = e.dataTransfer.getData("taskId");
-    // const taskIndex = e.dataTransfer.getData("taskIndex");
     const columnId = e.dataTransfer.getData("columnId");
 
-    // TODO: Client side check needed?
-    startTransition(() => {
-      setOptimisticBoards({
-        action: "deleteTask",
-        boardId: currentBoardId,
-        columnId,
-        taskId,
-      });
-    });
+    setEditedTask({ columnId, taskId });
+    setShowConfirmDeleteTaskWindow(true);
     setActive(false);
-
-    // TODO: Display error
-    const response = await handleDeleteTask({
-      change: { action: "deleteTask", taskId },
-      revalidate: true,
-    });
-    if (response?.error) {
-      setError(response.error);
-      console.log(error);
-      return;
-    }
   };
 
   return (
@@ -63,7 +42,7 @@ const DeleteTaskZone = () => {
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
       onDrop={handleDragEnd}
-      className={`grid h-48 w-80 place-content-center rounded-md border shadow-md ${active ? "border-danger-300 bg-danger-300/60 dark:bg-danger-600/50" : "bg-light__test border-transparent"} relative z-[2]`}
+      className={`grid h-48 w-80 place-content-center rounded-md border drop-shadow-lg ${active ? "border-danger-300 bg-danger-300/60 dark:bg-danger-600/70" : "bg-light__test border-transparent"} relative z-[2]`}
     >
       <FaTrash
         className={`${active ? "text-danger-300" : "text-light"} h-6 w-6`}

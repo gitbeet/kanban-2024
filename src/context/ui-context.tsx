@@ -68,7 +68,7 @@ export const UIProvider: React.FC<UIProviderProps> = ({ children }) => {
   // mobile menu
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   // sidebar
-  const [showSidebar, setShowSidebar] = useState(true);
+  const [showSidebar, setShowSidebar] = useState(false);
   const [sidebarAnimating, setSidebarAnimating] = useState(false);
   // /boards settings
   const [showBoardsSettings, setShowBoardsSettings] = useState(false);

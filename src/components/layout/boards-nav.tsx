@@ -22,9 +22,9 @@ export const BoardsNav = () => {
   };
   return (
     <div
-      className={`section-padding absolute flex w-full grow items-center justify-between bg-neutral-50/50 py-2 shadow backdrop-blur-md dark:bg-neutral-850/40`}
+      className={`section-padding absolute flex w-full grow items-center justify-between bg-neutral-50/50 py-2 drop-shadow-md backdrop-blur-md dark:bg-neutral-850/40`}
     >
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-4 pl-6">
         {currentBoard && (
           <>
             {/* 3 dots button */}

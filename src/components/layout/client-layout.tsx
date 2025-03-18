@@ -12,7 +12,7 @@ const ClientLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <>
       <div
-        className={` ${isBoardsPage ? "flex h-[100dvh] flex-col" : "mx-auto flex min-h-screen flex-col justify-between"} bg-dark text-white`}
+        className={` ${isBoardsPage ? "relative flex h-[100dvh] flex-col" : "mx-auto flex min-h-screen flex-col justify-between"} bg-dark text-white`}
       >
         <Background />
         <Nav />

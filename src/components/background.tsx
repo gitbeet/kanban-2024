@@ -11,7 +11,7 @@ const Background = () => {
   const resolvedBackground = backgrounds.find((b) => b.slug === background);
   if (!resolvedBackground) return null;
   return (
-    <div className="pointer-events-none absolute z-0 h-full w-screen overflow-hidden">
+    <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
       {resolvedBackground?.type === "color" && (
         <div
           style={{ opacity: imageOpacity / 100 }}
@@ -21,7 +21,7 @@ const Background = () => {
       {resolvedBackground?.type === "image" && (
         <Image
           style={{ opacity: imageOpacity / 100 }}
-          className="z-10 h-full object-cover object-center opacity-80 dark:opacity-60"
+          className="z-10 min-h-full object-cover object-center opacity-80 dark:opacity-60"
           src={resolvedBackground.value ?? ""}
           alt="text for the image"
         />

@@ -66,12 +66,12 @@ const MakeBoardCurrentForm = ({ boardId, boardName, ...props }: Props) => {
   return (
     <button
       onClick={clientAction}
-      className={`w-full truncate rounded-r-full px-6 py-3.5 font-bold transition-colors duration-150 ${boardId === currentBoardId ? "bg-primary-700 text-white hover:bg-primary-650" : "text-light"} `}
+      className={`w-full rounded-r-full px-6 py-3.5 transition-colors duration-150 ${boardId === currentBoardId ? "bg-primary-700 text-white hover:bg-primary-650" : "text-light"} text-sm font-semibold`}
       {...props}
     >
       <p className="flex items-center gap-2">
         <MdDashboard />
-        <span> {boardName}</span>
+        <span className="truncate"> {boardName}</span>
       </p>
     </button>
   );

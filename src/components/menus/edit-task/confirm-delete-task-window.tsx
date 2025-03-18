@@ -13,8 +13,6 @@ const ConfirmDeleteTaskWindow = ({
 }) => {
   const {
     showConfirmDeleteTaskWindow,
-    showEditTaskMenu,
-    showEditTaskSmallMenu,
     setShowConfirmDeleteTaskWindow,
     setShowEditTaskMenu,
     setShowEditTaskWindow,
@@ -28,23 +26,26 @@ const ConfirmDeleteTaskWindow = ({
     setShowEditTaskSmallMenu(false);
   };
 
+  const handleCloseModal = () => {
+    setShowConfirmDeleteTaskWindow(false);
+  };
+
+  const displayedTaskName =
+    task.name.length > 30 ? `${task.name.slice(0, 30)}...` : task.name;
+
   return (
     <>
       <PromptWindow
         zIndex={40}
-        showBackdrop={
-          showConfirmDeleteTaskWindow &&
-          showEditTaskMenu &&
-          showEditTaskSmallMenu
-        }
+        showBackdrop={showConfirmDeleteTaskWindow}
         show={showConfirmDeleteTaskWindow}
-        onClose={() => setShowConfirmDeleteTaskWindow(false)}
+        onClose={handleCloseModal}
         message={
-          <span>
+          <>
             Are you sure you want to delete the ‘
-            <span className="font-bold">{task.name}</span>’ task and its
+            <span className="font-bold">{displayedTaskName}</span>’ task and its
             subtasks? This action cannot be reversed.
-          </span>
+          </>
         }
         confirmButton={
           <DeleteTaskForm
@@ -58,10 +59,7 @@ const ConfirmDeleteTaskWindow = ({
           </DeleteTaskForm>
         }
         cancelButton={
-          <Button
-            onClick={() => setShowConfirmDeleteTaskWindow(false)}
-            variant="ghost"
-          >
+          <Button onClick={handleCloseModal} variant="ghost">
             Cancel
           </Button>
         }

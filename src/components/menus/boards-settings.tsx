@@ -11,15 +11,15 @@ import OpacitySlider from "../opacity-slider";
 
 const BoardsSettings = () => {
   const { showBoardsSettings, setShowBoardsSettings } = useUI();
-  const { imageOpacity, setImageOpacity } = useBackground();
   return (
     <div
-      className={` ${showBoardsSettings ? "translate-x-0" : "translate-x-80"} bg-light__test-2 text-dark absolute right-0 z-10 h-screen w-80 p-8 transition`}
+      className={` ${showBoardsSettings ? "translate-x-0" : "translate-x-80"} bg-light__test-2 text-dark absolute bottom-0 right-0 top-0 z-10 w-80 overflow-auto p-8 transition`}
     >
-      <div className="flex grow justify-end">
-        <CloseButton onClick={() => setShowBoardsSettings(false)} />
-      </div>
-      <div className="flex flex-col gap-8 pt-12">
+      <CloseButton
+        className="fixed right-4 top-4"
+        onClick={() => setShowBoardsSettings(false)}
+      />
+      <div className="flex flex-col gap-12 pt-8">
         <h2 className="text-lg font-semibold">Background</h2>
         <div className="space-y-4">
           <OpacitySlider />

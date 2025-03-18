@@ -57,11 +57,11 @@
 }
 
 .bg-light {
-  @apply bg-neutral-50 dark:bg-neutral-750;
+  @apply bg-neutral-50 dark:bg-neutral-700;
 }
 
 .bg-light__test {
-  @apply dark:bg-neutral-900/85 bg-neutral-50/60 backdrop-blur;
+  @apply dark:bg-neutral-900/85 bg-neutral-100/60 backdrop-blur;
 }
 
 .bg-light__test-2 {
@@ -82,7 +82,7 @@
 }
 
 .section-padding {
-  @apply px-8;
+  @apply px-2 md:px-8;
 }
 
 /* ***** ELEMENTS ***** */
@@ -120,7 +120,7 @@ select option {
 
 .input,
 .input-readonly {
-  @apply rounded-sm px-2 py-1.5;
+  @apply rounded-sm px-2 py-1.5 text-sm;
 }
 
 .input {
