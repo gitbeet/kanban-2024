@@ -1,7 +1,8 @@
 import { usePathname } from "next/navigation";
 import Image from "next/image";
 
-import { useBackground, backgrounds } from "~/context/bg-context";
+import { useBackground } from "~/context/bg-context";
+import { backgrounds } from "~/utilities/backgrounds";
 
 const Background = () => {
   const pathname = usePathname();

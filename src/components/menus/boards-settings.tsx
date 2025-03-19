@@ -1,11 +1,11 @@
 import { useUI } from "~/context/ui-context";
 import ThemeSwitchUpdated from "../theme-switch-updated";
-import { colorBackgrounds, imageBackgrounds } from "~/context/bg-context";
 import BackgroundOption from "../background-option";
 import { IconButton } from "../ui/button/buttons";
 import OpacitySlider from "../opacity-slider";
 import FocusTrap from "focus-trap-react";
 import { useRef } from "react";
+import { colorBackgrounds, imageBackgrounds } from "~/utilities/backgrounds";
 
 const BoardsSettings = () => {
   const { showBoardsSettings, setShowBoardsSettings } = useUI();

@@ -1,5 +1,6 @@
 import Image from "next/image";
-import { type BackgroundType, useBackground } from "~/context/bg-context";
+import { useBackground } from "~/context/bg-context";
+import { BackgroundType } from "~/types";
 
 const BackgroundOption = ({
   background,
