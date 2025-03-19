@@ -60,6 +60,7 @@ const RenameTaskForm = ({
     if (!result.success) {
       setError(result.error.issues[0]?.message ?? "An error occurred");
       setLoading(false);
+      textAreaRef.current?.focus();
       return;
     }
     // client state change
@@ -84,6 +85,7 @@ const RenameTaskForm = ({
       // If server action fails open again
       setIsOpen(true);
       console.log("In server error");
+      textAreaRef.current?.focus();
       return;
     }
 

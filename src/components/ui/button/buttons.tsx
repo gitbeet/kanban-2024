@@ -3,7 +3,7 @@
 import { useFormStatus } from "react-dom";
 import { FaCheck, FaTrash } from "react-icons/fa";
 import { FaPlus } from "react-icons/fa6";
-import { forwardRef, type ButtonHTMLAttributes } from "react";
+import { ForwardedRef, forwardRef, type ButtonHTMLAttributes } from "react";
 import { MdClose, MdEdit } from "react-icons/md";
 import { LoadingPage } from "../loading-spinner";
 import { BsThreeDotsVertical } from "react-icons/bs";
@@ -45,30 +45,34 @@ export const SubmitButton = ({ children, ...props }: ButtonProps) => {
 
 // ---------- ICON BUTTONS ----------
 
-const IconButton = ({
-  children,
-  variant = "primary",
-  ...props
-}: ButtonHTMLAttributes<HTMLButtonElement> & {
+type IconButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   variant?: "primary" | "danger" | "success";
-}) => {
-  const variantColor =
-    variant === "primary"
-      ? "hover:text-neutral-850 dark:hover:text-neutral-50"
-      : variant === "danger"
-        ? "hover:text-danger-300"
-        : variant === "success"
-          ? "hover:text-success-400"
-          : "";
-  return (
-    <button
-      {...props}
-      className={`bg-neutral-600 transition-colors--default flex h-6 w-6 shrink-0 items-center justify-center text-neutral-700 dark:text-neutral-250 ${variantColor} disabled:pointer-events-none disabled:opacity-50 ${props.className}`}
-    >
-      {children}
-    </button>
-  );
+  preset?: "close";
 };
+
+export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
+  ({ children, variant = "primary", preset, ...props }, ref) => {
+    const variantColor =
+      variant === "primary"
+        ? "hover:text-neutral-850 dark:hover:text-neutral-50"
+        : variant === "danger"
+          ? "hover:text-danger-300 dark:hover:text-danger-300"
+          : variant === "success"
+            ? "hover:text-success-400 dark:hover:text-success-400"
+            : "";
+    return (
+      <button
+        ref={ref}
+        {...props}
+        className={`bg-neutral-600 transition-colors--default flex h-6 w-6 shrink-0 items-center justify-center text-neutral-700 dark:text-neutral-250 ${variantColor} disabled:pointer-events-none disabled:opacity-50 ${props.className}`}
+      >
+        {preset === "close" && <MdClose className="h-full w-full" />}
+        {children}
+      </button>
+    );
+  },
+);
+IconButton.displayName = "IconButton";
 
 export const SettingsButton = (
   props: ButtonHTMLAttributes<HTMLButtonElement>,
