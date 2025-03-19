@@ -48,14 +48,15 @@ export default function ThemeSwitchUpdated({
   return (
     <div className="bg-dark border-color w-fit rounded-full border p-1.5 drop-shadow">
       <button
+        aria-label="Switch the theme to system preferred"
         tabIndex={tabIndex}
         onClick={() => setTheme("system")}
         className={` ${theme === "system" ? "border-color bg-light" : "border-transparent"} rounded-full border p-1.5`}
       >
         <FaLaptopCode className="text-light h-4 w-4 shrink-0" />
       </button>
-
       <button
+        aria-label="Switch to light theme"
         tabIndex={tabIndex}
         onClick={() => setTheme("light")}
         className={` ${theme === "light" ? "border-color bg-light" : "border-transparent"} rounded-full border p-1.5`}
@@ -63,6 +64,7 @@ export default function ThemeSwitchUpdated({
         <IoMdSunny className="text-light h-4 w-4 shrink-0" />
       </button>
       <button
+        aria-label="Switch to dark theme"
         tabIndex={tabIndex}
         onClick={() => setTheme("dark")}
         className={` ${theme === "dark" ? "border-color bg-light" : "border-transparent"} rounded-full border p-1.5`}

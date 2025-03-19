@@ -10,9 +10,12 @@ const BackgroundOption = ({
 }) => {
   const { setBackground } = useBackground();
   const { type, value, alt, slug, title } = background;
+  const lowerCaseTitle = title[0]?.toLowerCase() + title.slice(1);
+  const ariaLabel = `Switch to the ${lowerCaseTitle} background ${type}`;
   return (
     <div className="group text-center">
       <button
+        aria-label={ariaLabel}
         tabIndex={tabIndex}
         onClick={() => setBackground(slug)}
         className={`relative aspect-video w-28 cursor-pointer overflow-hidden rounded border border-transparent drop-shadow-md transition group-hover:border-neutral-350 dark:group-hover:border-neutral-650`}
