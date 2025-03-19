@@ -123,6 +123,7 @@ const CreateBoardForm = ({
               variant="text"
               onClick={() => setIsOpen(true)}
               tabIndex={props.tabIndex}
+              aria-label="Add a new board"
             >
               <div className="text-secondary--hoverable flex items-center gap-2 text-sm">
                 <FaPlus className="h-3 w-3" />
@@ -141,6 +142,7 @@ const CreateBoardForm = ({
             >
               <InputField
                 autoFocus
+                aria-label="Enter board name"
                 type="text"
                 error={error}
                 placeholder="Create board..."
@@ -155,6 +157,7 @@ const CreateBoardForm = ({
               <SaveButton
                 disabled={!!error || loading}
                 className="relative -top-2.5"
+                aria-label="Add board"
               />
             </form>
           </div>

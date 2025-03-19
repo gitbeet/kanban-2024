@@ -20,6 +20,7 @@ const Sidebar = () => {
 
   const outsideButton = (
     <button
+      aria-label={`${showSidebar ? "Close" : "Open"} the sidebar menu`}
       ref={outsideButtonRef}
       disabled={sidebarAnimating}
       onClick={() => setShowSidebar((prev) => !prev)}
