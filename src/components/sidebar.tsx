@@ -60,7 +60,7 @@ const Sidebar = () => {
     <motion.section
       onTransitionStart={() => setSidebarAnimating(true)}
       onTransitionEnd={() => setSidebarAnimating(false)}
-      className={`relative z-[5] ${showSidebar ? "ml-0 translate-x-0" : "-mr-52 -translate-x-52"} bg-light__test-2 border-color__test w-56 shrink-0 border-r shadow-md transition-all duration-300 dark:border-neutral-750`}
+      className={`relative z-[5] ${showSidebar ? "ml-0 translate-x-0" : "-mr-52 -translate-x-52"} bg-light__test-2 border-color__test w-56 shrink-0 border-r shadow-xl transition-all duration-300 dark:border-neutral-750`}
     >
       <FocusTrap
         active={showSidebar}

@@ -88,7 +88,7 @@
 
 .task-bg,
 .menu-bg {
-  @apply bg-light rounded-md shadow-md;
+  @apply bg-light rounded-md shadow-xl;
 }
 
 .task-bg {

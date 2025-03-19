@@ -60,6 +60,7 @@ const CreateBoardForm = ({
     const result = BoardSchema.safeParse(newBoard);
     if (!result.success) {
       setError(result.error.issues[0]?.message ?? "An error occured");
+      setLoading(false);
       setIsOpen(true);
       return;
     }
@@ -93,7 +94,7 @@ const CreateBoardForm = ({
     setLoading(false);
   };
 
-  const handleBoardName = (
+  const handleChangeBoardName = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     setError("");
@@ -148,7 +149,7 @@ const CreateBoardForm = ({
                 placeholder="Create board..."
                 value={boardName}
                 className="w-full"
-                onChange={handleBoardName}
+                onChange={handleChangeBoardName}
                 errorPlacement="bottom"
                 handleSubmit={clientAction}
                 handleCancel={handleClickOutside}

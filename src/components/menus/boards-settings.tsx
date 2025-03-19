@@ -26,7 +26,7 @@ const BoardsSettings = () => {
       }}
     >
       <div
-        className={` ${showBoardsSettings ? "translate-x-0" : "translate-x-80"} bg-light__test-2 text-dark absolute bottom-0 right-0 top-0 z-10 w-80 overflow-auto p-8 transition`}
+        className={` ${showBoardsSettings ? "translate-x-0" : "translate-x-80"} bg-light__test-2 text-dark absolute bottom-0 right-0 top-0 z-10 w-80 overflow-auto p-8 shadow-xl transition`}
       >
         <IconButton
           aria-label="Close the settings menu"
