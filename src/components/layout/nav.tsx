@@ -16,7 +16,7 @@ const Nav = () => {
   const isBoardsPage = pathname === "/boards";
 
   return (
-    <nav className="bg-light border-color__test relative z-[15] border-b shadow-sm">
+    <nav className="bg-light__test-2 border-color__test relative z-[15] border-b shadow-sm">
       <div
         className={` ${isBoardsPage ? "" : "container"} section-padding relative z-10 flex h-fit items-center justify-between gap-8 py-2`}
       >

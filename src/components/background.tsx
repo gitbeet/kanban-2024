@@ -26,6 +26,7 @@ const Background = () => {
           alt="text for the image"
         />
       )}
+      {/* <div className="animated-background__1 absolute inset-0" /> */}
     </div>
   );
 };

@@ -3,6 +3,24 @@
 @tailwind utilities;
 @import "./blobs.css";
 
+/* .animated-background__1 {
+  background: linear-gradient(270deg, #ff7eb3, #df75ff, #ff7eb3, #ff758c);
+  background-size: 400% 400%;
+  animation: animated-background__1__animation 8s ease infinite;
+}
+
+@keyframes animated-background__1__animation {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+} */
+
 .no-scroll {
   overflow: hidden;
 }
@@ -61,7 +79,7 @@
 }
 
 .bg-light__test {
-  @apply dark:bg-neutral-900/85 bg-neutral-100/60 backdrop-blur;
+  @apply bg-neutral-100/60 backdrop-blur dark:bg-neutral-900/85;
 }
 
 .bg-light__test-2 {
