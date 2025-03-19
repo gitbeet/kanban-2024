@@ -3,7 +3,6 @@
 import React, { useEffect, useRef, useState, useTransition } from "react";
 import { useUser } from "@clerk/nextjs";
 import { useBoards } from "~/context/boards-context";
-import useClickOutside from "~/hooks/useClickOutside";
 import { handleCreateBoard } from "~/server/queries";
 import { v4 as uuid } from "uuid";
 import InputField from "~/components/ui/input-field";
@@ -13,6 +12,7 @@ import { Button, SaveButton } from "~/components/ui/button/buttons";
 import { BoardSchema } from "~/zod-schemas";
 import type { ChangeEvent, FormEvent } from "react";
 import type { CreateBoardChange, BoardType } from "~/types";
+import FocusTrap from "focus-trap-react";
 
 const CreateBoardForm = ({
   ...props
@@ -35,8 +35,6 @@ const CreateBoardForm = ({
   useEffect(() => {
     setBoardsLoading((prev) => ({ ...prev, createBoard: pending }));
   }, [pending, setBoardsLoading]);
-
-  const { ref } = useClickOutside<HTMLDivElement>(handleClickOutside);
 
   const clientAction = async (e?: FormEvent) => {
     e?.preventDefault();
@@ -109,49 +107,60 @@ const CreateBoardForm = ({
   }
 
   return (
-    <>
-      {!isOpen && (
-        <motion.div layout className={props.className}>
-          <Button
-            variant="text"
-            onClick={() => setIsOpen(true)}
-            tabIndex={props.tabIndex}
-          >
-            <div className="text-secondary--hoverable flex items-center gap-2 text-sm">
-              <FaPlus className="h-3 w-3" />
-              <span>Add a board</span>
-            </div>
-          </Button>
-        </motion.div>
-      )}
-      {isOpen && (
-        <div ref={ref}>
-          <form
-            ref={createBoardRef}
-            onSubmit={clientAction}
-            className="flex items-center gap-2"
-          >
-            <InputField
-              autoFocus
-              type="text"
-              error={error}
-              placeholder="Create board..."
-              value={boardName}
-              className="w-full"
-              onChange={handleBoardName}
-              errorPlacement="bottom"
-              handleSubmit={clientAction}
-              handleCancel={handleClickOutside}
-            />
+    <FocusTrap
+      active={isOpen}
+      focusTrapOptions={{
+        escapeDeactivates: true,
+        allowOutsideClick: true,
+        onDeactivate: handleClickOutside,
+        clickOutsideDeactivates: true,
+      }}
+    >
+      <div>
+        {!isOpen && (
+          <motion.div layout className={props.className}>
+            <Button
+              variant="text"
+              onClick={() => setIsOpen(true)}
+              tabIndex={props.tabIndex}
+            >
+              <div className="text-secondary--hoverable flex items-center gap-2 text-sm">
+                <FaPlus className="h-3 w-3" />
+                <span>Add a board</span>
+              </div>
+            </Button>
+          </motion.div>
+        )}
 
-            <SaveButton
-              disabled={!!error || loading}
-              className="relative -top-2.5"
-            />
-          </form>
-        </div>
-      )}
-    </>
+        {isOpen && (
+          <div>
+            <form
+              ref={createBoardRef}
+              onSubmit={clientAction}
+              className="flex items-center gap-2"
+            >
+              <InputField
+                autoFocus
+                type="text"
+                error={error}
+                placeholder="Create board..."
+                value={boardName}
+                className="w-full"
+                onChange={handleBoardName}
+                errorPlacement="bottom"
+                handleSubmit={clientAction}
+                handleCancel={handleClickOutside}
+              />
+
+              <SaveButton
+                disabled={!!error || loading}
+                className="relative -top-2.5"
+              />
+            </form>
+          </div>
+        )}
+      </div>
+    </FocusTrap>
   );
 };
 

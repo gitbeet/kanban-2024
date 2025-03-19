@@ -4,7 +4,6 @@ import { useBoards } from "~/context/boards-context";
 import { useUI } from "~/context/ui-context";
 import { motion } from "framer-motion";
 import useHasMounted from "~/hooks/useHasMounted";
-import { FaEyeSlash } from "react-icons/fa6";
 import CreateBoardForm from "./action-forms/board/create-board-form";
 import MakeBoardCurrentForm from "./action-forms/board/make-board-current-form";
 import FocusTrap from "focus-trap-react";
@@ -17,25 +16,10 @@ const Sidebar = () => {
   const { optimisticBoards, loading } = useBoards();
   const hasMounted = useHasMounted();
 
-  const toggleButtonRef = useRef<HTMLButtonElement | null>(null);
   const outsideButtonRef = useRef<HTMLButtonElement | null>(null);
-
-  const toggleButton = (
-    <button
-      disabled={sidebarAnimating}
-      tabIndex={showSidebar ? 0 : -1}
-      ref={toggleButtonRef}
-      onClick={() => setShowSidebar((prev) => !prev)}
-      className="text-secondary--hoverable flex items-center gap-2 py-3.5 text-lg disabled:bg-white"
-    >
-      <FaEyeSlash />
-      <span>Hide sidebar</span>
-    </button>
-  );
 
   const outsideButton = (
     <button
-      // tabIndex={showSidebar ? -1 : 0}
       ref={outsideButtonRef}
       disabled={sidebarAnimating}
       onClick={() => setShowSidebar((prev) => !prev)}
@@ -44,18 +28,6 @@ const Sidebar = () => {
       <FaChevronRight className={showSidebar ? "rotate-180" : ""} />
     </button>
   );
-
-  // const outsideButton = (
-  //   <button
-  //     tabIndex={showSidebar ? -1 : 0}
-  //     ref={outsideButtonRef}
-  //     disabled={sidebarAnimating}
-  //     onClick={() => setShowSidebar((prev) => !prev)}
-  //     className={` ${showSidebar ? "hidden" : ""} transitionz-colors absolute bottom-[7dvh] right-0 translate-x-full cursor-pointer rounded rounded-r-full bg-primary-700 px-5 py-3.5 text-xl text-white duration-150 hover:bg-primary-650`}
-  //   >
-  //     <FaEye />
-  //   </button>
-  // );
 
   const boards = optimisticBoards
     .sort((a, b) => a.index - b.index)
@@ -74,13 +46,11 @@ const Sidebar = () => {
           exit={{ y: "-100%", opacity: 0 }}
           className={`group cursor-pointer pr-4`}
         >
-          <div className="flex items-center justify-between gap-4">
-            <MakeBoardCurrentForm
-              tabIndex={showSidebar ? 0 : -1}
-              boardName={board.name}
-              boardId={board.id}
-            />
-          </div>
+          <MakeBoardCurrentForm
+            tabIndex={showSidebar ? 0 : -1}
+            boardName={board.name}
+            boardId={board.id}
+          />
         </motion.li>
       </div>
     ));
@@ -115,9 +85,6 @@ const Sidebar = () => {
               </motion.li>
             </motion.ul>
           </div>
-          {/* <div className="absolute bottom-[7dvh] space-y-4 pl-5 pr-2">
-            {toggleButton}
-          </div> */}
           {outsideButton}
         </div>
       </FocusTrap>

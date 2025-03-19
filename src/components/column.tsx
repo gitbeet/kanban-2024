@@ -191,15 +191,17 @@ const Column = ({
       onDrop={handleDragEnd}
       key={column.id}
       // hard coded width for transition animation
-      className={`${active ? "bg-white/55 backdrop-blur-md dark:bg-neutral-950/80" : "bg-light__test"} w-80 rounded-md px-4 pb-4 shadow-lg`}
+      className={`${active ? "bg-white/55 backdrop-blur-md dark:bg-neutral-950/80" : "bg-light__test"} w-80 rounded-md px-6 pb-4 shadow-lg`}
     >
       <div className="flex items-center justify-between gap-4 py-2">
-        <div className="flex items-center gap-2 font-bold text-neutral-250">
+        <div className="flex grow items-center gap-2 font-bold text-neutral-250">
           {/* hard coded width to avoid shifting of column name */}
           <span className="shrink-0 text-sm text-neutral-500">
             ({column.tasks.length})
           </span>
-          <RenameColumnForm boardId={boardId} columnId={column.id} />
+          <div className="w-full grow pt-5">
+            <RenameColumnForm boardId={boardId} columnId={column.id} />
+          </div>
         </div>
         <DeleteButton
           onClick={() => {

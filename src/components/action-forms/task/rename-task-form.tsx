@@ -2,24 +2,14 @@
 
 import { useEffect, useState, useTransition, useRef } from "react";
 import { useBoards } from "~/context/boards-context";
-import useClickOutside from "~/hooks/useClickOutside";
 import { handleRenameTask } from "~/server/queries";
 import { resizeTextArea } from "~/utilities/resizeTextArea";
 import { CancelButton, SaveButton } from "~/components/ui/button/buttons";
 import { TaskSchema } from "~/zod-schemas";
 import type { TaskType } from "~/types";
-import type {
-  ChangeEvent,
-  Dispatch,
-  FormEvent,
-  KeyboardEvent,
-  SetStateAction,
-} from "react";
+import type { ChangeEvent, Dispatch, FormEvent, SetStateAction } from "react";
 import TextArea from "~/components/ui/text-area";
-import { handlePressEnterToSubmit } from "~/utilities/handlePressEnterOrEscape";
 import FocusTrap from "focus-trap-react";
-import { handlePressEscape } from "~/utilities/handlePressEscape";
-import { handlePressEnter } from "~/utilities/handlePressEnter";
 
 const RenameTaskForm = ({
   boardId,
@@ -44,7 +34,6 @@ const RenameTaskForm = ({
   // Refs
   const textAreaRef = useRef<HTMLTextAreaElement | null>(null);
   const renameTaskRef = useRef<HTMLFormElement | null>(null);
-  const { ref } = useClickOutside<HTMLDivElement>(handleClickOutside);
 
   // Dynamic height for the textarea
   useEffect(
@@ -73,7 +62,7 @@ const RenameTaskForm = ({
       setLoading(false);
       return;
     }
-
+    // client state change
     startTransition(() => {
       setOptimisticBoards({
         action: "renameTask",
@@ -83,9 +72,6 @@ const RenameTaskForm = ({
         newTaskName,
       });
     });
-
-    // Close without waiting for server
-    setIsOpen(false);
 
     // Server
     const response = await handleRenameTask({
@@ -103,34 +89,28 @@ const RenameTaskForm = ({
 
     // Wait for server to finish then set loading to false
     setLoading(false);
-    textAreaRef.current?.blur();
+    setIsOpen(false);
+    setNewTaskName("kekw");
+    setError("");
   };
 
   function handleClickOutside() {
     setIsOpen(false);
     setNewTaskName(task.name);
     setError("");
-    textAreaRef.current?.blur();
   }
 
-  const handlePressEnterToEdit = async (e: KeyboardEvent) => {
-    if (isOpen) {
-      handlePressEscape(e, handleClickOutside);
-    } else {
-      await handlePressEnter(e, () => {
-        setIsOpen(true);
-        setNewTaskName(task.name);
-      });
-    }
-  };
-
   return (
-    <div
-      onKeyDown={handlePressEnterToEdit}
-      ref={ref}
-      className={`${loading ? "pointer-events-none" : ""} `}
-    >
-      <FocusTrap active={isOpen}>
+    <div className={`${loading ? "pointer-events-none" : ""} `}>
+      <FocusTrap
+        active={isOpen}
+        focusTrapOptions={{
+          allowOutsideClick: true,
+          escapeDeactivates: true,
+          clickOutsideDeactivates: true,
+          onDeactivate: handleClickOutside,
+        }}
+      >
         <form
           className="flex flex-col gap-2"
           ref={renameTaskRef}
@@ -138,31 +118,28 @@ const RenameTaskForm = ({
         >
           <div className="relative">
             {!isOpen && (
-              <div
-                className="absolute z-[1] h-full w-full opacity-0"
+              <button
+                aria-label="Click to rename task"
                 onClick={() => {
-                  setIsOpen(true);
                   setNewTaskName(task.name);
+                  setIsOpen(true);
                 }}
-              ></div>
+                className="input-readonly w-full text-left"
+              >
+                <p> {task.name}</p>
+              </button>
             )}
-            <TextArea
-              ref={textAreaRef}
-              rows={1}
-              readOnly={!isOpen}
-              className={` ${isOpen ? "input" : "input-readonly"} text-sm dark:bg-neutral-700 dark:focus:bg-neutral-950/50`}
-              value={newTaskName}
-              onChange={isOpen ? handleTaskNameChange : undefined}
-              error={error}
-              onKeyDown={async (e) => {
-                if (!isOpen) return;
-                await handlePressEnterToSubmit(
-                  e,
-                  clientAction,
-                  handleClickOutside,
-                );
-              }}
-            />
+            {isOpen && (
+              <TextArea
+                ref={textAreaRef}
+                rows={1}
+                readOnly={!isOpen}
+                className={` ${isOpen ? "input" : "input-readonly"} text-sm dark:bg-neutral-700 dark:focus:bg-neutral-950/50`}
+                value={newTaskName}
+                onChange={handleTaskNameChange}
+                error={error}
+              />
+            )}
           </div>
           {isOpen && (
             <div

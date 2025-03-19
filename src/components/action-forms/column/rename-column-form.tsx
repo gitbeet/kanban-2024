@@ -4,9 +4,7 @@ import useClickOutside from "~/hooks/useClickOutside";
 import { handleRenameColumn } from "~/server/queries";
 import InputField from "~/components/ui/input-field";
 import { ColumnSchema } from "~/zod-schemas";
-import type { ChangeEvent, FormEvent, KeyboardEvent } from "react";
-import { handlePressEscape } from "~/utilities/handlePressEscape";
-import { handlePressEnter } from "~/utilities/handlePressEnter";
+import type { ChangeEvent, FormEvent } from "react";
 
 const RenameColumnForm = ({
   boardId,
@@ -71,39 +69,24 @@ const RenameColumnForm = ({
     setLoading(false);
   }
 
-  const handlePressEnterToEdit = async (e: KeyboardEvent) => {
-    if (isOpen) {
-      handlePressEscape(e, handleClickOutside);
-    } else {
-      await handlePressEnter(e, () => {
-        setIsOpen(true);
-        setNewColumnName(column!.name);
-      });
-    }
-  };
-
   return (
-    <div
-      onKeyDown={handlePressEnterToEdit}
-      ref={ref}
-      className={`${loading ? "pointer-events-none" : ""}`}
-    >
-      <form
-        ref={renameColumnRef}
-        onSubmit={clientAction}
-        className="flex flex-col"
-      >
+    <div ref={ref} className={`${loading ? "pointer-events-none" : ""} `}>
+      <form ref={renameColumnRef} onSubmit={clientAction} className="">
         {!isOpen && (
-          <InputField
-            error=""
-            readOnly
-            className="input-readonly w-full p-2"
-            onClick={() => {
-              setIsOpen(true);
-              setNewColumnName(column?.name ?? "");
-            }}
-            value={column?.name}
-          />
+          <>
+            <div className="h-1" />
+            <button
+              aria-label="Click to rename the column"
+              onClick={() => {
+                setIsOpen(true);
+                setNewColumnName(column?.name ?? "");
+              }}
+              className="input-readonly w-full text-left"
+            >
+              <p>{column?.name}</p>
+            </button>
+            <div className="h-6" />
+          </>
         )}
         {isOpen && (
           <>
@@ -115,6 +98,7 @@ const RenameColumnForm = ({
               placeholder="Enter column name"
               className="w-full"
               error={error}
+              errorPlacement="bottom"
               handleCancel={handleClickOutside}
               handleSubmit={clientAction}
             />
