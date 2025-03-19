@@ -1,7 +1,7 @@
 "use client";
 
 import { SignedOut, useClerk } from "@clerk/nextjs";
-import Blobs from "~/components/blobs";
+import Blobs from "~/components/common/blobs";
 import { Button } from "~/components/ui/button/buttons";
 
 export default function HomePage() {

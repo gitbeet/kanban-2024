@@ -1,7 +1,7 @@
 "use client";
 
-import Board from "~/components/board";
-import Sidebar from "~/components/sidebar";
+import Board from "~/components/board/board";
+import Sidebar from "~/components/layout/sidebar";
 import { motion } from "framer-motion";
 
 const Page = () => {

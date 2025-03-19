@@ -2,13 +2,13 @@
 
 import { useBoards } from "~/context/boards-context";
 import { motion } from "framer-motion";
-import CreateBoardForm from "./action-forms/board/create-board-form";
-import { LoadingPage } from "./ui/loading-spinner";
-import Column from "../components/column";
+import CreateBoardForm from "../action-forms/board/create-board-form";
+import { LoadingPage } from "../ui/loading-spinner";
+import Column from "./column";
 import DeleteTaskZone from "./delete-task-zone";
-import CreateColumnForm from "./action-forms/column/create-column-form";
-import { BoardsNav } from "./layout/boards-nav";
-import BoardsSettings from "./menus/boards-settings";
+import CreateColumnForm from "../action-forms/column/create-column-form";
+import { BoardsNav } from "../layout/boards-nav";
+import BoardsSettings from "../menus/boards-settings";
 
 const Board = () => {
   const { optimisticBoards, loading, getCurrentBoard } = useBoards();

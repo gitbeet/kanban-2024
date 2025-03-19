@@ -4,7 +4,7 @@ import { usePathname } from "next/navigation";
 import Menus from "../menus/menus";
 import Nav from "./nav";
 import Footer from "./footer";
-import Background from "../background";
+import Background from "../background/background";
 
 const ClientLayout = ({ children }: { children: React.ReactNode }) => {
   const pathname = usePathname();

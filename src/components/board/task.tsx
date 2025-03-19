@@ -6,10 +6,10 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { useBoards } from "~/context/boards-context";
 import DropIndicator from "./drop-indicator";
-import RenameTaskForm from "./action-forms/task/rename-task-form";
+import RenameTaskForm from "../action-forms/task/rename-task-form";
 import { useUI } from "~/context/ui-context";
-import { EditButton } from "./ui/button/buttons";
-import type { TaskType } from "../types";
+import { EditButton } from "../ui/button/buttons";
+import type { TaskType } from "../../types";
 
 const Task = ({
   columnId,

@@ -1,5 +1,5 @@
-import Logo from "../logo";
-import ThemeSwitchUpdated from "../theme-switch-updated";
+import Logo from "../common/logo";
+import ThemeSwitchUpdated from "../common/theme-switch-updated";
 
 const Footer = () => {
   return (

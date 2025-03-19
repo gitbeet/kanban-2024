@@ -4,7 +4,7 @@ import { SignedIn, SignedOut, useClerk } from "@clerk/nextjs";
 import { Button } from "../ui/button/buttons";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import Logo from "../logo";
+import Logo from "../common/logo";
 import MobileMenuButton from "../ui/mobile-menu-button";
 
 const Nav = () => {

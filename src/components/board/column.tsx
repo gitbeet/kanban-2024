@@ -2,16 +2,16 @@
 
 import { useState, useTransition } from "react";
 import { useBoards } from "~/context/boards-context";
-import RenameColumnForm from "./action-forms/column/rename-column-form";
-import CreateTaskForm from "./action-forms/task/create-task-form";
-import Task from "../components/task";
+import RenameColumnForm from "../action-forms/column/rename-column-form";
+import CreateTaskForm from "../action-forms/task/create-task-form";
+import Task from "./task";
 import DropIndicator from "./drop-indicator";
 import { SwitchTaskActionSchema } from "~/zod-schemas";
 import type { DragEvent } from "react";
-import type { TaskType, ColumnType } from "../types";
+import type { TaskType, ColumnType } from "../../types";
 import { handleSwitchTaskColumn } from "~/server/queries";
 import { useUI } from "~/context/ui-context";
-import { DeleteButton } from "./ui/button/buttons";
+import { DeleteButton } from "../ui/button/buttons";
 
 const Column = ({
   boardId,
