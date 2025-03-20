@@ -88,6 +88,8 @@ export const EditTaskMenu = ({ columnId, task }: Props) => {
   const handleCloseAllWindows = () => {
     setShowConfirmCancelWindow(false);
     setShowEditTaskWindow(false);
+    setShowEditTaskSmallMenu(false);
+    setShowEditTaskMenu(false);
     handleResetChanges();
   };
 
