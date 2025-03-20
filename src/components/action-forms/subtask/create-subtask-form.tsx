@@ -59,10 +59,12 @@ const CreateSubtaskForm = ({
     startTransition(() => {
       setOptimisticBoards({
         action: "createSubtask",
-        boardId: currentBoard?.id,
-        columnId,
-        taskId,
-        subtask: newSubtask,
+        payload: {
+          boardId: currentBoard?.id,
+          columnId,
+          taskId,
+          subtask: newSubtask,
+        },
       });
     });
 

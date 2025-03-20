@@ -1,4 +1,4 @@
-import React, { useState, useTransition } from "react";
+import { useState, useTransition } from "react";
 import { handleDeleteSubtask } from "~/server/queries";
 import { DeleteButton } from "~/components/ui/button/buttons";
 import { useBoards } from "~/context/boards-context";
@@ -24,10 +24,7 @@ const DeleteSubtaskForm = ({
     startTransition(() => {
       setOptimisticBoards({
         action: "deleteSubtask",
-        boardId,
-        columnId,
-        taskId,
-        subtaskId,
+        payload: { boardId, columnId, taskId, subtaskId },
       });
     });
     const response = await handleDeleteSubtask({

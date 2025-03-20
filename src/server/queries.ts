@@ -3,33 +3,9 @@
 import { db } from "./db/index";
 import { auth } from "@clerk/nextjs/server";
 import { boards, columns, subtasks, tasks } from "./db/schema";
-import { v4 as uuid } from "uuid";
 import { revalidatePath } from "next/cache";
 import { and, eq, gt, gte, lt, lte, ne, sql } from "drizzle-orm";
-import type {
-  CreateBoardChange,
-  CreateColumnChange,
-  CreateSubtaskChange,
-  CreateTaskChange,
-  BoardType,
-  ColumnType,
-  DatabaseType,
-  DeleteBoardChange,
-  DeleteColumnChange,
-  DeleteSubtaskChange,
-  DeleteTaskChange,
-  MakeBoardCurrentChange,
-  RenameBoardChange,
-  RenameColumnChange,
-  RenameSubtaskChange,
-  RenameTaskChange,
-  SubtaskType,
-  SwitchTaskColumnChange,
-  Change,
-  TaskType,
-  ToggleSubtaskCompletedChange,
-  ToggleTaskCompletedChange,
-} from "~/types";
+import type { DatabaseType } from "~/types";
 import {
   BoardSchema,
   ColumnSchema,

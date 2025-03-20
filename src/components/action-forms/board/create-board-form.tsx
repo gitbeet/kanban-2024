@@ -11,7 +11,7 @@ import { FaPlus } from "react-icons/fa";
 import { Button, SaveButton } from "~/components/ui/button/buttons";
 import { BoardSchema } from "~/zod-schemas";
 import type { ChangeEvent, FormEvent } from "react";
-import type { CreateBoardChange, BoardType } from "~/types";
+import type { BoardType } from "~/types";
 import FocusTrap from "focus-trap-react";
 import { CreateBoardUpdate } from "~/types/updates";
 
@@ -67,7 +67,10 @@ const CreateBoardForm = ({
     }
 
     startTransition(() => {
-      setOptimisticBoards({ action: "createBoard", board: newBoard });
+      setOptimisticBoards({
+        action: "createBoard",
+        payload: { board: newBoard },
+      } satisfies CreateBoardUpdate);
     });
 
     // Server error check

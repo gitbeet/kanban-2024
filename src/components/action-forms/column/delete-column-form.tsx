@@ -30,7 +30,10 @@ const DeleteColumnForm = ({
     }
 
     startTransition(() =>
-      setOptimisticBoards({ action: "deleteColumn", boardId, columnId }),
+      setOptimisticBoards({
+        action: "deleteColumn",
+        payload: { boardId, columnId },
+      }),
     );
 
     const response = await handleDeleteColumn({

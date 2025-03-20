@@ -5,7 +5,6 @@ import { BoardSchema } from "~/zod-schemas";
 import type { FormEvent } from "react";
 import { handleDeleteBoard } from "~/server/queries";
 import { useUser } from "@clerk/nextjs";
-import type { DeleteBoardChange } from "~/types";
 import { DeleteBoardUpdate } from "~/types/updates";
 
 interface DeleteTaskFormProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -49,11 +48,14 @@ const DeleteBoardForm = ({
       console.log(error);
       return;
     }
+    const wasCurrent = boardId === getCurrentBoard()?.id;
     startTransition(() => {
-      setOptimisticBoards({ action: "deleteBoard", boardId });
+      setOptimisticBoards({
+        action: "deleteBoard",
+        payload: { boardId, boardIndex, wasCurrent },
+      });
     });
 
-    const wasCurrent = boardId === getCurrentBoard()?.id;
     const args = {
       change: {
         action: "deleteBoard",

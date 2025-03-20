@@ -1,4 +1,4 @@
-import { type ChangeEvent, useRef, useState, useTransition } from "react";
+import { useRef, useState, useTransition } from "react";
 import ToggleSubtaskForm from "~/components/action-forms/subtask/toggle-subtask-form";
 import { Button, MoreButton } from "~/components/ui/button/buttons";
 import { ModalWithBackdrop } from "~/components/ui/modal/modal";
@@ -53,12 +53,14 @@ const EditTaskWindow = ({
         : newTaskIndex;
     setOptimisticBoards({
       action: "switchTaskColumn",
-      boardId: board?.id,
-      taskId: task.id,
-      oldColumnId: columnId,
-      newColumnId: newColumnId,
-      oldColumnIndex: task.index,
-      newColumnIndex: adjustedNewIndex,
+      payload: {
+        boardId: board?.id,
+        taskId: task.id,
+        oldColumnId: columnId,
+        newColumnId: newColumnId,
+        oldColumnIndex: task.index,
+        newColumnIndex: adjustedNewIndex,
+      },
     });
     handleClickOutside();
     const response = await handleSwitchTaskColumn({

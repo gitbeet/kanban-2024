@@ -67,10 +67,7 @@ const RenameTaskForm = ({
     startTransition(() => {
       setOptimisticBoards({
         action: "renameTask",
-        boardId,
-        columnId,
-        taskId: task.id,
-        newTaskName,
+        payload: { boardId, columnId, taskId: task.id, newTaskName },
       });
     });
 

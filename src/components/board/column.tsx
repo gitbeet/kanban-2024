@@ -157,12 +157,14 @@ const Column = ({
     startTransition(() => {
       setOptimisticBoards({
         action: "switchTaskColumn",
-        boardId,
-        taskId,
-        oldColumnId,
-        newColumnId,
-        oldColumnIndex: Number(oldColumnIndex),
-        newColumnIndex: Number(newColumnIndex),
+        payload: {
+          boardId,
+          taskId,
+          oldColumnId,
+          newColumnId,
+          oldColumnIndex: Number(oldColumnIndex),
+          newColumnIndex: Number(newColumnIndex),
+        },
       });
     });
 

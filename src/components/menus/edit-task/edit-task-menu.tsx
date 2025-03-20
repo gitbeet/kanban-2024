@@ -1,12 +1,12 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useBoards } from "~/context/boards-context";
 import { v4 as uuid } from "uuid";
 import { mutateTable } from "~/server/queries";
 import { SubtaskSchema, TaskSchema } from "~/zod-schemas";
 import type { ChangeEvent } from "react";
-import type { SubtaskType, Change, TaskType } from "~/types";
+import type { SubtaskType, TaskType } from "~/types";
 import InputField from "~/components/ui/input-field";
 import {
   Button,

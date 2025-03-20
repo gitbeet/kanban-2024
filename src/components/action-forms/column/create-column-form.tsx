@@ -55,8 +55,7 @@ const CreateColumnForm = ({ boardId, ...props }: CreateColumnProps) => {
     startTransition(() => {
       setOptimisticBoards({
         action: "createColumn",
-        boardId,
-        column: newColumn,
+        payload: { column: newColumn },
       });
     });
 

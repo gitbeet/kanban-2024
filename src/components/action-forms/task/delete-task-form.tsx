@@ -24,9 +24,7 @@ const DeleteTaskForm = ({
 
     setOptimisticBoards({
       action: "deleteTask",
-      boardId: currentBoardId,
-      columnId,
-      taskId,
+      payload: { boardId: currentBoardId, columnId, taskId },
     });
 
     const response = await handleDeleteTask({

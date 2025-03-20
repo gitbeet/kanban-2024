@@ -26,10 +26,12 @@ const ToggleSubtaskForm = ({
     startTransition(() => {
       setOptimisticBoards({
         action: "toggleSubtask",
-        boardId: currentBoardId,
-        columnId,
-        taskId,
-        subtaskId: subtask.id,
+        payload: {
+          boardId: currentBoardId,
+          columnId,
+          taskId,
+          subtaskId: subtask.id,
+        },
       });
     });
 

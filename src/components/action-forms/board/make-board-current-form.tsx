@@ -4,7 +4,6 @@ import { useBoards } from "~/context/boards-context";
 import { handleMakeBoardCurrent } from "~/server/queries";
 import { BoardSchema } from "~/zod-schemas";
 import type { FormEvent, HTMLAttributes } from "react";
-import type { MakeBoardCurrentChange } from "~/types";
 import { useUser } from "@clerk/nextjs";
 import { MdDashboard } from "react-icons/md";
 import { MakeBoardCurrentUpdate } from "~/types/updates";
@@ -31,6 +30,10 @@ const MakeBoardCurrentForm = ({ boardId, boardName, ...props }: Props) => {
   const currentBoardId = getCurrentBoard()?.id;
 
   const clientAction = async (e?: FormEvent) => {
+    if (!currentBoardId) {
+      setError("No currentboardId");
+      return;
+    }
     e?.preventDefault();
     if (!user?.id) return;
 
@@ -43,17 +46,22 @@ const MakeBoardCurrentForm = ({ boardId, boardName, ...props }: Props) => {
     }
     // client update
     startTransition(() => {
-      setOptimisticBoards({ action: "makeBoardCurrent", boardId });
+      setOptimisticBoards({
+        action: "makeBoardCurrent",
+        payload: {
+          oldCurrentBoardId: currentBoardId,
+          newCurrentBoardId: boardId,
+        },
+      });
     });
     // server validation
     // server update
-    console.log(currentBoardId, boardId);
     const response = await handleMakeBoardCurrent({
       change: {
         action: "makeBoardCurrent",
         payload: {
           newCurrentBoardId: boardId,
-          oldCurrentBoardId: currentBoardId!,
+          oldCurrentBoardId: currentBoardId,
         },
       } as MakeBoardCurrentUpdate,
       userId: user?.id,

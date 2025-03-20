@@ -18,9 +18,7 @@ const ToggleTaskForm = ({
   const clientAction = async () => {
     setOptimisticBoards({
       action: "toggleTask",
-      boardId,
-      columnId,
-      taskId: task.id,
+      payload: { boardId, columnId, taskId: task.id },
     });
     const response = await handleToggleTaskCompleted({
       change: {

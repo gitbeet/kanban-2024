@@ -32,14 +32,6 @@ const getInitialErrors = (columns: ColumnType[]) => {
   };
 };
 
-// const getInitialTemporaryColumns = (columns: ColumnType[]) => {
-//   return columns.map(({ id, index, name }) => ({
-//     id,
-//     index,
-//     name,
-//   }));
-// };
-
 const EditBoard = ({ board }: { board: BoardType }) => {
   const { showEditBoardMenu, setShowEditBoardMenu, setShowEditBoardWindow } =
     useUI();

@@ -1,4 +1,3 @@
-import React from "react";
 import DeleteBoardForm from "~/components/action-forms/board/delete-board-form";
 import { Button } from "~/components/ui/button/buttons";
 import PromptWindow from "~/components/ui/modal/prompt-window";
