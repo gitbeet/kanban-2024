@@ -34,7 +34,7 @@ const DeleteColumnForm = ({
     );
 
     const response = await handleDeleteColumn({
-      change: { action: "deleteColumn", columnId },
+      change: { action: "deleteColumn", payload: { columnId, boardId } },
       revalidate: true,
     });
     if (response?.error) {

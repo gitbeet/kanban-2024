@@ -1,6 +1,6 @@
 import bg from "../../public/test-bg-4.jpg";
 import bgTwo from "../../public/test-bg-2.jpg";
-import { ColorBackground, ImageBackground } from "~/types";
+import { ColorBackground, ImageBackground } from "~/types/background";
 export const imageBackgrounds: ImageBackground[] = [
   {
     type: "image",

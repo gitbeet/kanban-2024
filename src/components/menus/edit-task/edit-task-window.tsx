@@ -41,6 +41,10 @@ const EditTaskWindow = ({
 
   const handleColumnChange = async () => {
     setLoading(true);
+    if (!board) {
+      setLoading(false);
+      return;
+    }
     if (newColumnId === columnId && newTaskIndex === task.index)
       return handleClickOutside();
     const adjustedNewIndex =
@@ -60,11 +64,14 @@ const EditTaskWindow = ({
     const response = await handleSwitchTaskColumn({
       change: {
         action: "switchTaskColumn",
-        taskId: task.id,
-        oldColumnId: columnId,
-        newColumnId: newColumnId,
-        oldColumnIndex: task.index,
-        newColumnIndex: adjustedNewIndex,
+        payload: {
+          boardId: board.id,
+          taskId: task.id,
+          oldColumnId: columnId,
+          newColumnId: newColumnId,
+          oldColumnIndex: task.index,
+          newColumnIndex: adjustedNewIndex,
+        },
       },
       revalidate: true,
     });

@@ -10,6 +10,7 @@ import RenameTaskForm from "../action-forms/task/rename-task-form";
 import { useUI } from "~/context/ui-context";
 import { EditButton } from "../ui/button/buttons";
 import type { TaskType } from "../../types";
+import CreateSubtaskForm from "../action-forms/subtask/create-subtask-form";
 
 const Task = ({
   columnId,

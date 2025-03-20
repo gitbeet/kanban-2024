@@ -13,6 +13,7 @@ import { BoardSchema } from "~/zod-schemas";
 import type { ChangeEvent, FormEvent } from "react";
 import type { CreateBoardChange, BoardType } from "~/types";
 import FocusTrap from "focus-trap-react";
+import { CreateBoardUpdate } from "~/types/updates";
 
 const CreateBoardForm = ({
   ...props
@@ -70,14 +71,11 @@ const CreateBoardForm = ({
     });
 
     // Server error check
-    const currentBoardId = getCurrentBoard()?.id;
     const args = {
       change: {
         action: "createBoard",
-        oldCurrentBoardId: currentBoardId!,
-        id: newBoard.id,
-        name: newBoard.name,
-      } as CreateBoardChange,
+        payload: { board: newBoard },
+      } as CreateBoardUpdate,
       userId: user.id,
       revalidate: true,
     };

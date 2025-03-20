@@ -53,7 +53,10 @@ const RenameColumnForm = ({
     setIsOpen(false);
 
     const response = await handleRenameColumn({
-      change: { action: "renameColumn", columnId, newName: newColumnName },
+      change: {
+        action: "renameColumn",
+        payload: { columnId, newColumnName, boardId },
+      },
       revalidate: true,
     });
     if (response?.error) {

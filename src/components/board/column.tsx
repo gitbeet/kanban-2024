@@ -169,11 +169,14 @@ const Column = ({
     const response = await handleSwitchTaskColumn({
       change: {
         action: "switchTaskColumn",
-        taskId,
-        oldColumnId,
-        newColumnId,
-        oldColumnIndex: Number(oldColumnIndex),
-        newColumnIndex: Number(newColumnIndex),
+        payload: {
+          boardId,
+          taskId,
+          oldColumnId,
+          newColumnId,
+          oldColumnIndex: Number(oldColumnIndex),
+          newColumnIndex: Number(newColumnIndex),
+        },
       },
       revalidate: true,
     });

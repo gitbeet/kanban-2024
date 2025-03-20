@@ -6,6 +6,7 @@ import type { FormEvent } from "react";
 import { handleDeleteBoard } from "~/server/queries";
 import { useUser } from "@clerk/nextjs";
 import type { DeleteBoardChange } from "~/types";
+import { DeleteBoardUpdate } from "~/types/updates";
 
 interface DeleteTaskFormProps extends React.HTMLAttributes<HTMLDivElement> {
   boardId: string;
@@ -56,10 +57,8 @@ const DeleteBoardForm = ({
     const args = {
       change: {
         action: "deleteBoard",
-        boardId,
-        boardIndex,
-        wasCurrent,
-      } as DeleteBoardChange,
+        payload: { boardId, boardIndex, wasCurrent },
+      } as DeleteBoardUpdate,
       userId: user.id,
       revalidate: true,
     };

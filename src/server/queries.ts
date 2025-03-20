@@ -30,7 +30,31 @@ import type {
   ToggleSubtaskCompletedChange,
   ToggleTaskCompletedChange,
 } from "~/types";
-import { BoardSchema } from "~/zod-schemas";
+import {
+  BoardSchema,
+  ColumnSchema,
+  SubtaskSchema,
+  TaskSchema,
+} from "~/zod-schemas";
+import {
+  CreateBoardUpdate,
+  CreateColumnUpdate,
+  CreateSubtaskUpdate,
+  CreateTaskUpdate,
+  DeleteBoardUpdate,
+  DeleteColumnUpdate,
+  DeleteSubtaskUpdate,
+  DeleteTaskUpdate,
+  MakeBoardCurrentUpdate,
+  RenameBoardUpdate,
+  RenameColumnUpdate,
+  RenameSubtaskUpdate,
+  RenameTaskUpdate,
+  SwitchTaskColumnUpdate,
+  ToggleSubtaskUpdate,
+  ToggleTaskUpdate,
+  Update,
+} from "~/types/updates";
 
 // ------ Board ------
 export async function getBoards() {
@@ -60,46 +84,34 @@ export const handleCreateBoard = async ({
   revalidate = false,
   inTransaction = false,
 }: {
-  change: CreateBoardChange;
+  change: CreateBoardUpdate;
   userId: string;
   tx?: DatabaseType;
   revalidate?: boolean;
   inTransaction?: boolean;
 }) => {
   try {
-    const { id, name, oldCurrentBoardId } = change;
-    // calculate current max position
+    const { payload } = change;
+    const { board } = payload;
     const boardsOrdered = await tx.query.boards.findMany({
       where: (model, { eq }) => eq(model.userId, userId),
       orderBy: (model, { desc }) => desc(model.index),
       limit: 1,
     });
+
     const maxIndex = boardsOrdered[0]?.index ?? 0;
-
     if (typeof maxIndex === undefined) throw new Error("No max index");
+    if (maxIndex + 1 !== board.index) throw new Error("Wrong index");
 
-    const newBoard: BoardType = {
-      id,
-      name,
-      columns: [],
-      current: true,
-      userId: userId,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      index: maxIndex + 1,
-    };
-
-    const result = BoardSchema.safeParse(newBoard);
+    const result = BoardSchema.safeParse(board);
     if (!result.success) {
       throw new Error(
         result.error.issues[0]?.message ?? "Error while creating a new board",
       );
     }
-    await tx
-      .update(boards)
-      .set({ current: false })
-      .where(and(eq(boards.id, oldCurrentBoardId), eq(boards.userId, userId)));
-    await tx.insert(boards).values(newBoard);
+
+    await tx.update(boards).set({ current: false });
+    await tx.insert(boards).values(board);
   } catch (error) {
     const errorMessage =
       error === "string" ? error : "Error while creating a new board";
@@ -121,17 +133,29 @@ export const handleRenameBoard = async ({
   revalidate = false,
   inTransaction = false,
 }: {
-  change: RenameBoardChange;
+  change: RenameBoardUpdate;
   userId: string;
   tx?: DatabaseType;
   revalidate?: boolean;
   inTransaction?: boolean;
 }) => {
-  const { boardId, newName } = change;
+  const { payload } = change;
+  const { boardId, newBoardName } = payload;
+
+  const result = BoardSchema.pick({ id: true, name: true }).safeParse({
+    id: boardId,
+    name: newBoardName,
+  });
+  if (!result.success) {
+    throw new Error(
+      result.error.issues[0]?.message ?? "Error while renaming a board",
+    );
+  }
+
   try {
     await tx
       .update(boards)
-      .set({ name: newName, updatedAt: new Date() })
+      .set({ name: newBoardName, updatedAt: new Date() })
       .where(and(eq(boards.id, boardId), eq(boards.userId, userId)));
   } catch (error) {
     const errorMessage =
@@ -154,13 +178,26 @@ export const handleDeleteBoard = async ({
   revalidate = false,
   inTransaction = false,
 }: {
-  change: DeleteBoardChange;
+  change: DeleteBoardUpdate;
   userId: string;
   tx?: DatabaseType;
   revalidate?: boolean;
   inTransaction?: boolean;
 }) => {
-  const { boardId, boardIndex, wasCurrent } = change;
+  const { payload } = change;
+  const { boardId, boardIndex, wasCurrent } = payload;
+
+  const result = BoardSchema.pick({ id: true, index: true }).safeParse({
+    id: boardId,
+    index: boardIndex,
+  });
+
+  if (!result.success) {
+    throw new Error(
+      result.error.issues[0]?.message ?? "Error while deleting a board",
+    );
+  }
+
   try {
     await tx
       .update(boards)
@@ -195,13 +232,14 @@ export const handleMakeBoardCurrent = async ({
   revalidate = false,
   inTransaction = false,
 }: {
-  change: MakeBoardCurrentChange;
+  change: MakeBoardCurrentUpdate;
   userId: string;
   tx?: DatabaseType;
   revalidate?: boolean;
   inTransaction?: boolean;
 }) => {
-  const { oldCurrentBoardId, newCurrentBoardId } = change;
+  const { payload } = change;
+  const { oldCurrentBoardId, newCurrentBoardId } = payload;
   try {
     await tx
       .update(boards)
@@ -232,12 +270,20 @@ export const handleCreateColumn = async ({
   revalidate = false,
   inTransaction = false,
 }: {
-  change: CreateColumnChange;
+  change: CreateColumnUpdate;
   tx?: DatabaseType;
   revalidate?: boolean;
   inTransaction?: boolean;
 }) => {
-  const { boardId, columnName, columnId } = change;
+  const { payload } = change;
+  const { column } = payload;
+  const { boardId } = column;
+
+  const result = ColumnSchema.safeParse(column);
+  if (!result.success) {
+    throw new Error("Error while creating a column");
+  }
+
   // calculate current max position
   const columnsOrdered = await tx.query.columns.findMany({
     where: (model, { eq }) => eq(model.boardId, boardId),
@@ -248,18 +294,10 @@ export const handleCreateColumn = async ({
   const maxIndex = columnsOrdered[0]?.index ?? 0;
 
   if (typeof maxIndex === undefined) throw new Error("No max index");
+  if (maxIndex + 1 !== column.index) throw new Error("Wrong index");
 
-  const newColumn: ColumnType = {
-    id: columnId,
-    index: maxIndex + 1,
-    tasks: [],
-    name: columnName,
-    boardId,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  };
   try {
-    await tx.insert(columns).values(newColumn);
+    await tx.insert(columns).values(column);
   } catch (error) {
     const errorMessage =
       error === "string" ? error : "Error while creating column";
@@ -280,16 +318,27 @@ export const handleRenameColumn = async ({
   revalidate = false,
   inTransaction = false,
 }: {
-  change: RenameColumnChange;
+  change: RenameColumnUpdate;
   tx?: DatabaseType;
   revalidate?: boolean;
   inTransaction?: boolean;
 }) => {
+  const { payload } = change;
+  const { columnId, newColumnName } = payload;
+
+  const result = ColumnSchema.pick({ id: true, name: true }).safeParse({
+    id: columnId,
+    name: newColumnName,
+  });
+  if (!result.success) {
+    throw new Error("Error while renaming a column");
+  }
+
   try {
     await tx
       .update(columns)
-      .set({ name: change.newName, updatedAt: new Date() })
-      .where(and(eq(columns.id, change.columnId)));
+      .set({ name: newColumnName, updatedAt: new Date() })
+      .where(and(eq(columns.id, columnId)));
   } catch (error) {
     const errorMessage =
       error === "string" ? error : "Error while renaming column";
@@ -310,14 +359,25 @@ export const handleDeleteColumn = async ({
   revalidate = false,
   inTransaction = false,
 }: {
-  change: DeleteColumnChange;
+  change: DeleteColumnUpdate;
   tx?: DatabaseType;
   revalidate?: boolean;
   inTransaction?: boolean;
 }) => {
+  const { payload } = change;
+  const { boardId, columnId } = payload;
+
+  const result = ColumnSchema.pick({ id: true, boardId: true }).safeParse({
+    id: columnId,
+    boardId,
+  });
+  if (!result.success) {
+    throw new Error("Error while deleting a column");
+  }
+
   try {
     const column = await tx.query.columns.findFirst({
-      where: (model, { eq }) => eq(model.id, change.columnId),
+      where: (model, { eq }) => eq(model.id, columnId),
     });
     if (!column) throw new Error("Column not found");
     await tx
@@ -329,7 +389,7 @@ export const handleDeleteColumn = async ({
           gt(columns.index, column.index),
         ),
       );
-    await tx.delete(columns).where(eq(columns.id, change.columnId));
+    await tx.delete(columns).where(eq(columns.id, columnId));
   } catch (error) {
     const errorMessage =
       error === "string" ? error : "Error while deleting column";
@@ -351,34 +411,30 @@ export const handleCreateTask = async ({
   revalidate = false,
   inTransaction = false,
 }: {
-  change: CreateTaskChange;
+  change: CreateTaskUpdate;
   tx?: DatabaseType;
   revalidate?: boolean;
   inTransaction?: boolean;
 }) => {
-  const { name, columnId } = change;
+  const { payload } = change;
+  const { columnId, task } = payload;
+
+  const result = TaskSchema.safeParse(task);
+  if (!result.success) throw new Error("Error while creating a task");
+
   // calculate current max position
   const tasksOrdered = await tx.query.tasks.findMany({
     where: (model, { eq }) => eq(model.columnId, columnId),
     orderBy: (model, { desc }) => desc(model.index),
     limit: 1,
   });
+
   const maxIndex = tasksOrdered[0]?.index ?? 0;
-
   if (typeof maxIndex === undefined) throw new Error("No max index");
+  if (maxIndex + 1 !== task.index) throw new Error("Wrong index");
 
-  const newTask: TaskType = {
-    id: uuid(),
-    index: maxIndex + 1,
-    name,
-    completed: false,
-    columnId,
-    subtasks: [],
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  };
   try {
-    await tx.insert(tasks).values(newTask);
+    await tx.insert(tasks).values(task);
   } catch (error) {
     const errorMessage =
       error === "string" ? error : "Error while creating task";
@@ -399,16 +455,23 @@ export const handleRenameTask = async ({
   revalidate = false,
   inTransaction = false,
 }: {
-  change: RenameTaskChange;
+  change: RenameTaskUpdate;
   tx?: DatabaseType;
   revalidate?: boolean;
   inTransaction?: boolean;
 }) => {
+  const { payload } = change;
+  const { taskId, newTaskName } = payload;
+  const result = TaskSchema.pick({ id: true, name: true }).safeParse({
+    id: taskId,
+    name: newTaskName,
+  });
+  if (!result.success) throw new Error("Error while renaming a task");
   try {
     await tx
       .update(tasks)
-      .set({ name: change.newTaskName, updatedAt: new Date() })
-      .where(eq(tasks.id, change.taskId));
+      .set({ name: newTaskName, updatedAt: new Date() })
+      .where(eq(tasks.id, taskId));
   } catch (error) {
     const errorMessage =
       error === "string" ? error : "Error while renaming task";
@@ -429,14 +492,20 @@ export const handleDeleteTask = async ({
   revalidate = false,
   inTransaction = false,
 }: {
-  change: DeleteTaskChange;
+  change: DeleteTaskUpdate;
   tx?: DatabaseType;
   revalidate?: boolean;
   inTransaction?: boolean;
 }) => {
+  const { payload } = change;
+  const { taskId } = payload;
+
+  const result = TaskSchema.pick({ id: true }).safeParse({ id: taskId });
+  if (!result.success) throw new Error("Error while deleting a task");
+
   try {
     const task = await tx.query.tasks.findFirst({
-      where: (model, { eq }) => eq(model.id, change.taskId),
+      where: (model, { eq }) => eq(model.id, taskId),
     });
     if (!task) throw new Error("Task not found");
     await tx
@@ -445,7 +514,7 @@ export const handleDeleteTask = async ({
       .where(
         and(eq(tasks.columnId, task.columnId), gt(tasks.index, task.index)),
       );
-    await tx.delete(tasks).where(eq(tasks.id, change.taskId));
+    await tx.delete(tasks).where(eq(tasks.id, taskId));
   } catch (error) {
     const errorMessage =
       error === "string" ? error : "Error while deleting task";
@@ -466,14 +535,20 @@ export const handleToggleTaskCompleted = async ({
   revalidate = false,
   inTransaction = false,
 }: {
-  change: ToggleTaskCompletedChange;
+  change: ToggleTaskUpdate;
   tx?: DatabaseType;
   revalidate?: boolean;
   inTransaction?: boolean;
 }) => {
+  const { payload } = change;
+  const { taskId } = payload;
+
+  const result = TaskSchema.pick({ id: true }).safeParse({ id: taskId });
+  if (!result.success) throw new Error("Error while toggling a task");
+
   try {
     const task = await tx.query.tasks.findFirst({
-      where: (model, { eq }) => eq(model.id, change.taskId),
+      where: (model, { eq }) => eq(model.id, taskId),
     });
 
     if (!task) throw new Error("Task not found!");
@@ -481,7 +556,7 @@ export const handleToggleTaskCompleted = async ({
     await tx
       .update(tasks)
       .set({ completed: !task.completed, updatedAt: new Date() })
-      .where(eq(tasks.id, change.taskId));
+      .where(eq(tasks.id, taskId));
   } catch (error) {
     const errorMessage =
       error === "string" ? error : "Error while toggling task";
@@ -502,32 +577,60 @@ export const handleSwitchTaskColumn = async ({
   revalidate = false,
   inTransaction = false,
 }: {
-  change: SwitchTaskColumnChange;
+  change: SwitchTaskColumnUpdate;
   tx?: DatabaseType;
   revalidate?: boolean;
   inTransaction?: boolean;
 }) => {
+  const { payload } = change;
+  const { newColumnId, newColumnIndex, oldColumnId, oldColumnIndex, taskId } =
+    payload;
+
+  const oldColumnParseResult = ColumnSchema.pick({
+    id: true,
+    index: true,
+  }).safeParse({
+    id: oldColumnId,
+    index: oldColumnIndex,
+  });
+  const newColumnParseResult = ColumnSchema.pick({
+    id: true,
+    index: true,
+  }).safeParse({
+    id: newColumnId,
+    index: newColumnIndex,
+  });
+  const taskParseResult = TaskSchema.pick({ id: true }).safeParse({
+    id: taskId,
+  });
+  if (
+    !oldColumnParseResult.success ||
+    !newColumnParseResult.success ||
+    !taskParseResult.success
+  )
+    throw new Error("Error while switching a task column");
+
   try {
-    const inTheSameColumn = change.oldColumnId === change.newColumnId;
+    const inTheSameColumn = oldColumnId === newColumnId;
     if (inTheSameColumn) {
       // check which direction we're moving in
-      const movingUp = change.oldColumnIndex > change.newColumnIndex;
+      const movingUp = oldColumnIndex > newColumnIndex;
       if (movingUp) {
         // update the task index
         await tx
           .update(tasks)
-          .set({ index: change.newColumnIndex, updatedAt: new Date() })
-          .where(eq(tasks.id, change.taskId));
+          .set({ index: newColumnIndex, updatedAt: new Date() })
+          .where(eq(tasks.id, taskId));
         // Increment all indices between the old and the new, excluding the dragged task's index
         await tx
           .update(tasks)
           .set({ index: sql`${tasks.index} + 1` })
           .where(
             and(
-              eq(tasks.columnId, change.newColumnId),
-              ne(tasks.id, change.taskId),
-              gte(tasks.index, change.newColumnIndex),
-              lte(tasks.index, change.oldColumnIndex),
+              eq(tasks.columnId, newColumnId),
+              ne(tasks.id, taskId),
+              gte(tasks.index, newColumnIndex),
+              lte(tasks.index, oldColumnIndex),
             ),
           );
       } else {
@@ -535,20 +638,20 @@ export const handleSwitchTaskColumn = async ({
         await tx
           .update(tasks)
           .set({
-            index: change.newColumnIndex - 1,
+            index: newColumnIndex - 1,
             updatedAt: new Date(),
           })
-          .where(eq(tasks.id, change.taskId));
+          .where(eq(tasks.id, taskId));
         // Decrement all indices between the old and the new, excluding the dragged task's index
         await tx
           .update(tasks)
           .set({ index: sql`${tasks.index} - 1` })
           .where(
             and(
-              eq(tasks.columnId, change.newColumnId),
-              ne(tasks.id, change.taskId),
-              gte(tasks.index, change.oldColumnIndex),
-              lt(tasks.index, change.newColumnIndex),
+              eq(tasks.columnId, newColumnId),
+              ne(tasks.id, taskId),
+              gte(tasks.index, oldColumnIndex),
+              lt(tasks.index, newColumnIndex),
             ),
           );
       }
@@ -559,8 +662,8 @@ export const handleSwitchTaskColumn = async ({
         .set({ index: sql`${tasks.index} - 1` })
         .where(
           and(
-            eq(tasks.columnId, change.oldColumnId),
-            gte(tasks.index, change.oldColumnIndex),
+            eq(tasks.columnId, oldColumnId),
+            gte(tasks.index, oldColumnIndex),
           ),
         );
       await tx
@@ -568,18 +671,18 @@ export const handleSwitchTaskColumn = async ({
         .set({ index: sql`${tasks.index} + 1` })
         .where(
           and(
-            eq(tasks.columnId, change.newColumnId),
-            gte(tasks.index, change.newColumnIndex),
+            eq(tasks.columnId, newColumnId),
+            gte(tasks.index, newColumnIndex),
           ),
         );
 
       await tx
         .update(tasks)
         .set({
-          columnId: change.newColumnId,
-          index: change.newColumnIndex,
+          columnId: newColumnId,
+          index: newColumnIndex,
         })
-        .where(eq(tasks.id, change.taskId));
+        .where(eq(tasks.id, taskId));
     }
   } catch (error) {
     const errorMessage =
@@ -602,35 +705,31 @@ export const handleCreateSubtask = async ({
   revalidate = false,
   inTransaction = false,
 }: {
-  change: CreateSubtaskChange;
+  change: CreateSubtaskUpdate;
   tx?: DatabaseType;
   revalidate?: boolean;
   inTransaction?: boolean;
 }) => {
+  const { payload } = change;
+  const { subtask } = payload;
+
+  const result = SubtaskSchema.safeParse(subtask);
+  if (!result.success) throw new Error("Error while creating a subtask");
+
   try {
     const subtasksOrdered = await tx.query.subtasks.findMany({
-      where: (model, { eq }) => eq(model.taskId, change.newSubtask.taskId),
+      where: (model, { eq }) => eq(model.taskId, subtask.taskId),
       orderBy: (model, { desc }) => desc(model.index),
       limit: 1,
     });
     const maxIndex = subtasksOrdered[0]?.index ?? 0;
-
     if (typeof maxIndex === undefined) throw new Error("No max index");
+    if (maxIndex + 1 !== subtask.index) throw new Error("Wrong index");
 
-    const newSubtask: SubtaskType = {
-      id: uuid(),
-      index: maxIndex + 1,
-      name: change.newSubtask.name,
-      completed: false,
-      taskId: change.newSubtask.taskId,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
-
-    await tx.insert(subtasks).values(newSubtask);
+    await tx.insert(subtasks).values(subtask);
   } catch (error) {
     const errorMessage =
-      error === "string" ? error : "Error while creating subtask";
+      error === "string" ? error : "Error while creating a subtask";
     if (inTransaction) {
       throw new Error(errorMessage);
     } else {
@@ -648,16 +747,25 @@ export const handleRenameSubtask = async ({
   revalidate = false,
   inTransaction = false,
 }: {
-  change: RenameSubtaskChange;
+  change: RenameSubtaskUpdate;
   tx?: DatabaseType;
   revalidate?: boolean;
   inTransaction?: boolean;
 }) => {
+  const { payload } = change;
+  const { newSubtaskName, subtaskId } = payload;
+
+  const result = SubtaskSchema.pick({ id: true, name: true }).safeParse({
+    id: subtaskId,
+    name: newSubtaskName,
+  });
+  if (!result.success) throw new Error("Error while renaming subtask");
+
   try {
     await tx
       .update(subtasks)
-      .set({ name: change.newSubtaskName, updatedAt: new Date() })
-      .where(eq(subtasks.id, change.subtaskId));
+      .set({ name: newSubtaskName, updatedAt: new Date() })
+      .where(eq(subtasks.id, subtaskId));
   } catch (error) {
     const errorMessage =
       error === "string" ? error : "Error while renaming subtask";
@@ -678,14 +786,20 @@ export const handleDeleteSubtask = async ({
   revalidate = false,
   inTransaction = false,
 }: {
-  change: DeleteSubtaskChange;
+  change: DeleteSubtaskUpdate;
   tx?: DatabaseType;
   revalidate?: boolean;
   inTransaction?: boolean;
 }) => {
+  const { payload } = change;
+  const { subtaskId } = payload;
+
+  const result = SubtaskSchema.pick({ id: true }).safeParse({ id: subtaskId });
+  if (!result.success) throw new Error("Error while deleting a subtask");
+
   try {
     const subtask = await tx.query.subtasks.findFirst({
-      where: (model, { eq }) => eq(model.id, change.subtaskId),
+      where: (model, { eq }) => eq(model.id, subtaskId),
     });
     if (!subtask) throw new Error("Subtask not found");
     await tx
@@ -697,7 +811,7 @@ export const handleDeleteSubtask = async ({
           gt(subtasks.index, subtask.index),
         ),
       );
-    await tx.delete(subtasks).where(eq(subtasks.id, change.subtaskId));
+    await tx.delete(subtasks).where(eq(subtasks.id, subtaskId));
   } catch (error) {
     const errorMessage =
       error === "string" ? error : "Error while deleting subtask";
@@ -718,14 +832,20 @@ export const handleToggleSubtaskCompleted = async ({
   revalidate = false,
   inTransaction = false,
 }: {
-  change: ToggleSubtaskCompletedChange;
+  change: ToggleSubtaskUpdate;
   tx?: DatabaseType;
   revalidate?: boolean;
   inTransaction?: boolean;
 }) => {
+  const { payload } = change;
+  const { subtaskId } = payload;
+
+  const result = SubtaskSchema.pick({ id: true }).safeParse({ id: subtaskId });
+  if (!result.success) throw new Error("Error while togglingh a subtask");
+
   try {
     const subtask = await tx.query.subtasks.findFirst({
-      where: (model, { eq }) => eq(model.id, change.subtaskId),
+      where: (model, { eq }) => eq(model.id, subtaskId),
     });
 
     if (!subtask) throw new Error("Subtask not found!");
@@ -733,7 +853,7 @@ export const handleToggleSubtaskCompleted = async ({
     await tx
       .update(subtasks)
       .set({ completed: !subtask.completed, updatedAt: new Date() })
-      .where(eq(subtasks.id, change.subtaskId));
+      .where(eq(subtasks.id, subtaskId));
   } catch (error) {
     const errorMessage =
       error === "string" ? error : "Error while toggling subtask";
@@ -749,7 +869,7 @@ export const handleToggleSubtaskCompleted = async ({
 };
 
 // ------ Transaction ------
-export async function mutateTable(changes: Change[]) {
+export async function mutateTable(changes: Update[]) {
   const user = auth();
   if (!user.userId) throw new Error("Unauthorized");
   try {
@@ -811,7 +931,7 @@ export async function mutateTable(changes: Change[]) {
           case "deleteTask":
             await handleDeleteTask({ change, tx, inTransaction: true });
             break;
-          case "toggleTaskCompleted":
+          case "toggleTask":
             await handleToggleTaskCompleted({
               change,
               tx,
@@ -832,7 +952,7 @@ export async function mutateTable(changes: Change[]) {
           case "deleteSubtask":
             await handleDeleteSubtask({ change, tx, inTransaction: true });
             break;
-          case "toggleSubtaskCompleted":
+          case "toggleSubtask":
             await handleToggleSubtaskCompleted({
               change,
               tx,

@@ -17,6 +17,10 @@ const DeleteSubtaskForm = ({
   const [pending, startTransition] = useTransition();
   const boardId = getCurrentBoard()?.id;
   const clientAction = async () => {
+    if (!boardId) {
+      setError("No board id found");
+      return;
+    }
     startTransition(() => {
       setOptimisticBoards({
         action: "deleteSubtask",
@@ -27,7 +31,10 @@ const DeleteSubtaskForm = ({
       });
     });
     const response = await handleDeleteSubtask({
-      change: { action: "deleteSubtask", subtaskId },
+      change: {
+        action: "deleteSubtask",
+        payload: { boardId, columnId, taskId, subtaskId },
+      },
       revalidate: true,
     });
     if (response?.error) {

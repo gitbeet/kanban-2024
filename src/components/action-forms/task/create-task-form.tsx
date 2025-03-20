@@ -69,7 +69,10 @@ const CreateTaskForm = ({
     });
 
     const response = await handleCreateTask({
-      change: { action: "createTask", columnId, name: newTask.name },
+      change: {
+        action: "createTask",
+        payload: { boardId, task: newTask, columnId },
+      },
       revalidate: true,
     });
     if (response?.error) {

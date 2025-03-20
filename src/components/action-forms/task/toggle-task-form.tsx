@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useBoards } from "~/context/boards-context";
 import { handleToggleTaskCompleted } from "~/server/queries";
 import { ToggleButton } from "~/components/ui/button/buttons";
-import type { TaskType } from "~/types";
+import { type TaskType } from "~/types";
 
 const ToggleTaskForm = ({
   boardId,
@@ -23,7 +23,10 @@ const ToggleTaskForm = ({
       taskId: task.id,
     });
     const response = await handleToggleTaskCompleted({
-      change: { action: "toggleTaskCompleted", taskId: task.id },
+      change: {
+        action: "toggleTask",
+        payload: { boardId, columnId, taskId: task.id },
+      },
       revalidate: true,
     });
     if (response?.error) {

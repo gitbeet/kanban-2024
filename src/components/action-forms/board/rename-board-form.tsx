@@ -9,6 +9,7 @@ import { BoardSchema } from "~/zod-schemas";
 import type { ChangeEvent } from "react";
 import type { RenameBoardChange } from "~/types";
 import { useUser } from "@clerk/nextjs";
+import { RenameBoardUpdate } from "~/types/updates";
 
 const RenameBoardForm = ({ boardId }: { boardId: string }) => {
   const [newBoardName, setNewBoardName] = useState("");
@@ -39,9 +40,11 @@ const RenameBoardForm = ({ boardId }: { boardId: string }) => {
     const response = await handleRenameBoard({
       change: {
         action: "renameBoard",
-        boardId,
-        newName: newBoardName,
-      } as RenameBoardChange,
+        payload: {
+          boardId,
+          newBoardName,
+        },
+      } as RenameBoardUpdate,
       userId: user.id,
       revalidate: true,
     });

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useBoards } from "~/context/boards-context";
 import { v4 as uuid } from "uuid";
 import { mutateTable } from "~/server/queries";
@@ -16,6 +16,13 @@ import {
 import { ModalWithBackdrop } from "~/components/ui/modal/modal";
 import PromptWindow from "~/components/ui/modal/prompt-window";
 import { useUI } from "~/context/ui-context";
+import {
+  CreateSubtaskUpdate,
+  RenameSubtaskUpdate,
+  RenameTaskUpdate,
+  SwitchTaskColumnUpdate,
+  Update,
+} from "~/types/updates";
 
 interface Props {
   task: TaskType;
@@ -50,9 +57,9 @@ export const EditTaskMenu = ({ columnId, task }: Props) => {
   const [showConfirmCancelWindow, setShowConfirmCancelWindow] = useState(false);
 
   const [temporaryTaskName, setTemporaryName] = useState(task.name);
-  const [temporarySubtasks, setTemporarySubtasks] = useState<
-    { id: string; index: number; name: string }[]
-  >(initialTemporarySubtasks);
+  const [temporarySubtasks, setTemporarySubtasks] = useState<SubtaskType[]>(
+    task.subtasks,
+  );
   const [temporaryColumnId, setTemporaryColumnId] = useState(columnId);
 
   const [loading, setLoading] = useState(false);
@@ -62,10 +69,15 @@ export const EditTaskMenu = ({ columnId, task }: Props) => {
   }>(initialErrors);
 
   // Changes are used for the db transaction query
-  const [changes, setChanges] = useState<Change[]>([]);
+  const [changes, setChanges] = useState<Update[]>([]);
+
+  useEffect(() => {
+    setTemporaryName(task.name);
+    setTemporarySubtasks(task.subtasks);
+  }, [task]);
 
   const handleResetChanges = () => {
-    setTemporarySubtasks(initialTemporarySubtasks);
+    setTemporarySubtasks(task.subtasks);
     setTemporaryColumnId(columnId);
     setTemporaryName(task.name);
     setLoading(false);
@@ -76,8 +88,6 @@ export const EditTaskMenu = ({ columnId, task }: Props) => {
   const handleCloseAllWindows = () => {
     setShowConfirmCancelWindow(false);
     setShowEditTaskWindow(false);
-    setShowEditTaskSmallMenu(false);
-    setShowEditTaskMenu(false);
     handleResetChanges();
   };
 
@@ -88,17 +98,22 @@ export const EditTaskMenu = ({ columnId, task }: Props) => {
   };
 
   const handleChangeTaskName = (e: ChangeEvent<HTMLInputElement>) => {
+    if (!board) return;
     setError((prev) => ({ ...prev, name: "" }));
     setTemporaryName(e.target.value);
     setChanges((prev) => {
       const actionIndex = prev.findIndex(
-        (change) => change.action === "renameTask" && change.taskId === task.id,
+        (change) =>
+          change.action === "renameTask" && change.payload.taskId === task.id,
       );
       // If there's already a rename action, don't add another one
       if (actionIndex !== -1) {
         return prev.map((change, i) =>
           i === actionIndex
-            ? { ...change, newTaskName: e.target.value }
+            ? ({
+                ...change,
+                payload: { ...change.payload, newTaskName: e.target.value },
+              } as RenameTaskUpdate)
             : change,
         );
       } else {
@@ -106,16 +121,20 @@ export const EditTaskMenu = ({ columnId, task }: Props) => {
           ...prev,
           {
             action: "renameTask",
-            taskId: task.id,
-            // use e.target.value as state updates async and can be one letter behind
-            newTaskName: e.target.value,
-          },
+            payload: {
+              boardId: board.id,
+              columnId: columnId,
+              taskId: task.id,
+              newTaskName: e.target.value,
+            },
+          } satisfies RenameTaskUpdate,
         ];
       }
     });
   };
 
   const handleChangeTaskColumn = (e: ChangeEvent<HTMLSelectElement>) => {
+    if (!board) return;
     setTemporaryColumnId(e.target.value);
     setChanges((prev) => {
       const isSameColumn = task.columnId === e.target.value;
@@ -129,7 +148,10 @@ export const EditTaskMenu = ({ columnId, task }: Props) => {
       if (actionIndex !== -1) {
         return prev.map((change, i) =>
           i === actionIndex
-            ? { ...change, newColumnId: e.target.value }
+            ? ({
+                ...change,
+                payload: { ...change.payload, newColumnId: e.target.value },
+              } as SwitchTaskColumnUpdate)
             : change,
         );
       }
@@ -142,17 +164,21 @@ export const EditTaskMenu = ({ columnId, task }: Props) => {
         ...prev,
         {
           action: "switchTaskColumn",
-          taskId: task.id,
-          oldColumnId: task.columnId,
-          newColumnId: e.target.value,
-          oldColumnIndex: task.index,
-          newColumnIndex: newColumnIndex,
-        },
+          payload: {
+            boardId: board.id,
+            taskId: task.id,
+            oldColumnId: task.columnId,
+            newColumnId: e.target.value,
+            oldColumnIndex: task.index,
+            newColumnIndex: newColumnIndex,
+          },
+        } satisfies SwitchTaskColumnUpdate,
       ];
     });
   };
 
   const handlecreateSubtask = () => {
+    if (!board) return;
     const maxIndex = temporarySubtasks.length;
 
     const newSubtask: SubtaskType = {
@@ -169,7 +195,7 @@ export const EditTaskMenu = ({ columnId, task }: Props) => {
       const actionIndex = prev.findIndex(
         (change) =>
           change.action === "createSubtask" &&
-          change.newSubtask.id === newSubtask.id,
+          change.payload.subtask.id === newSubtask.id,
       );
       // If action already exists
       if (actionIndex !== -1) {
@@ -179,8 +205,13 @@ export const EditTaskMenu = ({ columnId, task }: Props) => {
           ...prev,
           {
             action: "createSubtask",
-            newSubtask,
-          },
+            payload: {
+              boardId: board.id,
+              columnId,
+              subtask: newSubtask,
+              taskId: task.id,
+            },
+          } satisfies CreateSubtaskUpdate,
         ];
       }
     });
@@ -198,6 +229,7 @@ export const EditTaskMenu = ({ columnId, task }: Props) => {
     e: ChangeEvent<HTMLInputElement>,
     subtaskId: string,
   ) => {
+    if (!board) return;
     setError((prev) => ({
       ...prev,
       subtasks: prev.subtasks.map((s) =>
@@ -214,28 +246,35 @@ export const EditTaskMenu = ({ columnId, task }: Props) => {
       const subtaskAddActionIndex = prev.findIndex(
         (change) =>
           change.action === "createSubtask" &&
-          change.newSubtask.id === subtaskId,
+          change.payload.subtask.id === subtaskId,
       );
 
       const subtaskRenameActionIndex = prev.findIndex(
         (change) =>
-          change.action === "renameSubtask" && change.subtaskId === subtaskId,
+          change.action === "renameSubtask" &&
+          change.payload.subtaskId === subtaskId,
       );
 
       if (subtaskAddActionIndex !== -1) {
         return prev.map((change) =>
           change.action === "createSubtask" &&
-          change.newSubtask.id === subtaskId
+          change.payload.subtask.id === subtaskId
             ? {
                 ...change,
-                newSubtask: { ...change.newSubtask, name: e.target.value },
+                payload: {
+                  ...change.payload,
+                  subtask: { ...change.payload.subtask, name: e.target.value },
+                },
               }
             : change,
         );
       } else if (subtaskRenameActionIndex !== -1) {
         return prev.map((change, i) =>
           i === subtaskRenameActionIndex
-            ? { ...change, newSubtaskName: e.target.value }
+            ? ({
+                ...change,
+                payload: { ...change.payload, newSubtaskName: e.target.value },
+              } as RenameSubtaskUpdate)
             : change,
         );
       } else {
@@ -243,35 +282,42 @@ export const EditTaskMenu = ({ columnId, task }: Props) => {
           ...prev,
           {
             action: "renameSubtask",
-            subtaskId,
-            newSubtaskName: e.target.value,
-          },
+            payload: {
+              boardId: board.id,
+              columnId,
+              taskId: task.id,
+              subtaskId,
+              newSubtaskName: e.target.value,
+            },
+          } satisfies RenameSubtaskUpdate,
         ];
       }
     });
   };
 
   const handleDeleteSubtask = (subtaskId: string, subtaskIndex: number) => {
+    if (!board) return;
     setChanges((prev) => {
       // Check if the subtask was added since the menu was opened
       const wasAdded =
         changes.findIndex(
           (change) =>
             change.action === "createSubtask" &&
-            change.newSubtask?.id === subtaskId,
+            change.payload.subtask.id === subtaskId,
         ) !== -1;
       const actionIndex = prev.findIndex(
         (change) =>
-          change.action === "deleteSubtask" && change.subtaskId === subtaskId,
+          change.action === "deleteSubtask" &&
+          change.payload.subtaskId === subtaskId,
       );
       // If it was added since the menu was opened -> clear all actions that have to do with said subtask (if we added it , renamed it then deleted it before saving the changes it means we don't query the db at all )
       if (wasAdded) {
         return prev.filter((change) => {
           if (change.action === "renameSubtask") {
-            return change.subtaskId !== subtaskId;
+            return change.payload.subtaskId !== subtaskId;
           }
           if (change.action === "createSubtask") {
-            return change.newSubtask.id !== subtaskId;
+            return change.payload.subtask.id !== subtaskId;
           }
           return true;
         });
@@ -284,13 +330,18 @@ export const EditTaskMenu = ({ columnId, task }: Props) => {
         return [
           ...prev.filter((change) => {
             if (change.action === "renameSubtask") {
-              return change.subtaskId !== subtaskId;
+              return change.payload.subtaskId !== subtaskId;
             }
             return true;
           }),
           {
             action: "deleteSubtask",
-            subtaskId,
+            payload: {
+              boardId: board.id,
+              columnId,
+              taskId: task.id,
+              subtaskId,
+            },
           },
         ];
       }
@@ -336,7 +387,7 @@ export const EditTaskMenu = ({ columnId, task }: Props) => {
 
     const response = await mutateTable(changes);
     if (response?.error) {
-      console.log(response.error);
+      return console.log(response.error);
     }
     setLoading(false);
     handleCloseAllWindows();

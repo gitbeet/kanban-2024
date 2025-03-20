@@ -7,11 +7,18 @@ import {
 import InputField from "~/components/ui/input-field";
 import { ModalWithBackdrop } from "~/components/ui/modal/modal";
 import { useUI } from "~/context/ui-context";
-import type { BoardType, Change, ColumnType } from "~/types";
+import type { BoardType, ColumnType } from "~/types";
 import { v4 as uuid } from "uuid";
 import { BoardSchema, ColumnSchema } from "~/zod-schemas";
 import { mutateTable } from "~/server/queries";
 import PromptWindow from "~/components/ui/modal/prompt-window";
+import {
+  CreateColumnUpdate,
+  DeleteColumnUpdate,
+  RenameBoardUpdate,
+  RenameColumnUpdate,
+  Update,
+} from "~/types/updates";
 
 type ErrorType = {
   boardName: string;
@@ -25,32 +32,33 @@ const getInitialErrors = (columns: ColumnType[]) => {
   };
 };
 
-const getInitialTemporaryColumns = (columns: ColumnType[]) => {
-  return columns.map(({ id, index, name }) => ({
-    id,
-    index,
-    name,
-  }));
-};
+// const getInitialTemporaryColumns = (columns: ColumnType[]) => {
+//   return columns.map(({ id, index, name }) => ({
+//     id,
+//     index,
+//     name,
+//   }));
+// };
 
 const EditBoard = ({ board }: { board: BoardType }) => {
   const { showEditBoardMenu, setShowEditBoardMenu, setShowEditBoardWindow } =
     useUI();
   const [showConfirmCancelWindow, setShowConfirmCancelWindow] = useState(false);
   const [boardName, setBoardName] = useState(board.name);
-  const [temporaryColumns, setTemporaryColumns] = useState(
-    getInitialTemporaryColumns(board.columns),
+  const [temporaryColumns, setTemporaryColumns] = useState<ColumnType[]>(
+    board.columns,
   );
   const [error, setError] = useState<ErrorType>(
     getInitialErrors(board.columns),
   );
-  const [changes, setChanges] = useState<Change[]>([]);
+  const [changes, setChanges] = useState<Update[]>([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (!showEditBoardMenu) return;
     setError(getInitialErrors(board.columns));
-    setTemporaryColumns(getInitialTemporaryColumns(board.columns));
+    setTemporaryColumns(board.columns);
+    // setTemporaryColumns(getInitialTemporaryColumns(board.columns));
     setChanges([]);
   }, [showEditBoardMenu, board.columns]);
 
@@ -60,22 +68,29 @@ const EditBoard = ({ board }: { board: BoardType }) => {
     setChanges((prev) => {
       const actionIndex = prev.findIndex(
         (change) =>
-          change.action === "renameBoard" && change.boardId === board.id,
+          change.action === "renameBoard" &&
+          change.payload.boardId === board.id,
       );
       // If there's already a rename action, don't add another one
       if (actionIndex !== -1) {
         return prev.map((change, i) =>
-          i === actionIndex ? { ...change, newName: e.target.value } : change,
+          i === actionIndex
+            ? ({
+                ...change,
+                payload: { ...change.payload, newBoardName: e.target.value },
+              } as RenameBoardUpdate)
+            : change,
         );
       } else {
         return [
           ...prev,
           {
             action: "renameBoard",
-            boardId: board.id,
-            // use e.target.value as state updates async and can be one letter behind
-            newName: e.target.value,
-          },
+            payload: {
+              boardId: board.id,
+              newBoardName: e.target.value,
+            },
+          } satisfies RenameBoardUpdate,
         ];
       }
     });
@@ -97,7 +112,8 @@ const EditBoard = ({ board }: { board: BoardType }) => {
     setChanges((prev) => {
       const actionIndex = prev.findIndex(
         (change) =>
-          change.action === "createColumn" && change.columnId === newColumn.id,
+          change.action === "createColumn" &&
+          change.payload.column.id === newColumn.id,
       );
       if (actionIndex !== -1) {
         return prev;
@@ -106,10 +122,10 @@ const EditBoard = ({ board }: { board: BoardType }) => {
           ...prev,
           {
             action: "createColumn",
-            boardId: board.id,
-            columnId: newColumn.id,
-            columnName: "",
-          },
+            payload: {
+              column: newColumn,
+            },
+          } as CreateColumnUpdate,
         ];
       }
     });
@@ -136,27 +152,32 @@ const EditBoard = ({ board }: { board: BoardType }) => {
       prev.map((s) => (s.id === columnId ? { ...s, name: e.target.value } : s)),
     );
     setChanges((prev) => {
+      const column = temporaryColumns.find((c) => c.id === columnId);
+      if (!column) return prev;
+
       const columnAddActionIndex = prev.findIndex(
         (change) =>
           change.action === "createColumn" &&
-          change.boardId === board.id &&
-          //   FIX ACTION PAYLOAD
-          change.columnId === columnId,
+          change.payload.column.boardId === board.id &&
+          change.payload.column.id === columnId,
       );
 
       const columnRenameActionIndex = prev.findIndex(
         (change) =>
-          change.action === "renameColumn" && change.columnId === columnId,
+          change.action === "renameColumn" &&
+          change.payload.columnId === columnId,
       );
 
       if (columnAddActionIndex !== -1) {
         return prev.map((change) =>
-          change.action === "createColumn" && change.columnId === columnId
-            ? {
+          change.action === "createColumn" &&
+          change.payload.column.id === columnId
+            ? ({
                 ...change,
-                boardId: board.id,
-                columnName: e.target.value,
-              }
+                payload: {
+                  column: { ...column, name: e.target.value },
+                },
+              } satisfies CreateColumnUpdate)
             : change,
         );
       } else if (columnRenameActionIndex !== -1) {
@@ -170,9 +191,12 @@ const EditBoard = ({ board }: { board: BoardType }) => {
           ...prev,
           {
             action: "renameColumn",
-            columnId,
-            newName: e.target.value,
-          },
+            payload: {
+              boardId: board.id,
+              columnId,
+              newColumnName: e.target.value,
+            },
+          } satisfies RenameColumnUpdate,
         ];
       }
     });
@@ -184,20 +208,22 @@ const EditBoard = ({ board }: { board: BoardType }) => {
       const wasAdded =
         changes.findIndex(
           (change) =>
-            change.action === "createColumn" && change.columnName === columnId,
+            change.action === "createColumn" &&
+            change.payload.column.id === columnId,
         ) !== -1;
       const actionIndex = prev.findIndex(
         (change) =>
-          change.action === "deleteColumn" && change.columnId === columnId,
+          change.action === "deleteColumn" &&
+          change.payload.columnId === columnId,
       );
       // If it was added since the menu was opened -> clear all actions that have to do with said subtask (if we added it , renamed it then deleted it before saving the changes it means we don't query the db at all )
       if (wasAdded) {
         return prev.filter((change) => {
           if (change.action === "renameColumn") {
-            return change.columnId !== columnId;
+            return change.payload.columnId !== columnId;
           }
           if (change.action === "createColumn") {
-            return change.columnId !== columnId;
+            return change.payload.column.id !== columnId;
           }
           return true;
         });
@@ -210,14 +236,14 @@ const EditBoard = ({ board }: { board: BoardType }) => {
         return [
           ...prev.filter((change) => {
             if (change.action === "renameColumn") {
-              return change.columnId !== columnId;
+              return change.payload.columnId !== columnId;
             }
             return true;
           }),
           {
             action: "deleteColumn",
-            columnId,
-          },
+            payload: { boardId: board.id, columnId },
+          } satisfies DeleteColumnUpdate,
         ];
       }
     });
@@ -279,7 +305,7 @@ const EditBoard = ({ board }: { board: BoardType }) => {
     setShowConfirmCancelWindow(false);
     setLoading(false);
     setError(getInitialErrors(board.columns));
-    setTemporaryColumns(getInitialTemporaryColumns(board.columns));
+    setTemporaryColumns(board.columns);
     setChanges([]);
   };
 

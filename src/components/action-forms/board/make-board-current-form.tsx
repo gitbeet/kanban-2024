@@ -7,6 +7,7 @@ import type { FormEvent, HTMLAttributes } from "react";
 import type { MakeBoardCurrentChange } from "~/types";
 import { useUser } from "@clerk/nextjs";
 import { MdDashboard } from "react-icons/md";
+import { MakeBoardCurrentUpdate } from "~/types/updates";
 
 interface Props extends HTMLAttributes<HTMLButtonElement> {
   boardId: string;
@@ -50,9 +51,11 @@ const MakeBoardCurrentForm = ({ boardId, boardName, ...props }: Props) => {
     const response = await handleMakeBoardCurrent({
       change: {
         action: "makeBoardCurrent",
-        newCurrentBoardId: boardId,
-        oldCurrentBoardId: currentBoardId!,
-      } as MakeBoardCurrentChange,
+        payload: {
+          newCurrentBoardId: boardId,
+          oldCurrentBoardId: currentBoardId!,
+        },
+      } as MakeBoardCurrentUpdate,
       userId: user?.id,
       revalidate: true,
     });

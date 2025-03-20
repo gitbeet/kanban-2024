@@ -9,6 +9,7 @@ import DeleteTaskZone from "./delete-task-zone";
 import CreateColumnForm from "../action-forms/column/create-column-form";
 import { BoardsNav } from "../layout/boards-nav";
 import BoardsSettings from "../menus/boards-settings";
+import RenameBoardForm from "../action-forms/board/rename-board-form";
 
 const Board = () => {
   const { optimisticBoards, loading, getCurrentBoard } = useBoards();

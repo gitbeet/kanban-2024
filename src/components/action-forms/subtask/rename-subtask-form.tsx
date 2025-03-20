@@ -19,6 +19,9 @@ const RenameSubtaskForm = ({
   const { setOptimisticBoards, getCurrentBoard } = useBoards();
   const currentBoardId = getCurrentBoard()?.id;
   const clientAction = async (e?: FormEvent) => {
+    if (!currentBoardId) {
+      return;
+    }
     e?.preventDefault();
 
     const result = SubtaskSchema.shape.name.safeParse(newSubtaskName);
@@ -39,7 +42,16 @@ const RenameSubtaskForm = ({
     });
 
     const response = await handleRenameSubtask({
-      change: { action: "renameSubtask", subtaskId, newSubtaskName },
+      change: {
+        action: "renameSubtask",
+        payload: {
+          boardId: currentBoardId,
+          columnId,
+          taskId,
+          subtaskId,
+          newSubtaskName,
+        },
+      },
       revalidate: true,
     });
     if (response?.error) {

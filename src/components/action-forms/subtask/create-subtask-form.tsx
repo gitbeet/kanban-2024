@@ -22,12 +22,16 @@ const CreateSubtaskForm = ({
   const [isOpen, setIsOpen] = useState(false);
 
   const clientAction = async (e?: FormEvent) => {
+    if (!currentBoard) {
+      setError("No current board");
+      return;
+    }
     e?.preventDefault();
 
     // client validation
     // client state update
 
-    const currentTask = currentBoard?.columns
+    const currentTask = currentBoard.columns
       .find((column) => column.id === columnId)
       ?.tasks.find((task) => task.id === taskId);
 
@@ -64,7 +68,15 @@ const CreateSubtaskForm = ({
 
     // sever validation/state update
     const response = await handleCreateSubtask({
-      change: { action: "createSubtask", newSubtask },
+      change: {
+        action: "createSubtask",
+        payload: {
+          boardId: currentBoard.id,
+          columnId,
+          taskId,
+          subtask: newSubtask,
+        },
+      },
       revalidate: true,
     });
     if (response?.error) {

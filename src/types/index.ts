@@ -1,6 +1,6 @@
 import { StaticImageData } from "next/image";
-import type { db } from "./server/db";
-import { type getBoards } from "./server/queries";
+import type { db } from "../server/db";
+import { type getBoards } from "../server/queries";
 
 export type BoardType = Awaited<ReturnType<typeof getBoards>>[number];
 
@@ -150,7 +150,6 @@ export type Change =
 // ----------  CHANGE TYPES ENDING ----------
 
 export type OptimisticActionType =
-  | "getInitialBoards"
   | "createBoard"
   | "renameBoard"
   | "deleteBoard"
@@ -192,19 +191,3 @@ export type OptimisticParams = {
 export type SetOptimisticType = (args: OptimisticParams) => void;
 
 // Background
-
-export type ColorBackground = {
-  type: "color";
-  slug: string;
-  title: string;
-  value: string;
-  alt: string;
-};
-export type ImageBackground = {
-  type: "image";
-  slug: string;
-  title: string;
-  value: StaticImageData;
-  alt: string;
-};
-export type BackgroundType = ColorBackground | ImageBackground;

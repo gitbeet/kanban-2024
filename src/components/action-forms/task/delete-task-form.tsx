@@ -17,6 +17,11 @@ const DeleteTaskForm = ({
   const { setOptimisticBoards, getCurrentBoard } = useBoards();
   const currentBoardId = getCurrentBoard()?.id;
   const clientAction = async () => {
+    if (typeof currentBoardId === "undefined") {
+      setError("No current board ID");
+      return;
+    }
+
     setOptimisticBoards({
       action: "deleteTask",
       boardId: currentBoardId,
@@ -25,7 +30,10 @@ const DeleteTaskForm = ({
     });
 
     const response = await handleDeleteTask({
-      change: { action: "deleteTask", taskId },
+      change: {
+        action: "deleteTask",
+        payload: { boardId: currentBoardId, columnId, taskId },
+      },
       revalidate: true,
     });
     if (response?.error) {

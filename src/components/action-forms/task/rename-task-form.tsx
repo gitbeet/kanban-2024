@@ -76,7 +76,10 @@ const RenameTaskForm = ({
 
     // Server
     const response = await handleRenameTask({
-      change: { action: "renameTask", newTaskName, taskId: task.id },
+      change: {
+        action: "renameTask",
+        payload: { boardId, newTaskName, columnId, taskId: task.id },
+      },
       revalidate: true,
     });
     if (response?.error) {

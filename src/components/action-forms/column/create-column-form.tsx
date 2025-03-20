@@ -32,7 +32,8 @@ const CreateColumnForm = ({ boardId, ...props }: CreateColumnProps) => {
   const clientAction = async (e?: FormEvent) => {
     e?.preventDefault();
     setLoading(true);
-    const maxIndex = Math.max(...currentBoard.columns.map((c) => c.index));
+    let maxIndex = Math.max(...currentBoard.columns.map((c) => c.index));
+    maxIndex = Math.max(maxIndex, 0);
     createColumnRef.current?.reset();
     const newColumn: ColumnType = {
       id: uuid(),
@@ -62,9 +63,7 @@ const CreateColumnForm = ({ boardId, ...props }: CreateColumnProps) => {
     const response = await handleCreateColumn({
       change: {
         action: "createColumn",
-        boardId: boardId,
-        columnName: newColumn.name,
-        columnId: newColumn.id,
+        payload: { column: newColumn },
       },
       revalidate: true,
     });
