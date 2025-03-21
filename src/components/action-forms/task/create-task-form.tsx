@@ -13,6 +13,7 @@ import type { ChangeEvent, FormEvent } from "react";
 import type { TaskType } from "~/types";
 import TextArea from "~/components/ui/text-area";
 import FocusTrap from "focus-trap-react";
+import { CreateTaskAction } from "~/types/actions";
 
 const CreateTaskForm = ({
   boardId,
@@ -61,16 +62,16 @@ const CreateTaskForm = ({
       setError(result.error.issues[0]?.message ?? "An error occured");
       return;
     }
-    setOptimisticBoards({
+
+    const action: CreateTaskAction = {
       type: "CREATE_TASK",
       payload: { boardId, columnId, task: newTask },
-    });
+    };
+
+    setOptimisticBoards(action);
 
     const response = await handleCreateTask({
-      action: {
-        type: "CREATE_TASK",
-        payload: { boardId, task: newTask, columnId },
-      },
+      action,
       revalidate: true,
     });
     if (response?.error) {

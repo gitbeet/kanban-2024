@@ -3,6 +3,7 @@ import { useBoards } from "~/context/boards-context";
 import { handleDeleteColumn } from "~/server/queries";
 import { DeleteButton } from "~/components/ui/button/buttons";
 import { ColumnSchema } from "~/zod-schemas";
+import { DeleteColumnAction } from "~/types/actions";
 
 const DeleteColumnForm = ({
   boardId,
@@ -29,15 +30,15 @@ const DeleteColumnForm = ({
       return;
     }
 
-    startTransition(() =>
-      setOptimisticBoards({
-        type: "DELETE_COLUMN",
-        payload: { boardId, columnId },
-      }),
-    );
+    const action: DeleteColumnAction = {
+      type: "DELETE_COLUMN",
+      payload: { boardId, columnId },
+    };
+
+    startTransition(() => setOptimisticBoards(action));
 
     const response = await handleDeleteColumn({
-      action: { type: "DELETE_COLUMN", payload: { columnId, boardId } },
+      action,
       revalidate: true,
     });
     if (response?.error) {

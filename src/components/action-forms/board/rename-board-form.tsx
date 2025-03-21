@@ -28,24 +28,19 @@ const RenameBoardForm = ({ boardId }: { boardId: string }) => {
     if (!result.success) {
       return setError(result.error.issues[0]?.message ?? "An error occured");
     }
-    startTransition(() =>
-      setOptimisticBoards({
-        type: "RENAME_BOARD",
-        payload: {
-          boardId: boardId,
-          newBoardName,
-        },
-      } satisfies RenameBoardAction),
-    );
+
+    const action: RenameBoardAction = {
+      type: "RENAME_BOARD",
+      payload: {
+        boardId,
+        newBoardName,
+      },
+    };
+
+    startTransition(() => setOptimisticBoards(action));
 
     const response = await handleRenameBoard({
-      action: {
-        type: "RENAME_BOARD",
-        payload: {
-          boardId,
-          newBoardName,
-        },
-      } as RenameBoardAction,
+      action,
       userId: user.id,
       revalidate: true,
     });

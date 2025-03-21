@@ -49,22 +49,21 @@ const DeleteBoardForm = ({
       return;
     }
     const wasCurrent = boardId === getCurrentBoard()?.id;
+
+    const action: DeleteBoardAction = {
+      type: "DELETE_BOARD",
+      payload: { boardId, boardIndex, wasCurrent },
+    };
+
     startTransition(() => {
-      setOptimisticBoards({
-        type: "DELETE_BOARD",
-        payload: { boardId, boardIndex, wasCurrent },
-      });
+      setOptimisticBoards(action);
     });
 
-    const args = {
-      action: {
-        type: "DELETE_BOARD",
-        payload: { boardId, boardIndex, wasCurrent },
-      } as DeleteBoardAction,
+    const response = await handleDeleteBoard({
+      action,
       userId: user.id,
       revalidate: true,
-    };
-    const response = await handleDeleteBoard(args);
+    });
     if (response?.error) {
       return setError(response.error);
     }

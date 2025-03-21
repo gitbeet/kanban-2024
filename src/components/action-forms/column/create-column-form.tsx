@@ -9,6 +9,7 @@ import { FaPlus } from "react-icons/fa6";
 import type { ColumnType } from "~/types";
 import type { ChangeEvent, FormEvent } from "react";
 import FocusTrap from "focus-trap-react";
+import { CreateColumnAction } from "~/types/actions";
 
 interface CreateColumnProps extends React.HTMLAttributes<HTMLDivElement> {
   boardId: string;
@@ -52,18 +53,18 @@ const CreateColumnForm = ({ boardId, ...props }: CreateColumnProps) => {
 
       return;
     }
+
+    const action: CreateColumnAction = {
+      type: "CREATE_COLUMN",
+      payload: { column: newColumn },
+    };
+
     startTransition(() => {
-      setOptimisticBoards({
-        type: "CREATE_COLUMN",
-        payload: { column: newColumn },
-      });
+      setOptimisticBoards(action);
     });
 
     const response = await handleCreateColumn({
-      action: {
-        type: "CREATE_COLUMN",
-        payload: { column: newColumn },
-      },
+      action,
       revalidate: true,
     });
     if (response?.error) {

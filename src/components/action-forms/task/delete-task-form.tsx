@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useBoards } from "~/context/boards-context";
 import { handleDeleteTask } from "~/server/queries";
+import { DeleteTaskAction } from "~/types/actions";
 
 const DeleteTaskForm = ({
   columnId,
@@ -22,16 +23,14 @@ const DeleteTaskForm = ({
       return;
     }
 
-    setOptimisticBoards({
+    const action: DeleteTaskAction = {
       type: "DELETE_TASK",
       payload: { boardId: currentBoardId, columnId, taskId },
-    });
+    };
+    setOptimisticBoards(action);
 
     const response = await handleDeleteTask({
-      action: {
-        type: "DELETE_TASK",
-        payload: { boardId: currentBoardId, columnId, taskId },
-      },
+      action,
       revalidate: true,
     });
     if (response?.error) {

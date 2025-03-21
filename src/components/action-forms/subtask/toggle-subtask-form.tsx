@@ -4,6 +4,7 @@ import { handleToggleSubtaskCompleted } from "~/server/queries";
 import { ToggleButton } from "~/components/ui/button/buttons";
 import { useBoards } from "~/context/boards-context";
 import type { SubtaskType } from "~/types";
+import { ToggleSubtaskAction } from "~/types/actions";
 
 const ToggleSubtaskForm = ({
   columnId,
@@ -23,28 +24,23 @@ const ToggleSubtaskForm = ({
       return;
     }
     e?.preventDefault();
+
+    const action: ToggleSubtaskAction = {
+      type: "TOGGLE_SUBTASK",
+      payload: {
+        boardId: currentBoardId,
+        columnId,
+        taskId,
+        subtaskId: subtask.id,
+      },
+    };
+
     startTransition(() => {
-      setOptimisticBoards({
-        type: "TOGGLE_SUBTASK",
-        payload: {
-          boardId: currentBoardId,
-          columnId,
-          taskId,
-          subtaskId: subtask.id,
-        },
-      });
+      setOptimisticBoards(action);
     });
 
     const response = await handleToggleSubtaskCompleted({
-      action: {
-        type: "TOGGLE_SUBTASK",
-        payload: {
-          boardId: currentBoardId,
-          columnId,
-          taskId,
-          subtaskId: subtask.id,
-        },
-      },
+      action,
       revalidate: true,
     });
     if (response?.error) {

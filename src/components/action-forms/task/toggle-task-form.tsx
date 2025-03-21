@@ -3,6 +3,7 @@ import { useBoards } from "~/context/boards-context";
 import { handleToggleTaskCompleted } from "~/server/queries";
 import { ToggleButton } from "~/components/ui/button/buttons";
 import { type TaskType } from "~/types";
+import { ToggleTaskAction } from "~/types/actions";
 
 const ToggleTaskForm = ({
   boardId,
@@ -16,15 +17,14 @@ const ToggleTaskForm = ({
   const [error, setError] = useState("");
   const { setOptimisticBoards } = useBoards();
   const clientAction = async () => {
-    setOptimisticBoards({
+    const action: ToggleTaskAction = {
       type: "TOGGLE_TASK",
       payload: { boardId, columnId, taskId: task.id },
-    });
+    };
+
+    setOptimisticBoards(action);
     const response = await handleToggleTaskCompleted({
-      action: {
-        type: "TOGGLE_TASK",
-        payload: { boardId, columnId, taskId: task.id },
-      },
+      action,
       revalidate: true,
     });
     if (response?.error) {

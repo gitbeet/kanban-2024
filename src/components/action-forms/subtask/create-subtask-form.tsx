@@ -6,6 +6,7 @@ import type { SubtaskType } from "~/types";
 import { SubtaskSchema } from "~/zod-schemas";
 import { v4 as uuid } from "uuid";
 import { handleCreateSubtask } from "~/server/queries";
+import { CreateSubtaskAction } from "~/types/actions";
 const CreateSubtaskForm = ({
   columnId,
   taskId,
@@ -56,29 +57,23 @@ const CreateSubtaskForm = ({
       return;
     }
 
+    const action: CreateSubtaskAction = {
+      type: "CREATE_SUBTASK",
+      payload: {
+        boardId: currentBoard.id,
+        columnId,
+        taskId,
+        subtask: newSubtask,
+      },
+    };
+
     startTransition(() => {
-      setOptimisticBoards({
-        type: "CREATE_SUBTASK",
-        payload: {
-          boardId: currentBoard?.id,
-          columnId,
-          taskId,
-          subtask: newSubtask,
-        },
-      });
+      setOptimisticBoards(action);
     });
 
     // sever validation/state update
     const response = await handleCreateSubtask({
-      action: {
-        type: "CREATE_SUBTASK",
-        payload: {
-          boardId: currentBoard.id,
-          columnId,
-          taskId,
-          subtask: newSubtask,
-        },
-      },
+      action,
       revalidate: true,
     });
     if (response?.error) {

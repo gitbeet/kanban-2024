@@ -44,26 +44,23 @@ const MakeBoardCurrentForm = ({ boardId, boardName, ...props }: Props) => {
       console.log("Client error");
       return;
     }
+
+    const action: MakeBoardCurrentAction = {
+      type: "MAKE_BOARD_CURRENT",
+      payload: {
+        oldCurrentBoardId: currentBoardId,
+        newCurrentBoardId: boardId,
+      },
+    };
+
     // client update
     startTransition(() => {
-      setOptimisticBoards({
-        type: "MAKE_BOARD_CURRENT",
-        payload: {
-          oldCurrentBoardId: currentBoardId,
-          newCurrentBoardId: boardId,
-        },
-      });
+      setOptimisticBoards(action);
     });
     // server validation
     // server update
     const response = await handleMakeBoardCurrent({
-      action: {
-        type: "MAKE_BOARD_CURRENT",
-        payload: {
-          newCurrentBoardId: boardId,
-          oldCurrentBoardId: currentBoardId,
-        },
-      } as MakeBoardCurrentAction,
+      action,
       userId: user?.id,
       revalidate: true,
     });

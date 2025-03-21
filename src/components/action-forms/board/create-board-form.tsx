@@ -65,23 +65,21 @@ const CreateBoardForm = ({
       return;
     }
 
+    const action: CreateBoardAction = {
+      type: "CREATE_BOARD",
+      payload: { board: newBoard },
+    };
+
     startTransition(() => {
-      setOptimisticBoards({
-        type: "CREATE_BOARD",
-        payload: { board: newBoard },
-      } satisfies CreateBoardAction);
+      setOptimisticBoards(action);
     });
 
     // Server error check
-    const args = {
-      action: {
-        type: "CREATE_BOARD",
-        payload: { board: newBoard },
-      } as CreateBoardAction,
+    const response = await handleCreateBoard({
+      action,
       userId: user.id,
       revalidate: true,
-    };
-    const response = await handleCreateBoard(args);
+    });
     if (response?.error) {
       setError(response.error);
       setIsOpen(true);

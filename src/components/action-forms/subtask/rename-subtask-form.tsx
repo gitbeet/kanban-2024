@@ -4,6 +4,7 @@ import { handleRenameSubtask } from "~/server/queries";
 import { SaveButton } from "~/components/ui/button/buttons";
 import { useBoards } from "~/context/boards-context";
 import { SubtaskSchema } from "~/zod-schemas";
+import { RenameSubtaskAction } from "~/types/actions";
 
 const RenameSubtaskForm = ({
   columnId,
@@ -30,30 +31,23 @@ const RenameSubtaskForm = ({
       console.log(result.error.issues[0]?.message);
     }
 
+    const action: RenameSubtaskAction = {
+      type: "RENAME_SUBTASK",
+      payload: {
+        boardId: currentBoardId,
+        columnId,
+        taskId,
+        subtaskId,
+        newSubtaskName,
+      },
+    };
+
     startTransition(() => {
-      setOptimisticBoards({
-        type: "RENAME_SUBTASK",
-        payload: {
-          boardId: currentBoardId,
-          columnId,
-          taskId,
-          subtaskId,
-          newSubtaskName,
-        },
-      });
+      setOptimisticBoards(action);
     });
 
     const response = await handleRenameSubtask({
-      action: {
-        type: "RENAME_SUBTASK",
-        payload: {
-          boardId: currentBoardId,
-          columnId,
-          taskId,
-          subtaskId,
-          newSubtaskName,
-        },
-      },
+      action,
       revalidate: true,
     });
     if (response?.error) {

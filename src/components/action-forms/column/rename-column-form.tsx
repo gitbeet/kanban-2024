@@ -5,6 +5,7 @@ import { handleRenameColumn } from "~/server/queries";
 import InputField from "~/components/ui/input-field";
 import { ColumnSchema } from "~/zod-schemas";
 import type { ChangeEvent, FormEvent } from "react";
+import { RenameColumnAction } from "~/types/actions";
 
 const RenameColumnForm = ({
   boardId,
@@ -41,20 +42,20 @@ const RenameColumnForm = ({
     if (!result.success) {
       return setError(result.error.issues[0]?.message ?? "An error occured");
     }
+
+    const action: RenameColumnAction = {
+      type: "RENAME_COLUMN",
+      payload: { boardId, columnId, newColumnName },
+    };
+
     startTransition(() => {
-      setOptimisticBoards({
-        type: "RENAME_COLUMN",
-        payload: { boardId, columnId, newColumnName },
-      });
+      setOptimisticBoards(action);
     });
     setNewColumnName("");
     setIsOpen(false);
 
     const response = await handleRenameColumn({
-      action: {
-        type: "RENAME_COLUMN",
-        payload: { columnId, newColumnName, boardId },
-      },
+      action,
       revalidate: true,
     });
     if (response?.error) {

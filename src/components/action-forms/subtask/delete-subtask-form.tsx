@@ -2,6 +2,7 @@ import { useState, useTransition } from "react";
 import { handleDeleteSubtask } from "~/server/queries";
 import { DeleteButton } from "~/components/ui/button/buttons";
 import { useBoards } from "~/context/boards-context";
+import { DeleteSubtaskAction } from "~/types/actions";
 
 const DeleteSubtaskForm = ({
   columnId,
@@ -21,17 +22,17 @@ const DeleteSubtaskForm = ({
       setError("No board id found");
       return;
     }
+
+    const action: DeleteSubtaskAction = {
+      type: "DELETE_SUBTASK",
+      payload: { boardId, columnId, taskId, subtaskId },
+    };
+
     startTransition(() => {
-      setOptimisticBoards({
-        type: "DELETE_SUBTASK",
-        payload: { boardId, columnId, taskId, subtaskId },
-      });
+      setOptimisticBoards(action);
     });
     const response = await handleDeleteSubtask({
-      action: {
-        type: "DELETE_SUBTASK",
-        payload: { boardId, columnId, taskId, subtaskId },
-      },
+      action,
       revalidate: true,
     });
     if (response?.error) {

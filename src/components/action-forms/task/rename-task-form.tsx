@@ -10,6 +10,7 @@ import type { TaskType } from "~/types";
 import type { ChangeEvent, Dispatch, FormEvent, SetStateAction } from "react";
 import TextArea from "~/components/ui/text-area";
 import FocusTrap from "focus-trap-react";
+import { RenameTaskAction } from "~/types/actions";
 
 const RenameTaskForm = ({
   boardId,
@@ -63,20 +64,20 @@ const RenameTaskForm = ({
       textAreaRef.current?.focus();
       return;
     }
+
+    const action: RenameTaskAction = {
+      type: "RENAME_TASK",
+      payload: { boardId, columnId, taskId: task.id, newTaskName },
+    };
+
     // client state action
     startTransition(() => {
-      setOptimisticBoards({
-        type: "RENAME_TASK",
-        payload: { boardId, columnId, taskId: task.id, newTaskName },
-      });
+      setOptimisticBoards(action);
     });
 
     // Server
     const response = await handleRenameTask({
-      action: {
-        type: "RENAME_TASK",
-        payload: { boardId, newTaskName, columnId, taskId: task.id },
-      },
+      action,
       revalidate: true,
     });
     if (response?.error) {
