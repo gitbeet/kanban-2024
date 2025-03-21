@@ -104,7 +104,7 @@ const RenameTaskForm = ({
   }
 
   return (
-    <div className={`${loading ? "pointer-events-none" : ""} `}>
+    <div className={`${loading ? "pointer-events-none" : ""} max-w-full`}>
       <FocusTrap
         active={isOpen}
         focusTrapOptions={{
@@ -115,35 +115,33 @@ const RenameTaskForm = ({
         }}
       >
         <form
-          className="flex flex-col gap-2"
+          className="flex grow flex-col gap-2"
           ref={renameTaskRef}
           onSubmit={clientAction}
         >
-          <div className="relative">
-            {!isOpen && (
-              <button
-                aria-label="Click to rename task"
-                onClick={() => {
-                  setNewTaskName(task.name);
-                  setIsOpen(true);
-                }}
-                className="input-readonly w-full text-left"
-              >
-                <p> {task.name}</p>
-              </button>
-            )}
-            {isOpen && (
-              <TextArea
-                ref={textAreaRef}
-                rows={1}
-                readOnly={!isOpen}
-                className={` ${isOpen ? "input" : "input-readonly"} text-sm dark:bg-neutral-700 dark:focus:bg-neutral-950/50`}
-                value={newTaskName}
-                onChange={handleTaskNameChange}
-                error={error}
-              />
-            )}
-          </div>
+          {!isOpen && (
+            <button
+              aria-label="Click to rename task"
+              onClick={() => {
+                setNewTaskName(task.name);
+                setIsOpen(true);
+              }}
+              className="input-readonly text-left"
+            >
+              <p> {task.name}</p>
+            </button>
+          )}
+          {isOpen && (
+            <TextArea
+              ref={textAreaRef}
+              rows={1}
+              readOnly={!isOpen}
+              className={` ${isOpen ? "input" : "input-readonly"} text-sm dark:bg-neutral-700 dark:focus:bg-neutral-950/50`}
+              value={newTaskName}
+              onChange={handleTaskNameChange}
+              error={error}
+            />
+          )}
           {isOpen && (
             <div
               className={`${isOpen ? "opacity-100" : "opacity-0"} flex gap-1.5 self-end`}

@@ -10,7 +10,7 @@ import RenameTaskForm from "../action-forms/task/rename-task-form";
 import { useUI } from "~/context/ui-context";
 import { EditButton } from "../ui/button/buttons";
 import type { TaskType } from "../../types";
-import CreateSubtaskForm from "../action-forms/subtask/create-subtask-form";
+import ToggleTaskForm from "../action-forms/task/toggle-task-form";
 
 const Task = ({
   columnId,
@@ -57,15 +57,24 @@ const Task = ({
         layoutId={task.id}
         onDragStart={(e) => handleDragStart(e, task, columnId)}
         draggable={draggable}
-        className="task-bg group relative flex shrink-0 cursor-grab flex-col gap-1 rounded-lg p-1.5"
+        className="task-bg group relative flex shrink-0 cursor-grab flex-col gap-1 rounded-lg py-1.5 pl-2 pr-10"
       >
-        <RenameTaskForm
-          setDraggable={setDraggable}
-          boardId={currentBoardId}
-          columnId={columnId}
-          task={task}
-        />
-
+        <div className="flex flex-1 items-start">
+          <div>
+            <div className="h-2" />
+            <ToggleTaskForm
+              boardId={currentBoardId}
+              columnId={columnId}
+              task={task}
+            />
+          </div>
+          <RenameTaskForm
+            setDraggable={setDraggable}
+            boardId={currentBoardId}
+            columnId={columnId}
+            task={task}
+          />
+        </div>
         {menuButtonJsx}
         {allSubtasks > 0 && (
           <div className="pl-2 text-xs text-neutral-500">

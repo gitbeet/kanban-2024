@@ -25,7 +25,9 @@ const BackgroundOption = ({
           <Image className="absolute inset-0" src={value} alt={alt} />
         )}
         {type === "color" && (
-          <div aria-label={alt} className={`${value} absolute inset-0`} />
+          <>
+            <div aria-label={alt} className={`${value} absolute inset-0`} />
+          </>
         )}
       </button>
       <div className="relative">

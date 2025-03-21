@@ -1,0 +1,33 @@
+.bg-option__taskly {
+  @apply bg-gradient-to-br from-primary-700 to-primary-600;
+}
+
+.bg-option__sunset {
+  @apply bg-gradient-to-br from-[#ff0f7b] to-[#f89b29];
+}
+
+.bg-option__aurora {
+  @apply bg-gradient-to-br from-[#84ffc9] via-[#aab2ff] to-[#eca0ff];
+}
+
+.bg-option__space {
+  @apply bg-gradient-to-br from-[#0968e5] to-[#091970];
+}
+
+/* .animated-background__1 {
+  background: linear-gradient(270deg, #ff7eb3, #df75ff, #ff7eb3, #ff758c);
+  background-size: 400% 400%;
+  animation: animated-background__1__animation 8s ease infinite;
+}
+
+@keyframes animated-background__1__animation {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+} */
