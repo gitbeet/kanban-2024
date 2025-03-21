@@ -13,7 +13,7 @@ import { BoardSchema } from "~/zod-schemas";
 import type { ChangeEvent, FormEvent } from "react";
 import type { BoardType } from "~/types";
 import FocusTrap from "focus-trap-react";
-import { CreateBoardUpdate } from "~/types/updates";
+import { CreateBoardAction } from "~/types/actions";
 
 const CreateBoardForm = ({
   ...props
@@ -24,7 +24,6 @@ const CreateBoardForm = ({
     optimisticBoards,
     setOptimisticBoards,
     setLoading: setBoardsLoading,
-    getCurrentBoard,
   } = useBoards();
 
   const [boardName, setBoardName] = useState("");
@@ -68,17 +67,17 @@ const CreateBoardForm = ({
 
     startTransition(() => {
       setOptimisticBoards({
-        action: "createBoard",
+        type: "CREATE_BOARD",
         payload: { board: newBoard },
-      } satisfies CreateBoardUpdate);
+      } satisfies CreateBoardAction);
     });
 
     // Server error check
     const args = {
-      change: {
-        action: "createBoard",
+      action: {
+        type: "CREATE_BOARD",
         payload: { board: newBoard },
-      } as CreateBoardUpdate,
+      } as CreateBoardAction,
       userId: user.id,
       revalidate: true,
     };

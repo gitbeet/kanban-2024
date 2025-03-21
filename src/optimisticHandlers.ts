@@ -1,30 +1,30 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { TaskType, BoardType, SubtaskType } from "./types";
 import {
-  CreateBoardUpdate,
-  CreateColumnUpdate,
-  CreateSubtaskUpdate,
-  CreateTaskUpdate,
-  DeleteBoardUpdate,
-  DeleteColumnUpdate,
-  DeleteSubtaskUpdate,
-  DeleteTaskUpdate,
-  MakeBoardCurrentUpdate,
-  RenameBoardUpdate,
-  RenameColumnUpdate,
-  RenameSubtaskUpdate,
-  RenameTaskUpdate,
-  SwitchTaskColumnUpdate,
-  ToggleSubtaskUpdate,
-  ToggleTaskUpdate,
-  Update,
-} from "./types/updates";
+  CreateBoardAction,
+  CreateColumnAction,
+  CreateSubtaskAction,
+  CreateTaskAction,
+  DeleteBoardAction,
+  DeleteColumnAction,
+  DeleteSubtaskAction,
+  DeleteTaskAction,
+  MakeBoardCurrentAction,
+  RenameBoardAction,
+  RenameColumnAction,
+  RenameSubtaskAction,
+  RenameTaskAction,
+  SwitchTaskColumnAction,
+  ToggleSubtaskAction,
+  ToggleTaskAction,
+  Action,
+} from "./types/actions";
 
 // Boards
 
 const createBoard = (
   state: BoardType[],
-  payload: CreateBoardUpdate["payload"],
+  payload: CreateBoardAction["payload"],
 ) => {
   const { board } = payload;
   const allfalse = state.map((b) => ({ ...b, current: false }));
@@ -33,7 +33,7 @@ const createBoard = (
 
 const renameBoard = (
   state: BoardType[],
-  payload: RenameBoardUpdate["payload"],
+  payload: RenameBoardAction["payload"],
 ) => {
   const { boardId, newBoardName } = payload;
   if (!boardId || !newBoardName) return state;
@@ -44,7 +44,7 @@ const renameBoard = (
 
 const deleteBoard = (
   state: BoardType[],
-  payload: DeleteBoardUpdate["payload"],
+  payload: DeleteBoardAction["payload"],
 ) => {
   const { boardId, wasCurrent } = payload;
   const board = state.find((board) => board.id === boardId);
@@ -69,7 +69,7 @@ const deleteBoard = (
 
 const makeBoardCurrent = (
   state: BoardType[],
-  payload: MakeBoardCurrentUpdate["payload"],
+  payload: MakeBoardCurrentAction["payload"],
 ) => {
   const { newCurrentBoardId } = payload;
   return state
@@ -84,7 +84,7 @@ const makeBoardCurrent = (
 // Columns
 const createColumn = (
   state: BoardType[],
-  payload: CreateColumnUpdate["payload"],
+  payload: CreateColumnAction["payload"],
 ) => {
   const { column } = payload;
   return state.map((b) =>
@@ -94,7 +94,7 @@ const createColumn = (
 
 const renameColumn = (
   state: BoardType[],
-  payload: RenameColumnUpdate["payload"],
+  payload: RenameColumnAction["payload"],
 ) => {
   const { boardId, columnId, newColumnName } = payload;
   return state.map((b) =>
@@ -111,7 +111,7 @@ const renameColumn = (
 
 const deleteColumn = (
   state: BoardType[],
-  payload: DeleteColumnUpdate["payload"],
+  payload: DeleteColumnAction["payload"],
 ) => {
   const { boardId, columnId } = payload;
   return state.map((b) =>
@@ -124,7 +124,7 @@ const deleteColumn = (
 // Tasks
 const createTask = (
   state: BoardType[],
-  payload: CreateTaskUpdate["payload"],
+  payload: CreateTaskAction["payload"],
 ) => {
   const { boardId, columnId, task } = payload;
   return state.map((b) =>
@@ -141,7 +141,7 @@ const createTask = (
 
 const renameTask = (
   state: BoardType[],
-  payload: RenameTaskUpdate["payload"],
+  payload: RenameTaskAction["payload"],
 ) => {
   const { boardId, columnId, newTaskName, taskId } = payload;
   return state.map((b) =>
@@ -167,7 +167,7 @@ const renameTask = (
 
 const deleteTask = (
   state: BoardType[],
-  payload: DeleteTaskUpdate["payload"],
+  payload: DeleteTaskAction["payload"],
 ) => {
   const { boardId, columnId, taskId } = payload;
   return state.map((b) =>
@@ -201,7 +201,7 @@ const deleteTask = (
 
 const toggleTask = (
   state: BoardType[],
-  payload: ToggleTaskUpdate["payload"],
+  payload: ToggleTaskAction["payload"],
 ) => {
   const { boardId, columnId, taskId } = payload;
   return state.map((b) =>
@@ -225,7 +225,7 @@ const toggleTask = (
 
 const switchTaskColumn = (
   state: BoardType[],
-  payload: SwitchTaskColumnUpdate["payload"],
+  payload: SwitchTaskColumnAction["payload"],
 ) => {
   const {
     boardId,
@@ -308,7 +308,7 @@ const switchTaskColumn = (
 
 const createSubtask = (
   state: BoardType[],
-  payload: CreateSubtaskUpdate["payload"],
+  payload: CreateSubtaskAction["payload"],
 ) => {
   const { boardId, columnId, subtask, taskId } = payload;
   return state.map((b) =>
@@ -332,9 +332,46 @@ const createSubtask = (
   );
 };
 
+const renameSubtask = (
+  state: BoardType[],
+  payload: RenameSubtaskAction["payload"],
+) => {
+  const { boardId, columnId, newSubtaskName, subtaskId, taskId } = payload;
+  return state.map((b) =>
+    b.id === boardId
+      ? {
+          ...b,
+          columns: b.columns.map((c) =>
+            c.id === columnId
+              ? {
+                  ...c,
+                  tasks: c.tasks.map((t) =>
+                    t.id === taskId
+                      ? {
+                          ...t,
+                          subtasks: t.subtasks.map((s) =>
+                            s.id === subtaskId
+                              ? {
+                                  ...s,
+                                  name: newSubtaskName,
+                                  updatedAt: new Date(),
+                                }
+                              : s,
+                          ),
+                        }
+                      : t,
+                  ),
+                }
+              : c,
+          ),
+        }
+      : b,
+  );
+};
+
 const deleteSubtask = (
   state: BoardType[],
-  payload: DeleteSubtaskUpdate["payload"],
+  payload: DeleteSubtaskAction["payload"],
 ) => {
   const { boardId, columnId, subtaskId, taskId } = payload;
   return state.map((b) =>
@@ -373,46 +410,9 @@ const deleteSubtask = (
   );
 };
 
-const renameSubtask = (
-  state: BoardType[],
-  payload: RenameSubtaskUpdate["payload"],
-) => {
-  const { boardId, columnId, newSubtaskName, subtaskId, taskId } = payload;
-  return state.map((b) =>
-    b.id === boardId
-      ? {
-          ...b,
-          columns: b.columns.map((c) =>
-            c.id === columnId
-              ? {
-                  ...c,
-                  tasks: c.tasks.map((t) =>
-                    t.id === taskId
-                      ? {
-                          ...t,
-                          subtasks: t.subtasks.map((s) =>
-                            s.id === subtaskId
-                              ? {
-                                  ...s,
-                                  name: newSubtaskName,
-                                  updatedAt: new Date(),
-                                }
-                              : s,
-                          ),
-                        }
-                      : t,
-                  ),
-                }
-              : c,
-          ),
-        }
-      : b,
-  );
-};
-
 const toggleSubtask = (
   state: BoardType[],
-  payload: ToggleSubtaskUpdate["payload"],
+  payload: ToggleSubtaskAction["payload"],
 ) => {
   const { boardId, columnId, subtaskId, taskId } = payload;
   return state.map((b) =>
@@ -443,119 +443,43 @@ const toggleSubtask = (
   );
 };
 
-export const handleOptimisticUpdate = (state: BoardType[], update: Update) => {
-  const { action, payload } = update;
-  switch (action) {
-    case "createBoard":
+export const handleOptimisticUpdate = (state: BoardType[], action: Action) => {
+  const { type, payload } = action;
+  switch (type) {
+    case "CREATE_BOARD":
       return createBoard(state, payload);
-    case "renameBoard":
+    case "RENAME_BOARD":
       return renameBoard(state, payload);
-    case "deleteBoard":
+    case "DELETE_BOARD":
       return deleteBoard(state, payload);
-    case "makeBoardCurrent":
+    case "MAKE_BOARD_CURRENT":
       return makeBoardCurrent(state, payload);
-    case "createColumn":
+    case "CREATE_COLUMN":
       return createColumn(state, payload);
-    case "renameColumn":
+    case "RENAME_COLUMN":
       return renameColumn(state, payload);
-    case "deleteColumn":
+    case "DELETE_COLUMN":
       return deleteColumn(state, payload);
-    case "createTask":
+    case "CREATE_TASK":
       return createTask(state, payload);
-    case "renameTask":
+    case "RENAME_TASK":
       return renameTask(state, payload);
-    case "deleteTask":
+    case "DELETE_TASK":
       return deleteTask(state, payload);
-    case "toggleTask":
+    case "TOGGLE_TASK":
       return toggleTask(state, payload);
-    case "switchTaskColumn":
+    case "SWITCH_TASK_COLUMN":
       return switchTaskColumn(state, payload);
-    case "createSubtask":
+    case "CREATE_SUBTASK":
       return createSubtask(state, payload);
-    case "deleteSubtask":
-      return deleteSubtask(state, payload);
-    case "renameSubtask":
+    case "RENAME_SUBTASK":
       return renameSubtask(state, payload);
-    case "toggleSubtask":
+    case "DELETE_SUBTASK":
+      return deleteSubtask(state, payload);
+    case "TOGGLE_SUBTASK":
       return toggleSubtask(state, payload);
     default:
       break;
   }
   return state;
 };
-// export const handleOptimisticUpdate = (
-//   state: BoardType[],
-//   {
-//     action,
-//     boards,
-//     board,
-//     boardId,
-//     newBoardName,
-//     column,
-//     columnId,
-//     newColumnName,
-//     task,
-//     taskId,
-//     newTaskName,
-//     subtask,
-//     subtaskId,
-//     newSubtaskName,
-//     oldColumnId,
-//     newColumnId,
-//     oldColumnIndex,
-//     newColumnIndex,
-//   }: OptimisticParams,
-// ) => {
-//   switch (action) {
-//     case "createBoard":
-//       return createBoard(state, board);
-//     case "renameBoard":
-//       return renameBoard(state, boardId, newBoardName);
-//     case "deleteBoard":
-//       return deleteBoard(state, boardId);
-//     case "makeBoardCurrent":
-//       return makeBoardCurrent(state, boardId);
-//     case "createColumn":
-//       return createColumn(state, boardId, column);
-//     case "renameColumn":
-//       return renameColumn(state, boardId, columnId, newColumnName);
-//     case "deleteColumn":
-//       return deleteColumn(state, boardId, columnId);
-//     case "createTask":
-//       return createTask(state, boardId, columnId, task);
-//     case "renameTask":
-//       return renameTask(state, boardId, columnId, taskId, newTaskName);
-//     case "deleteTask":
-//       return deleteTask(state, boardId, columnId, taskId);
-//     case "toggleTask":
-//       return toggleTask(state, boardId, columnId, taskId);
-//     case "switchTaskColumn":
-//       return switchTaskColumn(
-//         state,
-//         boardId,
-//         taskId,
-//         oldColumnId,
-//         newColumnId,
-//         oldColumnIndex,
-//         newColumnIndex,
-//       );
-//     case "createSubtask":
-//       return createSubtask(state, boardId, columnId, taskId, subtask);
-//     case "deleteSubtask":
-//       return deleteSubtask(state, boardId, columnId, taskId, subtaskId);
-//     case "renameSubtask":
-//       return renameSubtask(
-//         state,
-//         boardId,
-//         columnId,
-//         taskId,
-//         subtaskId,
-//         newSubtaskName,
-//       );
-//     case "toggleSubtask":
-//       return toggleSubtask(state, boardId, columnId, taskId, subtaskId);
-//     default:
-//       break;
-//   }
-//   return state;
-// };

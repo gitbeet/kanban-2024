@@ -63,18 +63,18 @@ const RenameTaskForm = ({
       textAreaRef.current?.focus();
       return;
     }
-    // client state change
+    // client state action
     startTransition(() => {
       setOptimisticBoards({
-        action: "renameTask",
+        type: "RENAME_TASK",
         payload: { boardId, columnId, taskId: task.id, newTaskName },
       });
     });
 
     // Server
     const response = await handleRenameTask({
-      change: {
-        action: "renameTask",
+      action: {
+        type: "RENAME_TASK",
         payload: { boardId, newTaskName, columnId, taskId: task.id },
       },
       revalidate: true,

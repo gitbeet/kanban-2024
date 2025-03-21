@@ -32,7 +32,7 @@ const RenameSubtaskForm = ({
 
     startTransition(() => {
       setOptimisticBoards({
-        action: "renameSubtask",
+        type: "RENAME_SUBTASK",
         payload: {
           boardId: currentBoardId,
           columnId,
@@ -44,8 +44,8 @@ const RenameSubtaskForm = ({
     });
 
     const response = await handleRenameSubtask({
-      change: {
-        action: "renameSubtask",
+      action: {
+        type: "RENAME_SUBTASK",
         payload: {
           boardId: currentBoardId,
           columnId,

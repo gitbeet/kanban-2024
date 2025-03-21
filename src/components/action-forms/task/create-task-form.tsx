@@ -62,13 +62,13 @@ const CreateTaskForm = ({
       return;
     }
     setOptimisticBoards({
-      action: "createTask",
+      type: "CREATE_TASK",
       payload: { boardId, columnId, task: newTask },
     });
 
     const response = await handleCreateTask({
-      change: {
-        action: "createTask",
+      action: {
+        type: "CREATE_TASK",
         payload: { boardId, task: newTask, columnId },
       },
       revalidate: true,

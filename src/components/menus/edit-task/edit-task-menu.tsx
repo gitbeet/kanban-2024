@@ -17,12 +17,12 @@ import { ModalWithBackdrop } from "~/components/ui/modal/modal";
 import PromptWindow from "~/components/ui/modal/prompt-window";
 import { useUI } from "~/context/ui-context";
 import {
-  CreateSubtaskUpdate,
-  RenameSubtaskUpdate,
-  RenameTaskUpdate,
-  SwitchTaskColumnUpdate,
-  Update,
-} from "~/types/updates";
+  CreateSubtaskAction,
+  RenameSubtaskAction,
+  RenameTaskAction,
+  SwitchTaskColumnAction,
+  Action,
+} from "~/types/actions";
 
 interface Props {
   task: TaskType;
@@ -69,7 +69,7 @@ export const EditTaskMenu = ({ columnId, task }: Props) => {
   }>(initialErrors);
 
   // Changes are used for the db transaction query
-  const [changes, setChanges] = useState<Update[]>([]);
+  const [changes, setChanges] = useState<Action[]>([]);
 
   useEffect(() => {
     setTemporaryName(task.name);
@@ -105,31 +105,31 @@ export const EditTaskMenu = ({ columnId, task }: Props) => {
     setTemporaryName(e.target.value);
     setChanges((prev) => {
       const actionIndex = prev.findIndex(
-        (change) =>
-          change.action === "renameTask" && change.payload.taskId === task.id,
+        (action) =>
+          action.type === "RENAME_TASK" && action.payload.taskId === task.id,
       );
       // If there's already a rename action, don't add another one
       if (actionIndex !== -1) {
-        return prev.map((change, i) =>
+        return prev.map((action, i) =>
           i === actionIndex
             ? ({
-                ...change,
-                payload: { ...change.payload, newTaskName: e.target.value },
-              } as RenameTaskUpdate)
-            : change,
+                ...action,
+                payload: { ...action.payload, newTaskName: e.target.value },
+              } as RenameTaskAction)
+            : action,
         );
       } else {
         return [
           ...prev,
           {
-            action: "renameTask",
+            type: "RENAME_TASK",
             payload: {
               boardId: board.id,
               columnId: columnId,
               taskId: task.id,
               newTaskName: e.target.value,
             },
-          } satisfies RenameTaskUpdate,
+          } satisfies RenameTaskAction,
         ];
       }
     });
@@ -142,19 +142,19 @@ export const EditTaskMenu = ({ columnId, task }: Props) => {
       const isSameColumn = task.columnId === e.target.value;
       // if we changed to the column the task is currently in -> remove the action
       if (isSameColumn)
-        return prev.filter((change) => change.action !== "switchTaskColumn");
+        return prev.filter((action) => action.type !== "SWITCH_TASK_COLUMN");
       const actionIndex = prev.findIndex(
-        (change) => change.action === "switchTaskColumn",
+        (action) => action.type === "SWITCH_TASK_COLUMN",
       );
       // If action already exists
       if (actionIndex !== -1) {
-        return prev.map((change, i) =>
+        return prev.map((action, i) =>
           i === actionIndex
             ? ({
-                ...change,
-                payload: { ...change.payload, newColumnId: e.target.value },
-              } as SwitchTaskColumnUpdate)
-            : change,
+                ...action,
+                payload: { ...action.payload, newColumnId: e.target.value },
+              } as SwitchTaskColumnAction)
+            : action,
         );
       }
 
@@ -165,7 +165,7 @@ export const EditTaskMenu = ({ columnId, task }: Props) => {
       return [
         ...prev,
         {
-          action: "switchTaskColumn",
+          type: "SWITCH_TASK_COLUMN",
           payload: {
             boardId: board.id,
             taskId: task.id,
@@ -174,7 +174,7 @@ export const EditTaskMenu = ({ columnId, task }: Props) => {
             oldColumnIndex: task.index,
             newColumnIndex: newColumnIndex,
           },
-        } satisfies SwitchTaskColumnUpdate,
+        } satisfies SwitchTaskColumnAction,
       ];
     });
   };
@@ -195,9 +195,9 @@ export const EditTaskMenu = ({ columnId, task }: Props) => {
     // Add the subtask id to the "new" list only if it it's not already there
     setChanges((prev) => {
       const actionIndex = prev.findIndex(
-        (change) =>
-          change.action === "createSubtask" &&
-          change.payload.subtask.id === newSubtask.id,
+        (action) =>
+          action.type === "CREATE_SUBTASK" &&
+          action.payload.subtask.id === newSubtask.id,
       );
       // If action already exists
       if (actionIndex !== -1) {
@@ -206,14 +206,14 @@ export const EditTaskMenu = ({ columnId, task }: Props) => {
         return [
           ...prev,
           {
-            action: "createSubtask",
+            type: "CREATE_SUBTASK",
             payload: {
               boardId: board.id,
               columnId,
               subtask: newSubtask,
               taskId: task.id,
             },
-          } satisfies CreateSubtaskUpdate,
+          } satisfies CreateSubtaskAction,
         ];
       }
     });
@@ -246,44 +246,44 @@ export const EditTaskMenu = ({ columnId, task }: Props) => {
     );
     setChanges((prev) => {
       const subtaskAddActionIndex = prev.findIndex(
-        (change) =>
-          change.action === "createSubtask" &&
-          change.payload.subtask.id === subtaskId,
+        (action) =>
+          action.type === "CREATE_SUBTASK" &&
+          action.payload.subtask.id === subtaskId,
       );
 
       const subtaskRenameActionIndex = prev.findIndex(
-        (change) =>
-          change.action === "renameSubtask" &&
-          change.payload.subtaskId === subtaskId,
+        (action) =>
+          action.type === "RENAME_SUBTASK" &&
+          action.payload.subtaskId === subtaskId,
       );
 
       if (subtaskAddActionIndex !== -1) {
-        return prev.map((change) =>
-          change.action === "createSubtask" &&
-          change.payload.subtask.id === subtaskId
+        return prev.map((action) =>
+          action.type === "CREATE_SUBTASK" &&
+          action.payload.subtask.id === subtaskId
             ? {
-                ...change,
+                ...action,
                 payload: {
-                  ...change.payload,
-                  subtask: { ...change.payload.subtask, name: e.target.value },
+                  ...action.payload,
+                  subtask: { ...action.payload.subtask, name: e.target.value },
                 },
               }
-            : change,
+            : action,
         );
       } else if (subtaskRenameActionIndex !== -1) {
-        return prev.map((change, i) =>
+        return prev.map((action, i) =>
           i === subtaskRenameActionIndex
             ? ({
-                ...change,
-                payload: { ...change.payload, newSubtaskName: e.target.value },
-              } as RenameSubtaskUpdate)
-            : change,
+                ...action,
+                payload: { ...action.payload, newSubtaskName: e.target.value },
+              } as RenameSubtaskAction)
+            : action,
         );
       } else {
         return [
           ...prev,
           {
-            action: "renameSubtask",
+            type: "RENAME_SUBTASK",
             payload: {
               boardId: board.id,
               columnId,
@@ -291,7 +291,7 @@ export const EditTaskMenu = ({ columnId, task }: Props) => {
               subtaskId,
               newSubtaskName: e.target.value,
             },
-          } satisfies RenameSubtaskUpdate,
+          } satisfies RenameSubtaskAction,
         ];
       }
     });
@@ -303,23 +303,23 @@ export const EditTaskMenu = ({ columnId, task }: Props) => {
       // Check if the subtask was added since the menu was opened
       const wasAdded =
         changes.findIndex(
-          (change) =>
-            change.action === "createSubtask" &&
-            change.payload.subtask.id === subtaskId,
+          (action) =>
+            action.type === "CREATE_SUBTASK" &&
+            action.payload.subtask.id === subtaskId,
         ) !== -1;
       const actionIndex = prev.findIndex(
-        (change) =>
-          change.action === "deleteSubtask" &&
-          change.payload.subtaskId === subtaskId,
+        (action) =>
+          action.type === "DELETE_SUBTASK" &&
+          action.payload.subtaskId === subtaskId,
       );
       // If it was added since the menu was opened -> clear all actions that have to do with said subtask (if we added it , renamed it then deleted it before saving the changes it means we don't query the db at all )
       if (wasAdded) {
-        return prev.filter((change) => {
-          if (change.action === "renameSubtask") {
-            return change.payload.subtaskId !== subtaskId;
+        return prev.filter((action) => {
+          if (action.type === "RENAME_SUBTASK") {
+            return action.payload.subtaskId !== subtaskId;
           }
-          if (change.action === "createSubtask") {
-            return change.payload.subtask.id !== subtaskId;
+          if (action.type === "CREATE_SUBTASK") {
+            return action.payload.subtask.id !== subtaskId;
           }
           return true;
         });
@@ -330,14 +330,14 @@ export const EditTaskMenu = ({ columnId, task }: Props) => {
       } else {
         // If we still don't have a action entry for the delete of this subtask and we haven't added it since the menu was opened -> add the delete action entry and remove the rename (we don't need to rename the task if we are to delete it in the same query)
         return [
-          ...prev.filter((change) => {
-            if (change.action === "renameSubtask") {
-              return change.payload.subtaskId !== subtaskId;
+          ...prev.filter((action) => {
+            if (action.type === "RENAME_SUBTASK") {
+              return action.payload.subtaskId !== subtaskId;
             }
             return true;
           }),
           {
-            action: "deleteSubtask",
+            type: "DELETE_SUBTASK",
             payload: {
               boardId: board.id,
               columnId,

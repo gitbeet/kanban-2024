@@ -15,7 +15,7 @@ const Board = () => {
   const { optimisticBoards, loading, getCurrentBoard } = useBoards();
   const currentBoard = getCurrentBoard();
 
-  if (loading.deleteBoard || loading.createBoard) return <LoadingPage />;
+  if (loading.DELETE_BOARD || loading.createBoard) return <LoadingPage />;
 
   const noBoards = !optimisticBoards.length;
   const noBoardsJsx = (

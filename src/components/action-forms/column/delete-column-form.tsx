@@ -31,13 +31,13 @@ const DeleteColumnForm = ({
 
     startTransition(() =>
       setOptimisticBoards({
-        action: "deleteColumn",
+        type: "DELETE_COLUMN",
         payload: { boardId, columnId },
       }),
     );
 
     const response = await handleDeleteColumn({
-      change: { action: "deleteColumn", payload: { columnId, boardId } },
+      action: { type: "DELETE_COLUMN", payload: { columnId, boardId } },
       revalidate: true,
     });
     if (response?.error) {

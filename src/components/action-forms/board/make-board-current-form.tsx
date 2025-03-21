@@ -6,7 +6,7 @@ import { BoardSchema } from "~/zod-schemas";
 import type { FormEvent, HTMLAttributes } from "react";
 import { useUser } from "@clerk/nextjs";
 import { MdDashboard } from "react-icons/md";
-import { MakeBoardCurrentUpdate } from "~/types/updates";
+import { MakeBoardCurrentAction } from "~/types/actions";
 
 interface Props extends HTMLAttributes<HTMLButtonElement> {
   boardId: string;
@@ -25,7 +25,7 @@ const MakeBoardCurrentForm = ({ boardId, boardName, ...props }: Props) => {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    setBoardsLoading((prev) => ({ ...prev, makeBoardCurrent: pending }));
+    setBoardsLoading((prev) => ({ ...prev, MAKE_BOARD_CURRENT: pending }));
   }, [pending, setBoardsLoading]);
   const currentBoardId = getCurrentBoard()?.id;
 
@@ -47,7 +47,7 @@ const MakeBoardCurrentForm = ({ boardId, boardName, ...props }: Props) => {
     // client update
     startTransition(() => {
       setOptimisticBoards({
-        action: "makeBoardCurrent",
+        type: "MAKE_BOARD_CURRENT",
         payload: {
           oldCurrentBoardId: currentBoardId,
           newCurrentBoardId: boardId,
@@ -57,13 +57,13 @@ const MakeBoardCurrentForm = ({ boardId, boardName, ...props }: Props) => {
     // server validation
     // server update
     const response = await handleMakeBoardCurrent({
-      change: {
-        action: "makeBoardCurrent",
+      action: {
+        type: "MAKE_BOARD_CURRENT",
         payload: {
           newCurrentBoardId: boardId,
           oldCurrentBoardId: currentBoardId,
         },
-      } as MakeBoardCurrentUpdate,
+      } as MakeBoardCurrentAction,
       userId: user?.id,
       revalidate: true,
     });

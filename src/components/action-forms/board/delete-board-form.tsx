@@ -5,7 +5,7 @@ import { BoardSchema } from "~/zod-schemas";
 import type { FormEvent } from "react";
 import { handleDeleteBoard } from "~/server/queries";
 import { useUser } from "@clerk/nextjs";
-import { DeleteBoardUpdate } from "~/types/updates";
+import { DeleteBoardAction } from "~/types/actions";
 
 interface DeleteTaskFormProps extends React.HTMLAttributes<HTMLDivElement> {
   boardId: string;
@@ -31,7 +31,7 @@ const DeleteBoardForm = ({
   const [pending, startTransition] = useTransition();
 
   useEffect(() => {
-    setBoardsLoading((prev) => ({ ...prev, deleteBoard: pending }));
+    setBoardsLoading((prev) => ({ ...prev, DELETE_BOARD: pending }));
   }, [pending, setBoardsLoading]);
 
   const clientAction = async (e?: FormEvent) => {
@@ -51,16 +51,16 @@ const DeleteBoardForm = ({
     const wasCurrent = boardId === getCurrentBoard()?.id;
     startTransition(() => {
       setOptimisticBoards({
-        action: "deleteBoard",
+        type: "DELETE_BOARD",
         payload: { boardId, boardIndex, wasCurrent },
       });
     });
 
     const args = {
-      change: {
-        action: "deleteBoard",
+      action: {
+        type: "DELETE_BOARD",
         payload: { boardId, boardIndex, wasCurrent },
-      } as DeleteBoardUpdate,
+      } as DeleteBoardAction,
       userId: user.id,
       revalidate: true,
     };

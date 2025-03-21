@@ -13,12 +13,12 @@ import { BoardSchema, ColumnSchema } from "~/zod-schemas";
 import { mutateTable } from "~/server/queries";
 import PromptWindow from "~/components/ui/modal/prompt-window";
 import {
-  CreateColumnUpdate,
-  DeleteColumnUpdate,
-  RenameBoardUpdate,
-  RenameColumnUpdate,
-  Update,
-} from "~/types/updates";
+  CreateColumnAction,
+  DeleteColumnAction,
+  RenameBoardAction,
+  RenameColumnAction,
+  Action,
+} from "~/types/actions";
 
 type ErrorType = {
   boardName: string;
@@ -43,7 +43,7 @@ const EditBoard = ({ board }: { board: BoardType }) => {
   const [error, setError] = useState<ErrorType>(
     getInitialErrors(board.columns),
   );
-  const [changes, setChanges] = useState<Update[]>([]);
+  const [changes, setChanges] = useState<Action[]>([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -59,30 +59,29 @@ const EditBoard = ({ board }: { board: BoardType }) => {
     setBoardName(e.target.value);
     setChanges((prev) => {
       const actionIndex = prev.findIndex(
-        (change) =>
-          change.action === "renameBoard" &&
-          change.payload.boardId === board.id,
+        (action) =>
+          action.type === "RENAME_BOARD" && action.payload.boardId === board.id,
       );
       // If there's already a rename action, don't add another one
       if (actionIndex !== -1) {
-        return prev.map((change, i) =>
+        return prev.map((action, i) =>
           i === actionIndex
             ? ({
-                ...change,
-                payload: { ...change.payload, newBoardName: e.target.value },
-              } as RenameBoardUpdate)
-            : change,
+                ...action,
+                payload: { ...action.payload, newBoardName: e.target.value },
+              } as RenameBoardAction)
+            : action,
         );
       } else {
         return [
           ...prev,
           {
-            action: "renameBoard",
+            type: "RENAME_BOARD",
             payload: {
               boardId: board.id,
               newBoardName: e.target.value,
             },
-          } satisfies RenameBoardUpdate,
+          } satisfies RenameBoardAction,
         ];
       }
     });
@@ -103,9 +102,9 @@ const EditBoard = ({ board }: { board: BoardType }) => {
 
     setChanges((prev) => {
       const actionIndex = prev.findIndex(
-        (change) =>
-          change.action === "createColumn" &&
-          change.payload.column.id === newColumn.id,
+        (action) =>
+          action.type === "CREATE_COLUMN" &&
+          action.payload.column.id === newColumn.id,
       );
       if (actionIndex !== -1) {
         return prev;
@@ -113,11 +112,11 @@ const EditBoard = ({ board }: { board: BoardType }) => {
         return [
           ...prev,
           {
-            action: "createColumn",
+            type: "CREATE_COLUMN",
             payload: {
               column: newColumn,
             },
-          } as CreateColumnUpdate,
+          } as CreateColumnAction,
         ];
       }
     });
@@ -148,47 +147,47 @@ const EditBoard = ({ board }: { board: BoardType }) => {
       if (!column) return prev;
 
       const columnAddActionIndex = prev.findIndex(
-        (change) =>
-          change.action === "createColumn" &&
-          change.payload.column.boardId === board.id &&
-          change.payload.column.id === columnId,
+        (action) =>
+          action.type === "CREATE_COLUMN" &&
+          action.payload.column.boardId === board.id &&
+          action.payload.column.id === columnId,
       );
 
       const columnRenameActionIndex = prev.findIndex(
-        (change) =>
-          change.action === "renameColumn" &&
-          change.payload.columnId === columnId,
+        (action) =>
+          action.type === "RENAME_COLUMN" &&
+          action.payload.columnId === columnId,
       );
 
       if (columnAddActionIndex !== -1) {
-        return prev.map((change) =>
-          change.action === "createColumn" &&
-          change.payload.column.id === columnId
+        return prev.map((action) =>
+          action.type === "CREATE_COLUMN" &&
+          action.payload.column.id === columnId
             ? ({
-                ...change,
+                ...action,
                 payload: {
                   column: { ...column, name: e.target.value },
                 },
-              } satisfies CreateColumnUpdate)
-            : change,
+              } satisfies CreateColumnAction)
+            : action,
         );
       } else if (columnRenameActionIndex !== -1) {
-        return prev.map((change, i) =>
-          i === columnRenameActionIndex && change.action === "renameColumn"
-            ? { ...change, columnId, newName: e.target.value }
-            : change,
+        return prev.map((action, i) =>
+          i === columnRenameActionIndex && action.type === "RENAME_COLUMN"
+            ? { ...action, columnId, newName: e.target.value }
+            : action,
         );
       } else {
         return [
           ...prev,
           {
-            action: "renameColumn",
+            type: "RENAME_COLUMN",
             payload: {
               boardId: board.id,
               columnId,
               newColumnName: e.target.value,
             },
-          } satisfies RenameColumnUpdate,
+          } satisfies RenameColumnAction,
         ];
       }
     });
@@ -199,23 +198,23 @@ const EditBoard = ({ board }: { board: BoardType }) => {
       // Check if the subtask was added since the menu was opened
       const wasAdded =
         changes.findIndex(
-          (change) =>
-            change.action === "createColumn" &&
-            change.payload.column.id === columnId,
+          (action) =>
+            action.type === "CREATE_COLUMN" &&
+            action.payload.column.id === columnId,
         ) !== -1;
       const actionIndex = prev.findIndex(
-        (change) =>
-          change.action === "deleteColumn" &&
-          change.payload.columnId === columnId,
+        (action) =>
+          action.type === "DELETE_COLUMN" &&
+          action.payload.columnId === columnId,
       );
       // If it was added since the menu was opened -> clear all actions that have to do with said subtask (if we added it , renamed it then deleted it before saving the changes it means we don't query the db at all )
       if (wasAdded) {
-        return prev.filter((change) => {
-          if (change.action === "renameColumn") {
-            return change.payload.columnId !== columnId;
+        return prev.filter((action) => {
+          if (action.type === "RENAME_COLUMN") {
+            return action.payload.columnId !== columnId;
           }
-          if (change.action === "createColumn") {
-            return change.payload.column.id !== columnId;
+          if (action.type === "CREATE_COLUMN") {
+            return action.payload.column.id !== columnId;
           }
           return true;
         });
@@ -226,16 +225,16 @@ const EditBoard = ({ board }: { board: BoardType }) => {
       } else {
         // If we still don't have a action entry for the delete of this subtask and we haven't added it since the menu was opened -> add the delete action entry and remove the rename (we don't need to rename the task if we are to delete it in the same query)
         return [
-          ...prev.filter((change) => {
-            if (change.action === "renameColumn") {
-              return change.payload.columnId !== columnId;
+          ...prev.filter((action) => {
+            if (action.type === "RENAME_COLUMN") {
+              return action.payload.columnId !== columnId;
             }
             return true;
           }),
           {
-            action: "deleteColumn",
+            type: "DELETE_COLUMN",
             payload: { boardId: board.id, columnId },
-          } satisfies DeleteColumnUpdate,
+          } satisfies DeleteColumnAction,
         ];
       }
     });

@@ -52,7 +52,7 @@ const EditTaskWindow = ({
         ? newTaskIndex + 1
         : newTaskIndex;
     setOptimisticBoards({
-      action: "switchTaskColumn",
+      type: "SWITCH_TASK_COLUMN",
       payload: {
         boardId: board?.id,
         taskId: task.id,
@@ -64,8 +64,8 @@ const EditTaskWindow = ({
     });
     handleClickOutside();
     const response = await handleSwitchTaskColumn({
-      change: {
-        action: "switchTaskColumn",
+      action: {
+        type: "SWITCH_TASK_COLUMN",
         payload: {
           boardId: board.id,
           taskId: task.id,

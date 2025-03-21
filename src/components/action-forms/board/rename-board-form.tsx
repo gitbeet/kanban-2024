@@ -8,7 +8,7 @@ import InputField from "~/components/ui/input-field";
 import { BoardSchema } from "~/zod-schemas";
 import type { ChangeEvent } from "react";
 import { useUser } from "@clerk/nextjs";
-import { RenameBoardUpdate } from "~/types/updates";
+import { RenameBoardAction } from "~/types/actions";
 
 const RenameBoardForm = ({ boardId }: { boardId: string }) => {
   const [newBoardName, setNewBoardName] = useState("");
@@ -30,22 +30,22 @@ const RenameBoardForm = ({ boardId }: { boardId: string }) => {
     }
     startTransition(() =>
       setOptimisticBoards({
-        action: "renameBoard",
+        type: "RENAME_BOARD",
         payload: {
           boardId: boardId,
           newBoardName,
         },
-      } satisfies RenameBoardUpdate),
+      } satisfies RenameBoardAction),
     );
 
     const response = await handleRenameBoard({
-      change: {
-        action: "renameBoard",
+      action: {
+        type: "RENAME_BOARD",
         payload: {
           boardId,
           newBoardName,
         },
-      } as RenameBoardUpdate,
+      } as RenameBoardAction,
       userId: user.id,
       revalidate: true,
     });

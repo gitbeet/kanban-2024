@@ -25,7 +25,7 @@ const ToggleSubtaskForm = ({
     e?.preventDefault();
     startTransition(() => {
       setOptimisticBoards({
-        action: "toggleSubtask",
+        type: "TOGGLE_SUBTASK",
         payload: {
           boardId: currentBoardId,
           columnId,
@@ -36,8 +36,8 @@ const ToggleSubtaskForm = ({
     });
 
     const response = await handleToggleSubtaskCompleted({
-      change: {
-        action: "toggleSubtask",
+      action: {
+        type: "TOGGLE_SUBTASK",
         payload: {
           boardId: currentBoardId,
           columnId,

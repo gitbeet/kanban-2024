@@ -13,24 +13,24 @@ import {
   TaskSchema,
 } from "~/zod-schemas";
 import {
-  CreateBoardUpdate,
-  CreateColumnUpdate,
-  CreateSubtaskUpdate,
-  CreateTaskUpdate,
-  DeleteBoardUpdate,
-  DeleteColumnUpdate,
-  DeleteSubtaskUpdate,
-  DeleteTaskUpdate,
-  MakeBoardCurrentUpdate,
-  RenameBoardUpdate,
-  RenameColumnUpdate,
-  RenameSubtaskUpdate,
-  RenameTaskUpdate,
-  SwitchTaskColumnUpdate,
-  ToggleSubtaskUpdate,
-  ToggleTaskUpdate,
-  Update,
-} from "~/types/updates";
+  CreateBoardAction,
+  CreateColumnAction,
+  CreateSubtaskAction,
+  CreateTaskAction,
+  DeleteBoardAction,
+  DeleteColumnAction,
+  DeleteSubtaskAction,
+  DeleteTaskAction,
+  MakeBoardCurrentAction,
+  RenameBoardAction,
+  RenameColumnAction,
+  RenameSubtaskAction,
+  RenameTaskAction,
+  SwitchTaskColumnAction,
+  ToggleSubtaskAction,
+  ToggleTaskAction,
+  Action,
+} from "~/types/actions";
 
 // ------ Board ------
 export async function getBoards() {
@@ -54,20 +54,20 @@ export async function getBoards() {
 }
 
 export const handleCreateBoard = async ({
-  change,
+  action,
   userId,
   tx = db,
   revalidate = false,
   inTransaction = false,
 }: {
-  change: CreateBoardUpdate;
+  action: CreateBoardAction;
   userId: string;
   tx?: DatabaseType;
   revalidate?: boolean;
   inTransaction?: boolean;
 }) => {
   try {
-    const { payload } = change;
+    const { payload } = action;
     const { board } = payload;
     const boardsOrdered = await tx.query.boards.findMany({
       where: (model, { eq }) => eq(model.userId, userId),
@@ -103,19 +103,19 @@ export const handleCreateBoard = async ({
 };
 
 export const handleRenameBoard = async ({
-  change,
+  action,
   userId,
   tx = db,
   revalidate = false,
   inTransaction = false,
 }: {
-  change: RenameBoardUpdate;
+  action: RenameBoardAction;
   userId: string;
   tx?: DatabaseType;
   revalidate?: boolean;
   inTransaction?: boolean;
 }) => {
-  const { payload } = change;
+  const { payload } = action;
   const { boardId, newBoardName } = payload;
 
   const result = BoardSchema.pick({ id: true, name: true }).safeParse({
@@ -148,19 +148,19 @@ export const handleRenameBoard = async ({
 };
 
 export const handleDeleteBoard = async ({
-  change,
+  action,
   userId,
   tx = db,
   revalidate = false,
   inTransaction = false,
 }: {
-  change: DeleteBoardUpdate;
+  action: DeleteBoardAction;
   userId: string;
   tx?: DatabaseType;
   revalidate?: boolean;
   inTransaction?: boolean;
 }) => {
-  const { payload } = change;
+  const { payload } = action;
   const { boardId, boardIndex, wasCurrent } = payload;
 
   const result = BoardSchema.pick({ id: true, index: true }).safeParse({
@@ -202,19 +202,19 @@ export const handleDeleteBoard = async ({
 };
 
 export const handleMakeBoardCurrent = async ({
-  change,
+  action,
   userId,
   tx = db,
   revalidate = false,
   inTransaction = false,
 }: {
-  change: MakeBoardCurrentUpdate;
+  action: MakeBoardCurrentAction;
   userId: string;
   tx?: DatabaseType;
   revalidate?: boolean;
   inTransaction?: boolean;
 }) => {
-  const { payload } = change;
+  const { payload } = action;
   const { oldCurrentBoardId, newCurrentBoardId } = payload;
   try {
     await tx
@@ -241,17 +241,17 @@ export const handleMakeBoardCurrent = async ({
 
 // ------ Column ------
 export const handleCreateColumn = async ({
-  change,
+  action,
   tx = db,
   revalidate = false,
   inTransaction = false,
 }: {
-  change: CreateColumnUpdate;
+  action: CreateColumnAction;
   tx?: DatabaseType;
   revalidate?: boolean;
   inTransaction?: boolean;
 }) => {
-  const { payload } = change;
+  const { payload } = action;
   const { column } = payload;
   const { boardId } = column;
 
@@ -289,17 +289,17 @@ export const handleCreateColumn = async ({
 };
 
 export const handleRenameColumn = async ({
-  change,
+  action,
   tx = db,
   revalidate = false,
   inTransaction = false,
 }: {
-  change: RenameColumnUpdate;
+  action: RenameColumnAction;
   tx?: DatabaseType;
   revalidate?: boolean;
   inTransaction?: boolean;
 }) => {
-  const { payload } = change;
+  const { payload } = action;
   const { columnId, newColumnName } = payload;
 
   const result = ColumnSchema.pick({ id: true, name: true }).safeParse({
@@ -330,17 +330,17 @@ export const handleRenameColumn = async ({
 };
 
 export const handleDeleteColumn = async ({
-  change,
+  action,
   tx = db,
   revalidate = false,
   inTransaction = false,
 }: {
-  change: DeleteColumnUpdate;
+  action: DeleteColumnAction;
   tx?: DatabaseType;
   revalidate?: boolean;
   inTransaction?: boolean;
 }) => {
-  const { payload } = change;
+  const { payload } = action;
   const { boardId, columnId } = payload;
 
   const result = ColumnSchema.pick({ id: true, boardId: true }).safeParse({
@@ -382,17 +382,17 @@ export const handleDeleteColumn = async ({
 
 // ------ Task ------
 export const handleCreateTask = async ({
-  change,
+  action,
   tx = db,
   revalidate = false,
   inTransaction = false,
 }: {
-  change: CreateTaskUpdate;
+  action: CreateTaskAction;
   tx?: DatabaseType;
   revalidate?: boolean;
   inTransaction?: boolean;
 }) => {
-  const { payload } = change;
+  const { payload } = action;
   const { columnId, task } = payload;
 
   const result = TaskSchema.safeParse(task);
@@ -426,17 +426,17 @@ export const handleCreateTask = async ({
 };
 
 export const handleRenameTask = async ({
-  change,
+  action,
   tx = db,
   revalidate = false,
   inTransaction = false,
 }: {
-  change: RenameTaskUpdate;
+  action: RenameTaskAction;
   tx?: DatabaseType;
   revalidate?: boolean;
   inTransaction?: boolean;
 }) => {
-  const { payload } = change;
+  const { payload } = action;
   const { taskId, newTaskName } = payload;
   const result = TaskSchema.pick({ id: true, name: true }).safeParse({
     id: taskId,
@@ -463,17 +463,17 @@ export const handleRenameTask = async ({
 };
 
 export const handleDeleteTask = async ({
-  change,
+  action,
   tx = db,
   revalidate = false,
   inTransaction = false,
 }: {
-  change: DeleteTaskUpdate;
+  action: DeleteTaskAction;
   tx?: DatabaseType;
   revalidate?: boolean;
   inTransaction?: boolean;
 }) => {
-  const { payload } = change;
+  const { payload } = action;
   const { taskId } = payload;
 
   const result = TaskSchema.pick({ id: true }).safeParse({ id: taskId });
@@ -506,17 +506,17 @@ export const handleDeleteTask = async ({
 };
 
 export const handleToggleTaskCompleted = async ({
-  change,
+  action,
   tx = db,
   revalidate = false,
   inTransaction = false,
 }: {
-  change: ToggleTaskUpdate;
+  action: ToggleTaskAction;
   tx?: DatabaseType;
   revalidate?: boolean;
   inTransaction?: boolean;
 }) => {
-  const { payload } = change;
+  const { payload } = action;
   const { taskId } = payload;
 
   const result = TaskSchema.pick({ id: true }).safeParse({ id: taskId });
@@ -548,17 +548,17 @@ export const handleToggleTaskCompleted = async ({
 };
 
 export const handleSwitchTaskColumn = async ({
-  change,
+  action,
   tx = db,
   revalidate = false,
   inTransaction = false,
 }: {
-  change: SwitchTaskColumnUpdate;
+  action: SwitchTaskColumnAction;
   tx?: DatabaseType;
   revalidate?: boolean;
   inTransaction?: boolean;
 }) => {
-  const { payload } = change;
+  const { payload } = action;
   const { newColumnId, newColumnIndex, oldColumnId, oldColumnIndex, taskId } =
     payload;
 
@@ -676,17 +676,17 @@ export const handleSwitchTaskColumn = async ({
 
 // ------ Subtask ------
 export const handleCreateSubtask = async ({
-  change,
+  action,
   tx = db,
   revalidate = false,
   inTransaction = false,
 }: {
-  change: CreateSubtaskUpdate;
+  action: CreateSubtaskAction;
   tx?: DatabaseType;
   revalidate?: boolean;
   inTransaction?: boolean;
 }) => {
-  const { payload } = change;
+  const { payload } = action;
   const { subtask } = payload;
 
   const result = SubtaskSchema.safeParse(subtask);
@@ -718,17 +718,17 @@ export const handleCreateSubtask = async ({
 };
 
 export const handleRenameSubtask = async ({
-  change,
+  action,
   tx = db,
   revalidate = false,
   inTransaction = false,
 }: {
-  change: RenameSubtaskUpdate;
+  action: RenameSubtaskAction;
   tx?: DatabaseType;
   revalidate?: boolean;
   inTransaction?: boolean;
 }) => {
-  const { payload } = change;
+  const { payload } = action;
   const { newSubtaskName, subtaskId } = payload;
 
   const result = SubtaskSchema.pick({ id: true, name: true }).safeParse({
@@ -757,17 +757,17 @@ export const handleRenameSubtask = async ({
 };
 
 export const handleDeleteSubtask = async ({
-  change,
+  action,
   tx = db,
   revalidate = false,
   inTransaction = false,
 }: {
-  change: DeleteSubtaskUpdate;
+  action: DeleteSubtaskAction;
   tx?: DatabaseType;
   revalidate?: boolean;
   inTransaction?: boolean;
 }) => {
-  const { payload } = change;
+  const { payload } = action;
   const { subtaskId } = payload;
 
   const result = SubtaskSchema.pick({ id: true }).safeParse({ id: subtaskId });
@@ -803,17 +803,17 @@ export const handleDeleteSubtask = async ({
 };
 
 export const handleToggleSubtaskCompleted = async ({
-  change,
+  action,
   tx = db,
   revalidate = false,
   inTransaction = false,
 }: {
-  change: ToggleSubtaskUpdate;
+  action: ToggleSubtaskAction;
   tx?: DatabaseType;
   revalidate?: boolean;
   inTransaction?: boolean;
 }) => {
-  const { payload } = change;
+  const { payload } = action;
   const { subtaskId } = payload;
 
   const result = SubtaskSchema.pick({ id: true }).safeParse({ id: subtaskId });
@@ -845,41 +845,41 @@ export const handleToggleSubtaskCompleted = async ({
 };
 
 // ------ Transaction ------
-export async function mutateTable(changes: Update[]) {
+export async function mutateTable(changes: Action[]) {
   const user = auth();
   if (!user.userId) throw new Error("Unauthorized");
   try {
     await db.transaction(async (tx) => {
-      for (const change of changes) {
-        switch (change.action) {
+      for (const action of changes) {
+        switch (action.type) {
           // Boards
-          case "createBoard":
+          case "CREATE_BOARD":
             await handleCreateBoard({
-              change,
+              action,
               userId: user.userId,
               tx,
               inTransaction: true,
             });
             break;
-          case "renameBoard":
+          case "RENAME_BOARD":
             await handleRenameBoard({
-              change,
+              action,
               userId: user.userId,
               tx,
               inTransaction: true,
             });
             break;
-          case "deleteBoard":
+          case "DELETE_BOARD":
             await handleDeleteBoard({
-              change,
+              action,
               userId: user.userId,
               tx,
               inTransaction: true,
             });
             break;
-          case "makeBoardCurrent":
+          case "MAKE_BOARD_CURRENT":
             await handleMakeBoardCurrent({
-              change,
+              action,
               userId: user.userId,
               tx,
               inTransaction: true,
@@ -887,50 +887,50 @@ export async function mutateTable(changes: Update[]) {
             break;
 
           // Columns
-          case "createColumn":
-            await handleCreateColumn({ change, tx, inTransaction: true });
+          case "CREATE_COLUMN":
+            await handleCreateColumn({ action, tx, inTransaction: true });
             break;
-          case "renameColumn":
-            await handleRenameColumn({ change, tx, inTransaction: true });
+          case "RENAME_COLUMN":
+            await handleRenameColumn({ action, tx, inTransaction: true });
             break;
-          case "deleteColumn":
-            await handleDeleteColumn({ change, tx, inTransaction: true });
+          case "DELETE_COLUMN":
+            await handleDeleteColumn({ action, tx, inTransaction: true });
             break;
 
           // Tasks
-          case "createTask":
-            await handleCreateTask({ change, tx, inTransaction: true });
+          case "CREATE_TASK":
+            await handleCreateTask({ action, tx, inTransaction: true });
             break;
-          case "renameTask":
-            await handleRenameTask({ change, tx, inTransaction: true });
+          case "RENAME_TASK":
+            await handleRenameTask({ action, tx, inTransaction: true });
             break;
-          case "deleteTask":
-            await handleDeleteTask({ change, tx, inTransaction: true });
+          case "DELETE_TASK":
+            await handleDeleteTask({ action, tx, inTransaction: true });
             break;
-          case "toggleTask":
+          case "TOGGLE_TASK":
             await handleToggleTaskCompleted({
-              change,
+              action,
               tx,
               inTransaction: true,
             });
             break;
-          case "switchTaskColumn":
-            await handleSwitchTaskColumn({ change, tx, inTransaction: true });
+          case "SWITCH_TASK_COLUMN":
+            await handleSwitchTaskColumn({ action, tx, inTransaction: true });
             break;
 
           // Subtasks
-          case "createSubtask":
-            await handleCreateSubtask({ change, tx, inTransaction: true });
+          case "CREATE_SUBTASK":
+            await handleCreateSubtask({ action, tx, inTransaction: true });
             break;
-          case "renameSubtask":
-            await handleRenameSubtask({ change, tx, inTransaction: true });
+          case "RENAME_SUBTASK":
+            await handleRenameSubtask({ action, tx, inTransaction: true });
             break;
-          case "deleteSubtask":
-            await handleDeleteSubtask({ change, tx, inTransaction: true });
+          case "DELETE_SUBTASK":
+            await handleDeleteSubtask({ action, tx, inTransaction: true });
             break;
-          case "toggleSubtask":
+          case "TOGGLE_SUBTASK":
             await handleToggleSubtaskCompleted({
-              change,
+              action,
               tx,
               inTransaction: true,
             });

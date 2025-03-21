@@ -43,7 +43,7 @@ const RenameColumnForm = ({
     }
     startTransition(() => {
       setOptimisticBoards({
-        action: "renameColumn",
+        type: "RENAME_COLUMN",
         payload: { boardId, columnId, newColumnName },
       });
     });
@@ -51,8 +51,8 @@ const RenameColumnForm = ({
     setIsOpen(false);
 
     const response = await handleRenameColumn({
-      change: {
-        action: "renameColumn",
+      action: {
+        type: "RENAME_COLUMN",
         payload: { columnId, newColumnName, boardId },
       },
       revalidate: true,

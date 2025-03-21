@@ -23,13 +23,13 @@ const DeleteSubtaskForm = ({
     }
     startTransition(() => {
       setOptimisticBoards({
-        action: "deleteSubtask",
+        type: "DELETE_SUBTASK",
         payload: { boardId, columnId, taskId, subtaskId },
       });
     });
     const response = await handleDeleteSubtask({
-      change: {
-        action: "deleteSubtask",
+      action: {
+        type: "DELETE_SUBTASK",
         payload: { boardId, columnId, taskId, subtaskId },
       },
       revalidate: true,

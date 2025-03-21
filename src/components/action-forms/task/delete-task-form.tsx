@@ -23,13 +23,13 @@ const DeleteTaskForm = ({
     }
 
     setOptimisticBoards({
-      action: "deleteTask",
+      type: "DELETE_TASK",
       payload: { boardId: currentBoardId, columnId, taskId },
     });
 
     const response = await handleDeleteTask({
-      change: {
-        action: "deleteTask",
+      action: {
+        type: "DELETE_TASK",
         payload: { boardId: currentBoardId, columnId, taskId },
       },
       revalidate: true,

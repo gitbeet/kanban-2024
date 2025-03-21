@@ -1,6 +1,6 @@
 import type { db } from "../server/db";
 import { type getBoards } from "../server/queries";
-import { Update } from "./updates";
+import { Action } from "./actions";
 
 export type BoardType = Awaited<ReturnType<typeof getBoards>>[number];
 
@@ -24,4 +24,4 @@ export type DBType = typeof db;
 
 export type DatabaseType = TransactionType | DBType;
 
-export type SetOptimisticType = (update: Update) => void;
+export type SetOptimisticType = (update: Action) => void;

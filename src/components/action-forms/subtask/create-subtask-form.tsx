@@ -58,7 +58,7 @@ const CreateSubtaskForm = ({
 
     startTransition(() => {
       setOptimisticBoards({
-        action: "createSubtask",
+        type: "CREATE_SUBTASK",
         payload: {
           boardId: currentBoard?.id,
           columnId,
@@ -70,8 +70,8 @@ const CreateSubtaskForm = ({
 
     // sever validation/state update
     const response = await handleCreateSubtask({
-      change: {
-        action: "createSubtask",
+      action: {
+        type: "CREATE_SUBTASK",
         payload: {
           boardId: currentBoard.id,
           columnId,

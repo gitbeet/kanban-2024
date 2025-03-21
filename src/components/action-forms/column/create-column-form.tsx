@@ -54,14 +54,14 @@ const CreateColumnForm = ({ boardId, ...props }: CreateColumnProps) => {
     }
     startTransition(() => {
       setOptimisticBoards({
-        action: "createColumn",
+        type: "CREATE_COLUMN",
         payload: { column: newColumn },
       });
     });
 
     const response = await handleCreateColumn({
-      change: {
-        action: "createColumn",
+      action: {
+        type: "CREATE_COLUMN",
         payload: { column: newColumn },
       },
       revalidate: true,

@@ -156,7 +156,7 @@ const Column = ({
     }
     startTransition(() => {
       setOptimisticBoards({
-        action: "switchTaskColumn",
+        type: "SWITCH_TASK_COLUMN",
         payload: {
           boardId,
           taskId,
@@ -169,8 +169,8 @@ const Column = ({
     });
 
     const response = await handleSwitchTaskColumn({
-      change: {
-        action: "switchTaskColumn",
+      action: {
+        type: "SWITCH_TASK_COLUMN",
         payload: {
           boardId,
           taskId,

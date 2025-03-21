@@ -9,15 +9,15 @@ interface BoardsContextType {
   optimisticBoards: BoardType[];
   setOptimisticBoards: SetOptimisticType;
   loading: {
-    deleteBoard: boolean;
+    DELETE_BOARD: boolean;
     createBoard: boolean;
-    makeBoardCurrent: boolean;
+    MAKE_BOARD_CURRENT: boolean;
   };
   setLoading: React.Dispatch<
     React.SetStateAction<{
-      deleteBoard: boolean;
+      DELETE_BOARD: boolean;
       createBoard: boolean;
-      makeBoardCurrent: boolean;
+      MAKE_BOARD_CURRENT: boolean;
     }>
   >;
   getCurrentBoard: () => BoardType | undefined;
@@ -47,9 +47,9 @@ export const BoardsProvider: React.FC<BoardsProviderProps> = ({
     handleOptimisticUpdate,
   );
   const [loading, setLoading] = useState({
-    deleteBoard: false,
+    DELETE_BOARD: false,
     createBoard: false,
-    makeBoardCurrent: false,
+    MAKE_BOARD_CURRENT: false,
   });
 
   const getCurrentBoard = () => {
