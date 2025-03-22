@@ -338,7 +338,6 @@ const EditTaskWindow = ({
           </Button>
           <Button
             disabled={pending}
-            loading={pending}
             variant="danger"
             onClick={handleClickOutside}
           >

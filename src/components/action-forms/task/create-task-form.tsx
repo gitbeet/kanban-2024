@@ -29,6 +29,7 @@ const CreateTaskForm = ({
   const [error, setError] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const { optimisticBoards } = useBoards();
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => resizeTextArea(textAreaRef), [taskName, isOpen]);
 
@@ -56,32 +57,35 @@ const CreateTaskForm = ({
       createdAt: new Date(),
       updatedAt: new Date(),
     };
-
+    // client validation
     const result = TaskSchema.safeParse(newTask);
     if (!result.success) {
       setError(result.error.issues[0]?.message ?? "An error occured");
       textAreaRef.current?.focus();
       return;
     }
-
+    // action
     const action: CreateTaskAction = {
       type: "CREATE_TASK",
       payload: { boardId, columnId, task: newTask },
     };
-
+    // client mutation
     setOptimisticBoards(action);
-
+    setTaskName("");
+    formRef.current?.scrollIntoView({ block: "end" });
+    textAreaRef.current?.focus();
+    // server validation / mutation
+    setLoading(true);
     const response = await handleCreateTask({
       action,
       revalidate: true,
     });
     if (response?.error) {
       setError(response.error);
+      setLoading(false);
       return;
     }
-    setTaskName("");
-    formRef.current?.scrollIntoView({ block: "end" });
-    textAreaRef.current?.focus();
+    setLoading(false);
   };
 
   const handleChange = (
@@ -152,7 +156,9 @@ const CreateTaskForm = ({
               >
                 Cancel
               </Button>
-              <SubmitButton size="small">Add</SubmitButton>
+              <SubmitButton disabled={loading} size="small">
+                Add
+              </SubmitButton>
             </div>
           </form>
         )}

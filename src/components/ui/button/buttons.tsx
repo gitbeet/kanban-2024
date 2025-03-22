@@ -3,7 +3,7 @@
 import { useFormStatus } from "react-dom";
 import { FaCheck, FaTrash } from "react-icons/fa";
 import { FaPlus } from "react-icons/fa6";
-import { ForwardedRef, forwardRef, type ButtonHTMLAttributes } from "react";
+import { forwardRef, type ButtonHTMLAttributes } from "react";
 import { MdClose, MdEdit } from "react-icons/md";
 import { LoadingPage } from "../loading-spinner";
 import { BsThreeDotsVertical } from "react-icons/bs";
