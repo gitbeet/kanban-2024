@@ -13,6 +13,9 @@ const MobileMenu = () => {
   const { showMobileMenu, setShowMobileMenu } = useUI();
   const resolvedTabIndex = showMobileMenu ? 0 : -1;
   const ref = useRef<HTMLAnchorElement>(null);
+
+  const handleCloseMenu = () => setShowMobileMenu(false);
+
   return (
     <FocusTrap
       active={showMobileMenu}
@@ -25,13 +28,13 @@ const MobileMenu = () => {
         className={`${showMobileMenu ? "translate-y-0 opacity-100" : "pointer-events-none -translate-y-12 opacity-0"} section-padding bg-light absolute inset-0 z-[10] space-y-8 pt-24 backdrop-blur transition-[opacity,transform]`}
       >
         <button
-          onClick={() => setShowMobileMenu(false)}
+          onClick={handleCloseMenu}
           className="text-light pointer-events-none text-sm opacity-0 focus:pointer-events-auto focus:opacity-100"
         >
           Close mobile menu
         </button>
         <ul className="space-y-4">
-          <li onClick={() => setShowMobileMenu(false)}>
+          <li onClick={handleCloseMenu}>
             <Link
               ref={ref}
               tabIndex={resolvedTabIndex}
@@ -42,7 +45,7 @@ const MobileMenu = () => {
             </Link>
           </li>
           <SignedIn>
-            <li onClick={() => setShowMobileMenu(false)}>
+            <li onClick={handleCloseMenu}>
               <Link
                 tabIndex={resolvedTabIndex}
                 className="text-dark text-xl font-semibold"
@@ -52,7 +55,7 @@ const MobileMenu = () => {
               </Link>
             </li>
           </SignedIn>
-          <li onClick={() => setShowMobileMenu(false)}>
+          <li onClick={handleCloseMenu}>
             <Link
               tabIndex={resolvedTabIndex}
               className="text-dark text-xl font-semibold"
@@ -61,7 +64,7 @@ const MobileMenu = () => {
               About
             </Link>
           </li>
-          <li onClick={() => setShowMobileMenu(false)}>
+          <li onClick={handleCloseMenu}>
             <Link
               tabIndex={resolvedTabIndex}
               className="text-dark text-xl font-semibold"

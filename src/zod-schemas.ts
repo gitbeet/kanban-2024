@@ -61,6 +61,7 @@ export const BoardSchema = z.object({
   updatedAt: z.date(),
   userId: z.string(),
   columns: z.array(ColumnSchema),
+  current: z.boolean(),
 });
 
 export const SwitchTaskActionSchema = z.object({

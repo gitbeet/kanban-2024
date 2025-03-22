@@ -1,6 +1,6 @@
 "use client";
 
-import { startTransition, useEffect, useState } from "react";
+import { startTransition, useEffect, useState, useTransition } from "react";
 import { useBoards } from "~/context/boards-context";
 import { v4 as uuid } from "uuid";
 import { mutateTable } from "~/server/queries";
@@ -545,7 +545,6 @@ export const EditTaskMenu = ({ columnId, task }: Props) => {
               Save changes
             </Button>
             <Button
-              loading={loading}
               type="button"
               variant="danger"
               className="w-full"

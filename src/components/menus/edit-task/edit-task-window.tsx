@@ -324,7 +324,7 @@ const EditTaskWindow = ({
           >
             {positionsArr.map((c) => (
               <option key={c + 1} value={c + 1}>
-                {c + 1}
+                {c + 1} {task.index === c + 1 ? " (Current)" : ""}
               </option>
             ))}
           </select>
@@ -336,7 +336,12 @@ const EditTaskWindow = ({
           >
             Save changes
           </Button>
-          <Button variant="danger" onClick={handleClickOutside}>
+          <Button
+            disabled={pending}
+            loading={pending}
+            variant="danger"
+            onClick={handleClickOutside}
+          >
             Close
           </Button>
         </div>
