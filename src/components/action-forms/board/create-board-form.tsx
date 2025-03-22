@@ -19,6 +19,8 @@ const CreateBoardForm = ({
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) => {
   const createBoardRef = useRef<HTMLFormElement>(null);
+  const inputFieldRef = useRef<HTMLInputElement>(null);
+
   const { user } = useUser();
   const {
     optimisticBoards,
@@ -59,11 +61,26 @@ const CreateBoardForm = ({
     };
 
     // Client error check
+    const boardNameAlreadyExists =
+      optimisticBoards.findIndex(
+        (board) =>
+          board.name.toLowerCase().trim() ===
+          newBoard.name.toLowerCase().trim(),
+      ) !== -1;
+    if (boardNameAlreadyExists) {
+      setError("Already exists");
+      setLoading(false);
+      setIsOpen(true);
+      inputFieldRef.current?.focus();
+      return;
+    }
+
     const result = BoardSchema.safeParse(newBoard);
     if (!result.success) {
       setError(result.error.issues[0]?.message ?? "An error occured");
       setLoading(false);
       setIsOpen(true);
+      inputFieldRef.current?.focus();
       return;
     }
 
@@ -75,7 +92,6 @@ const CreateBoardForm = ({
     startTransition(() => {
       setOptimisticBoards(action);
     });
-
     // Server error check
     const response = await handleCreateBoard({
       action,
@@ -141,6 +157,7 @@ const CreateBoardForm = ({
               className="flex items-center gap-2"
             >
               <InputField
+                ref={inputFieldRef}
                 autoFocus
                 aria-label="Enter board name"
                 type="text"

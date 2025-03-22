@@ -9,7 +9,7 @@ import { FaPlus } from "react-icons/fa6";
 import type { ColumnType } from "~/types";
 import type { ChangeEvent, FormEvent } from "react";
 import FocusTrap from "focus-trap-react";
-import { CreateColumnAction } from "~/types/actions";
+import { type CreateColumnAction } from "~/types/actions";
 
 interface CreateColumnProps extends React.HTMLAttributes<HTMLDivElement> {
   boardId: string;
@@ -17,6 +17,7 @@ interface CreateColumnProps extends React.HTMLAttributes<HTMLDivElement> {
 
 const CreateColumnForm = ({ boardId, ...props }: CreateColumnProps) => {
   const createColumnRef = useRef<HTMLFormElement | null>(null);
+  const inputFieldRef = useRef<HTMLInputElement>(null);
 
   const { setOptimisticBoards, getCurrentBoard } = useBoards();
 
@@ -46,23 +47,36 @@ const CreateColumnForm = ({ boardId, ...props }: CreateColumnProps) => {
       updatedAt: new Date(),
     };
 
+    // client validation
+
+    const columnAlreadyExists =
+      currentBoard.columns.findIndex(
+        (col) =>
+          col.name.toLowerCase().trim() === newColumn.name.toLowerCase().trim(),
+      ) !== -1;
+    if (columnAlreadyExists) {
+      setError("Already exists");
+      inputFieldRef.current?.focus();
+      return;
+    }
+
     const result = ColumnSchema.safeParse(newColumn);
     if (!result.success) {
       setError(result.error.issues[0]?.message ?? "An error occured");
       setLoading(false);
-
+      inputFieldRef.current?.focus();
       return;
     }
-
+    //action
     const action: CreateColumnAction = {
       type: "CREATE_COLUMN",
       payload: { column: newColumn },
     };
-
+    // client mutation
     startTransition(() => {
       setOptimisticBoards(action);
     });
-
+    //server validation / mutation
     const response = await handleCreateColumn({
       action,
       revalidate: true,
@@ -114,6 +128,7 @@ const CreateColumnForm = ({ boardId, ...props }: CreateColumnProps) => {
       className="flex items-center gap-2 p-1.5"
     >
       <InputField
+        ref={inputFieldRef}
         autoFocus
         value={columnName}
         onChange={handleColumnChangeName}

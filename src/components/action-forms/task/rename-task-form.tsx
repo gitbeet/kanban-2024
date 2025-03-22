@@ -10,7 +10,7 @@ import type { TaskType } from "~/types";
 import type { ChangeEvent, Dispatch, FormEvent, SetStateAction } from "react";
 import TextArea from "~/components/ui/text-area";
 import FocusTrap from "focus-trap-react";
-import { RenameTaskAction } from "~/types/actions";
+import { type RenameTaskAction } from "~/types/actions";
 
 const RenameTaskForm = ({
   boardId,
@@ -29,7 +29,7 @@ const RenameTaskForm = ({
 
   const [newTaskName, setNewTaskName] = useState(task.name);
   const [isOpen, setIsOpen] = useState(false);
-  const { setOptimisticBoards } = useBoards();
+  const { setOptimisticBoards, getCurrentBoard } = useBoards();
   const [pending, startTransition] = useTransition();
 
   // Refs
@@ -57,6 +57,30 @@ const RenameTaskForm = ({
     setLoading(true);
 
     // Client validation
+    if (task.name.trim() === newTaskName.trim()) {
+      setLoading(false);
+      setIsOpen(false);
+      setNewTaskName("");
+      setError("");
+      return;
+    }
+
+    const currentBoard = getCurrentBoard();
+    const taskAlreadyExists =
+      currentBoard?.columns
+        .find((col) => col.id === columnId)
+        ?.tasks.findIndex(
+          (t) =>
+            t.name.toLowerCase().trim() === newTaskName.toLowerCase().trim() &&
+            t.id !== task.id,
+        ) !== -1;
+    if (taskAlreadyExists) {
+      setError("Already exists");
+      setLoading(false);
+      textAreaRef.current?.focus();
+      return;
+    }
+
     const result = TaskSchema.shape.name.safeParse(newTaskName);
     if (!result.success) {
       setError(result.error.issues[0]?.message ?? "An error occurred");
@@ -93,7 +117,7 @@ const RenameTaskForm = ({
     // Wait for server to finish then set loading to false
     setLoading(false);
     setIsOpen(false);
-    setNewTaskName("kekw");
+    setNewTaskName("");
     setError("");
   };
 
@@ -146,7 +170,7 @@ const RenameTaskForm = ({
             <div
               className={`${isOpen ? "opacity-100" : "opacity-0"} flex gap-1.5 self-end`}
             >
-              <SaveButton disabled={!!error} />
+              <SaveButton disabled={!!error || loading || pending} />
               <CancelButton onClick={handleClickOutside} />
             </div>
           )}

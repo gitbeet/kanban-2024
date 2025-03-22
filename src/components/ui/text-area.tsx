@@ -15,7 +15,7 @@ const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
       <>
         <textarea
           ref={ref}
-          className={`${className} ${error ? "!border-danger-400" : ""} w-full resize-none overflow-hidden`}
+          className={`${className} ${error ? "!focus:outline-danger-400 !text-danger-400 !outline !outline-danger-400 !ring !ring-danger-400" : ""} w-full resize-none overflow-hidden`}
           onKeyDown={(e) =>
             handleCancel && handleSubmit
               ? handlePressEnterToSubmit(e, handleSubmit, handleCancel)

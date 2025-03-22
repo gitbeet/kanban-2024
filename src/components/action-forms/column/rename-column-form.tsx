@@ -5,7 +5,7 @@ import { handleRenameColumn } from "~/server/queries";
 import InputField from "~/components/ui/input-field";
 import { ColumnSchema } from "~/zod-schemas";
 import type { ChangeEvent, FormEvent } from "react";
-import { RenameColumnAction } from "~/types/actions";
+import { type RenameColumnAction } from "~/types/actions";
 
 const RenameColumnForm = ({
   boardId,
@@ -14,20 +14,19 @@ const RenameColumnForm = ({
   boardId: string;
   columnId: string;
 }) => {
-  const { setOptimisticBoards, optimisticBoards } = useBoards();
+  const { setOptimisticBoards, getCurrentBoard } = useBoards();
 
-  const column = optimisticBoards
-    .find((board) => board.id === boardId)
-    ?.columns.find((col) => col.id === columnId);
+  const currentBoard = getCurrentBoard();
+  const column = currentBoard?.columns.find((col) => col.id === columnId);
 
   const [newColumnName, setNewColumnName] = useState(column?.name ?? "");
   const [error, setError] = useState("");
   const [pending, startTransition] = useTransition();
   const [isOpen, setIsOpen] = useState(false);
-  const renameColumnRef = useRef<HTMLFormElement>(null);
   const [loading, setLoading] = useState(false);
+  const renameColumnRef = useRef<HTMLFormElement>(null);
   const { ref } = useClickOutside<HTMLDivElement>(handleClickOutside);
-
+  const inputRef = useRef<HTMLInputElement>(null);
   const handleColumnNameChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
@@ -37,29 +36,51 @@ const RenameColumnForm = ({
 
   const clientAction = async (e?: FormEvent) => {
     e?.preventDefault();
-    setLoading(true);
-    const result = ColumnSchema.shape.name.safeParse(newColumnName);
-    if (!result.success) {
-      return setError(result.error.issues[0]?.message ?? "An error occured");
+
+    // client validations
+    if (column?.name.trim() === newColumnName.trim()) {
+      inputRef.current?.blur();
+      return;
     }
 
+    const columnAlreadyExists =
+      currentBoard?.columns.findIndex(
+        (col) =>
+          col.name.toLowerCase().trim() ===
+            newColumnName.toLowerCase().trim() && col.id !== columnId,
+      ) !== -1;
+    if (columnAlreadyExists) {
+      setError("Already exists");
+      inputRef.current?.focus();
+      return;
+    }
+
+    const result = ColumnSchema.shape.name.safeParse(newColumnName);
+    if (!result.success) {
+      setError(result.error.issues[0]?.message ?? "An error occured");
+      return;
+    }
+    // action
     const action: RenameColumnAction = {
       type: "RENAME_COLUMN",
       payload: { boardId, columnId, newColumnName },
     };
-
+    // client mutation
     startTransition(() => {
       setOptimisticBoards(action);
     });
     setNewColumnName("");
     setIsOpen(false);
-
+    setLoading(true);
+    // server validation / mutation
     const response = await handleRenameColumn({
       action,
       revalidate: true,
     });
     if (response?.error) {
-      return setError(response.error);
+      setError(response.error);
+      setLoading(false);
+      return;
     }
     setLoading(false);
   };
@@ -93,6 +114,7 @@ const RenameColumnForm = ({
         {isOpen && (
           <>
             <InputField
+              ref={inputRef}
               autoFocus
               value={newColumnName ?? ""}
               onChange={handleColumnNameChange}
@@ -105,7 +127,11 @@ const RenameColumnForm = ({
               handleSubmit={clientAction}
             />
 
-            <button type="submit" className="hidden" />
+            <button
+              disabled={loading || pending}
+              type="submit"
+              className="hidden"
+            />
           </>
         )}
       </form>

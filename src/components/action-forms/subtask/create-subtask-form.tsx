@@ -6,7 +6,7 @@ import type { SubtaskType } from "~/types";
 import { SubtaskSchema } from "~/zod-schemas";
 import { v4 as uuid } from "uuid";
 import { handleCreateSubtask } from "~/server/queries";
-import { CreateSubtaskAction } from "~/types/actions";
+import { type CreateSubtaskAction } from "~/types/actions";
 const CreateSubtaskForm = ({
   columnId,
   taskId,

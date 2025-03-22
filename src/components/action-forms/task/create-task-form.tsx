@@ -24,12 +24,14 @@ const CreateTaskForm = ({
 }) => {
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
-  const { setOptimisticBoards } = useBoards();
+  const { optimisticBoards, setOptimisticBoards, getCurrentBoard } =
+    useBoards();
   const [taskName, setTaskName] = useState("");
   const [error, setError] = useState("");
   const [isOpen, setIsOpen] = useState(false);
-  const { optimisticBoards } = useBoards();
   const [loading, setLoading] = useState(false);
+
+  const currentBoard = getCurrentBoard();
 
   useEffect(() => resizeTextArea(textAreaRef), [taskName, isOpen]);
 
@@ -58,6 +60,23 @@ const CreateTaskForm = ({
       updatedAt: new Date(),
     };
     // client validation
+    if (!currentBoard) {
+      setError("Board not found");
+      return;
+    }
+    const taskAlreadyExists =
+      currentBoard.columns
+        .find((col) => col.id == columnId)
+        ?.tasks.findIndex(
+          (t) =>
+            t.name.toLowerCase().trim() === newTask.name.toLowerCase().trim(),
+        ) !== -1;
+    if (taskAlreadyExists) {
+      setError("Already exists");
+      textAreaRef.current?.focus();
+      return;
+    }
+
     const result = TaskSchema.safeParse(newTask);
     if (!result.success) {
       setError(result.error.issues[0]?.message ?? "An error occured");
