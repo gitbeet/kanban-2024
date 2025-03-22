@@ -78,13 +78,13 @@ const Sidebar = () => {
               All boards ({optimisticBoards.length})
             </h2>
             <div className="h-8"></div>
-            <motion.ul>
+            <motion.ul className="scrollbar-thin max-h-[60dvh] overflow-auto">
               {boards}
-              <motion.li layout className="px-4">
-                <div className="h-4"></div>
-                <CreateBoardForm tabIndex={showSidebar ? 0 : -1} />
-              </motion.li>
             </motion.ul>
+            <div className="px-4">
+              <div className="h-4"></div>
+              <CreateBoardForm tabIndex={showSidebar ? 0 : -1} />
+            </div>
           </div>
           {outsideButton}
         </div>
