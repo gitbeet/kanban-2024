@@ -1,6 +1,7 @@
 import bg from "../../public/test-bg-4.jpg";
 import bgTwo from "../../public/test-bg-2.jpg";
-import { ColorBackground, ImageBackground } from "~/types/background";
+import bgTest from "../../public/test-bg-3.jpg";
+import type { ColorBackground, ImageBackground } from "~/types/background";
 export const imageBackgrounds: ImageBackground[] = [
   {
     type: "image",
@@ -16,6 +17,13 @@ export const imageBackgrounds: ImageBackground[] = [
     value: bgTwo,
     alt: "Beautiful flowers",
   },
+  // {
+  //   type: "image",
+  //   slug: "test",
+  //   title: "Test",
+  //   value: bgTest,
+  //   alt: "Test background",
+  // },
 ];
 
 export const colorBackgrounds: ColorBackground[] = [
@@ -23,7 +31,7 @@ export const colorBackgrounds: ColorBackground[] = [
     type: "color",
     slug: "default",
     title: "Default",
-    value: "bg-neutral-250 dark:bg-neutral-750",
+    value: "bg-option__default",
     alt: "Default color",
   },
   {

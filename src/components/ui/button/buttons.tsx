@@ -137,7 +137,7 @@ MoreButton.displayName = "MoreButton";
 export const ToggleButton = ({ checked }: { checked: boolean }) => (
   <button
     type="submit"
-    className={`flex h-4 w-4 items-center justify-center rounded-full shadow ${checked ? "bg-success-400" : "bg-neutral-250 dark:bg-neutral-800"} `}
+    className={`flex h-4 w-4 items-center justify-center rounded-full shadow ${checked ? "bg-success-400" : "border border-neutral-350 bg-neutral-250 dark:border-neutral-500 dark:bg-neutral-800"} `}
   >
     {checked ? (
       <FaCheck className="h-2.5 w-2.5 shrink-0 text-white dark:text-neutral-750" />

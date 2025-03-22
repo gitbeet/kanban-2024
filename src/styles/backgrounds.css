@@ -1,3 +1,6 @@
+.bg-option__default {
+  @apply bg-neutral-350 dark:bg-neutral-750;
+}
 .bg-option__taskly {
   @apply bg-gradient-to-br from-primary-700 to-primary-600;
 }
