@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { startTransition, useEffect, useState } from "react";
 import { useBoards } from "~/context/boards-context";
 import { v4 as uuid } from "uuid";
 import { mutateTable } from "~/server/queries";
@@ -16,7 +16,7 @@ import {
 import { ModalWithBackdrop } from "~/components/ui/modal/modal";
 import PromptWindow from "~/components/ui/modal/prompt-window";
 import { useUI } from "~/context/ui-context";
-import {
+import type {
   CreateSubtaskAction,
   RenameSubtaskAction,
   RenameTaskAction,
@@ -50,8 +50,9 @@ export const EditTaskMenu = ({ columnId, task }: Props) => {
     setShowEditTaskWindow,
     setShowEditTaskSmallMenu,
     setShowEditTaskMenu,
+    setEditedTask,
   } = useUI();
-  const { getCurrentBoard } = useBoards();
+  const { getCurrentBoard, setOptimisticBoards } = useBoards();
   const board = getCurrentBoard();
 
   const [showConfirmCancelWindow, setShowConfirmCancelWindow] = useState(false);
@@ -76,7 +77,7 @@ export const EditTaskMenu = ({ columnId, task }: Props) => {
     setTemporarySubtasks(task.subtasks);
   }, [task]);
 
-  const handleResetChanges = () => {
+  const resetState = () => {
     setTemporarySubtasks(task.subtasks);
     setTemporaryColumnId(columnId);
     setTemporaryName(task.name);
@@ -90,13 +91,13 @@ export const EditTaskMenu = ({ columnId, task }: Props) => {
     setShowEditTaskWindow(false);
     setShowEditTaskSmallMenu(false);
     setShowEditTaskMenu(false);
-    handleResetChanges();
+    resetState();
   };
 
   const handleCloseTaskEditWindow = () => {
     setShowConfirmCancelWindow(false);
     setShowEditTaskWindow(false);
-    handleResetChanges();
+    resetState();
   };
 
   const handleChangeTaskName = (e: ChangeEvent<HTMLInputElement>) => {
@@ -357,7 +358,6 @@ export const EditTaskMenu = ({ columnId, task }: Props) => {
   };
 
   const handleSaveChanges = async () => {
-    setLoading(true);
     // -------------- CLIENT VALIDATION START --------------
 
     // Use local variable as state changes async and can validate wrongly when errors are present
@@ -386,13 +386,17 @@ export const EditTaskMenu = ({ columnId, task }: Props) => {
 
     if (!validated) return setLoading(false);
     // -------------- CLIENT VALIDATION END --------------
+    // updating editedTask when switching column so the menu does not disappear
+    handleCloseAllWindows();
+    setEditedTask({ columnId: temporaryColumnId, taskId: task.id });
+    startTransition(() => {
+      changes.forEach((action) => setOptimisticBoards(action));
+    });
 
     const response = await mutateTable(changes);
     if (response?.error) {
       return console.log(response.error);
     }
-    setLoading(false);
-    handleCloseAllWindows();
   };
 
   const handleShowConfirmationWindow = () => {
@@ -445,11 +449,14 @@ export const EditTaskMenu = ({ columnId, task }: Props) => {
         }
         onClose={handleShowConfirmationWindow}
       >
-        <div className="text-dark relative space-y-8">
+        {/* p-1 to fix overflow-auto not showing outline on focused elements */}
+        <div className="text-dark relative max-h-[95dvh] overflow-auto p-1">
           <div className="flex items-center justify-between">
             <h1 className="text-lg font-bold">Edit Task</h1>
             <CloseButton onClick={handleShowConfirmationWindow} />
           </div>
+          <div className="h-8" />
+
           {/* -----  ----- */}
           <div className="space-y-4">
             <h4 className="text-sm font-bold">Title</h4>
@@ -460,12 +467,19 @@ export const EditTaskMenu = ({ columnId, task }: Props) => {
               onChange={handleChangeTaskName}
               className="w-full"
               errorPlacement="bottom"
+              menu
             />
           </div>
+          <div className="h-8" />
+
           {/* -----  ----- */}
           <div className="space-y-4">
             <h3 className="text-sm font-bold">Subtasks</h3>
-            <ul className="space-y-2.5">
+            {temporarySubtasks.length === 0 && (
+              <p className="text-light text-center">You have no subtasks</p>
+            )}
+            {/* p-1 to fix overflow-auto not showing outline on focused elements */}
+            <ul className="max-h-44 space-y-1 overflow-auto px-1">
               {temporarySubtasks
                 .sort((a, b) => a.index - b.index)
                 .map((subtask) => {
@@ -484,6 +498,7 @@ export const EditTaskMenu = ({ columnId, task }: Props) => {
                         onChange={(e) => handleChangeSubtaskName(e, subtask.id)}
                         errorPlacement="bottom"
                         shiftLayout
+                        menu
                       />
                       <DeleteButton
                         className={`${error.subtasks[errorIndex]?.errorMessage ? "relative -top-2.5" : ""}`}
@@ -504,7 +519,7 @@ export const EditTaskMenu = ({ columnId, task }: Props) => {
               Add new subtask
             </Button>
           </div>
-
+          <div className="h-8" />
           {/* -----  ----- */}
           <div className="space-y-4">
             <h3 className="text-sm font-bold">Column</h3>
@@ -516,6 +531,8 @@ export const EditTaskMenu = ({ columnId, task }: Props) => {
               ))}
             </select>
           </div>
+          <div className="h-8" />
+
           <div className="space-y-4">
             <Button
               disabled={!changes.length || loading}

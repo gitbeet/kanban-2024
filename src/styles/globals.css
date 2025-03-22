@@ -120,12 +120,26 @@ select option {
 }
 
 .input,
+.input-readonly,
+.input-menu {
+  @apply rounded-sm px-2 text-sm;
+}
+
+.input,
 .input-readonly {
-  @apply rounded-sm px-2 py-1.5 text-sm;
+  @apply py-1.5;
+}
+
+.input-menu {
+  @apply py-3;
 }
 
 .input {
   @apply placeholder:text-neutral-650 focus:text-neutral-950 dark:focus:text-white;
+}
+
+.input-menu {
+  @apply placeholder:text-neutral-650 focus:text-neutral-900 dark:bg-neutral-800 dark:focus:bg-neutral-950/50 dark:focus:text-white;
 }
 
 .input-readonly {

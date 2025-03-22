@@ -6,6 +6,7 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   error: string;
   labelText?: string;
   errorPlacement?: "top" | "bottom";
+  menu?: boolean;
   handleSubmit?: () => void | Promise<void>;
   handleCancel?: () => void;
   shiftLayout?: boolean;
@@ -16,6 +17,7 @@ const InputField = ({
   error,
   labelText,
   errorPlacement = "top",
+  menu = false,
   handleSubmit,
   handleCancel,
   shiftLayout = false,
@@ -29,7 +31,7 @@ const InputField = ({
           ? handlePressEnterToSubmit(e, handleSubmit, handleCancel)
           : undefined
       }
-      className={`${className} ${props.readOnly ? "input-readonly" : "input"} ${error ? "!border-danger-400 !text-danger-400" : "border-neutral-500"}`}
+      className={`${className} ${props.readOnly ? "input-readonly" : menu ? "input-menu" : "input"} ${error ? "!border-danger-400 !text-danger-400" : "border-neutral-500"}`}
     />
   );
 
