@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useState, useTransition } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 import { useUser } from "@clerk/nextjs";
 import { useBoards } from "~/context/boards-context";
 import { handleCreateBoard } from "~/server/queries";
@@ -13,7 +13,7 @@ import { BoardSchema } from "~/zod-schemas";
 import type { ChangeEvent, FormEvent } from "react";
 import type { BoardType } from "~/types";
 import FocusTrap from "focus-trap-react";
-import { CreateBoardAction } from "~/types/actions";
+import { type CreateBoardAction } from "~/types/actions";
 
 const CreateBoardForm = ({
   ...props
@@ -27,9 +27,9 @@ const CreateBoardForm = ({
   } = useBoards();
 
   const [boardName, setBoardName] = useState("");
+  const [isOpen, setIsOpen] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
   const [pending, startTransition] = useTransition();
 
   useEffect(() => {
@@ -37,11 +37,15 @@ const CreateBoardForm = ({
   }, [pending, setBoardsLoading]);
 
   const clientAction = async (e?: FormEvent) => {
+    // optimistically close the form
+    setIsOpen(false);
+
     e?.preventDefault();
     if (!user?.id) return;
     setLoading(true);
 
     const maxIndex = Math.max(...optimisticBoards.map((b) => b.index));
+
     const newBoardId = uuid();
     const newBoard: BoardType = {
       id: newBoardId,
@@ -53,8 +57,6 @@ const CreateBoardForm = ({
       createdAt: new Date(),
       updatedAt: new Date(),
     };
-
-    setIsOpen(false);
 
     // Client error check
     const result = BoardSchema.safeParse(newBoard);
@@ -77,7 +79,6 @@ const CreateBoardForm = ({
     // Server error check
     const response = await handleCreateBoard({
       action,
-      userId: user.id,
       revalidate: true,
     });
     if (response?.error) {

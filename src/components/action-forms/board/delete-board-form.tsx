@@ -5,7 +5,7 @@ import { BoardSchema } from "~/zod-schemas";
 import type { FormEvent } from "react";
 import { handleDeleteBoard } from "~/server/queries";
 import { useUser } from "@clerk/nextjs";
-import { DeleteBoardAction } from "~/types/actions";
+import { type DeleteBoardAction } from "~/types/actions";
 
 interface DeleteTaskFormProps extends React.HTMLAttributes<HTMLDivElement> {
   boardId: string;
@@ -61,7 +61,6 @@ const DeleteBoardForm = ({
 
     const response = await handleDeleteBoard({
       action,
-      userId: user.id,
       revalidate: true,
     });
     if (response?.error) {

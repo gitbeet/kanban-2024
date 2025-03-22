@@ -12,7 +12,7 @@ import {
   SubtaskSchema,
   TaskSchema,
 } from "~/zod-schemas";
-import {
+import type {
   CreateBoardAction,
   CreateColumnAction,
   CreateSubtaskAction,
@@ -55,18 +55,19 @@ export async function getBoards() {
 
 export const handleCreateBoard = async ({
   action,
-  userId,
   tx = db,
   revalidate = false,
   inTransaction = false,
 }: {
   action: CreateBoardAction;
-  userId: string;
   tx?: DatabaseType;
   revalidate?: boolean;
   inTransaction?: boolean;
 }) => {
   try {
+    const { userId } = auth();
+    if (!userId) throw new Error("Unauthorized");
+
     const { payload } = action;
     const { board } = payload;
     const boardsOrdered = await tx.query.boards.findMany({
@@ -104,17 +105,18 @@ export const handleCreateBoard = async ({
 
 export const handleRenameBoard = async ({
   action,
-  userId,
   tx = db,
   revalidate = false,
   inTransaction = false,
 }: {
   action: RenameBoardAction;
-  userId: string;
   tx?: DatabaseType;
   revalidate?: boolean;
   inTransaction?: boolean;
 }) => {
+  const { userId } = auth();
+  if (!userId) throw new Error("Unauthorized");
+
   const { payload } = action;
   const { boardId, newBoardName } = payload;
 
@@ -149,17 +151,18 @@ export const handleRenameBoard = async ({
 
 export const handleDeleteBoard = async ({
   action,
-  userId,
   tx = db,
   revalidate = false,
   inTransaction = false,
 }: {
   action: DeleteBoardAction;
-  userId: string;
   tx?: DatabaseType;
   revalidate?: boolean;
   inTransaction?: boolean;
 }) => {
+  const { userId } = auth();
+  if (!userId) throw new Error("Unauthorized");
+
   const { payload } = action;
   const { boardId, boardIndex, wasCurrent } = payload;
 
@@ -203,17 +206,18 @@ export const handleDeleteBoard = async ({
 
 export const handleMakeBoardCurrent = async ({
   action,
-  userId,
   tx = db,
   revalidate = false,
   inTransaction = false,
 }: {
   action: MakeBoardCurrentAction;
-  userId: string;
   tx?: DatabaseType;
   revalidate?: boolean;
   inTransaction?: boolean;
 }) => {
+  const { userId } = auth();
+  if (!userId) throw new Error("Unauthorized");
+
   const { payload } = action;
   const { oldCurrentBoardId, newCurrentBoardId } = payload;
   try {
@@ -848,6 +852,7 @@ export const handleToggleSubtaskCompleted = async ({
 export async function mutateTable(changes: Action[]) {
   const user = auth();
   if (!user.userId) throw new Error("Unauthorized");
+
   try {
     await db.transaction(async (tx) => {
       for (const action of changes) {
@@ -856,7 +861,6 @@ export async function mutateTable(changes: Action[]) {
           case "CREATE_BOARD":
             await handleCreateBoard({
               action,
-              userId: user.userId,
               tx,
               inTransaction: true,
             });
@@ -864,7 +868,6 @@ export async function mutateTable(changes: Action[]) {
           case "RENAME_BOARD":
             await handleRenameBoard({
               action,
-              userId: user.userId,
               tx,
               inTransaction: true,
             });
@@ -872,7 +875,6 @@ export async function mutateTable(changes: Action[]) {
           case "DELETE_BOARD":
             await handleDeleteBoard({
               action,
-              userId: user.userId,
               tx,
               inTransaction: true,
             });
@@ -880,7 +882,6 @@ export async function mutateTable(changes: Action[]) {
           case "MAKE_BOARD_CURRENT":
             await handleMakeBoardCurrent({
               action,
-              userId: user.userId,
               tx,
               inTransaction: true,
             });

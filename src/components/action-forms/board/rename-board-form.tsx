@@ -8,7 +8,7 @@ import InputField from "~/components/ui/input-field";
 import { BoardSchema } from "~/zod-schemas";
 import type { ChangeEvent } from "react";
 import { useUser } from "@clerk/nextjs";
-import { RenameBoardAction } from "~/types/actions";
+import { type RenameBoardAction } from "~/types/actions";
 
 const RenameBoardForm = ({ boardId }: { boardId: string }) => {
   const [newBoardName, setNewBoardName] = useState("");
@@ -41,7 +41,6 @@ const RenameBoardForm = ({ boardId }: { boardId: string }) => {
 
     const response = await handleRenameBoard({
       action,
-      userId: user.id,
       revalidate: true,
     });
     if (response?.error) {

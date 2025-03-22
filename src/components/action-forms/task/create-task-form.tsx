@@ -13,7 +13,7 @@ import type { ChangeEvent, FormEvent } from "react";
 import type { TaskType } from "~/types";
 import TextArea from "~/components/ui/text-area";
 import FocusTrap from "focus-trap-react";
-import { CreateTaskAction } from "~/types/actions";
+import { type CreateTaskAction } from "~/types/actions";
 
 const CreateTaskForm = ({
   boardId,
@@ -60,6 +60,7 @@ const CreateTaskForm = ({
     const result = TaskSchema.safeParse(newTask);
     if (!result.success) {
       setError(result.error.issues[0]?.message ?? "An error occured");
+      textAreaRef.current?.focus();
       return;
     }
 
