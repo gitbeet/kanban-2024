@@ -1,7 +1,6 @@
 import { SignedIn, SignedOut, useClerk } from "@clerk/nextjs";
 import Link from "next/link";
-// import { usePathname } from "next/navigation";
-import React from "react";
+import React, { useRef } from "react";
 import { useUI } from "~/context/ui-context";
 import { Button } from "../ui/button/buttons";
 import FocusTrap from "focus-trap-react";
@@ -11,18 +10,15 @@ const MobileMenu = () => {
   const { signOut, redirectToSignIn, user } = useClerk();
   const handleSignOut = async () => await signOut();
   const handleRedirectToSignIn = async () => await redirectToSignIn();
-  //   const pathname = usePathname();
-  //   const isBoardsPage = pathname === "/boards";
   const { showMobileMenu, setShowMobileMenu } = useUI();
   const resolvedTabIndex = showMobileMenu ? 0 : -1;
+  const ref = useRef<HTMLAnchorElement>(null);
   return (
     <FocusTrap
       active={showMobileMenu}
       focusTrapOptions={{
         allowOutsideClick: true,
-        clickOutsideDeactivates: true,
-        escapeDeactivates: true,
-        onDeactivate: () => setShowMobileMenu(false),
+        initialFocus: () => ref.current,
       }}
     >
       <div
@@ -37,6 +33,7 @@ const MobileMenu = () => {
         <ul className="space-y-4">
           <li onClick={() => setShowMobileMenu(false)}>
             <Link
+              ref={ref}
               tabIndex={resolvedTabIndex}
               className="text-dark text-xl font-semibold"
               href="/"
