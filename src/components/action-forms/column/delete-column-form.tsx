@@ -4,6 +4,7 @@ import { handleDeleteColumn } from "~/server/queries";
 import { DeleteButton } from "~/components/ui/button/buttons";
 import { ColumnSchema } from "~/zod-schemas";
 import { DeleteColumnAction } from "~/types/actions";
+import { showCustomErrorToast } from "~/utilities/showCustomErrorToast";
 
 const DeleteColumnForm = ({
   boardId,
@@ -28,7 +29,6 @@ const DeleteColumnForm = ({
     // Fix error display later
     if (!result.success) {
       setError(result.error.issues[0]?.message ?? "An error occured");
-      console.log(error);
       return;
     }
 
@@ -44,7 +44,7 @@ const DeleteColumnForm = ({
       revalidate: true,
     });
     if (response?.error) {
-      return setError(response.error);
+      showCustomErrorToast({ message: response.error });
     }
   };
   return <form onSubmit={clientAction}>{button ?? <DeleteButton />}</form>;

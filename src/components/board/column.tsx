@@ -203,7 +203,6 @@ const Column = ({
         className={`flex items-center justify-between gap-4 pt-2 ${isFormOpen ? "pb-8" : "pb-2"}`}
       >
         <div className="flex grow items-center gap-2 font-bold text-neutral-250">
-          {/* hard coded width to avoid shifting of column name */}
           <span className={`shrink-0 text-sm text-neutral-500`}>
             ({column.tasks.length})
           </span>

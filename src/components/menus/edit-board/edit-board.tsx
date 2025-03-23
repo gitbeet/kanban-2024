@@ -19,6 +19,7 @@ import type {
   RenameColumnAction,
 } from "~/types/actions";
 import { useBoards } from "~/context/boards-context";
+import { showCustomErrorToast } from "~/utilities/showCustomErrorToast";
 
 type ErrorType = {
   boardName: string;
@@ -285,7 +286,7 @@ const EditBoard = ({ board }: { board: BoardType }) => {
 
     const response = await mutateTable(actions);
     if (response?.error) {
-      console.log(response.error);
+      showCustomErrorToast({ message: response.error });
     }
   };
 

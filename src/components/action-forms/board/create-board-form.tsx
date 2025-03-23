@@ -18,6 +18,7 @@ import type { ChangeEvent, FormEvent } from "react";
 import type { BoardType } from "~/types";
 import FocusTrap from "focus-trap-react";
 import { type CreateBoardAction } from "~/types/actions";
+import { showCustomErrorToast } from "~/utilities/showCustomErrorToast";
 
 const CreateBoardForm = ({
   ...props
@@ -105,10 +106,7 @@ const CreateBoardForm = ({
       revalidate: true,
     });
     if (response?.error) {
-      setError(response.error);
-      setIsOpen(true);
-      setLoading(false);
-      return;
+      showCustomErrorToast({ message: response.error });
     }
 
     setError("");

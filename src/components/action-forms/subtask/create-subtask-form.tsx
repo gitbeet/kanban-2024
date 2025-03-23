@@ -7,6 +7,7 @@ import { SubtaskSchema } from "~/zod-schemas";
 import { v4 as uuid } from "uuid";
 import { handleCreateSubtask } from "~/server/queries";
 import { type CreateSubtaskAction } from "~/types/actions";
+import { showCustomErrorToast } from "~/utilities/showCustomErrorToast";
 const CreateSubtaskForm = ({
   columnId,
   taskId,
@@ -77,9 +78,7 @@ const CreateSubtaskForm = ({
       revalidate: true,
     });
     if (response?.error) {
-      setIsOpen(true);
-      setError(response.error);
-      return;
+      showCustomErrorToast({ message: response.error });
     }
     setSubtaskName("");
   };

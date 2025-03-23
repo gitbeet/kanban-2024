@@ -3,6 +3,7 @@ import { handleDeleteSubtask } from "~/server/queries";
 import { DeleteButton } from "~/components/ui/button/buttons";
 import { useBoards } from "~/context/boards-context";
 import { DeleteSubtaskAction } from "~/types/actions";
+import { showCustomErrorToast } from "~/utilities/showCustomErrorToast";
 
 const DeleteSubtaskForm = ({
   columnId,
@@ -36,9 +37,7 @@ const DeleteSubtaskForm = ({
       revalidate: true,
     });
     if (response?.error) {
-      setError(response.error);
-      console.log(error);
-      return;
+      showCustomErrorToast({ message: response.error });
     }
   };
   return (

@@ -7,6 +7,7 @@ import type { FormEvent, HTMLAttributes } from "react";
 import { useUser } from "@clerk/nextjs";
 import { MdDashboard } from "react-icons/md";
 import { MakeBoardCurrentAction } from "~/types/actions";
+import { showCustomErrorToast } from "~/utilities/showCustomErrorToast";
 
 interface Props extends HTMLAttributes<HTMLButtonElement> {
   boardId: string;
@@ -64,9 +65,7 @@ const MakeBoardCurrentForm = ({ boardId, boardName, ...props }: Props) => {
       revalidate: true,
     });
     if (response?.error) {
-      setError(response.error);
-      console.log("Server error");
-      return;
+      showCustomErrorToast({ message: response.error });
     }
   };
 

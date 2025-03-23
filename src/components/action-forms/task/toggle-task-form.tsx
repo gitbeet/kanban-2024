@@ -1,9 +1,9 @@
-import { useState } from "react";
 import { useBoards } from "~/context/boards-context";
 import { handleToggleTaskCompleted } from "~/server/queries";
 import { ToggleButton } from "~/components/ui/button/buttons";
 import { type TaskType } from "~/types";
 import { ToggleTaskAction } from "~/types/actions";
+import { showCustomErrorToast } from "~/utilities/showCustomErrorToast";
 
 const ToggleTaskForm = ({
   boardId,
@@ -14,7 +14,6 @@ const ToggleTaskForm = ({
   columnId: string;
   task: TaskType;
 }) => {
-  const [error, setError] = useState("");
   const { setOptimisticBoards } = useBoards();
   const clientAction = async () => {
     const action: ToggleTaskAction = {
@@ -28,9 +27,7 @@ const ToggleTaskForm = ({
       revalidate: true,
     });
     if (response?.error) {
-      setError(response.error);
-      console.log(error);
-      return;
+      showCustomErrorToast({ message: response.error });
     }
   };
   return (

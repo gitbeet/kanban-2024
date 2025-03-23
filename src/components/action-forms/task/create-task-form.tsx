@@ -14,6 +14,7 @@ import type { TaskType } from "~/types";
 import TextArea from "~/components/ui/text-area";
 import FocusTrap from "focus-trap-react";
 import { type CreateTaskAction } from "~/types/actions";
+import { showCustomErrorToast } from "~/utilities/showCustomErrorToast";
 
 const CreateTaskForm = ({
   boardId,
@@ -100,7 +101,7 @@ const CreateTaskForm = ({
       revalidate: true,
     });
     if (response?.error) {
-      setError(response.error);
+      showCustomErrorToast({ message: response.error });
       setLoading(false);
       return;
     }

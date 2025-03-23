@@ -6,6 +6,7 @@ import type { FormEvent } from "react";
 import { handleDeleteBoard } from "~/server/queries";
 import { useUser } from "@clerk/nextjs";
 import { type DeleteBoardAction } from "~/types/actions";
+import { showCustomErrorToast } from "~/utilities/showCustomErrorToast";
 
 interface DeleteTaskFormProps extends React.HTMLAttributes<HTMLDivElement> {
   boardId: string;
@@ -64,7 +65,7 @@ const DeleteBoardForm = ({
       revalidate: true,
     });
     if (response?.error) {
-      return setError(response.error);
+      showCustomErrorToast({ message: response.error });
     }
   };
 

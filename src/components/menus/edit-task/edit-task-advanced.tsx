@@ -23,6 +23,7 @@ import type {
   SwitchTaskColumnAction,
   Action,
 } from "~/types/actions";
+import { showCustomErrorToast } from "~/utilities/showCustomErrorToast";
 
 interface Props {
   task: TaskType;
@@ -395,7 +396,7 @@ export const EditTaskAdvanced = ({ columnId, task }: Props) => {
 
     const response = await mutateTable(changes);
     if (response?.error) {
-      return console.log(response.error);
+      showCustomErrorToast({ message: response.error });
     }
   };
 

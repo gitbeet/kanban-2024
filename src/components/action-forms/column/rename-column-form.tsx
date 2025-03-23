@@ -8,6 +8,7 @@ import type { ChangeEvent, Dispatch, FormEvent, SetStateAction } from "react";
 import { type RenameColumnAction } from "~/types/actions";
 import { CancelButton, SaveButton } from "~/components/ui/button/buttons";
 import FocusTrap from "focus-trap-react";
+import { showCustomErrorToast } from "~/utilities/showCustomErrorToast";
 
 const RenameColumnForm = ({
   boardId,
@@ -84,9 +85,7 @@ const RenameColumnForm = ({
       revalidate: true,
     });
     if (response?.error) {
-      setError(response.error);
-      setLoading(false);
-      return;
+      showCustomErrorToast({ message: response.error });
     }
     setLoading(false);
   };

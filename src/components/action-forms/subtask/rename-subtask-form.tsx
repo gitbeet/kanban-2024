@@ -5,6 +5,7 @@ import { SaveButton } from "~/components/ui/button/buttons";
 import { useBoards } from "~/context/boards-context";
 import { SubtaskSchema } from "~/zod-schemas";
 import { RenameSubtaskAction } from "~/types/actions";
+import { showCustomErrorToast } from "~/utilities/showCustomErrorToast";
 
 const RenameSubtaskForm = ({
   columnId,
@@ -51,7 +52,7 @@ const RenameSubtaskForm = ({
       revalidate: true,
     });
     if (response?.error) {
-      console.log(response.error);
+      showCustomErrorToast({ message: response.error });
     }
   };
 

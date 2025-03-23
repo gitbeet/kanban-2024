@@ -11,6 +11,7 @@ import type { ChangeEvent, Dispatch, FormEvent, SetStateAction } from "react";
 import TextArea from "~/components/ui/text-area";
 import FocusTrap from "focus-trap-react";
 import { type RenameTaskAction } from "~/types/actions";
+import { showCustomErrorToast } from "~/utilities/showCustomErrorToast";
 
 const RenameTaskForm = ({
   boardId,
@@ -105,13 +106,7 @@ const RenameTaskForm = ({
       revalidate: true,
     });
     if (response?.error) {
-      setError(response.error);
-      setLoading(false);
-      // If server action fails open again
-      setIsOpen(true);
-      console.log("In server error");
-      textAreaRef.current?.focus();
-      return;
+      showCustomErrorToast({ message: response.error });
     }
 
     // Wait for server to finish then set loading to false

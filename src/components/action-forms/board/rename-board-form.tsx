@@ -9,6 +9,7 @@ import { BoardSchema } from "~/zod-schemas";
 import type { ChangeEvent } from "react";
 import { useUser } from "@clerk/nextjs";
 import { type RenameBoardAction } from "~/types/actions";
+import { showCustomErrorToast } from "~/utilities/showCustomErrorToast";
 
 const RenameBoardForm = ({ boardId }: { boardId: string }) => {
   const [newBoardName, setNewBoardName] = useState("");
@@ -44,7 +45,7 @@ const RenameBoardForm = ({ boardId }: { boardId: string }) => {
       revalidate: true,
     });
     if (response?.error) {
-      return setError(response.error);
+      showCustomErrorToast({ message: response.error });
     }
   };
 

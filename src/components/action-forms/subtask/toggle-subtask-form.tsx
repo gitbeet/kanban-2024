@@ -5,6 +5,7 @@ import { ToggleButton } from "~/components/ui/button/buttons";
 import { useBoards } from "~/context/boards-context";
 import type { SubtaskType } from "~/types";
 import { ToggleSubtaskAction } from "~/types/actions";
+import { showCustomErrorToast } from "~/utilities/showCustomErrorToast";
 
 const ToggleSubtaskForm = ({
   columnId,
@@ -44,7 +45,7 @@ const ToggleSubtaskForm = ({
       revalidate: true,
     });
     if (response?.error) {
-      console.log(response.error);
+      showCustomErrorToast({ message: response.error });
     }
   };
   return (

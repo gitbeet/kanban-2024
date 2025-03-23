@@ -2,6 +2,7 @@ import { FormEvent, startTransition, useState } from "react";
 import { useBoards } from "~/context/boards-context";
 import { handleDeleteTask } from "~/server/queries";
 import { type DeleteTaskAction } from "~/types/actions";
+import { showCustomErrorToast } from "~/utilities/showCustomErrorToast";
 
 const DeleteTaskForm = ({
   columnId,
@@ -14,7 +15,6 @@ const DeleteTaskForm = ({
   children: React.ReactNode;
   extraAction?: () => void;
 }) => {
-  const [error, setError] = useState("");
   const { setOptimisticBoards, getCurrentBoard } = useBoards();
   const currentBoardId = getCurrentBoard()?.id;
   const clientAction = async (e: FormEvent) => {
@@ -22,7 +22,7 @@ const DeleteTaskForm = ({
     extraAction?.();
 
     if (typeof currentBoardId === "undefined") {
-      setError("No current board ID");
+      showCustomErrorToast({ message: "No board" });
       return;
     }
 
@@ -40,8 +40,7 @@ const DeleteTaskForm = ({
       revalidate: true,
     });
     if (response?.error) {
-      setError(response.error);
-      return;
+      showCustomErrorToast({ message: response.error });
     }
   };
   return <form onSubmit={clientAction}>{children}</form>;

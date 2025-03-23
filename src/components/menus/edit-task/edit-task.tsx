@@ -16,6 +16,7 @@ import type {
   ToggleSubtaskAction,
 } from "~/types/actions";
 import PromptWindow from "~/components/ui/modal/prompt-window";
+import { showCustomErrorToast } from "~/utilities/showCustomErrorToast";
 
 const EditTask = ({ task, columnId }: { task: TaskType; columnId: string }) => {
   const {
@@ -174,7 +175,7 @@ const EditTask = ({ task, columnId }: { task: TaskType; columnId: string }) => {
     });
     const response = await mutateTable(actions);
     if (response?.error) {
-      console.log("Error occured while saving changes");
+      showCustomErrorToast({ message: response.error });
     }
   };
 

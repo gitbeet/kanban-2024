@@ -10,6 +10,7 @@ import type { ColumnType } from "~/types";
 import type { ChangeEvent, FormEvent } from "react";
 import FocusTrap from "focus-trap-react";
 import { type CreateColumnAction } from "~/types/actions";
+import { showCustomErrorToast } from "~/utilities/showCustomErrorToast";
 
 interface CreateColumnProps extends React.HTMLAttributes<HTMLDivElement> {
   boardId: string;
@@ -82,11 +83,7 @@ const CreateColumnForm = ({ boardId, ...props }: CreateColumnProps) => {
       revalidate: true,
     });
     if (response?.error) {
-      setIsOpen(true);
-      setLoading(false);
-
-      setError(response.error);
-      return;
+      showCustomErrorToast({ message: response.error });
     }
 
     setIsOpen(false);
