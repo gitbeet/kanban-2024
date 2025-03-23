@@ -10,10 +10,10 @@ const EditTaskSmallMenu = ({
   const {
     showEditTaskSmallMenu,
     showEditTaskMenu,
-    showEditTaskWindow,
+    showEditTaskMenuAdvanced,
     showConfirmDeleteTaskWindow,
     setShowEditTaskSmallMenu,
-    setShowEditTaskWindow,
+    setShowEditTaskMenuAdvanced,
     setShowConfirmDeleteTaskWindow,
   } = useUI();
   return (
@@ -28,11 +28,11 @@ const EditTaskSmallMenu = ({
       showBackdrop={
         showEditTaskSmallMenu &&
         showEditTaskMenu &&
-        !showEditTaskWindow &&
+        !showEditTaskMenuAdvanced &&
         !showConfirmDeleteTaskWindow
       }
       onClose={() => {
-        if (showEditTaskWindow) return;
+        if (showEditTaskMenuAdvanced) return;
         setShowEditTaskSmallMenu(false);
       }}
       className="!w-fit !p-4"
@@ -41,7 +41,7 @@ const EditTaskSmallMenu = ({
         <Button
           type="button"
           variant="ghost"
-          onClick={() => setShowEditTaskWindow(true)}
+          onClick={() => setShowEditTaskMenuAdvanced(true)}
         >
           Edit task
         </Button>

@@ -17,38 +17,35 @@ import type {
 } from "~/types/actions";
 import PromptWindow from "~/components/ui/modal/prompt-window";
 
-const EditTaskWindow = ({
-  task,
-  columnId,
-}: {
-  task: TaskType;
-  columnId: string;
-}) => {
+const EditTask = ({ task, columnId }: { task: TaskType; columnId: string }) => {
   const {
     showEditTaskMenu,
     showEditTaskSmallMenu,
-    showEditTaskWindow,
+    showEditTaskMenuAdvanced,
     setShowEditTaskMenu,
     setEditedTask,
     setShowEditTaskSmallMenu,
   } = useUI();
+
   const { getCurrentBoard, setOptimisticBoards } = useBoards();
 
   const moreButtonRef = useRef<HTMLButtonElement>(null);
 
   const [pending, startTransition] = useTransition();
   const [loading, setLoading] = useState(false);
+
   const [newColumnId, setNewColumnId] = useState(columnId);
   const [newTaskIndex, setNewTaskIndex] = useState(task.index);
+
   const [temporarySubtasks, setTemporarySubtasks] = useState(task.subtasks);
-  const [showConfirmationModal, setShowConfirmationModal] = useState<{
-    show: boolean;
-    type: "closeButton" | "moreButton" | null;
-  }>({ show: false, type: null });
+  const [confirmationModalType, setShowConfirmationModalType] = useState<
+    "closeButton" | "moreButton" | null
+  >(null);
+  const [showConfirmationModal, setShowConfirmationModal] = useState(false);
 
   useEffect(() => {
-    setTemporarySubtasks(task.subtasks);
-  }, [task]);
+    resetState();
+  }, [task, columnId]);
 
   const board = getCurrentBoard();
   if (!board) return <div>No board</div>;
@@ -126,34 +123,36 @@ const EditTaskWindow = ({
     return actions;
   };
 
-  const resetState = () => {
+  function resetState() {
     setNewColumnId(columnId);
     setNewTaskIndex(task.index);
     setTemporarySubtasks(task.subtasks);
-  };
+  }
 
   const handleClickOutside = () => {
-    if (showEditTaskWindow || showEditTaskSmallMenu) return;
+    if (showEditTaskMenuAdvanced || showEditTaskSmallMenu) return;
     const actions = getActions();
     if (actions.length === 0) {
       setEditedTask({ columnId: null, taskId: null });
       setShowEditTaskMenu(false);
       return;
     }
-    setShowConfirmationModal({ show: true, type: "closeButton" });
+    setShowConfirmationModal(true);
+    setShowConfirmationModalType("closeButton");
   };
 
   const handleClickMoreMenu = () => {
     const actions = getActions();
-    if (!actions.length) {
+    if (actions.length === 0) {
       setShowEditTaskSmallMenu(true);
     } else {
-      setShowConfirmationModal({ show: true, type: "moreButton" });
+      setShowConfirmationModal(true);
+      setShowConfirmationModalType("moreButton");
     }
   };
 
   const handleClickDiscardChanges = () => {
-    setShowConfirmationModal({ show: false, type: null });
+    setShowConfirmationModal(false);
     setShowEditTaskSmallMenu(true);
     resetState();
   };
@@ -161,7 +160,7 @@ const EditTaskWindow = ({
   const handleClickCloseAnyway = () => {
     setShowEditTaskMenu(false);
     setShowEditTaskSmallMenu(false);
-    setShowConfirmationModal({ show: false, type: null });
+    setShowConfirmationModal(false);
     setEditedTask({ columnId: null, taskId: null });
     resetState();
   };
@@ -190,30 +189,29 @@ const EditTaskWindow = ({
 
   const confirmationModal = (
     <PromptWindow
-      show={showConfirmationModal.show}
-      showBackdrop={showConfirmationModal.show}
+      show={showConfirmationModal}
+      showBackdrop={showConfirmationModal}
       zIndex={90}
       message="Save your changes before proceding. All unsaved changes will be lost."
-      onClose={() => setShowConfirmationModal({ show: false, type: null })}
+      onClose={() => setShowConfirmationModal(false)}
       confirmButton={
         <Button
           onClick={
-            showConfirmationModal.type === "moreButton"
+            confirmationModalType === "moreButton"
               ? handleClickDiscardChanges
               : handleClickCloseAnyway
           }
           variant="danger"
         >
-          {showConfirmationModal.type === "moreButton"
+          {confirmationModalType === "moreButton"
             ? "Discard changes"
-            : "Close anyway"}
+            : confirmationModalType === "closeButton"
+              ? "Close anyway"
+              : "TEST"}
         </Button>
       }
       cancelButton={
-        <Button
-          onClick={() => setShowConfirmationModal({ show: false, type: null })}
-          variant="ghost"
-        >
+        <Button onClick={() => setShowConfirmationModal(false)} variant="ghost">
           Go back
         </Button>
       }
@@ -241,9 +239,11 @@ const EditTaskWindow = ({
       {confirmationModal}
       <ModalWithBackdrop
         zIndex={20}
-        show={showEditTaskMenu}
+        show={showEditTaskMenu && !!task && !!columnId}
         showBackdrop={
-          showEditTaskMenu && !showEditTaskSmallMenu && !showEditTaskWindow
+          showEditTaskMenu &&
+          !showEditTaskSmallMenu &&
+          !showEditTaskMenuAdvanced
         }
         onClose={handleClickOutside}
         className="flex max-h-[95dvh] flex-col gap-8 overflow-auto"
@@ -349,4 +349,4 @@ const EditTaskWindow = ({
   );
 };
 
-export default EditTaskWindow;
+export default EditTask;

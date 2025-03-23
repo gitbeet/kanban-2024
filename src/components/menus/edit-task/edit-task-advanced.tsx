@@ -29,7 +29,7 @@ interface Props {
   columnId: string;
 }
 
-export const EditTaskMenu = ({ columnId, task }: Props) => {
+export const EditTaskAdvanced = ({ columnId, task }: Props) => {
   // Initial state values
   const initialTemporarySubtasks = task.subtasks.map(({ id, index, name }) => ({
     id,
@@ -46,8 +46,8 @@ export const EditTaskMenu = ({ columnId, task }: Props) => {
   const {
     showEditTaskSmallMenu,
     showEditTaskMenu,
-    showEditTaskWindow,
-    setShowEditTaskWindow,
+    showEditTaskMenuAdvanced,
+    setShowEditTaskMenuAdvanced,
     setShowEditTaskSmallMenu,
     setShowEditTaskMenu,
     setEditedTask,
@@ -88,7 +88,7 @@ export const EditTaskMenu = ({ columnId, task }: Props) => {
 
   const handleCloseAllWindows = () => {
     setShowConfirmCancelWindow(false);
-    setShowEditTaskWindow(false);
+    setShowEditTaskMenuAdvanced(false);
     setShowEditTaskSmallMenu(false);
     setShowEditTaskMenu(false);
     resetState();
@@ -96,7 +96,7 @@ export const EditTaskMenu = ({ columnId, task }: Props) => {
 
   const handleCloseTaskEditWindow = () => {
     setShowConfirmCancelWindow(false);
-    setShowEditTaskWindow(false);
+    setShowEditTaskMenuAdvanced(false);
     resetState();
   };
 
@@ -408,8 +408,8 @@ export const EditTaskMenu = ({ columnId, task }: Props) => {
     <>
       <PromptWindow
         zIndex={50}
-        show={showConfirmCancelWindow}
-        showBackdrop={showEditTaskWindow && showConfirmCancelWindow}
+        show={showConfirmCancelWindow && !!task && !!columnId}
+        showBackdrop={showEditTaskMenuAdvanced && showConfirmCancelWindow}
         onClose={() => setShowConfirmCancelWindow(false)}
         message={
           <span>
@@ -443,9 +443,9 @@ export const EditTaskMenu = ({ columnId, task }: Props) => {
       {confirmCancelWindowJSX}
       <ModalWithBackdrop
         zIndex={40}
-        show={showEditTaskWindow}
+        show={showEditTaskMenuAdvanced && !!task && !!columnId}
         showBackdrop={
-          showEditTaskSmallMenu && showEditTaskMenu && showEditTaskWindow
+          showEditTaskSmallMenu && showEditTaskMenu && showEditTaskMenuAdvanced
         }
         onClose={handleShowConfirmationWindow}
       >

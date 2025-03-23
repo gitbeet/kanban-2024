@@ -15,14 +15,14 @@ const ConfirmDeleteTaskWindow = ({
     showConfirmDeleteTaskWindow,
     setShowConfirmDeleteTaskWindow,
     setShowEditTaskMenu,
-    setShowEditTaskWindow,
+    setShowEditTaskMenuAdvanced,
     setShowEditTaskSmallMenu,
   } = useUI();
 
   const handleOnDeleteTask = () => {
     setShowConfirmDeleteTaskWindow(false);
     setShowEditTaskMenu(false);
-    setShowEditTaskWindow(false);
+    setShowEditTaskMenuAdvanced(false);
     setShowEditTaskSmallMenu(false);
   };
 

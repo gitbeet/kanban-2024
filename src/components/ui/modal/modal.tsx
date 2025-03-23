@@ -20,60 +20,46 @@ export const Modal = ({
   ...props
 }: ModalProps) => {
   return (
-    show && (
-      <FocusTrap
-        active={show}
-        focusTrapOptions={{ allowOutsideClick: true, escapeDeactivates: false }}
+    <FocusTrap
+      active={show}
+      focusTrapOptions={{
+        allowOutsideClick: true,
+        escapeDeactivates: true,
+        clickOutsideDeactivates: true,
+        onDeactivate: () => onClose(),
+      }}
+    >
+      <div
+        {...props}
+        style={{ zIndex, ...props.style }}
+        className={`menu-bg ${centered ? "menu" : ""} absolute p-6 transition-opacity duration-200 ${show ? "opacity-100" : "pointer-events-none opacity-0"} text-dark ${props.className}`}
       >
-        <div
-          {...props}
-          style={{ zIndex, ...props.style }}
-          className={`menu-bg ${centered ? "menu" : ""} absolute p-6 transition-opacity duration-200 ${show ? "opacity-100" : "pointer-events-none opacity-0"} text-dark ${props.className}`}
-        >
-          {children}
-        </div>
-      </FocusTrap>
-    )
+        {children}
+      </div>
+    </FocusTrap>
   );
 };
 
 interface ModalWithBackdropProps extends ModalProps {
   showBackdrop: boolean;
-  onClose: () => void;
 }
 
 export const ModalWithBackdrop = ({
   children,
   zIndex,
-  show,
   showBackdrop,
-  centered = true,
   onClose,
   ...props
 }: ModalWithBackdropProps) => {
   const hasMounted = useHasMounted();
-  useEffect(() => {
-    const handleEscape = (e: KeyboardEvent) => {
-      if (!showBackdrop) return;
-      if (e.key === "Escape") {
-        onClose();
-      }
-    };
-
-    document.addEventListener("keydown", handleEscape);
-
-    return () => {
-      document.removeEventListener("keydown", handleEscape);
-    };
-  }, [show, showBackdrop, onClose]);
   const jsx = (
     <>
-      <Modal zIndex={zIndex} show={show} onClose={onClose} {...props}>
+      <Modal zIndex={zIndex} onClose={onClose} {...props}>
         {children}
       </Modal>
       <Backdrop
         show={showBackdrop}
-        onClose={onClose}
+        // onClose={onClose}
         style={{ zIndex: zIndex - 5 }}
       />
     </>
@@ -95,10 +81,6 @@ export interface ModalWithBackdropAndPositionProps
 
 export const ModalWithBackdropAndPosition = ({
   children,
-  zIndex,
-  show,
-  showBackdrop,
-  onClose,
   position,
   align = "left",
   ...props
@@ -106,10 +88,6 @@ export const ModalWithBackdropAndPosition = ({
   const transform = `translate(${align === "left" ? "-90%,0" : align === "right" ? "1rem,1rem" : "-50%,0"})`;
   return (
     <ModalWithBackdrop
-      show={show}
-      onClose={onClose}
-      showBackdrop={showBackdrop}
-      zIndex={zIndex}
       centered={false}
       style={{
         top: `${position.y}px`,

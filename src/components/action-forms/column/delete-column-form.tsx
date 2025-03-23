@@ -1,4 +1,4 @@
-import { useState, useTransition } from "react";
+import { FormEvent, useState, useTransition } from "react";
 import { useBoards } from "~/context/boards-context";
 import { handleDeleteColumn } from "~/server/queries";
 import { DeleteButton } from "~/components/ui/button/buttons";
@@ -19,10 +19,12 @@ const DeleteColumnForm = ({
   const [error, setError] = useState("");
   const { setOptimisticBoards } = useBoards();
   const [pending, startTransition] = useTransition();
-  const clientAction = async () => {
-    // Not completely sure if check is needed
-    const result = ColumnSchema.shape.id.safeParse(columnId);
+  const clientAction = async (e: FormEvent) => {
+    e.preventDefault();
+    extraAction?.();
 
+    //client validation
+    const result = ColumnSchema.shape.id.safeParse(columnId);
     // Fix error display later
     if (!result.success) {
       setError(result.error.issues[0]?.message ?? "An error occured");
@@ -44,9 +46,8 @@ const DeleteColumnForm = ({
     if (response?.error) {
       return setError(response.error);
     }
-    extraAction?.();
   };
-  return <form action={clientAction}>{button ?? <DeleteButton />}</form>;
+  return <form onSubmit={clientAction}>{button ?? <DeleteButton />}</form>;
 };
 
 export default DeleteColumnForm;

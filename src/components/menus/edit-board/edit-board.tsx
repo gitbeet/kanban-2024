@@ -1,4 +1,4 @@
-import { type ChangeEvent, useEffect, useState } from "react";
+import { type ChangeEvent, startTransition, useEffect, useState } from "react";
 import {
   Button,
   CloseButton,
@@ -12,13 +12,13 @@ import { v4 as uuid } from "uuid";
 import { BoardSchema, ColumnSchema } from "~/zod-schemas";
 import { mutateTable } from "~/server/queries";
 import PromptWindow from "~/components/ui/modal/prompt-window";
-import {
+import type {
   CreateColumnAction,
   DeleteColumnAction,
   RenameBoardAction,
   RenameColumnAction,
-  Action,
 } from "~/types/actions";
+import { useBoards } from "~/context/boards-context";
 
 type ErrorType = {
   boardName: string;
@@ -33,6 +33,8 @@ const getInitialErrors = (columns: ColumnType[]) => {
 };
 
 const EditBoard = ({ board }: { board: BoardType }) => {
+  const { optimisticBoards, setOptimisticBoards, getCurrentBoard } =
+    useBoards();
   const { showEditBoardMenu, setShowEditBoardMenu, setShowEditBoardWindow } =
     useUI();
   const [showConfirmCancelWindow, setShowConfirmCancelWindow] = useState(false);
@@ -43,48 +45,116 @@ const EditBoard = ({ board }: { board: BoardType }) => {
   const [error, setError] = useState<ErrorType>(
     getInitialErrors(board.columns),
   );
-  const [changes, setChanges] = useState<Action[]>([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (!showEditBoardMenu) return;
+    setBoardName(board.name);
     setError(getInitialErrors(board.columns));
     setTemporaryColumns(board.columns);
-    // setTemporaryColumns(getInitialTemporaryColumns(board.columns));
-    setChanges([]);
-  }, [showEditBoardMenu, board.columns]);
+  }, [showEditBoardMenu, board]);
+
+  const getBoardNameAction = () => {
+    if (board.name === boardName) return null;
+    const action: RenameBoardAction = {
+      type: "RENAME_BOARD",
+      payload: { boardId: board.id, newBoardName: boardName },
+    };
+    return action;
+  };
+
+  const getColumnActions = () => {
+    // find created columns diff
+    const createdColumns = temporaryColumns.filter((column) => {
+      const didColumnExist =
+        board.columns.findIndex((c) => c.id === column.id) !== -1;
+      return !didColumnExist;
+    });
+    // find renamed columns diff
+    const oldColumns = temporaryColumns.filter((column) => {
+      const didColumnExist =
+        board.columns.findIndex((c) => c.id === column.id) !== -1;
+      return didColumnExist;
+    });
+    const renamedColumns = oldColumns.filter((col) => {
+      const isRenamed =
+        board.columns.findIndex(
+          (c) => c.id === col.id && c.name !== col.name,
+        ) !== -1;
+      return isRenamed;
+    });
+    // find deleted columns diff
+    const deletedColumns = board.columns.filter((col) => {
+      const wasDeleted =
+        temporaryColumns.findIndex((c) => c.id === col.id) === -1;
+      return wasDeleted;
+    });
+    // create corresponding actions
+    const createColumnActions: CreateColumnAction[] = createdColumns.map(
+      (column) => ({ type: "CREATE_COLUMN", payload: { column } }),
+    );
+    const renameColumnActions: RenameColumnAction[] = renamedColumns.map(
+      (column) => ({
+        type: "RENAME_COLUMN",
+        payload: {
+          boardId: column.boardId,
+          columnId: column.id,
+          newColumnName: column.name,
+        },
+      }),
+    );
+    const deleteColumnActions: DeleteColumnAction[] = deletedColumns.map(
+      (column) => ({
+        type: "DELETE_COLUMN",
+        payload: { boardId: column.boardId, columnId: column.id },
+      }),
+    );
+    const actions = [
+      ...createColumnActions,
+      ...renameColumnActions,
+      ...deleteColumnActions,
+    ];
+    return actions;
+  };
+
+  const getActions = () => {
+    const boardNameAction = getBoardNameAction();
+    const columnActions = getColumnActions();
+    if (!boardNameAction) return [...columnActions];
+    return [boardNameAction, ...columnActions];
+  };
 
   const handleChangeBoardName = (e: ChangeEvent<HTMLInputElement>) => {
     setError((prev) => ({ ...prev, boardName: "" }));
     setBoardName(e.target.value);
-    setChanges((prev) => {
-      const actionIndex = prev.findIndex(
-        (action) =>
-          action.type === "RENAME_BOARD" && action.payload.boardId === board.id,
-      );
-      // If there's already a rename action, don't add another one
-      if (actionIndex !== -1) {
-        return prev.map((action, i) =>
-          i === actionIndex
-            ? ({
-                ...action,
-                payload: { ...action.payload, newBoardName: e.target.value },
-              } as RenameBoardAction)
-            : action,
-        );
-      } else {
-        return [
-          ...prev,
-          {
-            type: "RENAME_BOARD",
-            payload: {
-              boardId: board.id,
-              newBoardName: e.target.value,
-            },
-          } satisfies RenameBoardAction,
-        ];
-      }
-    });
+    // setChanges((prev) => {
+    //   const actionIndex = prev.findIndex(
+    //     (action) =>
+    //       action.type === "RENAME_BOARD" && action.payload.boardId === board.id,
+    //   );
+    //   // If there's already a rename action, don't add another one
+    //   if (actionIndex !== -1) {
+    //     return prev.map((action, i) =>
+    //       i === actionIndex
+    //         ? ({
+    //             ...action,
+    //             payload: { ...action.payload, newBoardName: e.target.value },
+    //           } as RenameBoardAction)
+    //         : action,
+    //     );
+    //   } else {
+    //     return [
+    //       ...prev,
+    //       {
+    //         type: "RENAME_BOARD",
+    //         payload: {
+    //           boardId: board.id,
+    //           newBoardName: e.target.value,
+    //         },
+    //       } satisfies RenameBoardAction,
+    //     ];
+    //   }
+    // });
   };
 
   const handlecreateColumn = () => {
@@ -100,26 +170,26 @@ const EditBoard = ({ board }: { board: BoardType }) => {
       updatedAt: new Date(),
     };
 
-    setChanges((prev) => {
-      const actionIndex = prev.findIndex(
-        (action) =>
-          action.type === "CREATE_COLUMN" &&
-          action.payload.column.id === newColumn.id,
-      );
-      if (actionIndex !== -1) {
-        return prev;
-      } else {
-        return [
-          ...prev,
-          {
-            type: "CREATE_COLUMN",
-            payload: {
-              column: newColumn,
-            },
-          } as CreateColumnAction,
-        ];
-      }
-    });
+    // setChanges((prev) => {
+    //   const actionIndex = prev.findIndex(
+    //     (action) =>
+    //       action.type === "CREATE_COLUMN" &&
+    //       action.payload.column.id === newColumn.id,
+    //   );
+    //   if (actionIndex !== -1) {
+    //     return prev;
+    //   } else {
+    //     return [
+    //       ...prev,
+    //       {
+    //         type: "CREATE_COLUMN",
+    //         payload: {
+    //           column: newColumn,
+    //         },
+    //       } as CreateColumnAction,
+    //     ];
+    //   }
+    // });
 
     setTemporaryColumns((prev) => [...prev, newColumn]);
     setError((prev) => ({
@@ -142,102 +212,102 @@ const EditBoard = ({ board }: { board: BoardType }) => {
     setTemporaryColumns((prev) =>
       prev.map((s) => (s.id === columnId ? { ...s, name: e.target.value } : s)),
     );
-    setChanges((prev) => {
-      const column = temporaryColumns.find((c) => c.id === columnId);
-      if (!column) return prev;
+    // setChanges((prev) => {
+    //   const column = temporaryColumns.find((c) => c.id === columnId);
+    //   if (!column) return prev;
 
-      const columnAddActionIndex = prev.findIndex(
-        (action) =>
-          action.type === "CREATE_COLUMN" &&
-          action.payload.column.boardId === board.id &&
-          action.payload.column.id === columnId,
-      );
+    //   const columnAddActionIndex = prev.findIndex(
+    //     (action) =>
+    //       action.type === "CREATE_COLUMN" &&
+    //       action.payload.column.boardId === board.id &&
+    //       action.payload.column.id === columnId,
+    //   );
 
-      const columnRenameActionIndex = prev.findIndex(
-        (action) =>
-          action.type === "RENAME_COLUMN" &&
-          action.payload.columnId === columnId,
-      );
+    //   const columnRenameActionIndex = prev.findIndex(
+    //     (action) =>
+    //       action.type === "RENAME_COLUMN" &&
+    //       action.payload.columnId === columnId,
+    //   );
 
-      if (columnAddActionIndex !== -1) {
-        return prev.map((action) =>
-          action.type === "CREATE_COLUMN" &&
-          action.payload.column.id === columnId
-            ? ({
-                ...action,
-                payload: {
-                  column: { ...column, name: e.target.value },
-                },
-              } satisfies CreateColumnAction)
-            : action,
-        );
-      } else if (columnRenameActionIndex !== -1) {
-        return prev.map((action, i) =>
-          i === columnRenameActionIndex && action.type === "RENAME_COLUMN"
-            ? { ...action, columnId, newName: e.target.value }
-            : action,
-        );
-      } else {
-        return [
-          ...prev,
-          {
-            type: "RENAME_COLUMN",
-            payload: {
-              boardId: board.id,
-              columnId,
-              newColumnName: e.target.value,
-            },
-          } satisfies RenameColumnAction,
-        ];
-      }
-    });
+    //   if (columnAddActionIndex !== -1) {
+    //     return prev.map((action) =>
+    //       action.type === "CREATE_COLUMN" &&
+    //       action.payload.column.id === columnId
+    //         ? ({
+    //             ...action,
+    //             payload: {
+    //               column: { ...column, name: e.target.value },
+    //             },
+    //           } satisfies CreateColumnAction)
+    //         : action,
+    //     );
+    //   } else if (columnRenameActionIndex !== -1) {
+    //     return prev.map((action, i) =>
+    //       i === columnRenameActionIndex && action.type === "RENAME_COLUMN"
+    //         ? { ...action, columnId, newName: e.target.value }
+    //         : action,
+    //     );
+    //   } else {
+    //     return [
+    //       ...prev,
+    //       {
+    //         type: "RENAME_COLUMN",
+    //         payload: {
+    //           boardId: board.id,
+    //           columnId,
+    //           newColumnName: e.target.value,
+    //         },
+    //       } satisfies RenameColumnAction,
+    //     ];
+    //   }
+    // });
   };
 
   const handleDeleteColumn = (columnId: string, columnIndex: number) => {
-    setChanges((prev) => {
-      // Check if the subtask was added since the menu was opened
-      const wasAdded =
-        changes.findIndex(
-          (action) =>
-            action.type === "CREATE_COLUMN" &&
-            action.payload.column.id === columnId,
-        ) !== -1;
-      const actionIndex = prev.findIndex(
-        (action) =>
-          action.type === "DELETE_COLUMN" &&
-          action.payload.columnId === columnId,
-      );
-      // If it was added since the menu was opened -> clear all actions that have to do with said subtask (if we added it , renamed it then deleted it before saving the changes it means we don't query the db at all )
-      if (wasAdded) {
-        return prev.filter((action) => {
-          if (action.type === "RENAME_COLUMN") {
-            return action.payload.columnId !== columnId;
-          }
-          if (action.type === "CREATE_COLUMN") {
-            return action.payload.column.id !== columnId;
-          }
-          return true;
-        });
-      }
+    // setChanges((prev) => {
+    //   // Check if the subtask was added since the menu was opened
+    //   const wasAdded =
+    //     changes.findIndex(
+    //       (action) =>
+    //         action.type === "CREATE_COLUMN" &&
+    //         action.payload.column.id === columnId,
+    //     ) !== -1;
+    //   const actionIndex = prev.findIndex(
+    //     (action) =>
+    //       action.type === "DELETE_COLUMN" &&
+    //       action.payload.columnId === columnId,
+    //   );
+    //   // If it was added since the menu was opened -> clear all actions that have to do with said subtask (if we added it , renamed it then deleted it before saving the changes it means we don't query the db at all )
+    //   if (wasAdded) {
+    //     return prev.filter((action) => {
+    //       if (action.type === "RENAME_COLUMN") {
+    //         return action.payload.columnId !== columnId;
+    //       }
+    //       if (action.type === "CREATE_COLUMN") {
+    //         return action.payload.column.id !== columnId;
+    //       }
+    //       return true;
+    //     });
+    //   }
 
-      if (actionIndex !== -1 && !wasAdded) {
-        return prev;
-      } else {
-        // If we still don't have a action entry for the delete of this subtask and we haven't added it since the menu was opened -> add the delete action entry and remove the rename (we don't need to rename the task if we are to delete it in the same query)
-        return [
-          ...prev.filter((action) => {
-            if (action.type === "RENAME_COLUMN") {
-              return action.payload.columnId !== columnId;
-            }
-            return true;
-          }),
-          {
-            type: "DELETE_COLUMN",
-            payload: { boardId: board.id, columnId },
-          } satisfies DeleteColumnAction,
-        ];
-      }
-    });
+    //   if (actionIndex !== -1 && !wasAdded) {
+    //     return prev;
+    //   } else {
+    //     // If we still don't have a action entry for the delete of this subtask and we haven't added it since the menu was opened -> add the delete action entry and remove the rename (we don't need to rename the task if we are to delete it in the same query)
+    //     return [
+    //       ...prev.filter((action) => {
+    //         if (action.type === "RENAME_COLUMN") {
+    //           return action.payload.columnId !== columnId;
+    //         }
+    //         return true;
+    //       }),
+    //       {
+    //         type: "DELETE_COLUMN",
+    //         payload: { boardId: board.id, columnId },
+    //       } satisfies DeleteColumnAction,
+    //     ];
+    //   }
+    // });
 
     setTemporaryColumns((prev) =>
       prev
@@ -247,7 +317,8 @@ const EditBoard = ({ board }: { board: BoardType }) => {
   };
 
   const handleSaveChanges = async () => {
-    if (!changes.length) {
+    const actions = getActions();
+    if (actions.length == 0) {
       setShowEditBoardMenu(false);
       setShowEditBoardWindow(false);
       return;
@@ -258,14 +329,34 @@ const EditBoard = ({ board }: { board: BoardType }) => {
     // Use local variable as state changes async and can validate wrongly when errors are present
     let validated = true;
 
-    // Task name  validation
+    // Board name  validations
+    const currentBoard = getCurrentBoard();
+    const boardAlreadyExists =
+      optimisticBoards.findIndex(
+        (board) =>
+          board.name.toLowerCase().trim() === boardName.toLowerCase().trim() &&
+          board.id !== currentBoard?.id,
+      ) !== -1;
+    if (boardAlreadyExists) {
+      setError((prev) => ({ ...prev, boardName: "Already exists" }));
+      validated = false;
+    }
     const nameValidationResult = BoardSchema.shape.name.safeParse(boardName);
-    if (!nameValidationResult.success) validated = false;
-    const nameValidationErrorMessage =
-      nameValidationResult.error?.issues[0]?.message ?? "";
-    setError((prev) => ({ ...prev, name: nameValidationErrorMessage }));
+    if (!nameValidationResult.success) {
+      validated = false;
+      const nameValidationErrorMessage =
+        nameValidationResult.error?.issues[0]?.message;
+      if (nameValidationErrorMessage) {
+        setError((prev) => ({
+          ...prev,
+          boardName: nameValidationErrorMessage,
+        }));
+      } else {
+        setError((prev) => ({ ...prev, boardName: "Error occurred" }));
+      }
+    }
 
-    // Subtask  validations
+    // Column  validations
     temporaryColumns.forEach((column) => {
       const result = ColumnSchema.shape.name.safeParse(column.name);
       if (!result.success) validated = false;
@@ -278,32 +369,41 @@ const EditBoard = ({ board }: { board: BoardType }) => {
       }));
     });
 
-    if (!validated) return setLoading(false);
+    if (!validated) {
+      setLoading(false);
+      return;
+    }
     // -------------- CLIENT VALIDATION END --------------
 
-    const response = await mutateTable(changes);
-    if (response?.error) {
-      console.log(response.error);
-    }
+    startTransition(() => {
+      actions.forEach((action) => setOptimisticBoards(action));
+    });
+
+    // optimistically close?
     setLoading(false);
     handleCloseWindow();
     // when saving close the small menu aswell
     setShowEditBoardWindow(false);
+
+    const response = await mutateTable(actions);
+    if (response?.error) {
+      console.log(response.error);
+    }
   };
 
   const handleCloseWindow = () => {
     setShowEditBoardMenu(false);
     setShowConfirmCancelWindow(false);
     setLoading(false);
-    setError(getInitialErrors(board.columns));
-    setTemporaryColumns(board.columns);
-    setChanges([]);
   };
 
   const handleShowConfirmationWindow = () => {
-    if (!changes.length) return handleCloseWindow();
+    const actions = getActions();
+    if (actions.length === 0) return handleCloseWindow();
     setShowConfirmCancelWindow(true);
   };
+
+  const actions = getActions();
 
   const confirmCancelWindowJSX = (
     <>
@@ -359,6 +459,7 @@ const EditBoard = ({ board }: { board: BoardType }) => {
               onChange={handleChangeBoardName}
               className="w-full"
               errorPlacement="bottom"
+              menu
             />
           </div>
           {/* -----  ----- */}
@@ -380,6 +481,7 @@ const EditBoard = ({ board }: { board: BoardType }) => {
                         onChange={(e) => handleChangeColumnName(e, c.id)}
                         errorPlacement="bottom"
                         shiftLayout
+                        menu
                       />
                       <DeleteButton
                         className={`${error.columns[errorIndex]?.errorMessage ? "relative -top-2.5" : ""}`}
@@ -401,7 +503,7 @@ const EditBoard = ({ board }: { board: BoardType }) => {
 
           <div className="space-y-4">
             <Button
-              disabled={!changes.length || loading}
+              disabled={actions.length === 0 || loading}
               loading={loading}
               type="button"
               variant="primary"
@@ -419,6 +521,14 @@ const EditBoard = ({ board }: { board: BoardType }) => {
               onClick={handleShowConfirmationWindow}
             >
               Cancel
+            </Button>
+            <Button
+              type="button"
+              variant="ghost"
+              className="w-full"
+              onClick={getColumnActions}
+            >
+              TEST
             </Button>
           </div>
         </div>

@@ -2,7 +2,7 @@ import type { HTMLAttributes } from "react";
 
 interface BackdropProps extends HTMLAttributes<HTMLDivElement> {
   show: boolean;
-  onClose: () => void;
+  onClose?: () => void;
 }
 
 const Backdrop = ({ show, onClose, ...props }: BackdropProps) => {

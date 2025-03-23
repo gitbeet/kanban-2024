@@ -39,7 +39,7 @@ const RenameColumnForm = ({
 
     // client validations
     if (column?.name.trim() === newColumnName.trim()) {
-      inputRef.current?.blur();
+      setIsOpen(false);
       return;
     }
 

@@ -1,8 +1,7 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useState } from "react";
 import { useBoards } from "~/context/boards-context";
-import { handleDeleteTask } from "~/server/queries";
 import { FaTrash } from "react-icons/fa";
 import { useUI } from "~/context/ui-context";
 

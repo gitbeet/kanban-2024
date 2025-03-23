@@ -34,8 +34,8 @@ interface UIContextType {
   showConfirmDeleteColumnWindow: boolean;
   setShowConfirmDeleteColumnWindow: Dispatch<SetStateAction<boolean>>;
   //task menus
-  showEditTaskWindow: boolean;
-  setShowEditTaskWindow: Dispatch<SetStateAction<boolean>>;
+  showEditTaskMenuAdvanced: boolean;
+  setShowEditTaskMenuAdvanced: Dispatch<SetStateAction<boolean>>;
   showEditTaskMenu: boolean;
   setShowEditTaskMenu: Dispatch<SetStateAction<boolean>>;
   showEditTaskSmallMenu: boolean;
@@ -82,7 +82,8 @@ export const UIProvider: React.FC<UIProviderProps> = ({ children }) => {
   const [showConfirmDeleteColumnWindow, setShowConfirmDeleteColumnWindow] =
     useState(false);
   // task menus
-  const [showEditTaskWindow, setShowEditTaskWindow] = useState(false);
+  const [showEditTaskMenuAdvanced, setShowEditTaskMenuAdvanced] =
+    useState(false);
   const [showEditTaskMenu, setShowEditTaskMenu] = useState(false);
   const [showEditTaskSmallMenu, setShowEditTaskSmallMenu] = useState(false);
   const [showConfirmDeleteTaskWindow, setShowConfirmDeleteTaskWindow] =
@@ -129,8 +130,8 @@ export const UIProvider: React.FC<UIProviderProps> = ({ children }) => {
         showConfirmDeleteColumnWindow,
         setShowConfirmDeleteColumnWindow,
         // task menus
-        showEditTaskWindow,
-        setShowEditTaskWindow,
+        showEditTaskMenuAdvanced,
+        setShowEditTaskMenuAdvanced,
         showEditTaskMenu,
         setShowEditTaskMenu,
         showEditTaskSmallMenu,

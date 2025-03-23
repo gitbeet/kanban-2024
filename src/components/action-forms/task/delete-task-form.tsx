@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { FormEvent, startTransition, useState } from "react";
 import { useBoards } from "~/context/boards-context";
 import { handleDeleteTask } from "~/server/queries";
-import { DeleteTaskAction } from "~/types/actions";
+import { type DeleteTaskAction } from "~/types/actions";
 
 const DeleteTaskForm = ({
   columnId,
@@ -17,7 +17,10 @@ const DeleteTaskForm = ({
   const [error, setError] = useState("");
   const { setOptimisticBoards, getCurrentBoard } = useBoards();
   const currentBoardId = getCurrentBoard()?.id;
-  const clientAction = async () => {
+  const clientAction = async (e: FormEvent) => {
+    e.preventDefault();
+    extraAction?.();
+
     if (typeof currentBoardId === "undefined") {
       setError("No current board ID");
       return;
@@ -27,7 +30,10 @@ const DeleteTaskForm = ({
       type: "DELETE_TASK",
       payload: { boardId: currentBoardId, columnId, taskId },
     };
-    setOptimisticBoards(action);
+
+    startTransition(() => {
+      setOptimisticBoards(action);
+    });
 
     const response = await handleDeleteTask({
       action,
@@ -35,12 +41,10 @@ const DeleteTaskForm = ({
     });
     if (response?.error) {
       setError(response.error);
-      console.log(error);
       return;
     }
-    extraAction?.();
   };
-  return <form action={clientAction}>{children}</form>;
+  return <form onSubmit={clientAction}>{children}</form>;
 };
 
 export default DeleteTaskForm;

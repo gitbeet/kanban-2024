@@ -53,11 +53,12 @@ const Task = ({
         columnId={task.columnId}
       />
       <motion.div
+        onClick={() => console.log(task)}
         layout="position"
         layoutId={task.id}
         onDragStart={(e) => handleDragStart(e, task, columnId)}
         draggable={draggable}
-        className="task-bg group relative flex shrink-0 cursor-grab flex-col gap-1 rounded-lg py-1.5 pl-2 pr-10"
+        className={`task-bg group relative flex shrink-0 cursor-grab flex-col gap-1 rounded-lg py-1.5 pl-2 ${draggable ? "pr-10" : "pr-2"}`}
       >
         <div className="flex flex-1 items-start">
           <div>
