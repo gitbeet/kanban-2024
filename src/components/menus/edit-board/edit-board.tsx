@@ -127,34 +127,6 @@ const EditBoard = ({ board }: { board: BoardType }) => {
   const handleChangeBoardName = (e: ChangeEvent<HTMLInputElement>) => {
     setError((prev) => ({ ...prev, boardName: "" }));
     setBoardName(e.target.value);
-    // setChanges((prev) => {
-    //   const actionIndex = prev.findIndex(
-    //     (action) =>
-    //       action.type === "RENAME_BOARD" && action.payload.boardId === board.id,
-    //   );
-    //   // If there's already a rename action, don't add another one
-    //   if (actionIndex !== -1) {
-    //     return prev.map((action, i) =>
-    //       i === actionIndex
-    //         ? ({
-    //             ...action,
-    //             payload: { ...action.payload, newBoardName: e.target.value },
-    //           } as RenameBoardAction)
-    //         : action,
-    //     );
-    //   } else {
-    //     return [
-    //       ...prev,
-    //       {
-    //         type: "RENAME_BOARD",
-    //         payload: {
-    //           boardId: board.id,
-    //           newBoardName: e.target.value,
-    //         },
-    //       } satisfies RenameBoardAction,
-    //     ];
-    //   }
-    // });
   };
 
   const handlecreateColumn = () => {
@@ -202,113 +174,13 @@ const EditBoard = ({ board }: { board: BoardType }) => {
     e: ChangeEvent<HTMLInputElement>,
     columnId: string,
   ) => {
-    setError((prev) => ({
-      ...prev,
-      columns: prev.columns.map((s) =>
-        s.id === columnId ? { ...s, errorMessage: "" } : s,
-      ),
-    }));
-
+    setError(getInitialErrors(temporaryColumns));
     setTemporaryColumns((prev) =>
       prev.map((s) => (s.id === columnId ? { ...s, name: e.target.value } : s)),
     );
-    // setChanges((prev) => {
-    //   const column = temporaryColumns.find((c) => c.id === columnId);
-    //   if (!column) return prev;
-
-    //   const columnAddActionIndex = prev.findIndex(
-    //     (action) =>
-    //       action.type === "CREATE_COLUMN" &&
-    //       action.payload.column.boardId === board.id &&
-    //       action.payload.column.id === columnId,
-    //   );
-
-    //   const columnRenameActionIndex = prev.findIndex(
-    //     (action) =>
-    //       action.type === "RENAME_COLUMN" &&
-    //       action.payload.columnId === columnId,
-    //   );
-
-    //   if (columnAddActionIndex !== -1) {
-    //     return prev.map((action) =>
-    //       action.type === "CREATE_COLUMN" &&
-    //       action.payload.column.id === columnId
-    //         ? ({
-    //             ...action,
-    //             payload: {
-    //               column: { ...column, name: e.target.value },
-    //             },
-    //           } satisfies CreateColumnAction)
-    //         : action,
-    //     );
-    //   } else if (columnRenameActionIndex !== -1) {
-    //     return prev.map((action, i) =>
-    //       i === columnRenameActionIndex && action.type === "RENAME_COLUMN"
-    //         ? { ...action, columnId, newName: e.target.value }
-    //         : action,
-    //     );
-    //   } else {
-    //     return [
-    //       ...prev,
-    //       {
-    //         type: "RENAME_COLUMN",
-    //         payload: {
-    //           boardId: board.id,
-    //           columnId,
-    //           newColumnName: e.target.value,
-    //         },
-    //       } satisfies RenameColumnAction,
-    //     ];
-    //   }
-    // });
   };
 
   const handleDeleteColumn = (columnId: string, columnIndex: number) => {
-    // setChanges((prev) => {
-    //   // Check if the subtask was added since the menu was opened
-    //   const wasAdded =
-    //     changes.findIndex(
-    //       (action) =>
-    //         action.type === "CREATE_COLUMN" &&
-    //         action.payload.column.id === columnId,
-    //     ) !== -1;
-    //   const actionIndex = prev.findIndex(
-    //     (action) =>
-    //       action.type === "DELETE_COLUMN" &&
-    //       action.payload.columnId === columnId,
-    //   );
-    //   // If it was added since the menu was opened -> clear all actions that have to do with said subtask (if we added it , renamed it then deleted it before saving the changes it means we don't query the db at all )
-    //   if (wasAdded) {
-    //     return prev.filter((action) => {
-    //       if (action.type === "RENAME_COLUMN") {
-    //         return action.payload.columnId !== columnId;
-    //       }
-    //       if (action.type === "CREATE_COLUMN") {
-    //         return action.payload.column.id !== columnId;
-    //       }
-    //       return true;
-    //     });
-    //   }
-
-    //   if (actionIndex !== -1 && !wasAdded) {
-    //     return prev;
-    //   } else {
-    //     // If we still don't have a action entry for the delete of this subtask and we haven't added it since the menu was opened -> add the delete action entry and remove the rename (we don't need to rename the task if we are to delete it in the same query)
-    //     return [
-    //       ...prev.filter((action) => {
-    //         if (action.type === "RENAME_COLUMN") {
-    //           return action.payload.columnId !== columnId;
-    //         }
-    //         return true;
-    //       }),
-    //       {
-    //         type: "DELETE_COLUMN",
-    //         payload: { boardId: board.id, columnId },
-    //       } satisfies DeleteColumnAction,
-    //     ];
-    //   }
-    // });
-
     setTemporaryColumns((prev) =>
       prev
         .map((c) => (c.index > columnIndex ? { ...c, index: c.index - 1 } : c))
@@ -317,12 +189,14 @@ const EditBoard = ({ board }: { board: BoardType }) => {
   };
 
   const handleSaveChanges = async () => {
+    setError(getInitialErrors(temporaryColumns));
     const actions = getActions();
     if (actions.length == 0) {
       setShowEditBoardMenu(false);
       setShowEditBoardWindow(false);
       return;
     }
+
     setLoading(true);
     // -------------- CLIENT VALIDATION START --------------
 
@@ -358,15 +232,39 @@ const EditBoard = ({ board }: { board: BoardType }) => {
 
     // Column  validations
     temporaryColumns.forEach((column) => {
+      const nameAlreadyExistsOutside =
+        board.columns.findIndex(
+          (c) =>
+            c.name.toLowerCase().trim() === column.name.toLowerCase().trim() &&
+            c.id !== column.id,
+        ) !== -1;
+      const nameAlreadyExistsInside =
+        temporaryColumns.findIndex(
+          (c) =>
+            c.name.toLowerCase().trim() === column.name.toLowerCase().trim() &&
+            c.id !== column.id,
+        ) !== -1;
+      if (nameAlreadyExistsInside || nameAlreadyExistsOutside) {
+        validated = false;
+        setError((prev) => ({
+          ...prev,
+          columns: prev.columns.map((e) =>
+            e.id === column.id ? { ...e, errorMessage: "Already exists" } : e,
+          ),
+        }));
+      }
+
       const result = ColumnSchema.shape.name.safeParse(column.name);
-      if (!result.success) validated = false;
-      const errorMessage = result.error?.issues[0]?.message ?? "";
-      setError((prev) => ({
-        ...prev,
-        columns: prev.columns.map((e) =>
-          e.id === column.id ? { ...e, errorMessage } : e,
-        ),
-      }));
+      if (!result.success) {
+        validated = false;
+        const errorMessage = result.error?.issues[0]?.message ?? "";
+        setError((prev) => ({
+          ...prev,
+          columns: prev.columns.map((e) =>
+            e.id === column.id ? { ...e, errorMessage } : e,
+          ),
+        }));
+      }
     });
 
     if (!validated) {
@@ -521,14 +419,6 @@ const EditBoard = ({ board }: { board: BoardType }) => {
               onClick={handleShowConfirmationWindow}
             >
               Cancel
-            </Button>
-            <Button
-              type="button"
-              variant="ghost"
-              className="w-full"
-              onClick={getColumnActions}
-            >
-              TEST
             </Button>
           </div>
         </div>
