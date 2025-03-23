@@ -3,7 +3,6 @@ import { useUI } from "~/context/ui-context";
 import { MoreButton, SettingsButton } from "~/components/ui/button/buttons";
 import { useRef } from "react";
 import EditBoardSmallMenu from "~/components/menus/edit-board/edit-board-small-menu";
-import { FaArrowRight, FaChevronRight } from "react-icons/fa";
 
 export const BoardsNav = () => {
   const moreButtonRef = useRef<HTMLButtonElement | null>(null);

@@ -3,7 +3,6 @@
 import Board from "~/components/board/board";
 import Sidebar from "~/components/layout/sidebar";
 import { motion } from "framer-motion";
-
 const Page = () => {
   return (
     <>

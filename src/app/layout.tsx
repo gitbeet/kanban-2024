@@ -4,6 +4,7 @@ import { getBoards } from "~/server/queries";
 import { Roboto } from "next/font/google";
 import Providers from "./providers";
 import ClientLayout from "~/components/layout/client-layout";
+import { Toaster } from "react-hot-toast";
 
 const roboto = Roboto({
   weight: ["400", "500", "700", "900"],
@@ -25,6 +26,13 @@ export default async function RootLayout({
     <html lang="en" className={`${roboto.variable}`} suppressHydrationWarning>
       <body>
         <Providers boards={boards}>
+          <Toaster
+            position="bottom-center"
+            toastOptions={{
+              className: "bg-light__test text-dark",
+              duration: 10000,
+            }}
+          />
           <ClientLayout>{children}</ClientLayout>
         </Providers>
       </body>
