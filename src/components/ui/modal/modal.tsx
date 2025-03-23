@@ -1,4 +1,9 @@
-import { useEffect, type HTMLAttributes, type ReactNode } from "react";
+import React, {
+  useEffect,
+  useRef,
+  type HTMLAttributes,
+  type ReactNode,
+} from "react";
 import Backdrop from "./backdrop";
 import { createPortal } from "react-dom";
 import useHasMounted from "~/hooks/useHasMounted";
@@ -19,6 +24,24 @@ export const Modal = ({
   centered = true,
   ...props
 }: ModalProps) => {
+  const modalRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (modalRef.current) {
+      const focusableElements = modalRef.current.querySelectorAll(
+        "a, button, input, textarea, select, details, [tabindex]:not([tabindex='-1'])",
+      );
+
+      focusableElements.forEach((el) => {
+        if (!show) {
+          el.setAttribute("tabindex", "-1"); // Disable focus when hidden
+        } else {
+          el.removeAttribute("tabindex"); // Restore focus when visible
+        }
+      });
+    }
+  }, [show]);
+
   return (
     <FocusTrap
       active={show}
@@ -27,12 +50,15 @@ export const Modal = ({
         escapeDeactivates: true,
         clickOutsideDeactivates: true,
         onDeactivate: () => onClose(),
+        checkCanFocusTrap: () =>
+          new Promise((resolve) => setTimeout(resolve, 100)),
       }}
     >
       <div
+        ref={modalRef}
         {...props}
         style={{ zIndex, ...props.style }}
-        className={`menu-bg ${centered ? "menu" : ""} absolute p-6 transition-opacity duration-200 ${show ? "opacity-100" : "pointer-events-none opacity-0"} text-dark ${props.className}`}
+        className={`menu-bg ${centered ? "menu" : ""} absolute p-6 transition duration-150 ${show ? "opacity-100" : "pointer-events-none opacity-0"} text-dark ${props.className}`}
       >
         {children}
       </div>
