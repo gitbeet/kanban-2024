@@ -48,7 +48,7 @@ const EditTask = ({ task, columnId }: { task: TaskType; columnId: string }) => {
   }, [task, columnId]);
 
   const board = getCurrentBoard();
-  if (!board) return <div>No board</div>;
+  if (!board) return null;
 
   const handleToggleTemporarySubtask = (subtaskId: SubtaskType["id"]) => {
     setTemporarySubtasks((prev) =>

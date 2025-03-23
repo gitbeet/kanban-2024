@@ -46,7 +46,8 @@ const CreateBoardForm = ({
     if (!user?.id) return;
     setLoading(true);
 
-    const maxIndex = Math.max(...optimisticBoards.map((b) => b.index));
+    let maxIndex = Math.max(...optimisticBoards.map((b) => b.index));
+    if (maxIndex < 0) maxIndex = 0;
 
     const newBoardId = uuid();
     const newBoard: BoardType = {
@@ -88,6 +89,8 @@ const CreateBoardForm = ({
       type: "CREATE_BOARD",
       payload: { board: newBoard },
     };
+
+    console.log(action);
 
     startTransition(() => {
       setOptimisticBoards(action);

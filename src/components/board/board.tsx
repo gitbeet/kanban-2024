@@ -9,7 +9,6 @@ import DeleteTaskZone from "./delete-task-zone";
 import CreateColumnForm from "../action-forms/column/create-column-form";
 import { BoardsNav } from "../layout/boards-nav";
 import BoardsSettings from "../menus/boards-settings";
-import RenameBoardForm from "../action-forms/board/rename-board-form";
 
 const Board = () => {
   const { optimisticBoards, loading, getCurrentBoard } = useBoards();
@@ -19,11 +18,15 @@ const Board = () => {
 
   const noBoards = !optimisticBoards.length;
   const noBoardsJsx = (
-    <section className="grid w-full place-content-center gap-4">
-      <h1 className="w-full text-center text-3xl font-bold">
-        You have no boards
-      </h1>
-      <CreateBoardForm className="text-center" />
+    <section className="relative z-[2] grid w-full place-content-center">
+      <BoardsNav />
+      <BoardsSettings />
+      <div className="bg-light__test space-y-8 rounded-md p-12 drop-shadow-lg">
+        <h1 className="text-dark w-full text-center text-3xl font-bold">
+          You have no boards
+        </h1>
+        <CreateBoardForm className="text-center" />
+      </div>
     </section>
   );
 
