@@ -466,7 +466,7 @@ export const EditTaskAdvanced = ({ columnId, task }: Props) => {
               id="task-title"
               onChange={handleChangeTaskName}
               className="w-full"
-              errorPlacement="bottom"
+              errorPlacement="bottomRight"
               menu
             />
           </div>
@@ -479,7 +479,7 @@ export const EditTaskAdvanced = ({ columnId, task }: Props) => {
               <p className="text-light text-center">You have no subtasks</p>
             )}
             {/* p-1 to fix overflow-auto not showing outline on focused elements */}
-            <ul className="max-h-44 space-y-1 overflow-auto px-1">
+            <ul className="scrollbar-thin max-h-44 space-y-2.5 overflow-auto p-1">
               {temporarySubtasks
                 .sort((a, b) => a.index - b.index)
                 .map((subtask) => {
@@ -496,17 +496,20 @@ export const EditTaskAdvanced = ({ columnId, task }: Props) => {
                         value={subtask.name}
                         error={error.subtasks[errorIndex]?.errorMessage ?? ""}
                         onChange={(e) => handleChangeSubtaskName(e, subtask.id)}
-                        errorPlacement="bottom"
                         shiftLayout
                         menu
                       />
-                      <DeleteButton
-                        className={`${error.subtasks[errorIndex]?.errorMessage ? "relative -top-2.5" : ""}`}
-                        type="button"
-                        onClick={() =>
-                          handleDeleteSubtask(subtask.id, subtask.index)
-                        }
-                      />
+                      <div>
+                        <DeleteButton
+                          type="button"
+                          onClick={() =>
+                            handleDeleteSubtask(subtask.id, subtask.index)
+                          }
+                        />
+                        {error.subtasks[errorIndex]?.errorMessage && (
+                          <div className="h-5" />
+                        )}
+                      </div>
                     </div>
                   );
                 })}

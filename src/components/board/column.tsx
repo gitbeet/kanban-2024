@@ -196,7 +196,7 @@ const Column = ({
       onDrop={handleDragEnd}
       key={column.id}
       // hard coded width for transition animation
-      className={`${active ? "bg-white/55 backdrop-blur-md dark:bg-neutral-950/80" : "bg-light__test"} w-80 rounded-md px-6 pb-4 shadow-lg`}
+      className={`${active ? "bg-white/55 backdrop-blur-md dark:bg-neutral-950/80" : "bg-light__test"} w-80 rounded-md px-6 py-4 shadow-lg`}
     >
       <div className="flex items-center justify-between gap-4 py-2">
         <div className="flex grow items-center gap-2 font-bold text-neutral-250">
@@ -204,7 +204,7 @@ const Column = ({
           <span className="shrink-0 text-sm text-neutral-500">
             ({column.tasks.length})
           </span>
-          <div className="w-full grow pt-5">
+          <div className="w-full grow">
             <RenameColumnForm boardId={boardId} columnId={column.id} />
           </div>
         </div>
@@ -214,7 +214,6 @@ const Column = ({
             setShowConfirmDeleteColumnWindow(true);
           }}
         />
-        {/* <DeleteColumnForm boardId={boardId} columnId={column.id} /> */}
       </div>
       {column.tasks
         .sort((a, b) => a.index - b.index)

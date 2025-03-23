@@ -135,11 +135,14 @@ const CreateColumnForm = ({ boardId, ...props }: CreateColumnProps) => {
         type="text"
         placeholder="Enter column name"
         className="w-full"
+        errorPlacement="bottomRight"
         error={error}
       />
-      <div className="flex gap-1.5">
-        <SaveButton disabled={!!error} />
-        <CancelButton onClick={handleClickOutside} />
+      <div>
+        <div className="flex gap-1.5">
+          <SaveButton disabled={!!error} />
+          <CancelButton onClick={handleClickOutside} />
+        </div>
       </div>
     </form>
   );

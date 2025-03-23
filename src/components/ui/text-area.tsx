@@ -12,7 +12,7 @@ interface TextAreaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
 const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
   ({ error, className, handleCancel, handleSubmit, ...props }, ref) => {
     return (
-      <>
+      <div className="relative">
         <textarea
           ref={ref}
           className={`${className} ${error ? "!focus:outline-danger-400 !text-danger-400 !outline !outline-danger-400 !ring !ring-danger-400" : ""} w-full resize-none overflow-hidden`}
@@ -24,9 +24,11 @@ const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
           {...props}
         />
         {error && (
-          <p className="pt-1 text-right text-sm text-danger-400">{error}</p>
+          <p className="absolute -bottom-1 w-full translate-y-full truncate text-right text-sm text-danger-400">
+            {error}
+          </p>
         )}
-      </>
+      </div>
     );
   },
 );

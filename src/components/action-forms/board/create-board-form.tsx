@@ -8,7 +8,11 @@ import { v4 as uuid } from "uuid";
 import InputField from "~/components/ui/input-field";
 import { motion } from "framer-motion";
 import { FaPlus } from "react-icons/fa";
-import { Button, SaveButton } from "~/components/ui/button/buttons";
+import {
+  Button,
+  CancelButton,
+  SaveButton,
+} from "~/components/ui/button/buttons";
 import { BoardSchema } from "~/zod-schemas";
 import type { ChangeEvent, FormEvent } from "react";
 import type { BoardType } from "~/types";
@@ -169,15 +173,16 @@ const CreateBoardForm = ({
                 value={boardName}
                 className="w-full"
                 onChange={handleChangeBoardName}
-                errorPlacement="bottom"
-                handleSubmit={clientAction}
-                handleCancel={handleClickOutside}
+                errorPlacement="bottomRight"
               />
 
               <SaveButton
                 disabled={!!error || loading}
-                className="relative -top-2.5"
                 aria-label="Add board"
+              />
+              <CancelButton
+                onClick={handleClickOutside}
+                aria-label="Close menu"
               />
             </form>
           </div>

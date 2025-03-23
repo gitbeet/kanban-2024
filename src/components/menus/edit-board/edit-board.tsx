@@ -356,14 +356,14 @@ const EditBoard = ({ board }: { board: BoardType }) => {
               id="board-title"
               onChange={handleChangeBoardName}
               className="w-full"
-              errorPlacement="bottom"
+              errorPlacement="bottomRight"
               menu
             />
           </div>
           {/* -----  ----- */}
           <div className="space-y-4">
             <h3 className="text-sm font-bold">Columns</h3>
-            <ul className="space-y-2.5">
+            <ul className="scrollbar-thin max-h-44 space-y-2.5 overflow-auto">
               {temporaryColumns
                 .sort((a, b) => a.index - b.index)
                 .map((c) => {
@@ -371,22 +371,27 @@ const EditBoard = ({ board }: { board: BoardType }) => {
                     (col) => col.id === c.id,
                   );
                   return (
-                    <div key={c.index} className="flex items-center gap-2">
-                      <InputField
-                        className="w-full"
-                        value={c.name}
-                        error={error.columns[errorIndex]?.errorMessage ?? ""}
-                        onChange={(e) => handleChangeColumnName(e, c.id)}
-                        errorPlacement="bottom"
-                        shiftLayout
-                        menu
-                      />
-                      <DeleteButton
-                        className={`${error.columns[errorIndex]?.errorMessage ? "relative -top-2.5" : ""}`}
-                        type="button"
-                        onClick={() => handleDeleteColumn(c.id, c.index)}
-                      />
-                    </div>
+                    <>
+                      <div key={c.index} className="flex items-center gap-2">
+                        <InputField
+                          className="w-full"
+                          value={c.name}
+                          error={error.columns[errorIndex]?.errorMessage ?? ""}
+                          onChange={(e) => handleChangeColumnName(e, c.id)}
+                          shiftLayout
+                          menu
+                        />
+                        <div>
+                          <DeleteButton
+                            type="button"
+                            onClick={() => handleDeleteColumn(c.id, c.index)}
+                          />
+                          {error.columns[errorIndex]?.errorMessage && (
+                            <div className="h-5" />
+                          )}
+                        </div>
+                      </div>
+                    </>
                   );
                 })}
             </ul>

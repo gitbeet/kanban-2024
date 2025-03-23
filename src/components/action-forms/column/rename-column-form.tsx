@@ -6,6 +6,8 @@ import InputField from "~/components/ui/input-field";
 import { ColumnSchema } from "~/zod-schemas";
 import type { ChangeEvent, FormEvent } from "react";
 import { type RenameColumnAction } from "~/types/actions";
+import { CancelButton, SaveButton } from "~/components/ui/button/buttons";
+import FocusTrap from "focus-trap-react";
 
 const RenameColumnForm = ({
   boardId,
@@ -58,6 +60,7 @@ const RenameColumnForm = ({
     const result = ColumnSchema.shape.name.safeParse(newColumnName);
     if (!result.success) {
       setError(result.error.issues[0]?.message ?? "An error occured");
+      inputRef.current?.focus();
       return;
     }
     // action
@@ -93,11 +96,18 @@ const RenameColumnForm = ({
   }
 
   return (
-    <div ref={ref} className={`${loading ? "pointer-events-none" : ""} `}>
-      <form ref={renameColumnRef} onSubmit={clientAction} className="">
+    <FocusTrap
+      active={isOpen}
+      focusTrapOptions={{
+        escapeDeactivates: true,
+        allowOutsideClick: true,
+        onDeactivate: handleClickOutside,
+        clickOutsideDeactivates: true,
+      }}
+    >
+      <div ref={ref} className={`${loading ? "pointer-events-none" : ""} `}>
         {!isOpen && (
           <>
-            <div className="h-1" />
             <button
               aria-label="Click to rename the column"
               onClick={() => {
@@ -108,34 +118,35 @@ const RenameColumnForm = ({
             >
               <p>{column?.name}</p>
             </button>
-            <div className="h-6" />
           </>
         )}
         {isOpen && (
-          <>
-            <InputField
-              ref={inputRef}
-              autoFocus
-              value={newColumnName ?? ""}
-              onChange={handleColumnNameChange}
-              type="text"
-              placeholder="Enter column name"
-              className="w-full"
-              error={error}
-              errorPlacement="bottom"
-              handleCancel={handleClickOutside}
-              handleSubmit={clientAction}
-            />
-
-            <button
-              disabled={loading || pending}
-              type="submit"
-              className="hidden"
-            />
-          </>
+          <form
+            ref={renameColumnRef}
+            onSubmit={clientAction}
+            className="relative"
+          >
+            <>
+              <InputField
+                ref={inputRef}
+                autoFocus
+                value={newColumnName ?? ""}
+                onChange={handleColumnNameChange}
+                type="text"
+                placeholder="Enter column name"
+                className="w-full"
+                error={error}
+                errorPlacement="bottomLeft"
+              />
+              <div className="absolute -bottom-2 right-0 z-[2] flex translate-y-full gap-1.5">
+                <SaveButton type="submit" disabled={!!error} />
+                <CancelButton onClick={handleClickOutside} />
+              </div>
+            </>
+          </form>
         )}
-      </form>
-    </div>
+      </div>
+    </FocusTrap>
   );
 };
 

@@ -149,11 +149,11 @@ const CreateTaskForm = ({
         )}
         {isOpen && (
           <form
-            className="flex flex-col gap-2"
+            className={`flex flex-col ${error ? "gap-8" : "gap-4"}`}
             ref={formRef}
             onSubmit={clientAction}
           >
-            <div className="bg-neutral-600 rounded-md p-1.5">
+            <div className="bg-neutral-600 rounded-md">
               <TextArea
                 autoFocus
                 ref={textAreaRef}

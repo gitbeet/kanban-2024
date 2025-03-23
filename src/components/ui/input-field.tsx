@@ -1,16 +1,26 @@
 import { forwardRef, type InputHTMLAttributes } from "react";
 import { handlePressEnterToSubmit } from "~/utilities/handlePressEnterOrEscape";
 
-interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
+type BaseProps = InputHTMLAttributes<HTMLInputElement> & {
   className?: string;
   error: string;
   labelText?: string;
-  errorPlacement?: "top" | "bottom";
   menu?: boolean;
   handleSubmit?: () => void | Promise<void>;
   handleCancel?: () => void;
-  shiftLayout?: boolean;
-}
+};
+
+type ShiftLayoutProps = {
+  shiftLayout: true;
+  errorPlacement?: never;
+};
+
+type NonShiftLayoutProps = {
+  shiftLayout?: false;
+  errorPlacement?: "topRight" | "bottomLeft" | "bottomRight";
+};
+
+type InputProps = BaseProps & (ShiftLayoutProps | NonShiftLayoutProps);
 
 const InputField = forwardRef<HTMLInputElement, InputProps>(
   (
@@ -18,7 +28,7 @@ const InputField = forwardRef<HTMLInputElement, InputProps>(
       className,
       error,
       labelText,
-      errorPlacement = "top",
+      errorPlacement = "topRight",
       menu = false,
       handleSubmit,
       handleCancel,
@@ -27,7 +37,7 @@ const InputField = forwardRef<HTMLInputElement, InputProps>(
     },
     ref,
   ) => {
-    const inputField = (
+    const inputFieldJSX = (
       <input
         ref={ref}
         {...props}
@@ -40,44 +50,47 @@ const InputField = forwardRef<HTMLInputElement, InputProps>(
       />
     );
 
-    const errorJSX = <p className="text-sm text-danger-400">{error}</p>;
+    const labelJSX = (
+      <label
+        className="text-dark absolute -top-1 -translate-y-full"
+        htmlFor={props.id}
+      >
+        {labelText}
+      </label>
+    );
+
+    const errorPlacementClass =
+      errorPlacement === "topRight"
+        ? "-top-1 -translate-y-full text-right"
+        : errorPlacement === "bottomRight"
+          ? "-bottom-1 translate-y-full text-right"
+          : "-bottom-1 translate-y-full text-left";
+
+    const errorJSX = (
+      <>
+        {shiftLayout && (
+          <>
+            <div className="h-1" />
+            <p className={`w-full truncate text-right text-sm text-danger-400`}>
+              {error}
+            </p>
+          </>
+        )}
+        {!shiftLayout && (
+          <p
+            className={`absolute w-full truncate text-sm text-danger-400 ${errorPlacementClass}`}
+          >
+            {error}
+          </p>
+        )}
+      </>
+    );
 
     return (
       <div className="relative w-full">
-        {errorPlacement === "top" && (
-          <>
-            <div className="flex h-5 justify-between text-sm">
-              {labelText && (
-                <label className="text-dark" htmlFor={props.id}>
-                  {labelText}
-                </label>
-              )}
-              {error && errorJSX}
-            </div>
-            <div className="h-1" />
-            {inputField}
-            <div className="h-6" />
-          </>
-        )}
-        {errorPlacement === "bottom" && (
-          <>
-            {labelText && (
-              <label className="text-dark text-sm" htmlFor={props.id}>
-                {labelText}
-              </label>
-            )}
-            <div className="h-1" />
-            {inputField}
-            <div className="h-1" />
-            {shiftLayout && error && (
-              <div className="h-5 text-right text-sm">{errorJSX}</div>
-            )}
-
-            {!shiftLayout && (
-              <div className="h-5 text-right text-sm">{error && errorJSX}</div>
-            )}
-          </>
-        )}
+        {labelText && labelJSX}
+        {inputFieldJSX}
+        {errorJSX}
       </div>
     );
   },
