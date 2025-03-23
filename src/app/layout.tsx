@@ -1,12 +1,12 @@
 import "~/styles/globals.css";
 import { type Metadata } from "next";
 import { getBoards } from "~/server/queries";
-import { Plus_Jakarta_Sans } from "next/font/google";
+import { Roboto } from "next/font/google";
 import Providers from "./providers";
 import ClientLayout from "~/components/layout/client-layout";
 
-const plusJakartaSans = Plus_Jakarta_Sans({
-  weight: ["400", "500", "700", "800"],
+const roboto = Roboto({
+  weight: ["400", "500", "700", "900"],
   subsets: ["latin"],
   variable: "--font-plus-jakarta-sans",
 });
@@ -22,11 +22,7 @@ export default async function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   const boards = await getBoards();
   return (
-    <html
-      lang="en"
-      className={`${plusJakartaSans.variable}`}
-      suppressHydrationWarning
-    >
+    <html lang="en" className={`${roboto.variable}`} suppressHydrationWarning>
       <body>
         <Providers boards={boards}>
           <ClientLayout>{children}</ClientLayout>

@@ -4,7 +4,7 @@ import useClickOutside from "~/hooks/useClickOutside";
 import { handleRenameColumn } from "~/server/queries";
 import InputField from "~/components/ui/input-field";
 import { ColumnSchema } from "~/zod-schemas";
-import type { ChangeEvent, FormEvent } from "react";
+import type { ChangeEvent, Dispatch, FormEvent, SetStateAction } from "react";
 import { type RenameColumnAction } from "~/types/actions";
 import { CancelButton, SaveButton } from "~/components/ui/button/buttons";
 import FocusTrap from "focus-trap-react";
@@ -12,9 +12,13 @@ import FocusTrap from "focus-trap-react";
 const RenameColumnForm = ({
   boardId,
   columnId,
+  isFormOpen,
+  setIsFormOpen,
 }: {
   boardId: string;
   columnId: string;
+  isFormOpen: boolean;
+  setIsFormOpen: Dispatch<SetStateAction<boolean>>;
 }) => {
   const { setOptimisticBoards, getCurrentBoard } = useBoards();
 
@@ -24,7 +28,6 @@ const RenameColumnForm = ({
   const [newColumnName, setNewColumnName] = useState(column?.name ?? "");
   const [error, setError] = useState("");
   const [pending, startTransition] = useTransition();
-  const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const renameColumnRef = useRef<HTMLFormElement>(null);
   const { ref } = useClickOutside<HTMLDivElement>(handleClickOutside);
@@ -41,7 +44,7 @@ const RenameColumnForm = ({
 
     // client validations
     if (column?.name.trim() === newColumnName.trim()) {
-      setIsOpen(false);
+      setIsFormOpen(false);
       return;
     }
 
@@ -73,7 +76,7 @@ const RenameColumnForm = ({
       setOptimisticBoards(action);
     });
     setNewColumnName("");
-    setIsOpen(false);
+    setIsFormOpen(false);
     setLoading(true);
     // server validation / mutation
     const response = await handleRenameColumn({
@@ -89,15 +92,17 @@ const RenameColumnForm = ({
   };
 
   function handleClickOutside() {
-    setIsOpen(false);
+    setIsFormOpen(false);
     setNewColumnName(column?.name ?? "");
     setError("");
     setLoading(false);
   }
 
+  const resolvedTabIndex = isFormOpen ? 0 : -1;
+
   return (
     <FocusTrap
-      active={isOpen}
+      active={isFormOpen}
       focusTrapOptions={{
         escapeDeactivates: true,
         allowOutsideClick: true,
@@ -106,45 +111,56 @@ const RenameColumnForm = ({
       }}
     >
       <div ref={ref} className={`${loading ? "pointer-events-none" : ""} `}>
-        {!isOpen && (
-          <>
-            <button
-              aria-label="Click to rename the column"
-              onClick={() => {
-                setIsOpen(true);
-                setNewColumnName(column?.name ?? "");
-              }}
-              className="input-readonly w-full text-left"
-            >
-              <p>{column?.name}</p>
-            </button>
-          </>
-        )}
-        {isOpen && (
+        <>
           <form
             ref={renameColumnRef}
             onSubmit={clientAction}
             className="relative"
           >
-            <>
-              <InputField
-                ref={inputRef}
-                autoFocus
-                value={newColumnName ?? ""}
-                onChange={handleColumnNameChange}
-                type="text"
-                placeholder="Enter column name"
-                className="w-full"
-                error={error}
-                errorPlacement="bottomLeft"
+            {!isFormOpen && (
+              <>
+                <button
+                  aria-label="Click to rename the column"
+                  onClick={() => {
+                    setIsFormOpen(true);
+                    setNewColumnName(column?.name ?? "");
+                  }}
+                  className="input-readonly w-full text-left"
+                >
+                  <p>{column?.name}</p>
+                </button>
+              </>
+            )}
+            {isFormOpen && (
+              <>
+                <InputField
+                  ref={inputRef}
+                  autoFocus
+                  value={newColumnName ?? ""}
+                  onChange={handleColumnNameChange}
+                  type="text"
+                  placeholder="Enter column name"
+                  className="w-full"
+                  error={error}
+                  errorPlacement="bottomLeft"
+                />
+              </>
+            )}
+            <div
+              className={`absolute right-0 flex items-center justify-end gap-1.5 pt-1 ${isFormOpen ? "translate-y-0 opacity-100" : "-translate-y-2 opacity-0"} transition`}
+            >
+              <SaveButton
+                tabIndex={resolvedTabIndex}
+                type="submit"
+                disabled={!!error}
               />
-              <div className="absolute -bottom-2 right-0 z-[2] flex translate-y-full gap-1.5">
-                <SaveButton type="submit" disabled={!!error} />
-                <CancelButton onClick={handleClickOutside} />
-              </div>
-            </>
+              <CancelButton
+                tabIndex={resolvedTabIndex}
+                onClick={handleClickOutside}
+              />
+            </div>
           </form>
-        )}
+        </>
       </div>
     </FocusTrap>
   );

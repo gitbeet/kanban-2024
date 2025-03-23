@@ -21,6 +21,7 @@ const Column = ({
   column: ColumnType;
 }) => {
   const { setShowConfirmDeleteColumnWindow, setColumnToDelete } = useUI();
+  const [isFormOpen, setIsFormOpen] = useState(false);
   const [active, setActive] = useState(false);
   // TODO : Disable dragging when pending ?
   const [isPending, startTransition] = useTransition();
@@ -198,14 +199,21 @@ const Column = ({
       // hard coded width for transition animation
       className={`${active ? "bg-white/55 backdrop-blur-md dark:bg-neutral-950/80" : "bg-light__test"} w-80 rounded-md px-6 py-4 shadow-lg`}
     >
-      <div className="flex items-center justify-between gap-4 py-2">
+      <div
+        className={`flex items-center justify-between gap-4 pt-2 ${isFormOpen ? "pb-8" : "pb-2"}`}
+      >
         <div className="flex grow items-center gap-2 font-bold text-neutral-250">
           {/* hard coded width to avoid shifting of column name */}
-          <span className="shrink-0 text-sm text-neutral-500">
+          <span className={`shrink-0 text-sm text-neutral-500`}>
             ({column.tasks.length})
           </span>
           <div className="w-full grow">
-            <RenameColumnForm boardId={boardId} columnId={column.id} />
+            <RenameColumnForm
+              isFormOpen={isFormOpen}
+              setIsFormOpen={setIsFormOpen}
+              boardId={boardId}
+              columnId={column.id}
+            />
           </div>
         </div>
         <DeleteButton
