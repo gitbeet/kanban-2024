@@ -34,23 +34,32 @@ import type {
 
 // ------ Board ------
 export async function getBoards() {
-  const user = auth();
-  if (!user.userId) return [];
-  const boards = await db.query.boards.findMany({
-    where: (model, { eq }) => eq(model.userId, user.userId),
-    with: {
-      columns: {
-        with: {
-          tasks: {
-            with: {
-              subtasks: true,
+  try {
+    const user = auth();
+    if (!user.userId) throw new Error("Unauthorized");
+
+    const boards = await db.query.boards.findMany({
+      where: (model, { eq }) => eq(model.userId, user.userId),
+      with: {
+        columns: {
+          with: {
+            tasks: {
+              with: {
+                subtasks: true,
+              },
             },
           },
         },
       },
-    },
-  });
-  return boards;
+    });
+    return { boards };
+  } catch (error) {
+    const errorMessage =
+      error instanceof Error ? error.message : "Error while getting boards";
+    return {
+      error: errorMessage,
+    };
+  }
 }
 
 export const handleCreateBoard = async ({
@@ -64,10 +73,10 @@ export const handleCreateBoard = async ({
   revalidate?: boolean;
   inTransaction?: boolean;
 }) => {
-  const { payload } = action;
-  const { board } = payload;
-
   try {
+    const { payload } = action;
+    const { board } = payload;
+
     const { userId } = auth();
     if (!userId) throw new Error("Unauthorized");
 
@@ -118,10 +127,10 @@ export const handleRenameBoard = async ({
   revalidate?: boolean;
   inTransaction?: boolean;
 }) => {
-  const { payload } = action;
-  const { boardId, newBoardName } = payload;
-
   try {
+    const { payload } = action;
+    const { boardId, newBoardName } = payload;
+
     const { userId } = auth();
     if (!userId) throw new Error("Unauthorized");
     if (newBoardName === "ERROR_TEST")
@@ -166,10 +175,10 @@ export const handleDeleteBoard = async ({
   revalidate?: boolean;
   inTransaction?: boolean;
 }) => {
-  const { payload } = action;
-  const { boardId, boardIndex, wasCurrent } = payload;
-
   try {
+    const { payload } = action;
+    const { boardId, boardIndex, wasCurrent } = payload;
+
     const { userId } = auth();
     if (!userId) throw new Error("Unauthorized");
 
@@ -221,9 +230,9 @@ export const handleMakeBoardCurrent = async ({
   revalidate?: boolean;
   inTransaction?: boolean;
 }) => {
-  const { payload } = action;
-  const { oldCurrentBoardId, newCurrentBoardId } = payload;
   try {
+    const { payload } = action;
+    const { oldCurrentBoardId, newCurrentBoardId } = payload;
     const { userId } = auth();
     if (!userId) throw new Error("Unauthorized");
 
@@ -263,11 +272,14 @@ export const handleCreateColumn = async ({
   revalidate?: boolean;
   inTransaction?: boolean;
 }) => {
-  const { payload } = action;
-  const { column } = payload;
-  const { boardId } = column;
-
   try {
+    const { payload } = action;
+    const { column } = payload;
+    const { boardId } = column;
+
+    const { userId } = auth();
+    if (!userId) throw new Error("Unauthorized");
+
     if (column.name === "ERROR_TEST")
       throw new Error("(TEST) Error while creating a column");
 
@@ -314,10 +326,13 @@ export const handleRenameColumn = async ({
   revalidate?: boolean;
   inTransaction?: boolean;
 }) => {
-  const { payload } = action;
-  const { columnId, newColumnName } = payload;
-
   try {
+    const { payload } = action;
+    const { columnId, newColumnName } = payload;
+
+    const { userId } = auth();
+    if (!userId) throw new Error("Unauthorized");
+
     if (newColumnName === "ERROR_TEST")
       throw new Error("(TEST) Error while renaming a column");
 
@@ -358,10 +373,13 @@ export const handleDeleteColumn = async ({
   revalidate?: boolean;
   inTransaction?: boolean;
 }) => {
-  const { payload } = action;
-  const { boardId, columnId } = payload;
-
   try {
+    const { payload } = action;
+    const { boardId, columnId } = payload;
+
+    const { userId } = auth();
+    if (!userId) throw new Error("Unauthorized");
+
     const result = ColumnSchema.pick({ id: true, boardId: true }).safeParse({
       id: columnId,
       boardId,
@@ -418,6 +436,9 @@ export const handleCreateTask = async ({
     const { payload } = action;
     const { columnId, task } = payload;
 
+    const { userId } = auth();
+    if (!userId) throw new Error("Unauthorized");
+
     if (task.name === "ERROR_TEST")
       throw new Error("(TEST) Error while creating a task");
 
@@ -461,10 +482,13 @@ export const handleRenameTask = async ({
   revalidate?: boolean;
   inTransaction?: boolean;
 }) => {
-  const { payload } = action;
-  const { taskId, newTaskName } = payload;
-
   try {
+    const { payload } = action;
+    const { taskId, newTaskName } = payload;
+
+    const { userId } = auth();
+    if (!userId) throw new Error("Unauthorized");
+
     if (newTaskName === "ERROR_TEST")
       throw new Error("(TEST) Error while renaming a task");
 
@@ -502,9 +526,12 @@ export const handleDeleteTask = async ({
   revalidate?: boolean;
   inTransaction?: boolean;
 }) => {
-  const { payload } = action;
-  const { taskId } = payload;
   try {
+    const { payload } = action;
+    const { taskId } = payload;
+    const { userId } = auth();
+    if (!userId) throw new Error("Unauthorized");
+
     const result = TaskSchema.pick({ id: true }).safeParse({ id: taskId });
     if (!result.success) throw new Error("Error while deleting a task");
 
@@ -548,10 +575,13 @@ export const handleToggleTaskCompleted = async ({
   revalidate?: boolean;
   inTransaction?: boolean;
 }) => {
-  const { payload } = action;
-  const { taskId } = payload;
-
   try {
+    const { payload } = action;
+    const { taskId } = payload;
+
+    const { userId } = auth();
+    if (!userId) throw new Error("Unauthorized");
+
     const result = TaskSchema.pick({ id: true }).safeParse({ id: taskId });
     if (!result.success) throw new Error("Error while toggling a task");
 
@@ -592,11 +622,14 @@ export const handleSwitchTaskColumn = async ({
   revalidate?: boolean;
   inTransaction?: boolean;
 }) => {
-  const { payload } = action;
-  const { newColumnId, newColumnIndex, oldColumnId, oldColumnIndex, taskId } =
-    payload;
-
   try {
+    const { userId } = auth();
+    if (!userId) throw new Error("Unauthorized");
+
+    const { payload } = action;
+    const { newColumnId, newColumnIndex, oldColumnId, oldColumnIndex, taskId } =
+      payload;
+
     const oldColumnParseResult = ColumnSchema.pick({
       id: true,
       index: true,
@@ -722,10 +755,13 @@ export const handleCreateSubtask = async ({
   revalidate?: boolean;
   inTransaction?: boolean;
 }) => {
-  const { payload } = action;
-  const { subtask } = payload;
-
   try {
+    const { userId } = auth();
+    if (!userId) throw new Error("Unauthorized");
+
+    const { payload } = action;
+    const { subtask } = payload;
+
     const result = SubtaskSchema.safeParse(subtask);
     if (!result.success) throw new Error("Error while creating a subtask");
 
@@ -764,6 +800,9 @@ export const handleRenameSubtask = async ({
   revalidate?: boolean;
   inTransaction?: boolean;
 }) => {
+  const { userId } = auth();
+  if (!userId) throw new Error("Unauthorized");
+
   const { payload } = action;
   const { newSubtaskName, subtaskId } = payload;
 
@@ -803,10 +842,13 @@ export const handleDeleteSubtask = async ({
   revalidate?: boolean;
   inTransaction?: boolean;
 }) => {
-  const { payload } = action;
-  const { subtaskId } = payload;
-
   try {
+    const { userId } = auth();
+    if (!userId) throw new Error("Unauthorized");
+
+    const { payload } = action;
+    const { subtaskId } = payload;
+
     const result = SubtaskSchema.pick({ id: true }).safeParse({
       id: subtaskId,
     });
@@ -851,10 +893,13 @@ export const handleToggleSubtaskCompleted = async ({
   revalidate?: boolean;
   inTransaction?: boolean;
 }) => {
-  const { payload } = action;
-  const { subtaskId } = payload;
-
   try {
+    const { userId } = auth();
+    if (!userId) throw new Error("Unauthorized");
+
+    const { payload } = action;
+    const { subtaskId } = payload;
+
     const result = SubtaskSchema.pick({ id: true }).safeParse({
       id: subtaskId,
     });

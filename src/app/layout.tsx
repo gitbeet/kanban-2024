@@ -5,6 +5,7 @@ import { Roboto } from "next/font/google";
 import Providers from "./providers";
 import ClientLayout from "~/components/layout/client-layout";
 import { Toaster } from "react-hot-toast";
+import { BoardType } from "~/types";
 
 const roboto = Roboto({
   weight: ["400", "500", "700", "900"],
@@ -21,7 +22,11 @@ export const metadata: Metadata = {
 export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  const boards = await getBoards();
+  let boards: BoardType[] = [];
+  const result = await getBoards();
+  if (result.boards) {
+    boards = result.boards;
+  }
   return (
     <html lang="en" className={`${roboto.variable}`} suppressHydrationWarning>
       <body>
