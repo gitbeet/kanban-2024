@@ -22,6 +22,14 @@ import {
 
 // Boards
 
+const setInitialBoards = (
+  state: BoardType[],
+  payload: { boards: BoardType[] },
+) => {
+  const { boards } = payload;
+  return [...state, ...boards];
+};
+
 const createBoard = (
   state: BoardType[],
   payload: CreateBoardAction["payload"],
@@ -446,6 +454,8 @@ const toggleSubtask = (
 export const handleOptimisticUpdate = (state: BoardType[], action: Action) => {
   const { type, payload } = action;
   switch (type) {
+    case "SET_INITIAL_BOARDS":
+      return setInitialBoards(state, payload);
     case "CREATE_BOARD":
       return createBoard(state, payload);
     case "RENAME_BOARD":

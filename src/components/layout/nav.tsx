@@ -21,6 +21,7 @@ const Nav = () => {
         className={` ${isBoardsPage ? "" : "container"} section-padding relative z-10 flex h-fit items-center justify-between gap-8 py-2`}
       >
         <Logo />
+
         <ul className="absolute left-1/2 hidden -translate-x-1/2 gap-8 lg:flex">
           <li>
             <Link className="text-dark" href="/">

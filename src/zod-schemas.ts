@@ -1,5 +1,13 @@
 import { z } from "zod";
 
+export const UserBackgroundSchema = z.object({
+  id: z.string().uuid({ message: "ID must be a uuid" }),
+  createdAt: z.date(),
+  userId: z.string(),
+  fileUrl: z.string(),
+  fileKey: z.string(),
+});
+
 export const SubtaskSchema = z.object({
   id: z.string().uuid({ message: "ID must be a uuid" }),
   index: z

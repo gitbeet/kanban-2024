@@ -2,7 +2,7 @@
 
 import { db } from "./db/index";
 import { auth } from "@clerk/nextjs/server";
-import { boards, columns, subtasks, tasks } from "./db/schema";
+import { backgrounds, boards, columns, subtasks, tasks } from "./db/schema";
 import { revalidatePath } from "next/cache";
 import { and, eq, gt, gte, lt, lte, ne, sql } from "drizzle-orm";
 import type { DatabaseType } from "~/types";
@@ -11,6 +11,7 @@ import {
   ColumnSchema,
   SubtaskSchema,
   TaskSchema,
+  UserBackgroundSchema,
 } from "~/zod-schemas";
 import type {
   CreateBoardAction,
@@ -30,10 +31,88 @@ import type {
   ToggleSubtaskAction,
   ToggleTaskAction,
   Action,
+  UploadUserBackgroundAction,
+  DeleteUserBackgroundAction,
 } from "~/types/actions";
 
+export const getBackgrounds = async () => {
+  try {
+    const user = auth();
+    if (!user.userId) throw new Error("Unauthorized");
+    const backgrounds = await db.query.backgrounds.findMany({
+      where: (model, { eq }) => eq(model.userId, user.userId),
+    });
+    revalidatePath("/");
+    return { backgrounds };
+  } catch (error) {
+    const errorMessage =
+      error instanceof Error
+        ? error.message
+        : "Error while getting user backgrounds";
+    return { error: errorMessage };
+  }
+};
+
+export const uploadBackground = async (action: UploadUserBackgroundAction) => {
+  try {
+    const user = auth();
+    if (!user.userId) throw new Error("Unauthorized");
+
+    const { payload } = action;
+    const { background } = payload;
+
+    const result = UserBackgroundSchema.safeParse(background);
+    if (!result.success) {
+      throw new Error(
+        result.error.issues[0]?.message ??
+          "Error while uploading a user background",
+      );
+    }
+
+    if (background.userId !== user.userId) throw new Error("Unauthorized");
+
+    await db.insert(backgrounds).values(background);
+  } catch (error) {
+    const errorMessage =
+      error instanceof Error
+        ? error.message
+        : "Error while uploading a user background";
+    return { error: errorMessage };
+  }
+  revalidatePath("/");
+};
+
+export const deleteBackground = async (action: DeleteUserBackgroundAction) => {
+  try {
+    const user = auth();
+    if (!user.userId) throw new Error("Unauthorized");
+
+    const { payload } = action;
+    const { backgroundId } = payload;
+
+    const result = UserBackgroundSchema.pick({ id: true }).safeParse({
+      id: backgroundId,
+    });
+    if (!result.success) {
+      throw new Error(
+        result.error.issues[0]?.message ??
+          "Error while deleting a user background",
+      );
+    }
+
+    await db.delete(backgrounds).where(eq(backgrounds.id, backgroundId));
+  } catch (error) {
+    const errorMessage =
+      error instanceof Error
+        ? error.message
+        : "Error while deleting a user background";
+    return { error: errorMessage };
+  }
+  revalidatePath("/");
+};
+
 // ------ Board ------
-export async function getBoards() {
+export const getBoards = async () => {
   try {
     const user = auth();
     if (!user.userId) throw new Error("Unauthorized");
@@ -52,6 +131,7 @@ export async function getBoards() {
         },
       },
     });
+    revalidatePath("/");
     return { boards };
   } catch (error) {
     const errorMessage =
@@ -60,7 +140,7 @@ export async function getBoards() {
       error: errorMessage,
     };
   }
-}
+};
 
 export const handleCreateBoard = async ({
   action,
@@ -73,10 +153,9 @@ export const handleCreateBoard = async ({
   revalidate?: boolean;
   inTransaction?: boolean;
 }) => {
+  const { payload } = action;
+  const { board } = payload;
   try {
-    const { payload } = action;
-    const { board } = payload;
-
     const { userId } = auth();
     if (!userId) throw new Error("Unauthorized");
 
@@ -930,12 +1009,12 @@ export const handleToggleSubtaskCompleted = async ({
 };
 
 // ------ Transaction ------
-export async function mutateTable(changes: Action[]) {
+export async function mutateTable(actions: Action[]) {
   const user = auth();
   try {
     if (!user.userId) throw new Error("Unauthorized");
     await db.transaction(async (tx) => {
-      for (const action of changes) {
+      for (const action of actions) {
         switch (action.type) {
           // Boards
           case "CREATE_BOARD":

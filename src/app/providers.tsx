@@ -6,13 +6,15 @@ import { ThemeProvider } from "next-themes";
 import { BackgroundProvider } from "~/context/bg-context";
 import { BoardsProvider } from "~/context/boards-context";
 import { UIProvider } from "~/context/ui-context";
-import { type BoardType } from "~/types";
+import { UserBackgroundType, type BoardType } from "~/types";
 
 const Providers = ({
   boards,
+  userBackgrounds,
   children,
 }: {
   boards: BoardType[];
+  userBackgrounds: UserBackgroundType[];
   children: React.ReactNode;
 }) => {
   return (
@@ -22,7 +24,7 @@ const Providers = ({
       }}
     >
       <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-        <BackgroundProvider>
+        <BackgroundProvider userBackgrounds={userBackgrounds}>
           <UIProvider>
             <BoardsProvider boards={boards}>{children}</BoardsProvider>
           </UIProvider>

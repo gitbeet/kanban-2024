@@ -6,7 +6,7 @@ import { BoardSchema } from "~/zod-schemas";
 import type { FormEvent, HTMLAttributes } from "react";
 import { useUser } from "@clerk/nextjs";
 import { MdDashboard } from "react-icons/md";
-import { MakeBoardCurrentAction } from "~/types/actions";
+import { type MakeBoardCurrentAction } from "~/types/actions";
 import { showCustomErrorToast } from "~/utilities/showCustomErrorToast";
 
 interface Props extends HTMLAttributes<HTMLButtonElement> {
@@ -32,7 +32,7 @@ const MakeBoardCurrentForm = ({ boardId, boardName, ...props }: Props) => {
 
   const clientAction = async (e?: FormEvent) => {
     if (!currentBoardId) {
-      setError("No currentboardId");
+      showCustomErrorToast({ message: "Client error" });
       return;
     }
     e?.preventDefault();

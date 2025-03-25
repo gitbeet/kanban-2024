@@ -101,6 +101,16 @@ export const subtasks = createTable(
   }),
 );
 
+export const backgrounds = createTable("background", {
+  id: varchar("id", { length: 1024 }).primaryKey(),
+  userId: varchar("userId", { length: 256 }).notNull(),
+  fileUrl: varchar("fileUrl", { length: 256 }).notNull(),
+  fileKey: varchar("fileKey", { length: 256 }).notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+});
+
 //---------- RELATIONS ----------
 
 export const boardRelations = relations(boards, ({ many }) => ({

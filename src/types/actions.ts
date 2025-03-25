@@ -1,5 +1,30 @@
-import { BoardType, ColumnType, SubtaskType, TaskType } from ".";
+import type {
+  BoardType,
+  ColumnType,
+  SubtaskType,
+  TaskType,
+  UserBackgroundType,
+} from ".";
+
+export type UploadUserBackgroundAction = {
+  type: "UPLOAD_USER_BACKGROUND";
+  payload: { background: UserBackgroundType };
+};
+
+export type DeleteUserBackgroundAction = {
+  type: "DELETE_USER_BACKGROUND";
+  payload: { backgroundId: string };
+};
+
+export type BackgroundAction =
+  | UploadUserBackgroundAction
+  | DeleteUserBackgroundAction;
+
 //  ----- Boards -----
+export type SetInitialBoardsAction = {
+  type: "SET_INITIAL_BOARDS";
+  payload: { boards: BoardType[] };
+};
 export type CreateBoardAction = {
   type: "CREATE_BOARD";
   payload: { board: BoardType };
@@ -18,6 +43,7 @@ export type MakeBoardCurrentAction = {
 };
 
 export type BoardAction =
+  | SetInitialBoardsAction
   | CreateBoardAction
   | RenameBoardAction
   | DeleteBoardAction

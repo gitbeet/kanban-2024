@@ -51,8 +51,7 @@ const CreateBoardForm = ({
     if (!user?.id) return;
     setLoading(true);
 
-    let maxIndex = Math.max(...optimisticBoards.map((b) => b.index));
-    if (maxIndex < 0) maxIndex = 0;
+    const maxIndex = optimisticBoards.length;
 
     const newBoardId = uuid();
     const newBoard: BoardType = {

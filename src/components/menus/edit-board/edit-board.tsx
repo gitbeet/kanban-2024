@@ -364,7 +364,7 @@ const EditBoard = ({ board }: { board: BoardType }) => {
           {/* -----  ----- */}
           <div className="space-y-4">
             <h3 className="text-sm font-bold">Columns</h3>
-            <ul className="scrollbar-thin max-h-44 space-y-2.5 overflow-auto">
+            <ul className="scrollbar-thin max-h-44 space-y-2.5 overflow-auto p-1">
               {temporaryColumns
                 .sort((a, b) => a.index - b.index)
                 .map((c) => {
@@ -372,27 +372,25 @@ const EditBoard = ({ board }: { board: BoardType }) => {
                     (col) => col.id === c.id,
                   );
                   return (
-                    <>
-                      <div key={c.index} className="flex items-center gap-2">
-                        <InputField
-                          className="w-full"
-                          value={c.name}
-                          error={error.columns[errorIndex]?.errorMessage ?? ""}
-                          onChange={(e) => handleChangeColumnName(e, c.id)}
-                          shiftLayout
-                          menu
+                    <div key={c.index} className="flex items-center gap-2">
+                      <InputField
+                        className="w-full"
+                        value={c.name}
+                        error={error.columns[errorIndex]?.errorMessage ?? ""}
+                        onChange={(e) => handleChangeColumnName(e, c.id)}
+                        shiftLayout
+                        menu
+                      />
+                      <div>
+                        <DeleteButton
+                          type="button"
+                          onClick={() => handleDeleteColumn(c.id, c.index)}
                         />
-                        <div>
-                          <DeleteButton
-                            type="button"
-                            onClick={() => handleDeleteColumn(c.id, c.index)}
-                          />
-                          {error.columns[errorIndex]?.errorMessage && (
-                            <div className="h-5" />
-                          )}
-                        </div>
+                        {error.columns[errorIndex]?.errorMessage && (
+                          <div className="h-5" />
+                        )}
                       </div>
-                    </>
+                    </div>
                   );
                 })}
             </ul>

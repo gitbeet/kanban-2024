@@ -1,20 +1,22 @@
 import type { db } from "../server/db";
-import { type getBoards } from "../server/queries";
-import { Action } from "./actions";
+import { type Action } from "./actions";
+import type {
+  backgrounds,
+  boards,
+  columns,
+  subtasks,
+  tasks,
+} from "~/server/db/schema";
 
-export type BoardType = Awaited<ReturnType<typeof getBoards>>[number];
+export type BoardType = typeof boards.$inferSelect & { columns: ColumnType[] };
 
-export type ColumnType = Awaited<
-  ReturnType<typeof getBoards>
->[number]["columns"][number];
+export type ColumnType = typeof columns.$inferSelect & { tasks: TaskType[] };
 
-export type TaskType = Awaited<
-  ReturnType<typeof getBoards>
->[number]["columns"][number]["tasks"][number];
+export type TaskType = typeof tasks.$inferSelect & { subtasks: SubtaskType[] };
 
-export type SubtaskType = Awaited<
-  ReturnType<typeof getBoards>
->[number]["columns"][number]["tasks"][number]["subtasks"][number];
+export type SubtaskType = typeof subtasks.$inferSelect;
+
+export type UserBackgroundType = typeof backgrounds.$inferSelect;
 
 export type TransactionType = Parameters<
   Parameters<typeof db.transaction>[0]

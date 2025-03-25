@@ -4,6 +4,7 @@ import { createContext, useContext, useOptimistic, useState } from "react";
 import { handleOptimisticUpdate } from "~/optimisticHandlers";
 import type { BoardType, SetOptimisticType } from "~/types";
 import type { ReactNode } from "react";
+import { Action } from "~/types/actions";
 
 interface BoardsContextType {
   optimisticBoards: BoardType[];
@@ -42,10 +43,10 @@ export const BoardsProvider: React.FC<BoardsProviderProps> = ({
   children,
   boards,
 }) => {
-  const [optimisticBoards, setOptimisticBoards] = useOptimistic(
-    boards,
-    handleOptimisticUpdate,
-  );
+  const [optimisticBoards, setOptimisticBoards] = useOptimistic<
+    BoardType[],
+    Action
+  >(boards, handleOptimisticUpdate);
   const [loading, setLoading] = useState({
     DELETE_BOARD: false,
     createBoard: false,
