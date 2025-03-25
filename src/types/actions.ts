@@ -13,7 +13,7 @@ export type UploadUserBackgroundAction = {
 
 export type DeleteUserBackgroundAction = {
   type: "DELETE_USER_BACKGROUND";
-  payload: { backgroundId: string };
+  payload: { backgroundId: string; fileKey: string };
 };
 
 export type BackgroundAction =

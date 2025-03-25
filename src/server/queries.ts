@@ -34,6 +34,7 @@ import type {
   UploadUserBackgroundAction,
   DeleteUserBackgroundAction,
 } from "~/types/actions";
+import { UTApi } from "uploadthing/server";
 
 export const getBackgrounds = async () => {
   try {
@@ -88,7 +89,7 @@ export const deleteBackground = async (action: DeleteUserBackgroundAction) => {
     if (!user.userId) throw new Error("Unauthorized");
 
     const { payload } = action;
-    const { backgroundId } = payload;
+    const { backgroundId, fileKey } = payload;
 
     const result = UserBackgroundSchema.pick({ id: true }).safeParse({
       id: backgroundId,
@@ -100,7 +101,13 @@ export const deleteBackground = async (action: DeleteUserBackgroundAction) => {
       );
     }
 
-    await db.delete(backgrounds).where(eq(backgrounds.id, backgroundId));
+    const deletedRows = await db
+      .delete(backgrounds)
+      .where(eq(backgrounds.id, backgroundId));
+    if (!deletedRows) throw new Error("Error while deleting the background");
+
+    const api = new UTApi();
+    await api.deleteFiles(fileKey);
   } catch (error) {
     const errorMessage =
       error instanceof Error

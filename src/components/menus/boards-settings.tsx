@@ -14,7 +14,7 @@ import { v4 as uuid } from "uuid";
 import { deleteBackground, uploadBackground } from "~/server/queries";
 import { type ClientUploadedFileData } from "uploadthing/types";
 import { useUser } from "@clerk/nextjs";
-import {
+import type {
   DeleteUserBackgroundAction,
   UploadUserBackgroundAction,
 } from "~/types/actions";
@@ -61,10 +61,10 @@ const BoardsSettings = () => {
     }
   };
 
-  const handleDelete = async (backgroundId: string) => {
+  const handleDelete = async (backgroundId: string, fileKey: string) => {
     const action: DeleteUserBackgroundAction = {
       type: "DELETE_USER_BACKGROUND",
-      payload: { backgroundId },
+      payload: { backgroundId, fileKey },
     };
     startTransition(() => {
       setOptimisticUserBackgrounds(action);
@@ -130,7 +130,7 @@ const BoardsSettings = () => {
                     <Button
                       size="small"
                       variant="ghost"
-                      onClick={() => handleDelete(b.id)}
+                      onClick={() => handleDelete(b.id, b.fileKey)}
                     >
                       Delete
                     </Button>
