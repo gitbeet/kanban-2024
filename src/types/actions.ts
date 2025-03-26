@@ -1,10 +1,5 @@
-import type {
-  BoardType,
-  ColumnType,
-  SubtaskType,
-  TaskType,
-  UserBackgroundType,
-} from ".";
+import type { BoardType, ColumnType, SubtaskType, TaskType } from ".";
+import { type UserBackgroundType } from "./background";
 
 export type UploadUserBackgroundAction = {
   type: "UPLOAD_USER_BACKGROUND";

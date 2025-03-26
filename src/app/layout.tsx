@@ -1,11 +1,12 @@
 import { type Metadata } from "next";
-import { UserBackgroundType, type BoardType } from "~/types";
+import { type BoardType } from "~/types";
 import { getBackgrounds, getBoards } from "~/server/queries";
 import { Roboto } from "next/font/google";
 import Providers from "./providers";
 import { Toaster } from "react-hot-toast";
 import ClientLayout from "~/components/layout/client-layout";
 import "~/styles/globals.css";
+import { type UserBackgroundType } from "~/types/background";
 
 const roboto = Roboto({
   weight: ["400", "500", "700", "900"],
