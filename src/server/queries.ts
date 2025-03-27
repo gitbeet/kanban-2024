@@ -2,7 +2,14 @@
 
 import { db } from "./db/index";
 import { auth } from "@clerk/nextjs/server";
-import { backgrounds, boards, columns, subtasks, tasks } from "./db/schema";
+import {
+  backgrounds,
+  boards,
+  columns,
+  subtasks,
+  tasks,
+  userBackgrounds,
+} from "./db/schema";
 import { revalidatePath } from "next/cache";
 import { and, eq, gt, gte, lt, lte, ne, sql } from "drizzle-orm";
 import type { DatabaseType } from "~/types";
@@ -38,9 +45,23 @@ import { UTApi } from "uploadthing/server";
 
 export const getBackgrounds = async () => {
   try {
+    const backgrounds = await db.query.backgrounds.findMany();
+    revalidatePath("/");
+    return { backgrounds };
+  } catch (error) {
+    const errorMessage =
+      error instanceof Error
+        ? error.message
+        : "Error while getting backgrounds";
+    return { error: errorMessage };
+  }
+};
+
+export const getUserBackgrounds = async () => {
+  try {
     const user = auth();
     if (!user.userId) throw new Error("Unauthorized");
-    const backgrounds = await db.query.backgrounds.findMany({
+    const backgrounds = await db.query.userBackgrounds.findMany({
       where: (model, { eq }) => eq(model.userId, user.userId),
     });
     revalidatePath("/");
@@ -54,7 +75,9 @@ export const getBackgrounds = async () => {
   }
 };
 
-export const uploadBackground = async (action: UploadUserBackgroundAction) => {
+export const uploadUserBackground = async (
+  action: UploadUserBackgroundAction,
+) => {
   try {
     const user = auth();
     if (!user.userId) throw new Error("Unauthorized");
@@ -72,7 +95,7 @@ export const uploadBackground = async (action: UploadUserBackgroundAction) => {
 
     if (background.userId !== user.userId) throw new Error("Unauthorized");
 
-    await db.insert(backgrounds).values(background);
+    await db.insert(userBackgrounds).values(background);
   } catch (error) {
     const errorMessage =
       error instanceof Error
@@ -83,7 +106,9 @@ export const uploadBackground = async (action: UploadUserBackgroundAction) => {
   revalidatePath("/");
 };
 
-export const deleteBackground = async (action: DeleteUserBackgroundAction) => {
+export const deleteUserBackground = async (
+  action: DeleteUserBackgroundAction,
+) => {
   try {
     const user = auth();
     if (!user.userId) throw new Error("Unauthorized");
@@ -102,8 +127,8 @@ export const deleteBackground = async (action: DeleteUserBackgroundAction) => {
     }
 
     const deletedRows = await db
-      .delete(backgrounds)
-      .where(eq(backgrounds.id, backgroundId));
+      .delete(userBackgrounds)
+      .where(eq(userBackgrounds.id, backgroundId));
     if (!deletedRows) throw new Error("Error while deleting the background");
 
     const api = new UTApi();

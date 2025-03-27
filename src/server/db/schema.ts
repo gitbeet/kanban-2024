@@ -12,6 +12,8 @@ export const createTable = pgTableCreator((name) => `kanban-2024_${name}`);
 
 // ---------- MODELS ----------
 
+// ** BOARDS **
+
 export const boards = createTable(
   "board",
   {
@@ -101,7 +103,27 @@ export const subtasks = createTable(
   }),
 );
 
+// ** BACKGROUNDS **
+
+// {
+//   id: "3",
+//   type: "color",
+//   slug: "default",
+//   title: "Default",
+//   value: "bg-option__default",
+//   alt: "Default color",
+// },
+
 export const backgrounds = createTable("background", {
+  id: varchar("id", { length: 1024 }).primaryKey(),
+  type: varchar("type").notNull().$type<"color" | "image">(),
+  slug: varchar("slug").notNull().unique(),
+  title: varchar("title").notNull(),
+  value: varchar("value").notNull(),
+  alt: varchar("alt").notNull(),
+});
+
+export const userBackgrounds = createTable("user_background", {
   id: varchar("id", { length: 1024 }).primaryKey(),
   userId: varchar("userId", { length: 256 }).notNull(),
   fileUrl: varchar("fileUrl", { length: 256 }).notNull(),
@@ -110,6 +132,21 @@ export const backgrounds = createTable("background", {
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull(),
 });
+
+// ** USER DATA **
+
+// export const userDatas = createTable("user_data", {
+//   id: varchar("id", { length: 1024 }).primaryKey(),
+//   userId: varchar("userId", { length: 256 }).notNull(),
+//   currentBoardId:varchar("current_board", { length: 1024 }).primaryKey(),
+//   currentThemeId:varchar("current_theme", { length: 1024 }).primaryKey(),
+//   createdAt: timestamp("created_at", { withTimezone: true })
+//     .default(sql`CURRENT_TIMESTAMP`)
+//     .notNull(),
+//   updatedAt: timestamp("updated_at", { withTimezone: true }).$onUpdate(
+//     () => new Date(),
+//   ),
+// });
 
 //---------- RELATIONS ----------
 

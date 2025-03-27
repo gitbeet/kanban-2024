@@ -4,7 +4,7 @@ import type { ClientUploadedFileData } from "uploadthing/types";
 import type { UploadUserBackgroundAction } from "~/types/actions";
 import { v4 as uuid } from "uuid";
 import { useBackground } from "~/context/bg-context";
-import { uploadBackground } from "~/server/queries";
+import { uploadUserBackground } from "~/server/queries";
 import { showCustomErrorToast } from "~/utilities/showCustomErrorToast";
 import { UploadButton } from "~/utilities/uploadthing";
 import { type UserBackgroundType } from "~/types/background";
@@ -37,7 +37,7 @@ const UploadBackground = () => {
       setOptimisticUserBackgrounds(action);
     });
 
-    const result = await uploadBackground(action);
+    const result = await uploadUserBackground(action);
     if (result?.error) {
       showCustomErrorToast({ message: result.error });
     }

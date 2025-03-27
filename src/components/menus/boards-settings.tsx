@@ -5,17 +5,18 @@ import { IconButton } from "../ui/button/buttons";
 import OpacitySlider from "../background/opacity-slider";
 import FocusTrap from "focus-trap-react";
 import { useRef } from "react";
-import { colorBackgrounds, imageBackgrounds } from "~/utilities/backgrounds";
+// import { colorBackgrounds, imageBackgrounds } from "~/utilities/backgrounds";
 import { useBackground } from "~/context/bg-context";
 import UploadBackground from "../background/upload-background";
 import UserBackgroundOption from "../background/user-background-option";
 
 const BoardsSettings = () => {
   const { showBoardsSettings, setShowBoardsSettings } = useUI();
-  const { optimisticUserBackgrounds } = useBackground();
+  const { optimisticUserBackgrounds, backgrounds } = useBackground();
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const resolvedTabIndex = showBoardsSettings ? 0 : -1;
-
+  const imageBackgrounds = backgrounds.filter((b) => b.type === "image");
+  const colorBackgrounds = backgrounds.filter((b) => b.type === "color");
   return (
     <FocusTrap
       active={showBoardsSettings}

@@ -1,33 +1,28 @@
-import bg from "../../public/test-bg-4.jpg";
-import bgTwo from "../../public/test-bg-2.jpg";
-import bgTest from "../../public/test-bg-3.jpg";
 import type { ColorBackground, ImageBackground } from "~/types/background";
 export const imageBackgrounds: ImageBackground[] = [
   {
+    id: "1",
     type: "image",
     slug: "mountain",
     title: "Mountain",
-    value: bg,
+    value:
+      "https://b0ys30u6uc.ufs.sh/f/yL7xBWHcasSVLyIDsgmPyj72oOUbcKIBqYCS5Mwe1udLWisV",
     alt: "Beautiful mountains",
   },
   {
+    id: "2",
     type: "image",
     slug: "flowers",
     title: "Flowers",
-    value: bgTwo,
+    value:
+      "https://b0ys30u6uc.ufs.sh/f/yL7xBWHcasSVVDSTS4MolNvVB3wzdq4TjHPK69DOU5YiIExA",
     alt: "Beautiful flowers",
   },
-  // {
-  //   type: "image",
-  //   slug: "test",
-  //   title: "Test",
-  //   value: bgTest,
-  //   alt: "Test background",
-  // },
 ];
 
 export const colorBackgrounds: ColorBackground[] = [
   {
+    id: "3",
     type: "color",
     slug: "default",
     title: "Default",
@@ -35,6 +30,7 @@ export const colorBackgrounds: ColorBackground[] = [
     alt: "Default color",
   },
   {
+    id: "4",
     type: "color",
     slug: "taskly",
     title: "Taskly",
@@ -42,6 +38,7 @@ export const colorBackgrounds: ColorBackground[] = [
     alt: "Taskly color gradient",
   },
   {
+    id: "5",
     type: "color",
     slug: "sunset",
     title: "Sunset",
@@ -49,6 +46,7 @@ export const colorBackgrounds: ColorBackground[] = [
     alt: "Sunset color gradient",
   },
   {
+    id: "6",
     type: "color",
     slug: "aurora",
     title: "Aurora",
@@ -56,6 +54,7 @@ export const colorBackgrounds: ColorBackground[] = [
     alt: "Aurora color gradient",
   },
   {
+    id: "7",
     type: "color",
     slug: "space",
     title: "Space",

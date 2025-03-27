@@ -18,7 +18,7 @@ const Background = () => {
         />
       )}
       {background.type === "image" && (
-        <Image
+        <img
           style={{ opacity: imageOpacity / 100 }}
           className="z-10 min-h-full object-cover object-center opacity-80 dark:opacity-60"
           src={background.value ?? ""}

@@ -7,14 +7,16 @@ import { BackgroundProvider } from "~/context/bg-context";
 import { BoardsProvider } from "~/context/boards-context";
 import { UIProvider } from "~/context/ui-context";
 import { type BoardType } from "~/types";
-import { type UserBackgroundType } from "~/types/background";
+import type { BackgroundType, UserBackgroundType } from "~/types/background";
 
 const Providers = ({
   boards,
+  backgrounds,
   userBackgrounds,
   children,
 }: {
   boards: BoardType[];
+  backgrounds: BackgroundType[];
   userBackgrounds: UserBackgroundType[];
   children: React.ReactNode;
 }) => {
@@ -25,7 +27,10 @@ const Providers = ({
       }}
     >
       <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-        <BackgroundProvider userBackgrounds={userBackgrounds}>
+        <BackgroundProvider
+          userBackgrounds={userBackgrounds}
+          backgrounds={backgrounds}
+        >
           <UIProvider>
             <BoardsProvider boards={boards}>{children}</BoardsProvider>
           </UIProvider>

@@ -21,18 +21,39 @@ const BackgroundOptionThumbnail = ({ backgroundData, ...props }: Props) => {
   const handleClick = () => {
     if (backgroundData.type === "user") {
       setBackground({
+        id: backgroundData.id,
         type: backgroundData.type,
         fileUrl: backgroundData.fileUrl,
       });
-      console.log({ type: backgroundData.type, value: backgroundData.fileUrl });
+      console.log({
+        id: backgroundData.id,
+        type: backgroundData.type,
+        value: backgroundData.fileUrl,
+      });
     }
     if (backgroundData.type === "color") {
-      setBackground({ type: backgroundData.type, value: backgroundData.value });
-      console.log({ type: backgroundData.type, value: backgroundData.value });
+      setBackground({
+        id: backgroundData.id,
+        type: backgroundData.type,
+        value: backgroundData.value,
+      });
+      console.log({
+        id: backgroundData.id,
+        type: backgroundData.type,
+        value: backgroundData.value,
+      });
     }
     if (backgroundData.type === "image") {
-      setBackground({ type: backgroundData.type, value: backgroundData.value });
-      console.log({ type: backgroundData.type, value: backgroundData.value });
+      setBackground({
+        id: backgroundData.id,
+        type: backgroundData.type,
+        value: backgroundData.value,
+      });
+      console.log({
+        id: backgroundData.id,
+        type: backgroundData.type,
+        value: backgroundData.value,
+      });
     }
   };
   return (
@@ -44,6 +65,8 @@ const BackgroundOptionThumbnail = ({ backgroundData, ...props }: Props) => {
     >
       {backgroundData.type === "image" && (
         <Image
+          width={112}
+          height={63}
           className="relative h-full min-w-full object-cover object-center"
           src={backgroundData.value}
           alt={backgroundData.alt}

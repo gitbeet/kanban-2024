@@ -1,12 +1,16 @@
 import { type Metadata } from "next";
 import { type BoardType } from "~/types";
-import { getBackgrounds, getBoards } from "~/server/queries";
+import {
+  getUserBackgrounds,
+  getBoards,
+  getBackgrounds,
+} from "~/server/queries";
 import { Roboto } from "next/font/google";
 import Providers from "./providers";
 import { Toaster } from "react-hot-toast";
 import ClientLayout from "~/components/layout/client-layout";
 import "~/styles/globals.css";
-import { type UserBackgroundType } from "~/types/background";
+import { BackgroundType, type UserBackgroundType } from "~/types/background";
 
 const roboto = Roboto({
   weight: ["400", "500", "700", "900"],
@@ -24,19 +28,30 @@ export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   let boards: BoardType[] = [];
+  let backgrounds: BackgroundType[] = [];
   let userBackgrounds: UserBackgroundType[] = [];
   const boardsResult = await getBoards();
   if (boardsResult.boards) {
     boards = boardsResult.boards;
   }
+
+  const userBackgroundsResult = await getUserBackgrounds();
+  if (userBackgroundsResult.backgrounds) {
+    userBackgrounds = userBackgroundsResult.backgrounds;
+  }
+
   const backgroundsResult = await getBackgrounds();
   if (backgroundsResult.backgrounds) {
-    userBackgrounds = backgroundsResult.backgrounds;
+    backgrounds = backgroundsResult.backgrounds;
   }
   return (
     <html lang="en" className={`${roboto.variable}`} suppressHydrationWarning>
       <body>
-        <Providers boards={boards} userBackgrounds={userBackgrounds}>
+        <Providers
+          boards={boards}
+          userBackgrounds={userBackgrounds}
+          backgrounds={backgrounds}
+        >
           <Toaster
             position="bottom-center"
             toastOptions={{

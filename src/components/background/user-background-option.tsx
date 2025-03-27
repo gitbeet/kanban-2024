@@ -1,7 +1,7 @@
 import { startTransition } from "react";
 import { Button } from "../ui/button/buttons";
 import { type DeleteUserBackgroundAction } from "~/types/actions";
-import { deleteBackground } from "~/server/queries";
+import { deleteUserBackground } from "~/server/queries";
 import { showCustomErrorToast } from "~/utilities/showCustomErrorToast";
 import { useBackground } from "~/context/bg-context";
 import { type UserBackgroundType } from "~/types/background";
@@ -21,7 +21,7 @@ const UserBackgroundOption = ({
     startTransition(() => {
       setOptimisticUserBackgrounds(action);
     });
-    const result = await deleteBackground(action);
+    const result = await deleteUserBackground(action);
     if (result?.error) {
       showCustomErrorToast({ message: result.error });
     }

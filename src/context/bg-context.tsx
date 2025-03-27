@@ -7,16 +7,21 @@ import type {
   UploadUserBackgroundAction,
   BackgroundAction,
 } from "~/types/actions";
-import type { BackgroundData, UserBackgroundType } from "~/types/background";
-import { backgrounds } from "~/utilities/backgrounds";
+import type {
+  BackgroundData,
+  BackgroundType,
+  UserBackgroundType,
+} from "~/types/background";
 
 interface UIProviderProps {
   children: ReactNode;
+  backgrounds: BackgroundType[];
   userBackgrounds: UserBackgroundType[];
 }
 
 interface BackgroundContextType {
   background: BackgroundData;
+  backgrounds: BackgroundType[];
   setBackground: Dispatch<SetStateAction<BackgroundData>>;
   imageOpacity: number;
   setImageOpacity: Dispatch<SetStateAction<number>>;
@@ -38,15 +43,14 @@ export const useBackground = () => {
 
 export const BackgroundProvider: React.FC<UIProviderProps> = ({
   children,
+  backgrounds,
   userBackgrounds,
 }) => {
-  // const [background, setBackground] = useState("default");
-
   const tasklyBackground = backgrounds.find((b) => b.slug === "taskly")?.value;
-
   const [background, setBackground] = useState<BackgroundData>({
+    id: "4",
     type: "color",
-    value: tasklyBackground as string,
+    value: tasklyBackground ?? "",
   });
   const [imageOpacity, setImageOpacity] = useState(100);
   const [optimisticUserBackgrounds, setOptimisticUserBackgrounds] =
@@ -90,6 +94,7 @@ export const BackgroundProvider: React.FC<UIProviderProps> = ({
     <BackgoundContext.Provider
       value={{
         background,
+        backgrounds,
         setBackground,
         imageOpacity,
         setImageOpacity,
