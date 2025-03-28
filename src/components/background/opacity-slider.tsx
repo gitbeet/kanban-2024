@@ -1,4 +1,3 @@
-import React from "react";
 import { useBackground } from "~/context/bg-context";
 
 const OpacitySlider = ({ tabIndex = 1 }: { tabIndex?: number }) => {

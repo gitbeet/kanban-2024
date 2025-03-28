@@ -1,5 +1,4 @@
 import { usePathname } from "next/navigation";
-import Image from "next/image";
 
 import { useBackground } from "~/context/bg-context";
 

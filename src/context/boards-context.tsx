@@ -4,7 +4,7 @@ import { createContext, useContext, useOptimistic, useState } from "react";
 import { handleOptimisticUpdate } from "~/optimisticHandlers";
 import type { BoardType, SetOptimisticType } from "~/types";
 import type { ReactNode } from "react";
-import { Action } from "~/types/actions";
+import type { Action } from "~/types/actions";
 
 interface BoardsContextType {
   optimisticBoards: BoardType[];

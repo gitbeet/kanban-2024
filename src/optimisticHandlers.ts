@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { TaskType, BoardType, SubtaskType } from "./types";
+import type { TaskType, BoardType } from "./types";
 import {
   CreateBoardAction,
   CreateColumnAction,

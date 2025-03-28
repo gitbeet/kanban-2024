@@ -29,7 +29,11 @@ const UserBackgroundOption = ({
   return (
     <div className="flex flex-col gap-2 text-center">
       <BackgroundOptionThumbnail
-        backgroundData={{ type: "user", fileUrl: background.fileUrl }}
+        backgroundData={{
+          id: background.id,
+          type: "user",
+          fileUrl: background.fileUrl,
+        }}
       />
 
       <Button

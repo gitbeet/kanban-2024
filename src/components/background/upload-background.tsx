@@ -18,7 +18,10 @@ const UploadBackground = () => {
       userId: string;
     }>[],
   ) => {
-    if (!res[0] || !user.user?.id) return;
+    if (!res[0] || !user.user?.id) {
+      showCustomErrorToast({ message: "Error" });
+      return;
+    }
     const { key, ufsUrl } = res[0];
     const background: UserBackgroundType = {
       createdAt: new Date(),

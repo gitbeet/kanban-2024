@@ -2,14 +2,7 @@
 
 import { db } from "./db/index";
 import { auth } from "@clerk/nextjs/server";
-import {
-  backgrounds,
-  boards,
-  columns,
-  subtasks,
-  tasks,
-  userBackgrounds,
-} from "./db/schema";
+import { boards, columns, subtasks, tasks, userBackgrounds } from "./db/schema";
 import { revalidatePath } from "next/cache";
 import { and, eq, gt, gte, lt, lte, ne, sql } from "drizzle-orm";
 import type { DatabaseType } from "~/types";
