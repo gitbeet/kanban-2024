@@ -18,7 +18,9 @@ export type ImageBackground = {
 };
 export type BackgroundType = ColorBackground | ImageBackground;
 
-export type UserBackgroundType = typeof userBackgrounds.$inferSelect;
+export type UserBackgroundType = typeof userBackgrounds.$inferSelect & {
+  type: "user";
+};
 
 export type ColorBackgroundData = Pick<
   ColorBackground,
@@ -28,9 +30,9 @@ export type ImageBackgroundData = Pick<
   ImageBackground,
   "type" | "value" | "id"
 >;
-export type UserBackgroundData = { type: "user" } & Pick<
+export type UserBackgroundData = Pick<
   UserBackgroundType,
-  "fileUrl" | "id"
+  "fileUrl" | "id" | "type"
 >;
 
 export type BackgroundData =

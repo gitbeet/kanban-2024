@@ -1,16 +1,17 @@
 import { type Metadata } from "next";
-import { type BoardType } from "~/types";
+import { UserDataType, type BoardType } from "~/types";
 import {
   getUserBackgrounds,
   getBoards,
   getBackgrounds,
+  getUserData,
 } from "~/server/queries";
 import { Roboto } from "next/font/google";
 import Providers from "./providers";
 import { Toaster } from "react-hot-toast";
 import ClientLayout from "~/components/layout/client-layout";
 import "~/styles/globals.css";
-import { BackgroundType, type UserBackgroundType } from "~/types/background";
+import type { BackgroundType, UserBackgroundType } from "~/types/background";
 
 const roboto = Roboto({
   weight: ["400", "500", "700", "900"],
@@ -30,6 +31,8 @@ export default async function RootLayout({
   let boards: BoardType[] = [];
   let backgrounds: BackgroundType[] = [];
   let userBackgrounds: UserBackgroundType[] = [];
+  let userData: UserDataType;
+
   const boardsResult = await getBoards();
   if (boardsResult.boards) {
     boards = boardsResult.boards;
@@ -37,12 +40,20 @@ export default async function RootLayout({
 
   const userBackgroundsResult = await getUserBackgrounds();
   if (userBackgroundsResult.backgrounds) {
-    userBackgrounds = userBackgroundsResult.backgrounds;
+    userBackgrounds = userBackgroundsResult.backgrounds.map((b) => ({
+      ...b,
+      type: "user",
+    }));
   }
 
   const backgroundsResult = await getBackgrounds();
   if (backgroundsResult.backgrounds) {
     backgrounds = backgroundsResult.backgrounds;
+  }
+
+  const userDataResult = await getUserData();
+  if (userDataResult.data) {
+    userData = userDataResult.data;
   }
   return (
     <html lang="en" className={`${roboto.variable}`} suppressHydrationWarning>
@@ -51,6 +62,7 @@ export default async function RootLayout({
           boards={boards}
           userBackgrounds={userBackgrounds}
           backgrounds={backgrounds}
+          userData={userData!}
         >
           <Toaster
             position="bottom-center"

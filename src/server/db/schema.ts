@@ -6,7 +6,6 @@ import {
   varchar,
   boolean,
   integer,
-  json,
 } from "drizzle-orm/pg-core";
 
 export const createTable = pgTableCreator((name) => `kanban-2024_${name}`);
@@ -106,15 +105,6 @@ export const subtasks = createTable(
 
 // ** BACKGROUNDS **
 
-// {
-//   id: "3",
-//   type: "color",
-//   slug: "default",
-//   title: "Default",
-//   value: "bg-option__default",
-//   alt: "Default color",
-// },
-
 export const backgrounds = createTable("background", {
   id: varchar("id", { length: 1024 }).primaryKey(),
   type: varchar("type").notNull().$type<"color" | "image">(),
@@ -139,7 +129,9 @@ export const userBackgrounds = createTable("user_background", {
 export const userDatas = createTable("user_data", {
   id: varchar("id", { length: 1024 }).primaryKey(),
   userId: varchar("userId", { length: 256 }).unique().notNull(),
-  data: json("data").default({}),
+  currentBoardId: varchar("current_board_id", { length: 256 }),
+  currentBackgroundId: varchar("background_id", { length: 256 }),
+  backgroundOpacity: integer("background_opacity"),
   createdAt: timestamp("created_at", { withTimezone: true })
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull(),

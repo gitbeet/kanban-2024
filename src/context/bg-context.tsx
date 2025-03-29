@@ -2,6 +2,7 @@
 
 import { useContext, createContext, useState, useOptimistic } from "react";
 import type { Dispatch, ReactNode, SetStateAction } from "react";
+import type { UserDataType } from "~/types";
 import type {
   DeleteUserBackgroundAction,
   UploadUserBackgroundAction,
@@ -17,6 +18,7 @@ interface UIProviderProps {
   children: ReactNode;
   backgrounds: BackgroundType[];
   userBackgrounds: UserBackgroundType[];
+  userData: UserDataType | undefined;
 }
 
 interface BackgroundContextType {
@@ -45,14 +47,17 @@ export const BackgroundProvider: React.FC<UIProviderProps> = ({
   children,
   backgrounds,
   userBackgrounds,
+  userData,
 }) => {
-  const tasklyBackground = backgrounds.find((b) => b.slug === "taskly")?.value;
-  const [background, setBackground] = useState<BackgroundData>({
-    id: "4",
-    type: "color",
-    value: tasklyBackground ?? "",
-  });
-  const [imageOpacity, setImageOpacity] = useState(100);
+  const allBackgrounds = [...backgrounds, ...userBackgrounds];
+  const initialBackground = allBackgrounds.find(
+    (b) => b.id === userData?.currentBackgroundId,
+  ) ?? { id: "4", type: "color", value: "bg-option__taskly" };
+  const [background, setBackground] =
+    useState<BackgroundData>(initialBackground);
+  const [imageOpacity, setImageOpacity] = useState(
+    userData?.backgroundOpacity ?? 100,
+  );
   const [optimisticUserBackgrounds, setOptimisticUserBackgrounds] =
     useOptimistic<UserBackgroundType[], BackgroundAction>(
       userBackgrounds,

@@ -29,6 +29,7 @@ const UploadBackground = () => {
       fileKey: key,
       fileUrl: ufsUrl,
       userId: user.user.id,
+      type: "user",
     };
 
     const action: UploadUserBackgroundAction = {

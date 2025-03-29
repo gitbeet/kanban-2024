@@ -11,6 +11,7 @@ const OpacitySlider = ({ tabIndex = 1 }: { tabIndex?: number }) => {
         type="range"
         min={0}
         max={100}
+        step={1}
         value={imageOpacity}
         onChange={(e) => setImageOpacity(parseInt(e.target.value))}
       />

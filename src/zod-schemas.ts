@@ -1,5 +1,15 @@
 import { z } from "zod";
 
+export const UserDataSchema = z.object({
+  id: z.string().uuid({ message: "ID must be a uuid" }),
+  userId: z.string(),
+  currentBoardId: z.string(),
+  currentBackgroundId: z.string(),
+  backgroundOpacity: z.number().int(),
+  createdAt: z.date(),
+  updatedAt: z.date(),
+});
+
 export const UserBackgroundSchema = z.object({
   id: z.string().uuid({ message: "ID must be a uuid" }),
   createdAt: z.date(),

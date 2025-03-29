@@ -19,6 +19,7 @@ import {
   SubtaskSchema,
   TaskSchema,
   UserBackgroundSchema,
+  UserDataSchema,
 } from "~/zod-schemas";
 import type {
   CreateBoardAction,
@@ -45,12 +46,18 @@ import { UTApi } from "uploadthing/server";
 import { v4 as uuid } from "uuid";
 // ------ User data ------
 
-export const getUserData = async (userId: string) => {
+export const getUserData = async (userId?: string) => {
   try {
+    let actualUserId = userId;
+    if (!actualUserId) {
+      const { userId } = auth();
+      if (userId) actualUserId = userId;
+    }
+    if (!actualUserId) throw new Error("Unauthorized");
     const data = await db.query.userDatas.findFirst({
-      where: (model, { eq }) => eq(model.userId, userId),
+      where: (model, { eq }) => eq(model.userId, actualUserId),
     });
-    return data;
+    return { data };
   } catch (error) {
     const errorMessage =
       error instanceof Error ? error.message : "Error while getting user data";
@@ -65,9 +72,12 @@ export const createUserData = async (userId: string) => {
       userId,
       createdAt: new Date(),
       updatedAt: new Date(),
-      data: {},
+      currentBackgroundId: null,
+      backgroundOpacity: null,
+      currentBoardId: null,
     };
-    await db.insert(userDatas).values(userData);
+    const data = await db.insert(userDatas).values(userData);
+    return { data: data.rows };
   } catch (error) {
     const errorMessage =
       error instanceof Error ? error.message : "Error while creating user data";
@@ -75,14 +85,12 @@ export const createUserData = async (userId: string) => {
   }
 };
 // TODO : fix error logic
+// Not use error object?
 export const getOrCreateUserData = async (userId: string) => {
   try {
-    let existingUserData = await getUserData(userId);
-    if (typeof existingUserData === "undefined") {
-      const data = await createUserData(userId);
-      if (!data?.error) {
-        existingUserData = data;
-      }
+    const existingUserData = await getUserData(userId);
+    if (!existingUserData.data) {
+      await createUserData(userId);
     }
     return existingUserData;
   } catch (error) {
@@ -90,6 +98,24 @@ export const getOrCreateUserData = async (userId: string) => {
       error instanceof Error
         ? error.message
         : "Error while getting/creating user data";
+    return { error: errorMessage };
+  }
+};
+
+export const modifyUserData = async (newData: Partial<UserDataType>) => {
+  try {
+    const { userId } = auth();
+    if (!userId) throw new Error("Unauthorized");
+    const result = UserDataSchema.partial().safeParse(newData);
+    if (!result.success) throw new Error("Error while modifying user data");
+    await db.update(userDatas).set(newData).where(eq(userDatas.userId, userId));
+    revalidatePath("/");
+  } catch (error) {
+    const errorMessage =
+      error instanceof Error
+        ? error.message
+        : "Error while modifying user data";
+    return { error: errorMessage };
   }
 };
 
