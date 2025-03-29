@@ -1,6 +1,12 @@
 import type { db } from "../server/db";
 import { type Action } from "./actions";
-import type { boards, columns, subtasks, tasks } from "~/server/db/schema";
+import type {
+  boards,
+  columns,
+  subtasks,
+  tasks,
+  userDatas,
+} from "~/server/db/schema";
 
 export type BoardType = typeof boards.$inferSelect & { columns: ColumnType[] };
 
@@ -19,3 +25,5 @@ export type DBType = typeof db;
 export type DatabaseType = TransactionType | DBType;
 
 export type SetOptimisticType = (update: Action) => void;
+
+export type UserDataType = typeof userDatas.$inferSelect;

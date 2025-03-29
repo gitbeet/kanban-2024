@@ -6,6 +6,7 @@ import {
   varchar,
   boolean,
   integer,
+  json,
 } from "drizzle-orm/pg-core";
 
 export const createTable = pgTableCreator((name) => `kanban-2024_${name}`);
@@ -135,18 +136,17 @@ export const userBackgrounds = createTable("user_background", {
 
 // ** USER DATA **
 
-// export const userDatas = createTable("user_data", {
-//   id: varchar("id", { length: 1024 }).primaryKey(),
-//   userId: varchar("userId", { length: 256 }).notNull(),
-//   currentBoardId:varchar("current_board", { length: 1024 }).primaryKey(),
-//   currentThemeId:varchar("current_theme", { length: 1024 }).primaryKey(),
-//   createdAt: timestamp("created_at", { withTimezone: true })
-//     .default(sql`CURRENT_TIMESTAMP`)
-//     .notNull(),
-//   updatedAt: timestamp("updated_at", { withTimezone: true }).$onUpdate(
-//     () => new Date(),
-//   ),
-// });
+export const userDatas = createTable("user_data", {
+  id: varchar("id", { length: 1024 }).primaryKey(),
+  userId: varchar("userId", { length: 256 }).unique().notNull(),
+  data: json("data").default({}),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).$onUpdate(
+    () => new Date(),
+  ),
+});
 
 //---------- RELATIONS ----------
 

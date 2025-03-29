@@ -2,10 +2,17 @@
 
 import { db } from "./db/index";
 import { auth } from "@clerk/nextjs/server";
-import { boards, columns, subtasks, tasks, userBackgrounds } from "./db/schema";
+import {
+  boards,
+  columns,
+  subtasks,
+  tasks,
+  userBackgrounds,
+  userDatas,
+} from "./db/schema";
 import { revalidatePath } from "next/cache";
 import { and, eq, gt, gte, lt, lte, ne, sql } from "drizzle-orm";
-import type { DatabaseType } from "~/types";
+import type { DatabaseType, UserDataType } from "~/types";
 import {
   BoardSchema,
   ColumnSchema,
@@ -35,6 +42,58 @@ import type {
   DeleteUserBackgroundAction,
 } from "~/types/actions";
 import { UTApi } from "uploadthing/server";
+import { v4 as uuid } from "uuid";
+// ------ User data ------
+
+export const getUserData = async (userId: string) => {
+  try {
+    const data = await db.query.userDatas.findFirst({
+      where: (model, { eq }) => eq(model.userId, userId),
+    });
+    return data;
+  } catch (error) {
+    const errorMessage =
+      error instanceof Error ? error.message : "Error while getting user data";
+    return { error: errorMessage };
+  }
+};
+
+export const createUserData = async (userId: string) => {
+  try {
+    const userData: UserDataType = {
+      id: uuid(),
+      userId,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      data: {},
+    };
+    await db.insert(userDatas).values(userData);
+  } catch (error) {
+    const errorMessage =
+      error instanceof Error ? error.message : "Error while creating user data";
+    return { error: errorMessage };
+  }
+};
+// TODO : fix error logic
+export const getOrCreateUserData = async (userId: string) => {
+  try {
+    let existingUserData = await getUserData(userId);
+    if (typeof existingUserData === "undefined") {
+      const data = await createUserData(userId);
+      if (!data?.error) {
+        existingUserData = data;
+      }
+    }
+    return existingUserData;
+  } catch (error) {
+    const errorMessage =
+      error instanceof Error
+        ? error.message
+        : "Error while getting/creating user data";
+  }
+};
+
+// ------ Background ------
 
 export const getBackgrounds = async () => {
   try {
