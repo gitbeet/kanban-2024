@@ -27,19 +27,9 @@ const BackgroundOptionThumbnail = ({ backgroundData, ...props }: Props) => {
         type: backgroundData.type,
         fileUrl: backgroundData.fileUrl,
       });
-      console.log({
-        id: backgroundData.id,
-        type: backgroundData.type,
-        value: backgroundData.fileUrl,
-      });
     }
     if (backgroundData.type === "color") {
       setBackground({
-        id: backgroundData.id,
-        type: backgroundData.type,
-        value: backgroundData.value,
-      });
-      console.log({
         id: backgroundData.id,
         type: backgroundData.type,
         value: backgroundData.value,
@@ -51,16 +41,11 @@ const BackgroundOptionThumbnail = ({ backgroundData, ...props }: Props) => {
         type: backgroundData.type,
         value: backgroundData.value,
       });
-      console.log({
-        id: backgroundData.id,
-        type: backgroundData.type,
-        value: backgroundData.value,
-      });
-      const result = await modifyUserData({
-        currentBackgroundId: backgroundData.id,
-      });
-      if (result?.error) showCustomErrorToast({ message: result.error });
     }
+    const result = await modifyUserData({
+      currentBackgroundId: backgroundData.id,
+    });
+    if (result?.error) showCustomErrorToast({ message: result.error });
   };
   return (
     <button
