@@ -1,4 +1,3 @@
-import { error } from "console";
 import Image from "next/image";
 import { type HTMLAttributes } from "react";
 import { useBackground } from "~/context/bg-context";
@@ -22,10 +21,6 @@ const BackgroundOptionThumbnail = ({ backgroundData, ...props }: Props) => {
   }
   const ariaLabel = `Switch to the ${lowerCaseTitle} background`;
   const handleClick = async () => {
-    const result = await modifyUserData({
-      currentBackgroundId: backgroundData.id,
-    });
-    if (result?.error) showCustomErrorToast({ message: result.error });
     if (backgroundData.type === "user") {
       setBackground({
         id: backgroundData.id,
@@ -61,6 +56,10 @@ const BackgroundOptionThumbnail = ({ backgroundData, ...props }: Props) => {
         type: backgroundData.type,
         value: backgroundData.value,
       });
+      const result = await modifyUserData({
+        currentBackgroundId: backgroundData.id,
+      });
+      if (result?.error) showCustomErrorToast({ message: result.error });
     }
   };
   return (
