@@ -9,6 +9,7 @@ import { useRef } from "react";
 import { useBackground } from "~/context/bg-context";
 import UploadBackground from "../background/upload-background";
 import UserBackgroundOption from "../background/user-background-option";
+import BlurToggle from "../background/blur-toggle";
 
 const BoardsSettings = () => {
   const { showBoardsSettings, setShowBoardsSettings } = useUI();
@@ -30,7 +31,7 @@ const BoardsSettings = () => {
       }}
     >
       <div
-        className={` ${showBoardsSettings ? "translate-x-0" : "translate-x-80"} bg-light__test-2 text-dark absolute bottom-0 right-0 top-0 z-10 w-80 overflow-auto p-8 shadow-xl transition`}
+        className={` ${showBoardsSettings ? "translate-x-0" : "translate-x-80"} bg-light__test-2 text-dark absolute bottom-0 right-0 top-0 z-10 w-80 overflow-auto p-8 shadow-xl transition scrollbar-thin`}
       >
         <IconButton
           aria-label="Close the settings menu"
@@ -45,8 +46,9 @@ const BoardsSettings = () => {
           <h2 className="text-lg font-semibold">Background</h2>
           <div className="space-y-4">
             <OpacitySlider tabIndex={resolvedTabIndex} />
+            <BlurToggle />
             <div className="space-y-2">
-              <h4>Image</h4>
+              <h4>Image backgrounds</h4>
               <div className="flex flex-wrap gap-3">
                 {imageBackgrounds.map((b, i) => (
                   <BackgroundOption
@@ -58,7 +60,7 @@ const BoardsSettings = () => {
               </div>
             </div>
             <div className="space-y-2">
-              <h4>User</h4>
+              <h4>User backgrounds</h4>
               <div className="flex flex-wrap gap-3">
                 {optimisticUserBackgrounds.map((b) => (
                   <UserBackgroundOption key={b.id} background={b} />
@@ -67,7 +69,7 @@ const BoardsSettings = () => {
               </div>
             </div>
             <div className="space-y-2">
-              <h4>Color</h4>
+              <h4>Color backgrounds</h4>
               <div className="flex flex-wrap gap-3">
                 {colorBackgrounds.map((b, i) => (
                   <BackgroundOption

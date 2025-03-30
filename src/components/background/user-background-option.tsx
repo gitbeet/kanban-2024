@@ -27,7 +27,7 @@ const UserBackgroundOption = ({
     }
   };
   return (
-    <div className="flex flex-col gap-2 text-center">
+    <div className="group flex flex-col gap-2 text-center">
       <BackgroundOptionThumbnail
         backgroundData={{
           id: background.id,

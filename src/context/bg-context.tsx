@@ -2,6 +2,7 @@
 
 import { useContext, createContext, useState, useOptimistic } from "react";
 import type { Dispatch, ReactNode, SetStateAction } from "react";
+import { BlurValue } from "~/components/background/blur-toggle";
 import type { UserDataType } from "~/types";
 import type {
   DeleteUserBackgroundAction,
@@ -29,6 +30,8 @@ interface BackgroundContextType {
   setImageOpacity: Dispatch<SetStateAction<number>>;
   optimisticUserBackgrounds: UserBackgroundType[];
   setOptimisticUserBackgrounds: (action: BackgroundAction) => void;
+  imageBlur: BlurValue;
+  setImageBlur: Dispatch<SetStateAction<BlurValue>>;
 }
 
 const BackgoundContext = createContext<BackgroundContextType | undefined>(
@@ -58,6 +61,7 @@ export const BackgroundProvider: React.FC<UIProviderProps> = ({
   const [imageOpacity, setImageOpacity] = useState(
     userData?.backgroundOpacity ?? 100,
   );
+  const [imageBlur, setImageBlur] = useState<BlurValue>("none");
   const [optimisticUserBackgrounds, setOptimisticUserBackgrounds] =
     useOptimistic<UserBackgroundType[], BackgroundAction>(
       userBackgrounds,
@@ -105,6 +109,8 @@ export const BackgroundProvider: React.FC<UIProviderProps> = ({
         setImageOpacity,
         optimisticUserBackgrounds,
         setOptimisticUserBackgrounds,
+        imageBlur,
+        setImageBlur,
       }}
     >
       {children}
