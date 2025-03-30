@@ -30,14 +30,15 @@ const BlurToggle = ({ tabIndex = 0 }: { tabIndex?: number }) => {
 
   return (
     <div className="space-y-2">
-      <h4>Background blur</h4>
+      {/* use label */}
+      <h4 className="text-light">Background blur</h4>
       <input
         type="range"
         min={0}
         max={100}
         step={25}
         className="accent-primary-700"
-        aria-label="Adjust the background opacity"
+        aria-label="Adjust the background blur"
         tabIndex={tabIndex}
         value={resolvedValue}
         onChange={handleChangeImageBlur}

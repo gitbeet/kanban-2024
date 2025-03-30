@@ -10,6 +10,8 @@ import { useBackground } from "~/context/bg-context";
 import UploadBackground from "../background/upload-background";
 import UserBackgroundOption from "../background/user-background-option";
 import BlurToggle from "../background/blur-toggle";
+import ExpandMenu from "../ui/expand-menu";
+import { motion } from "framer-motion";
 
 const BoardsSettings = () => {
   const { showBoardsSettings, setShowBoardsSettings } = useUI();
@@ -31,7 +33,7 @@ const BoardsSettings = () => {
       }}
     >
       <div
-        className={` ${showBoardsSettings ? "translate-x-0" : "translate-x-80"} bg-light__test-2 text-dark absolute bottom-0 right-0 top-0 z-10 w-80 overflow-auto p-8 shadow-xl transition scrollbar-thin`}
+        className={` ${showBoardsSettings ? "translate-x-0" : "translate-x-80"} bg-light__test-2 text-dark absolute bottom-0 right-0 top-0 z-10 w-80 overflow-auto px-4 py-8 shadow-xl transition scrollbar-thin`}
       >
         <IconButton
           aria-label="Close the settings menu"
@@ -44,32 +46,12 @@ const BoardsSettings = () => {
 
         <div className="flex flex-col gap-12 pt-8">
           <h2 className="text-lg font-semibold">Background</h2>
-          <div className="space-y-4">
-            <OpacitySlider tabIndex={resolvedTabIndex} />
-            <BlurToggle />
-            <div className="space-y-2">
-              <h4>Image backgrounds</h4>
-              <div className="flex flex-wrap gap-3">
-                {imageBackgrounds.map((b, i) => (
-                  <BackgroundOption
-                    key={i}
-                    background={b}
-                    tabIndex={resolvedTabIndex}
-                  />
-                ))}
-              </div>
-            </div>
-            <div className="space-y-2">
-              <h4>User backgrounds</h4>
-              <div className="flex flex-wrap gap-3">
-                {optimisticUserBackgrounds.map((b) => (
-                  <UserBackgroundOption key={b.id} background={b} />
-                ))}
-                <UploadBackground />
-              </div>
-            </div>
-            <div className="space-y-2">
-              <h4>Color backgrounds</h4>
+          <div className="space-y-8">
+            <ExpandMenu header="Background Settings" defaultOpen>
+              <OpacitySlider tabIndex={resolvedTabIndex} />
+              <BlurToggle />
+            </ExpandMenu>
+            <ExpandMenu header="Color backgrounds" defaultOpen>
               <div className="flex flex-wrap gap-3">
                 {colorBackgrounds.map((b, i) => (
                   <BackgroundOption
@@ -79,9 +61,27 @@ const BoardsSettings = () => {
                   />
                 ))}
               </div>
-            </div>
+            </ExpandMenu>
+            <ExpandMenu header="Image backgrounds">
+              <div className="flex flex-wrap gap-3">
+                {imageBackgrounds.map((b, i) => (
+                  <BackgroundOption
+                    key={i}
+                    background={b}
+                    tabIndex={resolvedTabIndex}
+                  />
+                ))}
+              </div>
+            </ExpandMenu>
+            <ExpandMenu header="User backgrounds">
+              <div className="flex flex-wrap gap-3">
+                {optimisticUserBackgrounds.map((b) => (
+                  <UserBackgroundOption key={b.id} background={b} />
+                ))}
+                <UploadBackground />
+              </div>
+            </ExpandMenu>
           </div>
-
           <div className="space-y-4">
             <h4 className="text-lg font-semibold">Theme</h4>
             <ThemeSwitchUpdated tabIndex={resolvedTabIndex} />
