@@ -138,7 +138,16 @@ const CreateBoardForm = ({
     >
       <div>
         {!isOpen && (
-          <motion.div layout className={props.className}>
+          <motion.div
+            layout
+            transition={{
+              type: "spring",
+              stiffness: 500,
+              damping: 30,
+              mass: 1,
+            }}
+            className={props.className}
+          >
             <Button
               variant="text"
               onClick={() => setIsOpen(true)}

@@ -34,7 +34,7 @@ const OpacitySlider = ({ tabIndex = 1 }: { tabIndex?: number }) => {
     <div className="space-y-2">
       <h4 className="text-light">Opacity</h4>
       <input
-        className="accent-primary-700"
+        className="w-full grow accent-primary-700"
         aria-label="Adjust the background opacity"
         tabIndex={tabIndex}
         type="range"

@@ -12,6 +12,7 @@ export const BoardsNav = () => {
     sidebarAnimating,
     setShowEditBoardWindow,
     setShowBoardsSettings,
+    boardsSettingsAnimating,
   } = useUI();
   const currentBoard = getCurrentBoard();
 
@@ -51,7 +52,10 @@ export const BoardsNav = () => {
           </button>
         )}
       </div>
-      <SettingsButton onClick={() => setShowBoardsSettings((prev) => !prev)} />
+      <SettingsButton
+        onClick={() => setShowBoardsSettings((prev) => !prev)}
+        disabled={boardsSettingsAnimating}
+      />
     </div>
   );
 };

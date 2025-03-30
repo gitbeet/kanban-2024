@@ -7,8 +7,10 @@ import { FaLaptopCode } from "react-icons/fa";
 
 export default function ThemeSwitchUpdated({
   tabIndex = 0,
+  disabled = false,
 }: {
   tabIndex?: number;
+  disabled?: boolean;
 }) {
   const [mounted, setMounted] = useState(false);
   const { setTheme, theme } = useTheme();

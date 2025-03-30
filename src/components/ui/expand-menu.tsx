@@ -6,10 +6,14 @@ const ExpandMenu = ({
   children,
   header,
   defaultOpen = false,
+  tabIndex = 0,
+  disabled = false,
 }: {
   children: React.ReactNode;
   header: string;
   defaultOpen?: boolean;
+  tabIndex?: number;
+  disabled?: boolean;
 }) => {
   const [isOpen, setIsOpen] = useState(defaultOpen);
 
@@ -20,7 +24,9 @@ const ExpandMenu = ({
       <button
         className="flex w-full grow items-center justify-between rounded bg-transparent p-2.5 transition hover:bg-white active:bg-neutral-50 dark:hover:bg-neutral-800 dark:active:bg-neutral-750"
         onClick={() => setIsOpen((prev) => !prev)}
+        tabIndex={tabIndex}
         aria-expanded={isOpen}
+        disabled={disabled}
       >
         {header} {menuIcon}
       </button>

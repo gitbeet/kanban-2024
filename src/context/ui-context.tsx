@@ -21,6 +21,8 @@ interface UIContextType {
   // /boards settings
   showBoardsSettings: boolean;
   setShowBoardsSettings: Dispatch<SetStateAction<boolean>>;
+  boardsSettingsAnimating: boolean;
+  setBoardsSettingsAnimating: Dispatch<SetStateAction<boolean>>;
   // board menus
   showEditBoardMenu: boolean;
   setShowEditBoardMenu: Dispatch<SetStateAction<boolean>>;
@@ -71,7 +73,8 @@ export const UIProvider: React.FC<UIProviderProps> = ({ children }) => {
   const [showSidebar, setShowSidebar] = useState(false);
   const [sidebarAnimating, setSidebarAnimating] = useState(false);
   // /boards settings
-  const [showBoardsSettings, setShowBoardsSettings] = useState(true);
+  const [showBoardsSettings, setShowBoardsSettings] = useState(false);
+  const [boardsSettingsAnimating, setBoardsSettingsAnimating] = useState(false);
   // board menus
   const [showEditBoardWindow, setShowEditBoardWindow] = useState(false);
   const [showEditBoardMenu, setShowEditBoardMenu] = useState(false);
@@ -117,6 +120,8 @@ export const UIProvider: React.FC<UIProviderProps> = ({ children }) => {
         // /boards settings
         showBoardsSettings,
         setShowBoardsSettings,
+        boardsSettingsAnimating,
+        setBoardsSettingsAnimating,
         // board menus
         showEditBoardWindow,
         setShowEditBoardWindow,

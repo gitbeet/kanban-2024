@@ -8,7 +8,13 @@ import { uploadUserBackground } from "~/server/queries";
 import { showCustomErrorToast } from "~/utilities/showCustomErrorToast";
 import { UploadButton } from "~/utilities/uploadthing";
 import { type UserBackgroundType } from "~/types/background";
-const UploadBackground = () => {
+const UploadBackground = ({
+  tabIndex = 0,
+  disabled = false,
+}: {
+  tabIndex?: number;
+  disabled?: boolean;
+}) => {
   const user = useUser();
   const { setOptimisticUserBackgrounds } = useBackground();
   const handleUpload = async (
@@ -55,17 +61,6 @@ const UploadBackground = () => {
         container: "w-28  flex flex-col justify-between rounded-sm group",
         allowedContent: " text-light h-12 mb-2",
       }}
-      // content={{
-      // button({ ready, isUploading }) {
-      //   if (ready) return <FiUpload className="h-5 w-5" />;
-      //   if (isUploading) return <LoadingSpinner size={20} />;
-      // },
-      // allowedContent({ ready, fileTypes, isUploading }) {
-      //   if (!ready) return "Checking what you allow";
-      //   if (isUploading) return "Seems like stuff is uploading";
-      //   return `Stuff you can upload: ${fileTypes.join(", ")}`;
-      // },
-      // }}
       endpoint="imageUploader"
       onClientUploadComplete={(res) => handleUpload(res)}
       onUploadError={(error: Error) =>

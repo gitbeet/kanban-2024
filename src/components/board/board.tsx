@@ -9,16 +9,25 @@ import DeleteTaskZone from "./delete-task-zone";
 import CreateColumnForm from "../action-forms/column/create-column-form";
 import { BoardsNav } from "../layout/boards-nav";
 import BoardsSettings from "../menus/boards-settings";
+import { useUI } from "~/context/ui-context";
+import { sidebarTransition } from "~/utilities/framer-motion";
 
 const Board = () => {
   const { optimisticBoards, loading, getCurrentBoard } = useBoards();
   const currentBoard = getCurrentBoard();
-
+  const { showSidebar } = useUI();
   if (loading.DELETE_BOARD || loading.createBoard) return <LoadingPage />;
 
   const noBoards = !optimisticBoards.length;
   const noBoardsJsx = (
-    <section className="relative z-[2] grid w-full place-content-center">
+    <motion.section
+      initial={false}
+      animate={{
+        marginLeft: showSidebar ? "0" : "-14rem",
+      }}
+      transition={sidebarTransition}
+      className="relative z-[2] grid w-full place-content-center"
+    >
       <BoardsNav />
       <BoardsSettings />
       <div className="bg-light__test space-y-8 rounded-md p-12 drop-shadow-lg">
@@ -27,7 +36,7 @@ const Board = () => {
         </h1>
         <CreateBoardForm className="text-center" />
       </div>
-    </section>
+    </motion.section>
   );
 
   if (noBoards) return noBoardsJsx;
@@ -36,7 +45,14 @@ const Board = () => {
   if (!currentBoard?.id) return <LoadingPage />;
 
   const emptyBoardJsx = (
-    <section className="relative z-[2] grid w-full place-content-center">
+    <motion.section
+      initial={false}
+      animate={{
+        marginLeft: showSidebar ? "0" : "-14rem",
+      }}
+      transition={sidebarTransition}
+      className="relative z-[2] grid w-full place-content-center"
+    >
       <BoardsNav />
       <BoardsSettings />
       <div className="bg-light__test rounded-md px-4 pt-8 drop-shadow-lg">
@@ -45,11 +61,18 @@ const Board = () => {
         </h1>
         <CreateColumnForm boardId={currentBoard.id} className="h-32 w-80" />
       </div>
-    </section>
+    </motion.section>
   );
 
   const boardJsx = (
-    <motion.div className="relative grow overflow-hidden">
+    <motion.section
+      initial={false}
+      animate={{
+        marginLeft: showSidebar ? "0" : "-14rem",
+      }}
+      transition={sidebarTransition}
+      className="relative grow overflow-hidden"
+    >
       <BoardsNav />
       <BoardsSettings />
       <motion.section
@@ -76,7 +99,7 @@ const Board = () => {
           </motion.div>
         </motion.div>
       </motion.section>
-    </motion.div>
+    </motion.section>
   );
 
   const isBoardEmpty = currentBoard?.columns.length === 0;

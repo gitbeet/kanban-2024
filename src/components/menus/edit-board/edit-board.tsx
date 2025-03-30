@@ -364,7 +364,7 @@ const EditBoard = ({ board }: { board: BoardType }) => {
           {/* -----  ----- */}
           <div className="space-y-4">
             <h3 className="text-sm font-bold">Columns</h3>
-            <ul className="scrollbar-thin max-h-44 space-y-2.5 overflow-auto p-1">
+            <ul className="max-h-44 space-y-2.5 overflow-auto p-1 scrollbar-thin">
               {temporaryColumns
                 .sort((a, b) => a.index - b.index)
                 .map((c) => {

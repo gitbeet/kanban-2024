@@ -93,7 +93,7 @@
 }
 
 .menu {
-  @apply absolute left-[50dvw] top-[50dvh] w-[min(calc(100dvw-2rem),25rem)] -translate-x-1/2 -translate-y-1/2;
+  @apply absolute left-[50dvw] top-[50dvh] w-[min(calc(100dvw-2rem),25rem)];
 }
 
 select,

@@ -37,7 +37,7 @@ const BlurToggle = ({ tabIndex = 0 }: { tabIndex?: number }) => {
         min={0}
         max={100}
         step={25}
-        className="accent-primary-700"
+        className="w-full grow accent-primary-700"
         aria-label="Adjust the background blur"
         tabIndex={tabIndex}
         value={resolvedValue}

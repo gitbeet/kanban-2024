@@ -1,19 +1,17 @@
-import React, {
-  useEffect,
-  useRef,
-  type HTMLAttributes,
-  type ReactNode,
-} from "react";
+import { useEffect, useRef, type HTMLAttributes, type ReactNode } from "react";
 import Backdrop from "./backdrop";
 import { createPortal } from "react-dom";
 import useHasMounted from "~/hooks/useHasMounted";
 import FocusTrap from "focus-trap-react";
-interface ModalProps extends HTMLAttributes<HTMLDivElement> {
+import { AnimationControls, motion, MotionProps } from "framer-motion";
+import { modalTransition } from "~/utilities/framer-motion";
+interface ModalProps extends MotionProps {
   children: ReactNode;
   zIndex: number;
   show: boolean;
   onClose: () => void;
   centered?: boolean;
+  className?: string;
 }
 
 export const Modal = ({
@@ -22,6 +20,7 @@ export const Modal = ({
   show,
   onClose,
   centered = true,
+  className = "",
   ...props
 }: ModalProps) => {
   const modalRef = useRef<HTMLDivElement>(null);
@@ -51,17 +50,25 @@ export const Modal = ({
         clickOutsideDeactivates: true,
         onDeactivate: () => onClose(),
         checkCanFocusTrap: () =>
-          new Promise((resolve) => setTimeout(resolve, 100)),
+          new Promise((resolve) => setTimeout(resolve, 200)),
       }}
     >
-      <div
+      <motion.div
+        initial={false}
+        animate={{
+          opacity: show ? 1 : 0,
+          scale: show ? 1 : 0.85,
+          x: centered ? "-50%" : 0,
+          y: centered ? "-50%" : 0,
+        }}
+        transition={modalTransition}
         ref={modalRef}
         {...props}
         style={{ zIndex, ...props.style }}
-        className={`menu-bg ${centered ? "menu" : ""} absolute p-6 transition duration-150 ${show ? "opacity-100" : "pointer-events-none opacity-0"} text-dark ${props.className}`}
+        className={`menu-bg ${centered ? "menu" : ""} absolute p-6 ${show ? "" : "pointer-events-none"} text-dark ${className}`}
       >
         {children}
-      </div>
+      </motion.div>
     </FocusTrap>
   );
 };

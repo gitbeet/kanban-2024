@@ -3,18 +3,17 @@
 import { useBoards } from "~/context/boards-context";
 import { useUI } from "~/context/ui-context";
 import { motion } from "framer-motion";
-import useHasMounted from "~/hooks/useHasMounted";
 import CreateBoardForm from "../action-forms/board/create-board-form";
 import MakeBoardCurrentForm from "../action-forms/board/make-board-current-form";
 import FocusTrap from "focus-trap-react";
 import { useRef } from "react";
 import { FaChevronRight } from "react-icons/fa";
+import { sidebarTransition } from "~/utilities/framer-motion";
 
 const Sidebar = () => {
   const { showSidebar, setShowSidebar, setSidebarAnimating, sidebarAnimating } =
     useUI();
-  const { optimisticBoards, loading } = useBoards();
-  const hasMounted = useHasMounted();
+  const { optimisticBoards } = useBoards();
 
   const outsideButtonRef = useRef<HTMLButtonElement | null>(null);
 
@@ -33,34 +32,27 @@ const Sidebar = () => {
   const boards = optimisticBoards
     .sort((a, b) => a.index - b.index)
     .map((board) => (
-      <div className="h-fit overflow-hidden" key={board.index}>
-        <motion.li
-          layout
-          initial={
-            hasMounted && !loading.createBoard ? { y: "-100%", opacity: 0 } : {}
-          }
-          animate={{
-            y: 0,
-            opacity: 1,
-            transition: { ease: "easeInOut" },
-          }}
-          exit={{ y: "-100%", opacity: 0 }}
-          className={`group cursor-pointer pr-4`}
-        >
+      <motion.div key={board.id} layout className="h-fit">
+        <motion.li layout className="group cursor-pointer">
           <MakeBoardCurrentForm
             tabIndex={showSidebar ? 0 : -1}
             boardName={board.name}
             boardId={board.id}
           />
         </motion.li>
-      </div>
+      </motion.div>
     ));
 
   return (
-    <motion.section
-      onTransitionStart={() => setSidebarAnimating(true)}
-      onTransitionEnd={() => setSidebarAnimating(false)}
-      className={`relative z-[5] ${showSidebar ? "ml-0 translate-x-0" : "-mr-52 -translate-x-52"} bg-light__test-2 border-color__test w-56 shrink-0 border-r shadow-xl transition-all duration-300 dark:border-neutral-750`}
+    <motion.aside
+      onAnimationStart={() => setSidebarAnimating(true)}
+      onAnimationComplete={() => setSidebarAnimating(false)}
+      initial={false}
+      animate={{
+        x: showSidebar ? 0 : -208,
+      }}
+      transition={sidebarTransition}
+      className="bg-light__test-2 left-0 top-0 z-[5] h-full w-56 shrink-0 border-r shadow-xl dark:border-neutral-750"
     >
       <FocusTrap
         active={showSidebar}
@@ -78,18 +70,25 @@ const Sidebar = () => {
               All boards ({optimisticBoards.length})
             </h2>
             <div className="h-8"></div>
-            <motion.ul className="scrollbar-thin max-h-[60dvh] overflow-auto">
+            <motion.ul
+              layout
+              className="max-h-[60dvh] overflow-auto scrollbar-thin"
+            >
               {boards}
             </motion.ul>
-            <div className="px-4">
+            <motion.div
+              layout
+              transition={{ type: "spring", stiffness: 300, damping: 28 }}
+              className="px-4"
+            >
               <div className="h-4"></div>
               <CreateBoardForm tabIndex={showSidebar ? 0 : -1} />
-            </div>
+            </motion.div>
           </div>
           {outsideButton}
         </div>
       </FocusTrap>
-    </motion.section>
+    </motion.aside>
   );
 };
 
