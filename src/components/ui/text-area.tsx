@@ -1,18 +1,30 @@
-import { forwardRef } from "react";
+import { forwardRef, useEffect } from "react";
 import type { TextareaHTMLAttributes } from "react";
 import { handlePressEnterToSubmit } from "~/utilities/handlePressEnterOrEscape";
+import { motion, MotionProps, useMotionValue } from "framer-motion";
+import {
+  modalTransition,
+  smallElementTransition,
+} from "~/utilities/framer-motion";
 
-interface TextAreaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
-  className?: string;
-  error?: string;
-  handleSubmit?: () => void | Promise<void>;
-  handleCancel?: () => void;
-}
+type TextAreaProps = MotionProps &
+  TextareaHTMLAttributes<HTMLTextAreaElement> & {
+    className?: string;
+    error?: string;
+    handleSubmit?: () => void | Promise<void>;
+    handleCancel?: () => void;
+  };
 
 const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
   ({ error, className, handleCancel, handleSubmit, ...props }, ref) => {
     return (
-      <div className="relative">
+      <motion.div
+        layout="position"
+        initial={{ opacity: 0, y: -8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={modalTransition}
+        className="relative"
+      >
         <textarea
           ref={ref}
           className={`${className} ${error ? "!focus:outline-danger-400 !text-danger-400 !outline !outline-danger-400 !ring !ring-danger-400" : ""} w-full resize-none overflow-hidden`}
@@ -23,12 +35,15 @@ const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
           }
           {...props}
         />
-        {error && (
-          <p className="absolute -bottom-1 w-full translate-y-full truncate text-right text-sm text-danger-400">
-            {error}
-          </p>
-        )}
-      </div>
+        <motion.p
+          initial={false}
+          animate={{ opacity: error ? 1 : 0.5, y: error ? 2 : "-50%" }}
+          transition={smallElementTransition}
+          className="w-full truncate text-right text-sm text-danger-400"
+        >
+          {error}
+        </motion.p>
+      </motion.div>
     );
   },
 );

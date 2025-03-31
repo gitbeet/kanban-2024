@@ -66,6 +66,7 @@ const Board = () => {
 
   const boardJsx = (
     <motion.section
+      layout
       initial={false}
       animate={{
         marginLeft: showSidebar ? "0" : "-14rem",
@@ -76,20 +77,27 @@ const Board = () => {
       <BoardsNav />
       <BoardsSettings />
       <motion.section
-        layout
         // Key prop for framer-motion
         key={currentBoard.id}
         className="grid h-full grow grid-rows-[1fr,auto] overflow-auto pt-12"
         tabIndex={-1}
       >
-        <motion.div className="flex items-start gap-4 p-8">
+        <motion.div
+          layout
+          transition={sidebarTransition}
+          className="flex items-start gap-4 p-8"
+        >
           {currentBoard?.columns
             .sort((a, b) => a.index - b.index)
             .map((col) => (
               <Column key={col.index} boardId={currentBoard.id} column={col} />
             ))}
 
-          <motion.div layout className="relative z-[2] h-96">
+          <motion.div
+            layout
+            transition={sidebarTransition}
+            className="relative z-[2] h-96"
+          >
             <CreateColumnForm
               className="bg-light__test h-32 w-80 shrink-0 overflow-hidden rounded-md drop-shadow-lg"
               boardId={currentBoard.id}

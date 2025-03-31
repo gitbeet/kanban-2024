@@ -4,6 +4,14 @@
 @import "./blobs.css";
 @import "./backgrounds.css";
 
+.no-animations *,
+.no-animations *::before,
+.no-animations *::after {
+  animation: none !important;
+  transition: none !important;
+  transform: none !important;
+}
+
 .no-scroll {
   overflow: hidden;
 }

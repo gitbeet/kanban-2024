@@ -11,6 +11,10 @@ import { useUI } from "~/context/ui-context";
 import { EditButton } from "../ui/button/buttons";
 import type { TaskType } from "../../types";
 import ToggleTaskForm from "../action-forms/task/toggle-task-form";
+import {
+  sidebarTransition,
+  smallElementTransition,
+} from "~/utilities/framer-motion";
 
 const Task = ({
   columnId,
@@ -55,6 +59,7 @@ const Task = ({
       <motion.div
         onClick={() => console.log(task)}
         layout="position"
+        transition={sidebarTransition}
         layoutId={task.id}
         onDragStart={(e) => handleDragStart(e, task, columnId)}
         draggable={draggable}

@@ -9,6 +9,8 @@ import { type RenameColumnAction } from "~/types/actions";
 import { CancelButton, SaveButton } from "~/components/ui/button/buttons";
 import FocusTrap from "focus-trap-react";
 import { showCustomErrorToast } from "~/utilities/showCustomErrorToast";
+import { motion } from "framer-motion";
+import { smallElementTransition } from "~/utilities/framer-motion";
 
 const RenameColumnForm = ({
   boardId,
@@ -110,56 +112,58 @@ const RenameColumnForm = ({
       }}
     >
       <div ref={ref} className={`${loading ? "pointer-events-none" : ""} `}>
-        <>
-          <form
-            ref={renameColumnRef}
-            onSubmit={clientAction}
-            className="relative"
+        <motion.form
+          ref={renameColumnRef}
+          onSubmit={clientAction}
+          className="relative"
+        >
+          {!isFormOpen && (
+            <>
+              <button
+                aria-label="Click to rename the column"
+                onClick={() => {
+                  setIsFormOpen(true);
+                  setNewColumnName(column?.name ?? "");
+                }}
+                className="input-readonly w-full text-left"
+              >
+                <p>{column?.name}</p>
+              </button>
+            </>
+          )}
+          {isFormOpen && (
+            <>
+              <InputField
+                ref={inputRef}
+                autoFocus
+                value={newColumnName ?? ""}
+                onChange={handleColumnNameChange}
+                type="text"
+                placeholder="Enter column name"
+                className="w-full"
+                error={error}
+                errorPlacement="bottomLeft"
+              />
+            </>
+          )}
+          <motion.div
+            layout
+            initial={false}
+            animate={{ opacity: isFormOpen ? 1 : 0, y: isFormOpen ? 0 : -8 }}
+            transition={smallElementTransition}
+            className={`absolute right-0 flex items-center justify-end gap-1.5 pt-1`}
           >
-            {!isFormOpen && (
-              <>
-                <button
-                  aria-label="Click to rename the column"
-                  onClick={() => {
-                    setIsFormOpen(true);
-                    setNewColumnName(column?.name ?? "");
-                  }}
-                  className="input-readonly w-full text-left"
-                >
-                  <p>{column?.name}</p>
-                </button>
-              </>
-            )}
-            {isFormOpen && (
-              <>
-                <InputField
-                  ref={inputRef}
-                  autoFocus
-                  value={newColumnName ?? ""}
-                  onChange={handleColumnNameChange}
-                  type="text"
-                  placeholder="Enter column name"
-                  className="w-full"
-                  error={error}
-                  errorPlacement="bottomLeft"
-                />
-              </>
-            )}
-            <div
-              className={`absolute right-0 flex items-center justify-end gap-1.5 pt-1 ${isFormOpen ? "translate-y-0 opacity-100" : "-translate-y-2 opacity-0"} transition`}
-            >
-              <SaveButton
-                tabIndex={resolvedTabIndex}
-                type="submit"
-                disabled={!!error}
-              />
-              <CancelButton
-                tabIndex={resolvedTabIndex}
-                onClick={handleClickOutside}
-              />
-            </div>
-          </form>
-        </>
+            <SaveButton
+              tabIndex={resolvedTabIndex}
+              type="submit"
+              disabled={!!error}
+            />
+            <CancelButton
+              tabIndex={resolvedTabIndex}
+              onClick={handleClickOutside}
+            />
+          </motion.div>
+        </motion.form>
       </div>
     </FocusTrap>
   );

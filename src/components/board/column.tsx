@@ -12,6 +12,8 @@ import type { TaskType, ColumnType } from "../../types";
 import { handleSwitchTaskColumn } from "~/server/queries";
 import { useUI } from "~/context/ui-context";
 import { DeleteButton } from "../ui/button/buttons";
+import { motion } from "framer-motion";
+import { sidebarTransition } from "~/utilities/framer-motion";
 
 const Column = ({
   boardId,
@@ -191,7 +193,9 @@ const Column = ({
   }
 
   return (
-    <div
+    <motion.div
+      layout
+      transition={sidebarTransition}
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
       onDrop={handleDragEnd}
@@ -199,21 +203,20 @@ const Column = ({
       // hard coded width for transition animation
       className={`${active ? "bg-white/55 backdrop-blur-md dark:bg-neutral-950/80" : "bg-light__test"} w-80 rounded-md px-6 py-4 shadow-lg`}
     >
-      <div
-        className={`flex items-center justify-between gap-4 pt-2 ${isFormOpen ? "pb-8" : "pb-2"}`}
+      <motion.div
+        layout="position"
+        className={`flex items-center justify-between gap-4 pb-7 pt-2`}
       >
-        <div className="flex grow items-center gap-2 font-bold text-neutral-250">
-          <span className={`shrink-0 text-sm text-neutral-500`}>
-            ({column.tasks.length})
-          </span>
-          <div className="w-full grow">
-            <RenameColumnForm
-              isFormOpen={isFormOpen}
-              setIsFormOpen={setIsFormOpen}
-              boardId={boardId}
-              columnId={column.id}
-            />
-          </div>
+        <span className={`shrink-0 text-sm text-neutral-500`}>
+          ({column.tasks.length})
+        </span>
+        <div className="w-full grow">
+          <RenameColumnForm
+            isFormOpen={isFormOpen}
+            setIsFormOpen={setIsFormOpen}
+            boardId={boardId}
+            columnId={column.id}
+          />
         </div>
         <DeleteButton
           onClick={() => {
@@ -221,25 +224,26 @@ const Column = ({
             setShowConfirmDeleteColumnWindow(true);
           }}
         />
-      </div>
-      {column.tasks
-        .sort((a, b) => a.index - b.index)
-        .map((task) => (
-          <Task
-            key={task.id}
-            columnId={column.id}
-            task={task}
-            handleDragStart={handleDragStart}
-          />
-        ))}
-      <DropIndicator
-        beforeId="-1"
-        columnId={column.id}
-        beforeIndex={(column.tasks.length + 1).toString()}
-      />
-
-      <CreateTaskForm boardId={boardId} columnId={column.id} />
-    </div>
+      </motion.div>
+      <motion.div layout>
+        {column.tasks
+          .sort((a, b) => a.index - b.index)
+          .map((task) => (
+            <Task
+              key={task.id}
+              columnId={column.id}
+              task={task}
+              handleDragStart={handleDragStart}
+            />
+          ))}
+        <DropIndicator
+          beforeId="-1"
+          columnId={column.id}
+          beforeIndex={(column.tasks.length + 1).toString()}
+        />
+        <CreateTaskForm boardId={boardId} columnId={column.id} />
+      </motion.div>
+    </motion.div>
   );
 };
 

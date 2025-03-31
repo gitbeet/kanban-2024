@@ -8,7 +8,10 @@ import MakeBoardCurrentForm from "../action-forms/board/make-board-current-form"
 import FocusTrap from "focus-trap-react";
 import { useRef } from "react";
 import { FaChevronRight } from "react-icons/fa";
-import { sidebarTransition } from "~/utilities/framer-motion";
+import {
+  sidebarTransition,
+  smallElementTransition,
+} from "~/utilities/framer-motion";
 
 const Sidebar = () => {
   const { showSidebar, setShowSidebar, setSidebarAnimating, sidebarAnimating } =
@@ -78,7 +81,7 @@ const Sidebar = () => {
             </motion.ul>
             <motion.div
               layout
-              transition={{ type: "spring", stiffness: 300, damping: 28 }}
+              transition={smallElementTransition}
               className="px-4"
             >
               <div className="h-4"></div>

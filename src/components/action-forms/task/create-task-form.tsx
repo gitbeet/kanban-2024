@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useBoards } from "~/context/boards-context";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion, useMotionValue } from "framer-motion";
 import { v4 as uuid } from "uuid";
 import { resizeTextArea } from "~/utilities/resizeTextArea";
 import { handleCreateTask } from "~/server/queries";
@@ -15,6 +15,10 @@ import TextArea from "~/components/ui/text-area";
 import FocusTrap from "focus-trap-react";
 import { type CreateTaskAction } from "~/types/actions";
 import { showCustomErrorToast } from "~/utilities/showCustomErrorToast";
+import {
+  modalTransition,
+  smallElementTransition,
+} from "~/utilities/framer-motion";
 
 const CreateTaskForm = ({
   boardId,
@@ -132,9 +136,9 @@ const CreateTaskForm = ({
         clickOutsideDeactivates: true,
       }}
     >
-      <div className="relative z-[1]">
+      <div className="relative z-[1] pt-2">
         {!isOpen && (
-          <motion.div layout className="pt-2">
+          <motion.div layout transition={smallElementTransition}>
             <Button
               variant="text"
               onClick={() => setIsOpen(true)}
@@ -149,25 +153,27 @@ const CreateTaskForm = ({
           </motion.div>
         )}
         {isOpen && (
-          <form
-            className={`flex flex-col ${error ? "gap-8" : "gap-4"}`}
+          <motion.form
+            layout
+            initial={{ opacity: 0.4, y: -6 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={smallElementTransition}
+            className={`flex flex-col gap-2`}
             ref={formRef}
             onSubmit={clientAction}
           >
-            <div className="bg-neutral-600 rounded-md">
-              <TextArea
-                autoFocus
-                ref={textAreaRef}
-                className="input"
-                rows={1}
-                value={taskName}
-                onChange={handleChange}
-                handleCancel={handleClickOutside}
-                handleSubmit={clientAction}
-                error={error}
-              />
-            </div>
-            <div className="flex items-center gap-2 self-end">
+            <TextArea
+              autoFocus
+              ref={textAreaRef}
+              className="input"
+              rows={1}
+              value={taskName}
+              onChange={handleChange}
+              handleCancel={handleClickOutside}
+              handleSubmit={clientAction}
+              error={error}
+            />
+            <motion.div className="flex items-center gap-2 self-end">
               <Button
                 size="small"
                 onClick={handleClickOutside}
@@ -179,8 +185,8 @@ const CreateTaskForm = ({
               <SubmitButton disabled={loading} size="small">
                 Add
               </SubmitButton>
-            </div>
-          </form>
+            </motion.div>
+          </motion.form>
         )}
       </div>
     </FocusTrap>

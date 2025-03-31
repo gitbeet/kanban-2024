@@ -6,3 +6,8 @@ export const modalTransition = {
   duration: 0.3,
   ease: [0.04, 0.62, 0.23, 0.98],
 };
+export const smallElementTransition = {
+  type: "spring",
+  stiffness: 300,
+  damping: 28,
+};
