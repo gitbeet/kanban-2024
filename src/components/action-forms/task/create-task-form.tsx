@@ -17,6 +17,8 @@ import { type CreateTaskAction } from "~/types/actions";
 import { showCustomErrorToast } from "~/utilities/showCustomErrorToast";
 import {
   modalTransition,
+  slideButtonsRightVariants,
+  slideFormDownVariants,
   smallElementTransition,
 } from "~/utilities/framer-motion";
 
@@ -155,25 +157,38 @@ const CreateTaskForm = ({
         {isOpen && (
           <motion.form
             layout
-            initial={{ opacity: 0.4, y: -6 }}
-            animate={{ opacity: 1, y: 0 }}
+            variants={slideFormDownVariants}
+            initial="initial"
+            animate="animate"
             transition={smallElementTransition}
             className={`flex flex-col gap-2`}
             ref={formRef}
             onSubmit={clientAction}
           >
-            <TextArea
-              autoFocus
-              ref={textAreaRef}
-              className="input"
-              rows={1}
-              value={taskName}
-              onChange={handleChange}
-              handleCancel={handleClickOutside}
-              handleSubmit={clientAction}
-              error={error}
-            />
-            <motion.div className="flex items-center gap-2 self-end">
+            <motion.div
+              initial={{ opacity: 0, y: -8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={modalTransition}
+            >
+              <TextArea
+                autoFocus
+                ref={textAreaRef}
+                className="input"
+                rows={1}
+                value={taskName}
+                onChange={handleChange}
+                handleCancel={handleClickOutside}
+                handleSubmit={clientAction}
+                error={error}
+              />
+            </motion.div>
+            <motion.div
+              variants={slideButtonsRightVariants}
+              initial="initial"
+              animate="animate"
+              transition={{ ...smallElementTransition, delay: 0.1 }}
+              className="flex items-center gap-1.5 self-end"
+            >
               <Button
                 size="small"
                 onClick={handleClickOutside}

@@ -12,6 +12,8 @@ import TextArea from "~/components/ui/text-area";
 import FocusTrap from "focus-trap-react";
 import { type RenameTaskAction } from "~/types/actions";
 import { showCustomErrorToast } from "~/utilities/showCustomErrorToast";
+import { motion } from "framer-motion";
+import { smallElementTransition } from "~/utilities/framer-motion";
 
 const RenameTaskForm = ({
   boardId,
@@ -134,7 +136,7 @@ const RenameTaskForm = ({
         }}
       >
         <form
-          className="flex grow flex-col gap-2"
+          className="flex items-center gap-2"
           ref={renameTaskRef}
           onSubmit={clientAction}
         >
@@ -162,12 +164,15 @@ const RenameTaskForm = ({
             />
           )}
           {isOpen && (
-            <div
-              className={`${isOpen ? "opacity-100" : "opacity-0"} flex gap-1.5 self-end`}
+            <motion.div
+              initial={{ opacity: 0, x: -4 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={smallElementTransition}
+              className={`${isOpen ? "opacity-100" : "opacity-0"} flex gap-1.5`}
             >
               <SaveButton disabled={!!error || loading || pending} />
               <CancelButton onClick={handleClickOutside} />
-            </div>
+            </motion.div>
           )}
         </form>
       </FocusTrap>

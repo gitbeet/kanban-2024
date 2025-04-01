@@ -19,6 +19,11 @@ import type { BoardType } from "~/types";
 import FocusTrap from "focus-trap-react";
 import { type CreateBoardAction } from "~/types/actions";
 import { showCustomErrorToast } from "~/utilities/showCustomErrorToast";
+import {
+  slideButtonsRightVariants,
+  slideFormDownVariants,
+  smallElementTransition,
+} from "~/utilities/framer-motion";
 
 const CreateBoardForm = ({
   ...props
@@ -164,7 +169,11 @@ const CreateBoardForm = ({
 
         {isOpen && (
           <div>
-            <form
+            <motion.form
+              variants={slideFormDownVariants}
+              initial="initial"
+              animate="animate"
+              transition={smallElementTransition}
               ref={createBoardRef}
               onSubmit={clientAction}
               className="flex items-center gap-2"
@@ -181,16 +190,24 @@ const CreateBoardForm = ({
                 onChange={handleChangeBoardName}
                 errorPlacement="bottomRight"
               />
-
-              <SaveButton
-                disabled={!!error || loading}
-                aria-label="Add board"
-              />
-              <CancelButton
-                onClick={handleClickOutside}
-                aria-label="Close menu"
-              />
-            </form>
+              <motion.div
+                layout
+                variants={slideButtonsRightVariants}
+                initial="initial"
+                animate="animate"
+                transition={{ ...smallElementTransition, delay: 0.1 }}
+                className={`flex items-center justify-end gap-1.5`}
+              >
+                <SaveButton
+                  disabled={!!error || loading}
+                  aria-label="Add board"
+                />
+                <CancelButton
+                  onClick={handleClickOutside}
+                  aria-label="Close menu"
+                />
+              </motion.div>
+            </motion.form>
           </div>
         )}
       </div>

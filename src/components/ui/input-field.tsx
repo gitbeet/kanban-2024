@@ -3,7 +3,7 @@ import { handlePressEnterToSubmit } from "~/utilities/handlePressEnterOrEscape";
 
 type BaseProps = InputHTMLAttributes<HTMLInputElement> & {
   className?: string;
-  error: string;
+  error?: string;
   labelText?: string;
   menu?: boolean;
   handleSubmit?: () => void | Promise<void>;

@@ -28,10 +28,10 @@ export const SubtaskSchema = z.object({
     .string({ message: "Task name must be a string" })
     .trim()
     .min(1, { message: "Cannot be blank" })
-    .max(30, { message: "Task name must be at most 30 character long" }),
+    .max(30, { message: "Subtask name too long" }),
   createdAt: z.date(),
   updatedAt: z.date(),
-  taskId: z.string().uuid({ message: "Task ID must be a uuid" }),
+  taskId: z.string().uuid({ message: "Subtask ID must be a uuid" }),
   completed: z.boolean(),
 });
 
@@ -45,11 +45,11 @@ export const TaskSchema = z.object({
     .string({ message: "Task name must be a string" })
     .trim()
     .min(1, { message: "Cannot be blank" })
-    .max(30, { message: "Task name must be at most 30 character long" }),
+    .max(30, { message: "Task name too long" }),
   createdAt: z.date(),
   updatedAt: z.date(),
   subtasks: z.array(SubtaskSchema),
-  columnId: z.string().uuid({ message: "Column ID must be a uuid" }),
+  columnId: z.string().uuid({ message: "Task ID must be a uuid" }),
   completed: z.boolean(),
 });
 
@@ -60,10 +60,10 @@ export const ColumnSchema = z.object({
     .string({ message: "Column name must be a string" })
     .trim()
     .min(1, { message: "Cannot be blank" })
-    .max(20, { message: "Column name must be at most 20 character long" }),
+    .max(20, { message: "Column name too long" }),
   createdAt: z.date(),
   updatedAt: z.date(),
-  boardId: z.string().uuid({ message: "Board ID must be a uuid" }),
+  boardId: z.string().uuid({ message: "Column ID must be a uuid" }),
   tasks: z.array(TaskSchema),
 });
 
@@ -74,7 +74,7 @@ export const BoardSchema = z.object({
     .string({ message: "Board name must be a string" })
     .trim()
     .min(1, { message: "Cannot be blank" })
-    .max(20, { message: "Board name must be at most 20 character long" }),
+    .max(20, { message: "Board name too long" }),
   createdAt: z.date(),
   updatedAt: z.date(),
   userId: z.string(),

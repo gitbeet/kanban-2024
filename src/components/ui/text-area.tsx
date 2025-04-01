@@ -1,11 +1,8 @@
-import { forwardRef, useEffect } from "react";
+import { forwardRef } from "react";
 import type { TextareaHTMLAttributes } from "react";
 import { handlePressEnterToSubmit } from "~/utilities/handlePressEnterOrEscape";
-import { motion, MotionProps, useMotionValue } from "framer-motion";
-import {
-  modalTransition,
-  smallElementTransition,
-} from "~/utilities/framer-motion";
+import { motion, MotionProps } from "framer-motion";
+import { smallElementTransition } from "~/utilities/framer-motion";
 
 type TextAreaProps = MotionProps &
   TextareaHTMLAttributes<HTMLTextAreaElement> & {
@@ -18,13 +15,7 @@ type TextAreaProps = MotionProps &
 const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
   ({ error, className, handleCancel, handleSubmit, ...props }, ref) => {
     return (
-      <motion.div
-        layout="position"
-        initial={{ opacity: 0, y: -8 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={modalTransition}
-        className="relative"
-      >
+      <motion.div layout="position" className="relative">
         <textarea
           ref={ref}
           className={`${className} ${error ? "!focus:outline-danger-400 !text-danger-400 !outline !outline-danger-400 !ring !ring-danger-400" : ""} w-full resize-none overflow-hidden`}

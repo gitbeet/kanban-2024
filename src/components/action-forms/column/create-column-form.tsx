@@ -11,7 +11,12 @@ import type { ChangeEvent, FormEvent } from "react";
 import FocusTrap from "focus-trap-react";
 import { type CreateColumnAction } from "~/types/actions";
 import { showCustomErrorToast } from "~/utilities/showCustomErrorToast";
-
+import { motion } from "framer-motion";
+import {
+  slideButtonsRightVariants,
+  slideFormDownVariants,
+  smallElementTransition,
+} from "~/utilities/framer-motion";
 interface CreateColumnProps extends React.HTMLAttributes<HTMLDivElement> {
   boardId: string;
 }
@@ -119,7 +124,11 @@ const CreateColumnForm = ({ boardId, ...props }: CreateColumnProps) => {
   );
 
   const openJsx = (
-    <form
+    <motion.form
+      variants={slideFormDownVariants}
+      initial="initial"
+      animate="animate"
+      transition={smallElementTransition}
       ref={createColumnRef}
       onSubmit={clientAction}
       className="flex items-center gap-2 p-1.5"
@@ -136,12 +145,19 @@ const CreateColumnForm = ({ boardId, ...props }: CreateColumnProps) => {
         error={error}
       />
       <div>
-        <div className="flex gap-1.5">
+        <motion.div
+          layout
+          variants={slideButtonsRightVariants}
+          initial="initial"
+          animate="animate"
+          transition={{ ...smallElementTransition, delay: 0.1 }}
+          className="flex gap-1.5"
+        >
           <SaveButton disabled={!!error} />
           <CancelButton onClick={handleClickOutside} />
-        </div>
+        </motion.div>
       </div>
-    </form>
+    </motion.form>
   );
 
   return (

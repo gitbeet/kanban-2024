@@ -99,7 +99,7 @@ export const CancelButton = ({
   ...props
 }: ButtonHTMLAttributes<HTMLButtonElement>) => (
   <IconButton {...props} variant="danger">
-    <FaPlus className="rotate-45" />
+    <FaPlus className="h-4.5 w-4.5 shrink-0 rotate-45" />
   </IconButton>
 );
 

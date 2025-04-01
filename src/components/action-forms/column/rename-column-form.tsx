@@ -10,7 +10,11 @@ import { CancelButton, SaveButton } from "~/components/ui/button/buttons";
 import FocusTrap from "focus-trap-react";
 import { showCustomErrorToast } from "~/utilities/showCustomErrorToast";
 import { motion } from "framer-motion";
-import { smallElementTransition } from "~/utilities/framer-motion";
+import {
+  slideButtonsRightVariants,
+  slideFormDownVariants,
+  smallElementTransition,
+} from "~/utilities/framer-motion";
 
 const RenameColumnForm = ({
   boardId,
@@ -132,7 +136,7 @@ const RenameColumnForm = ({
             </>
           )}
           {isFormOpen && (
-            <>
+            <motion.div layout className="flex items-center gap-2">
               <InputField
                 ref={inputRef}
                 autoFocus
@@ -144,25 +148,26 @@ const RenameColumnForm = ({
                 error={error}
                 errorPlacement="bottomLeft"
               />
-            </>
+              <motion.div
+                layout
+                variants={slideButtonsRightVariants}
+                initial="initial"
+                animate="animate"
+                transition={smallElementTransition}
+                className={`flex items-center justify-end gap-1.5`}
+              >
+                <SaveButton
+                  tabIndex={resolvedTabIndex}
+                  type="submit"
+                  disabled={!!error}
+                />
+                <CancelButton
+                  tabIndex={resolvedTabIndex}
+                  onClick={handleClickOutside}
+                />
+              </motion.div>
+            </motion.div>
           )}
-          <motion.div
-            layout
-            initial={false}
-            animate={{ opacity: isFormOpen ? 1 : 0, y: isFormOpen ? 0 : -8 }}
-            transition={smallElementTransition}
-            className={`absolute right-0 flex items-center justify-end gap-1.5 pt-1`}
-          >
-            <SaveButton
-              tabIndex={resolvedTabIndex}
-              type="submit"
-              disabled={!!error}
-            />
-            <CancelButton
-              tabIndex={resolvedTabIndex}
-              onClick={handleClickOutside}
-            />
-          </motion.div>
         </motion.form>
       </div>
     </FocusTrap>
