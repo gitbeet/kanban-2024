@@ -1,7 +1,7 @@
 import { forwardRef } from "react";
 import type { TextareaHTMLAttributes } from "react";
 import { handlePressEnterToSubmit } from "~/utilities/handlePressEnterOrEscape";
-import { motion, MotionProps } from "framer-motion";
+import { motion, type MotionProps } from "framer-motion";
 import { smallElementTransition } from "~/utilities/framer-motion";
 
 type TextAreaProps = MotionProps &

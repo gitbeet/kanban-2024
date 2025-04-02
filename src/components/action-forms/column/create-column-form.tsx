@@ -142,6 +142,7 @@ const CreateColumnForm = ({ boardId, ...props }: CreateColumnProps) => {
         placeholder="Enter column name"
         className="w-full"
         errorPlacement="bottomRight"
+        shiftLayout={false}
         error={error}
       />
       <div>

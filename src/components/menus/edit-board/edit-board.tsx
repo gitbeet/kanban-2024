@@ -358,6 +358,7 @@ const EditBoard = ({ board }: { board: BoardType }) => {
               onChange={handleChangeBoardName}
               className="w-full"
               errorPlacement="bottomRight"
+              shiftLayout={false}
               menu
             />
           </div>

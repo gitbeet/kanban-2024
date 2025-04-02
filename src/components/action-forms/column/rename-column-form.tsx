@@ -147,6 +147,7 @@ const RenameColumnForm = ({
                 className="w-full"
                 error={error}
                 errorPlacement="bottomLeft"
+                shiftLayout={false}
               />
               <motion.div
                 layout

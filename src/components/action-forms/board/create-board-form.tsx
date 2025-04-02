@@ -189,6 +189,7 @@ const CreateBoardForm = ({
                 className="w-full"
                 onChange={handleChangeBoardName}
                 errorPlacement="bottomRight"
+                shiftLayout={false}
               />
               <motion.div
                 layout

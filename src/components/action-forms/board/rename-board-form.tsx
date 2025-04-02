@@ -68,6 +68,7 @@ const RenameBoardForm = ({ boardId }: { boardId: string }) => {
         error={error}
         handleCancel={() => console.log("Clicked outside")}
         handleSubmit={clientAction}
+        shiftLayout
       />
 
       <EditButton />

@@ -6,7 +6,7 @@ import { ThemeProvider } from "next-themes";
 import { BackgroundProvider } from "~/context/bg-context";
 import { BoardsProvider } from "~/context/boards-context";
 import { UIProvider } from "~/context/ui-context";
-import { UserDataType, type BoardType } from "~/types";
+import type { UserDataType, BoardType } from "~/types";
 import type { BackgroundType, UserBackgroundType } from "~/types/background";
 
 const Providers = ({

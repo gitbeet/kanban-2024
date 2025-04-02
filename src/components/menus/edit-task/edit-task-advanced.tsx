@@ -468,6 +468,7 @@ export const EditTaskAdvanced = ({ columnId, task }: Props) => {
               onChange={handleChangeTaskName}
               className="w-full"
               errorPlacement="bottomRight"
+              shiftLayout={false}
               menu
             />
           </div>
@@ -480,7 +481,7 @@ export const EditTaskAdvanced = ({ columnId, task }: Props) => {
               <p className="text-light text-center">You have no subtasks</p>
             )}
             {/* p-1 to fix overflow-auto not showing outline on focused elements */}
-            <ul className="scrollbar-thin max-h-44 space-y-2.5 overflow-auto p-1">
+            <ul className="max-h-44 space-y-2.5 overflow-auto p-1 scrollbar-thin">
               {temporarySubtasks
                 .sort((a, b) => a.index - b.index)
                 .map((subtask) => {

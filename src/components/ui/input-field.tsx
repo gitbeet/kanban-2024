@@ -1,5 +1,7 @@
 import { forwardRef, type InputHTMLAttributes } from "react";
 import { handlePressEnterToSubmit } from "~/utilities/handlePressEnterOrEscape";
+import { motion } from "framer-motion";
+import { smallElementTransition } from "~/utilities/framer-motion";
 
 type BaseProps = InputHTMLAttributes<HTMLInputElement> & {
   className?: string;
@@ -16,8 +18,8 @@ type ShiftLayoutProps = {
 };
 
 type NonShiftLayoutProps = {
-  shiftLayout?: false;
-  errorPlacement?: "topRight" | "bottomLeft" | "bottomRight";
+  shiftLayout: false;
+  errorPlacement: "topLeft" | "topRight" | "bottomLeft" | "bottomRight";
 };
 
 type InputProps = BaseProps & (ShiftLayoutProps | NonShiftLayoutProps);
@@ -28,11 +30,11 @@ const InputField = forwardRef<HTMLInputElement, InputProps>(
       className,
       error,
       labelText,
-      errorPlacement = "topRight",
+      errorPlacement,
       menu = false,
       handleSubmit,
       handleCancel,
-      shiftLayout = false,
+      shiftLayout,
       ...props
     },
     ref,
@@ -59,39 +61,78 @@ const InputField = forwardRef<HTMLInputElement, InputProps>(
       </label>
     );
 
-    const errorPlacementClass =
-      errorPlacement === "topRight"
-        ? "-top-1 -translate-y-full text-right"
-        : errorPlacement === "bottomRight"
-          ? "-bottom-1 translate-y-full text-right"
-          : "-bottom-1 translate-y-full text-left";
+    // ***** ERROR ELEMENTS *****
+    //  error element that is not position absolute and affects the layout when error is popped
+    const shiftLayoutError = (
+      <motion.div
+        layout="position"
+        initial={false}
+        animate={{
+          opacity: error?.length !== 0 ? 1 : 0.5,
+          y: error?.length !== 0 ? 2 : "-50%",
+        }}
+        transition={smallElementTransition}
+      >
+        <div className="h-1" />
+        <p className={`w-full truncate text-right text-sm text-danger-400`}>
+          {error}
+        </p>
+      </motion.div>
+    );
+    // error elements that do not affect the layout
+    const topError = (
+      <motion.p
+        layout="position"
+        initial={{ opacity: 0, top: "0px", y: "-100%" }}
+        animate={{
+          opacity: 1,
+          top: "-4px",
+          y: "-100%",
+        }}
+        transition={smallElementTransition}
+        className={` ${errorPlacement === "topLeft" ? "text-left" : "text-right"} absolute w-full truncate text-left text-sm text-danger-400`}
+      >
+        {error}
+      </motion.p>
+    );
+
+    const bottomError = (
+      <motion.p
+        layout="position"
+        initial={{ opacity: 0, bottom: "0px", y: "100%" }}
+        animate={{
+          opacity: 1,
+          bottom: "-4px",
+          y: "100%",
+        }}
+        transition={smallElementTransition}
+        className={` ${errorPlacement === "bottomLeft" ? "text-left" : "text-right"} absolute w-full truncate text-right text-sm text-danger-400`}
+      >
+        {error}
+      </motion.p>
+    );
 
     const errorJSX = (
       <>
-        {shiftLayout && (
+        {shiftLayout && shiftLayoutError}
+        {!shiftLayout && error?.length !== 0 && (
           <>
-            <div className="h-1" />
-            <p className={`w-full truncate text-right text-sm text-danger-400`}>
-              {error}
-            </p>
+            {(errorPlacement === "bottomLeft" ||
+              errorPlacement === "bottomRight") &&
+              bottomError}
+            {(errorPlacement === "topLeft" || errorPlacement === "topRight") &&
+              topError}
           </>
-        )}
-        {!shiftLayout && (
-          <p
-            className={`absolute w-full truncate text-sm text-danger-400 ${errorPlacementClass}`}
-          >
-            {error}
-          </p>
         )}
       </>
     );
 
     return (
-      <div className="relative w-full">
+      <motion.div className="relative w-full">
         {labelText && labelJSX}
         {inputFieldJSX}
         {errorJSX}
-      </div>
+      </motion.div>
     );
   },
 );
