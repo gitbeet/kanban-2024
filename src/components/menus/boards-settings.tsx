@@ -14,7 +14,6 @@ import ExpandMenu from "../ui/expand-menu";
 import { motion } from "framer-motion";
 import { sidebarTransition } from "~/utilities/framer-motion";
 import { useSettings } from "~/context/settings-context";
-import { FaCircleInfo } from "react-icons/fa6";
 
 const BoardsSettings = () => {
   const {
@@ -130,7 +129,7 @@ const BoardsSettings = () => {
                 <ToggleButton checked={performanceMode} />
               </div>
               <div>
-                <p>Disable all animations</p>
+                <p>Disable animations</p>
                 <span className="text-light text-sm">
                   (improves performance)
                 </span>

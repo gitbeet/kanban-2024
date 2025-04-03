@@ -1,14 +1,13 @@
 import { usePathname } from "next/navigation";
 
 import { useBackground } from "~/context/bg-context";
-import type { BlurValue } from "./blur-toggle";
 
-const blurClassMap: Record<BlurValue, string> = {
-  none: "blur-none",
-  sm: "blur-sm",
-  md: "blur-md",
-  lg: "blur-lg",
-  xl: "blur-xl",
+const blurClassMap: Record<number, string> = {
+  0: "blur-none",
+  25: "blur-sm",
+  50: "blur-md",
+  75: "blur-lg",
+  100: "blur-xl",
 };
 
 const Background = () => {
