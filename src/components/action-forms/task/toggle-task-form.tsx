@@ -2,7 +2,7 @@ import { useBoards } from "~/context/boards-context";
 import { handleToggleTaskCompleted } from "~/server/queries";
 import { ToggleButton } from "~/components/ui/button/buttons";
 import { type TaskType } from "~/types";
-import { ToggleTaskAction } from "~/types/actions";
+import type { ToggleTaskAction } from "~/types/actions";
 import { showCustomErrorToast } from "~/utilities/showCustomErrorToast";
 
 const ToggleTaskForm = ({
@@ -39,7 +39,7 @@ const ToggleTaskForm = ({
         checked={task.completed ? true : false}
         value={task.completed ? "true" : "false"}
       />
-      <ToggleButton checked={task.completed} />
+      <ToggleButton size="small" checked={task.completed} />
     </form>
   );
 };

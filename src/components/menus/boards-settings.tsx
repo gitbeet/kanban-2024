@@ -1,7 +1,7 @@
 import { useUI } from "~/context/ui-context";
 import ThemeSwitchUpdated from "../common/theme-switch-updated";
 import BackgroundOption from "../background/background-option";
-import { IconButton } from "../ui/button/buttons";
+import { IconButton, ToggleButton } from "../ui/button/buttons";
 import OpacitySlider from "../background/opacity-slider";
 import FocusTrap from "focus-trap-react";
 import { useRef } from "react";
@@ -13,6 +13,8 @@ import BlurToggle from "../background/blur-toggle";
 import ExpandMenu from "../ui/expand-menu";
 import { motion } from "framer-motion";
 import { sidebarTransition } from "~/utilities/framer-motion";
+import { useSettings } from "~/context/settings-context";
+import { FaCircleInfo } from "react-icons/fa6";
 
 const BoardsSettings = () => {
   const {
@@ -21,6 +23,7 @@ const BoardsSettings = () => {
     boardsSettingsAnimating,
     setBoardsSettingsAnimating,
   } = useUI();
+  const { performanceMode, setPerformanceMode } = useSettings();
   const { optimisticUserBackgrounds, backgrounds } = useBackground();
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const imageBackgrounds = backgrounds.filter((b) => b.type === "image");
@@ -68,7 +71,6 @@ const BoardsSettings = () => {
                 disabled={boardsSettingsAnimating}
                 header="Background Settings"
                 tabIndex={resolvedTabIndex}
-                defaultOpen
               >
                 <OpacitySlider tabIndex={resolvedTabIndex} />
                 <BlurToggle tabIndex={resolvedTabIndex} />
@@ -117,6 +119,23 @@ const BoardsSettings = () => {
                 </div>
               </ExpandMenu>
             </div>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                setPerformanceMode((prev) => !prev);
+              }}
+              className="flex items-start gap-2"
+            >
+              <div className="pt-0.5">
+                <ToggleButton checked={performanceMode} />
+              </div>
+              <div>
+                <p>Disable all animations</p>
+                <span className="text-light text-sm">
+                  (improves performance)
+                </span>
+              </div>
+            </form>
             <div className="space-y-4">
               <h4 className="text-lg font-semibold">Theme</h4>
               <div className="pl-2">

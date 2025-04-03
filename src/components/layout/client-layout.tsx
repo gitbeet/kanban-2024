@@ -5,10 +5,13 @@ import Menus from "../menus/menus";
 import Nav from "./nav";
 import Footer from "./footer";
 import Background from "../background/background";
-
+import { MotionGlobalConfig } from "framer-motion";
+import { useSettings } from "~/context/settings-context";
 const ClientLayout = ({ children }: { children: React.ReactNode }) => {
+  const { performanceMode } = useSettings();
   const pathname = usePathname();
   const isBoardsPage = pathname === "/boards";
+  MotionGlobalConfig.skipAnimations = isBoardsPage ? performanceMode : false;
   return (
     <>
       <div

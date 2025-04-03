@@ -66,7 +66,6 @@ const Board = () => {
 
   const boardJsx = (
     <motion.section
-      layout
       initial={false}
       animate={{
         marginLeft: showSidebar ? "0" : "-14rem",
@@ -76,7 +75,7 @@ const Board = () => {
     >
       <BoardsNav />
       <BoardsSettings />
-      <motion.section
+      <section
         // Key prop for framer-motion
         key={currentBoard.id}
         className="grid h-full grow grid-rows-[1fr,auto] overflow-auto pt-12"
@@ -106,7 +105,7 @@ const Board = () => {
             <DeleteTaskZone />
           </motion.div>
         </motion.div>
-      </motion.section>
+      </section>
     </motion.section>
   );
 
