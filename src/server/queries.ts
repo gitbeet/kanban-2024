@@ -73,7 +73,9 @@ export const createUserData = async (userId: string) => {
       createdAt: new Date(),
       updatedAt: new Date(),
       currentBackgroundId: null,
-      backgroundOpacity: null,
+      backgroundOpacity: 100,
+      backgroundBlur: 0,
+      performanceMode: false,
       currentBoardId: null,
     };
     const data = await db.insert(userDatas).values(userData);
@@ -106,7 +108,7 @@ export const modifyUserData = async (newData: Partial<UserDataType>) => {
   try {
     const { userId } = auth();
     if (!userId) throw new Error("Unauthorized");
-    const result = UserDataSchema.partial().safeParse(newData);
+    const result = UserDataSchema.partial().strict().safeParse(newData);
     if (!result.success) throw new Error("Error while modifying user data");
     await db.update(userDatas).set(newData).where(eq(userDatas.userId, userId));
     revalidatePath("/");

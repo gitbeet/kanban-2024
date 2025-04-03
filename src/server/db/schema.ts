@@ -131,7 +131,9 @@ export const userDatas = createTable("user_data", {
   userId: varchar("userId", { length: 256 }).unique().notNull(),
   currentBoardId: varchar("current_board_id", { length: 256 }),
   currentBackgroundId: varchar("background_id", { length: 256 }),
-  backgroundOpacity: integer("background_opacity"),
+  backgroundOpacity: integer("background_opacity").notNull().default(100),
+  backgroundBlur: integer("background_blur").notNull().default(0),
+  performanceMode: boolean("performance_mode").notNull().default(false),
   createdAt: timestamp("created_at", { withTimezone: true })
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull(),

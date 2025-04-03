@@ -26,7 +26,7 @@ const Board = () => {
         marginLeft: showSidebar ? "0" : "-14rem",
       }}
       transition={sidebarTransition}
-      className="relative z-[2] grid w-full place-content-center"
+      className="relative z-[2] grid grow place-content-center overflow-hidden"
     >
       <BoardsNav />
       <BoardsSettings />
@@ -51,7 +51,7 @@ const Board = () => {
         marginLeft: showSidebar ? "0" : "-14rem",
       }}
       transition={sidebarTransition}
-      className="relative z-[2] grid w-full place-content-center"
+      className="relative z-[2] grid grow place-content-center overflow-hidden"
     >
       <BoardsNav />
       <BoardsSettings />

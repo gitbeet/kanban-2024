@@ -36,7 +36,7 @@ const Providers = ({
           userData={userData}
         >
           <UIProvider>
-            <SettingsProvider>
+            <SettingsProvider dbPerformanceMode={userData?.performanceMode}>
               <BoardsProvider boards={boards}>{children}</BoardsProvider>
             </SettingsProvider>
           </UIProvider>

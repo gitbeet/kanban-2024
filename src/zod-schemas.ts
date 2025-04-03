@@ -6,6 +6,8 @@ export const UserDataSchema = z.object({
   currentBoardId: z.string(),
   currentBackgroundId: z.string(),
   backgroundOpacity: z.number().int(),
+  backgroundBlur: z.number().int(),
+  performanceMode: z.boolean(),
   createdAt: z.date(),
   updatedAt: z.date(),
 });

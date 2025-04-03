@@ -5,6 +5,11 @@ type SettingsContextType = {
   setPerformanceMode: Dispatch<SetStateAction<boolean>>;
 };
 
+type Props = {
+  children: React.ReactNode;
+  dbPerformanceMode: boolean | undefined;
+};
+
 const settingsContext = createContext<SettingsContextType | null>(null);
 
 export const useSettings = () => {
@@ -13,8 +18,10 @@ export const useSettings = () => {
   return context;
 };
 
-const SettingsProvider = ({ children }: { children: React.ReactNode }) => {
-  const [performanceMode, setPerformanceMode] = useState(false);
+const SettingsProvider = ({ children, dbPerformanceMode }: Props) => {
+  const [performanceMode, setPerformanceMode] = useState(
+    dbPerformanceMode ?? false,
+  );
   return (
     <settingsContext.Provider value={{ performanceMode, setPerformanceMode }}>
       {children}

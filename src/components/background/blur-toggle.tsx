@@ -1,7 +1,10 @@
-import type { ChangeEvent } from "react";
+import { useEffect, type ChangeEvent } from "react";
+import { useDebouncedCallback } from "use-debounce";
 import { useBackground } from "~/context/bg-context";
+import { modifyUserData } from "~/server/queries";
+import { showCustomErrorToast } from "~/utilities/showCustomErrorToast";
 
-// export type BlurValue = "none" | "sm" | "md" | "lg" | "xl";
+const DEBOUNCE_DELAY = 1500;
 
 const BlurToggle = ({ tabIndex = 0 }: { tabIndex?: number }) => {
   const { imageBlur, setImageBlur } = useBackground();
@@ -10,6 +13,25 @@ const BlurToggle = ({ tabIndex = 0 }: { tabIndex?: number }) => {
 
     setImageBlur(intValue);
   };
+
+  const handleChangeDbBlur = useDebouncedCallback(async (newBlur: number) => {
+    const result = await modifyUserData({ backgroundBlur: newBlur });
+    if (result?.error) showCustomErrorToast({ message: result.error });
+  }, DEBOUNCE_DELAY);
+
+  const changeBlur = async () => {
+    try {
+      await handleChangeDbBlur(imageBlur);
+    } catch (error) {
+      showCustomErrorToast({ message: "Client error" });
+    }
+  };
+
+  useEffect(() => {
+    changeBlur()
+      .then()
+      .catch(() => showCustomErrorToast({ message: "Client error" }));
+  }, [imageBlur]);
 
   return (
     <div className="space-y-2">

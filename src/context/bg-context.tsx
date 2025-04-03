@@ -60,7 +60,9 @@ export const BackgroundProvider: React.FC<UIProviderProps> = ({
   const [imageOpacity, setImageOpacity] = useState(
     userData?.backgroundOpacity ?? 100,
   );
-  const [imageBlur, setImageBlur] = useState<number>(0);
+  const [imageBlur, setImageBlur] = useState<number>(
+    userData?.backgroundBlur ?? 0,
+  );
   const [optimisticUserBackgrounds, setOptimisticUserBackgrounds] =
     useOptimistic<UserBackgroundType[], BackgroundAction>(
       userBackgrounds,

@@ -4,7 +4,7 @@ import BackgroundOption from "../background/background-option";
 import { IconButton, ToggleButton } from "../ui/button/buttons";
 import OpacitySlider from "../background/opacity-slider";
 import FocusTrap from "focus-trap-react";
-import { useRef } from "react";
+import { FormEvent, useRef } from "react";
 // import { colorBackgrounds, imageBackgrounds } from "~/utilities/backgrounds";
 import { useBackground } from "~/context/bg-context";
 import UploadBackground from "../background/upload-background";
@@ -14,6 +14,8 @@ import ExpandMenu from "../ui/expand-menu";
 import { motion } from "framer-motion";
 import { sidebarTransition } from "~/utilities/framer-motion";
 import { useSettings } from "~/context/settings-context";
+import { modifyUserData } from "~/server/queries";
+import { showCustomErrorToast } from "~/utilities/showCustomErrorToast";
 
 const BoardsSettings = () => {
   const {
@@ -28,6 +30,14 @@ const BoardsSettings = () => {
   const imageBackgrounds = backgrounds.filter((b) => b.type === "image");
   const colorBackgrounds = backgrounds.filter((b) => b.type === "color");
   const resolvedTabIndex = showBoardsSettings ? 0 : -1;
+  const togglePerformanceMode = async (e: FormEvent) => {
+    e.preventDefault();
+    const result = await modifyUserData({ performanceMode: !performanceMode });
+    if (result?.error) {
+      showCustomErrorToast({ message: result.error });
+    }
+    setPerformanceMode((prev) => !prev);
+  };
   return (
     <motion.aside
       onAnimationStart={() => setBoardsSettingsAnimating(true)}
@@ -119,10 +129,7 @@ const BoardsSettings = () => {
               </ExpandMenu>
             </div>
             <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                setPerformanceMode((prev) => !prev);
-              }}
+              onSubmit={togglePerformanceMode}
               className="flex items-start gap-2"
             >
               <div className="pt-0.5">
