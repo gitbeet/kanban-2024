@@ -2,6 +2,7 @@ import { forwardRef, type InputHTMLAttributes } from "react";
 import { handlePressEnterToSubmit } from "~/utilities/handlePressEnterOrEscape";
 import { motion } from "framer-motion";
 import { smallElementTransition } from "~/utilities/framer-motion";
+import ErrorText from "./error-text";
 
 type BaseProps = InputHTMLAttributes<HTMLInputElement> & {
   className?: string;
@@ -68,20 +69,22 @@ const InputField = forwardRef<HTMLInputElement, InputProps>(
         layout="position"
         initial={false}
         animate={{
-          opacity: error?.length !== 0 ? 1 : 0.5,
+          opacity: error?.length !== 0 ? 1 : 0,
           y: error?.length !== 0 ? 2 : "-50%",
         }}
         transition={smallElementTransition}
       >
-        <div className="h-1" />
-        <p className={`w-full truncate text-right text-sm text-danger-400`}>
-          {error}
-        </p>
+        {error?.length !== 0 && (
+          <>
+            <div className="h-1" />
+            <ErrorText message={error} className="justify-end" />
+          </>
+        )}
       </motion.div>
     );
     // error elements that do not affect the layout
     const topError = (
-      <motion.p
+      <motion.div
         layout="position"
         initial={{ opacity: 0, top: "0px", y: "-100%" }}
         animate={{
@@ -90,14 +93,21 @@ const InputField = forwardRef<HTMLInputElement, InputProps>(
           y: "-100%",
         }}
         transition={smallElementTransition}
-        className={` ${errorPlacement === "topLeft" ? "text-left" : "text-right"} absolute w-full truncate text-left text-sm text-danger-400`}
+        className={` ${errorPlacement === "topLeft" ? "text-left" : "text-right"} absolute w-full`}
       >
-        {error}
-      </motion.p>
+        {error?.length !== 0 && (
+          <ErrorText
+            message={error}
+            className={
+              errorPlacement === "topLeft" ? "justify-start" : "justify-end"
+            }
+          />
+        )}
+      </motion.div>
     );
 
     const bottomError = (
-      <motion.p
+      <motion.div
         layout="position"
         initial={{ opacity: 0, bottom: "0px", y: "100%" }}
         animate={{
@@ -106,10 +116,17 @@ const InputField = forwardRef<HTMLInputElement, InputProps>(
           y: "100%",
         }}
         transition={smallElementTransition}
-        className={` ${errorPlacement === "bottomLeft" ? "text-left" : "text-right"} absolute w-full truncate text-right text-sm text-danger-400`}
+        className="absolute w-full"
       >
-        {error}
-      </motion.p>
+        {error?.length !== 0 && (
+          <ErrorText
+            message={error}
+            className={
+              errorPlacement === "bottomLeft" ? "justify-start" : "justify-end"
+            }
+          />
+        )}
+      </motion.div>
     );
 
     const errorJSX = (

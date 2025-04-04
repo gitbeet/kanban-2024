@@ -168,7 +168,7 @@ const RenameTaskForm = ({
               initial={{ opacity: 0, x: -4 }}
               animate={{ opacity: 1, x: 0 }}
               transition={smallElementTransition}
-              className={`${isOpen ? "opacity-100" : "opacity-0"} flex gap-1.5`}
+              className={`${error ? "mb-6" : "mb-1.5"} flex gap-1.5`}
             >
               <SaveButton disabled={!!error || loading || pending} />
               <CancelButton onClick={handleClickOutside} />

@@ -3,6 +3,7 @@ import type { TextareaHTMLAttributes } from "react";
 import { handlePressEnterToSubmit } from "~/utilities/handlePressEnterOrEscape";
 import { motion, type MotionProps } from "framer-motion";
 import { smallElementTransition } from "~/utilities/framer-motion";
+import ErrorText from "./error-text";
 
 type TextAreaProps = MotionProps &
   TextareaHTMLAttributes<HTMLTextAreaElement> & {
@@ -26,14 +27,18 @@ const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
           }
           {...props}
         />
-        <motion.p
+        <motion.div
           initial={false}
-          animate={{ opacity: error ? 1 : 0.5, y: error ? 2 : "-50%" }}
+          animate={{
+            opacity: error?.length !== 0 ? 1 : 0,
+            y: error?.length !== 0 ? 0 : "-50%",
+          }}
           transition={smallElementTransition}
-          className="w-full truncate text-right text-sm text-danger-400"
         >
-          {error}
-        </motion.p>
+          {error?.length !== 0 && (
+            <ErrorText message={error} className="justify-end" />
+          )}
+        </motion.div>
       </motion.div>
     );
   },
