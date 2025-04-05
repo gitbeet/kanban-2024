@@ -21,6 +21,7 @@ import {
   visaLogo,
   youTubeLogo,
 } from "~/components/common/logos";
+import { HeroImage } from "~/components/common/hero-image";
 
 const Hero = () => {
   // eslint-disable-next-line @typescript-eslint/unbound-method
@@ -30,7 +31,7 @@ const Hero = () => {
   return (
     <div className="bg-neutral-25 dark:bg-neutral-900">
       <Section className="relative flex flex-col gap-4 md:flex-row md:gap-16">
-        <div className="grow space-y-8">
+        <div className="grow space-y-8 md:space-y-12">
           <div className="z-[2] flex flex-col items-start gap-6 md:py-12">
             <h1 className="text-dark text-heading z-10 text-left font-black">
               <GradientText text="Organize" /> Your work,
@@ -51,9 +52,7 @@ const Hero = () => {
             </div>
           </SignedOut>
         </div>
-        <div className="mx-auto grid place-content-center">
-          <Image src={hero} alt="hero" className="animate-float shrink-0" />
-        </div>
+        <HeroImage />
       </Section>
     </div>
   );
@@ -104,7 +103,7 @@ const Features = () => (
   </Section>
 );
 
-const Phylosophy = () => (
+const Philosophy = () => (
   <Section variant="secondary">
     <div className="container flex flex-col items-center">
       <h2 className="text-center text-4xl font-black">
@@ -189,7 +188,7 @@ export default function HomePage() {
       <Hero />
       <TrustedBy />
       <Features />
-      <Phylosophy />
+      <Philosophy />
       <Steps />
       <CTA />
     </>
