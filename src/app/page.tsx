@@ -29,8 +29,8 @@ const Hero = () => {
   const handleRedirectToSignIn = async () => await redirectToSignIn();
   return (
     <div className="bg-neutral-25 dark:bg-neutral-900">
-      <Section className="relative flex flex-col gap-16 md:flex-row">
-        <div className="grow space-y-12">
+      <Section className="relative flex flex-col gap-4 md:flex-row md:gap-16">
+        <div className="grow space-y-8">
           <div className="z-[2] flex flex-col items-start gap-6 md:py-12">
             <h1 className="text-dark text-heading z-10 text-left font-black">
               <GradientText text="Organize" /> Your work,
@@ -42,14 +42,14 @@ const Hero = () => {
               workflow and get things done—faster and smarter!
             </p>
           </div>
-          <div className="z-10 flex gap-4">
-            <SignedOut>
+          <SignedOut>
+            <div className="flex gap-4">
               <Button onClick={handleRedirectToSignUp} variant="ghost">
                 Sign up for free
               </Button>
               <Button onClick={handleRedirectToSignIn}>Sign in</Button>
-            </SignedOut>
-          </div>
+            </div>
+          </SignedOut>
         </div>
         <div className="mx-auto grid place-content-center">
           <Image src={hero} alt="hero" className="animate-float shrink-0" />
@@ -83,8 +83,8 @@ const Features = () => (
         Everything you need to organize projects and collaborate effectively
       </p>
     </div>
-    <div className="h-16" />
-    <div className="flex w-full flex-col items-center justify-center gap-12 lg:flex-row lg:items-stretch">
+    <div className="h-8 md:h-16" />
+    <div className="flex w-full flex-col items-center justify-center gap-4 lg:flex-row lg:items-stretch lg:gap-12">
       <TestArticle
         icon={clipboardIcon}
         heading="Organize Your Work"
