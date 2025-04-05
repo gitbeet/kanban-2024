@@ -7,9 +7,9 @@ export async function POST(req: NextRequest) {
     const payload = (await req.json()) as WebhookEvent;
 
     const eventType = payload.type;
-    if (eventType !== "session.created") throw new Error("Wrong event");
+    if (eventType !== "user.created") throw new Error("Wrong event");
     // change to payload.data.id when changing event type to create
-    const userId = payload.data.user_id;
+    const userId = payload.data.id;
     if (!userId) throw new Error("No user ID");
     await getOrCreateUserData(userId);
     console.log("success");

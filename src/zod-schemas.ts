@@ -47,7 +47,7 @@ export const TaskSchema = z.object({
     .string({ message: "Task name must be a string" })
     .trim()
     .min(1, { message: "Cannot be blank" })
-    .max(30, { message: "Task name too long" }),
+    .max(50, { message: "Task name too long" }),
   createdAt: z.date(),
   updatedAt: z.date(),
   subtasks: z.array(SubtaskSchema),
@@ -62,7 +62,7 @@ export const ColumnSchema = z.object({
     .string({ message: "Column name must be a string" })
     .trim()
     .min(1, { message: "Cannot be blank" })
-    .max(20, { message: "Column name too long" }),
+    .max(30, { message: "Column name too long" }),
   createdAt: z.date(),
   updatedAt: z.date(),
   boardId: z.string().uuid({ message: "Column ID must be a uuid" }),
