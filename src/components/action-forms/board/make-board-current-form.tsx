@@ -8,6 +8,7 @@ import { useUser } from "@clerk/nextjs";
 import { MdDashboard } from "react-icons/md";
 import { type MakeBoardCurrentAction } from "~/types/actions";
 import { showCustomErrorToast } from "~/utilities/showCustomErrorToast";
+import { boards } from "~/server/db/schema";
 
 interface Props extends HTMLAttributes<HTMLButtonElement> {
   boardId: string;
@@ -18,7 +19,8 @@ const MakeBoardCurrentForm = ({ boardId, boardName, ...props }: Props) => {
   const {
     setOptimisticBoards,
     getCurrentBoard,
-    setLoading: setBoardsLoading,
+    setBoardsLoading,
+    boardsLoading,
   } = useBoards();
 
   const { user } = useUser();
@@ -71,9 +73,14 @@ const MakeBoardCurrentForm = ({ boardId, boardName, ...props }: Props) => {
 
   return (
     <button
+      disabled={
+        boardsLoading.createBoard ||
+        boardsLoading.deleteBoard ||
+        boardsLoading.makeBoardCurrent
+      }
       aria-label={`Switch to the ${boardName} board`}
       onClick={clientAction}
-      className={`w-full px-6 py-3.5 transition-colors duration-150 ${boardId === currentBoardId ? "hover:bg-neutral-600 bg-neutral-700 text-white dark:bg-neutral-50 dark:text-neutral-800 dark:hover:bg-white" : "text-secondary--hoverable"} my-1 text-sm font-semibold`}
+      className={`w-full px-6 py-3.5 transition-colors duration-150 ${boardId === currentBoardId ? "hover:bg-neutral-600 bg-neutral-700 text-white dark:bg-neutral-50 dark:text-neutral-800 dark:hover:bg-white" : "text-secondary--hoverable"} my-1 text-sm font-semibold disabled:opacity-50`}
       {...props}
     >
       <p className="flex items-center gap-2">

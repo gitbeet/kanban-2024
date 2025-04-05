@@ -13,10 +13,15 @@ import { useUI } from "~/context/ui-context";
 import { sidebarTransition } from "~/utilities/framer-motion";
 
 const Board = () => {
-  const { optimisticBoards, loading, getCurrentBoard } = useBoards();
+  const { optimisticBoards, boardsLoading, getCurrentBoard } = useBoards();
   const currentBoard = getCurrentBoard();
   const { showSidebar } = useUI();
-  if (loading.DELETE_BOARD || loading.createBoard) return <LoadingPage />;
+  if (
+    boardsLoading.deleteBoard ||
+    boardsLoading.createBoard ||
+    boardsLoading.makeBoardCurrent
+  )
+    return <LoadingPage />;
 
   const noBoards = !optimisticBoards.length;
   const noBoardsJsx = (

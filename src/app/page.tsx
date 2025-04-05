@@ -29,8 +29,8 @@ const Hero = () => {
   const handleRedirectToSignIn = async () => await redirectToSignIn();
   return (
     <div className="bg-neutral-25 dark:bg-neutral-900">
-      <Section className="relative gap-4 overflow-hidden py-12 md:flex">
-        <div className="grow">
+      <Section className="relative flex flex-col gap-16 md:flex-row">
+        <div className="grow space-y-12">
           <div className="z-[2] flex flex-col items-start gap-6 md:py-12">
             <h1 className="text-dark text-heading z-10 text-left font-black">
               <GradientText text="Organize" /> Your work,
@@ -51,22 +51,17 @@ const Hero = () => {
             </SignedOut>
           </div>
         </div>
-        <Image
-          src={hero}
-          objectFit="cover"
-          alt="hero"
-          placeholder="empty"
-          className="animate-float"
-        />
-        <div className="h-8" />
+        <div className="mx-auto grid place-content-center">
+          <Image src={hero} alt="hero" className="animate-float shrink-0" />
+        </div>
       </Section>
     </div>
   );
 };
 
 const TrustedBy = () => (
-  <section className="z-10 border-y border-neutral-100 bg-white shadow-lg shadow-neutral-250/15 dark:border-neutral-750 dark:bg-neutral-850 dark:shadow-neutral-950/5">
-    <div className="container mx-auto flex flex-wrap justify-center gap-12 py-5 text-neutral-500">
+  <section className="section-padding z-10 border-y border-neutral-100 bg-white shadow-lg shadow-neutral-250/15 dark:border-neutral-750 dark:bg-neutral-850 dark:shadow-neutral-950/5">
+    <div className="text-neutral-400 container mx-auto flex flex-wrap justify-center gap-8 py-5 dark:text-neutral-500 md:gap-12">
       {netFlixLogo}
       {youTubeLogo}
       {discordLogo}

@@ -3,7 +3,6 @@
 import EditTaskMenus from "./edit-task/edit-task-menus";
 import ConfirmDeleteColumn from "./confirm-delete-column";
 import EditBoardMenus from "./edit-board/edit-board-menus";
-import MobileMenu from "./mobile-menu";
 
 const Menus = () => {
   return (
@@ -11,7 +10,6 @@ const Menus = () => {
       <EditTaskMenus />
       <EditBoardMenus />
       <ConfirmDeleteColumn />
-      <MobileMenu />
     </>
   );
 };

@@ -7,6 +7,7 @@ import Footer from "./footer";
 import Background from "../background/background";
 import { MotionGlobalConfig } from "framer-motion";
 import { useSettings } from "~/context/settings-context";
+import MobileMenu from "../menus/mobile-menu";
 const ClientLayout = ({ children }: { children: React.ReactNode }) => {
   const { performanceMode } = useSettings();
   const pathname = usePathname();
@@ -25,7 +26,9 @@ const ClientLayout = ({ children }: { children: React.ReactNode }) => {
         <Nav />
         {children}
         {!isBoardsPage && <Footer />}
-        <Menus />
+        {isBoardsPage && <Menus />}
+        <MobileMenu />
+
         <div id="modal-root" className="absolute h-0 w-0" />
       </div>
     </>

@@ -3,6 +3,12 @@
 @tailwind utilities;
 @import "./blobs.css";
 @import "./backgrounds.css";
+/* 
+*,
+*::before,
+*::after {
+  outline: 1px solid red;
+} */
 
 @keyframes float {
   0%,

@@ -32,11 +32,8 @@ const CreateBoardForm = ({
   const inputFieldRef = useRef<HTMLInputElement>(null);
 
   const { user } = useUser();
-  const {
-    optimisticBoards,
-    setOptimisticBoards,
-    setLoading: setBoardsLoading,
-  } = useBoards();
+  const { optimisticBoards, setOptimisticBoards, setBoardsLoading } =
+    useBoards();
 
   const [boardName, setBoardName] = useState("");
   const [isOpen, setIsOpen] = useState(false);

@@ -9,16 +9,16 @@ import type { Action } from "~/types/actions";
 interface BoardsContextType {
   optimisticBoards: BoardType[];
   setOptimisticBoards: SetOptimisticType;
-  loading: {
-    DELETE_BOARD: boolean;
+  boardsLoading: {
+    deleteBoard: boolean;
     createBoard: boolean;
-    MAKE_BOARD_CURRENT: boolean;
+    makeBoardCurrent: boolean;
   };
-  setLoading: React.Dispatch<
+  setBoardsLoading: React.Dispatch<
     React.SetStateAction<{
-      DELETE_BOARD: boolean;
+      deleteBoard: boolean;
       createBoard: boolean;
-      MAKE_BOARD_CURRENT: boolean;
+      makeBoardCurrent: boolean;
     }>
   >;
   getCurrentBoard: () => BoardType | undefined;
@@ -47,10 +47,10 @@ export const BoardsProvider: React.FC<BoardsProviderProps> = ({
     BoardType[],
     Action
   >(boards, handleOptimisticUpdate);
-  const [loading, setLoading] = useState({
-    DELETE_BOARD: false,
+  const [boardsLoading, setBoardsLoading] = useState({
+    deleteBoard: false,
     createBoard: false,
-    MAKE_BOARD_CURRENT: false,
+    makeBoardCurrent: false,
   });
 
   const getCurrentBoard = () => {
@@ -62,8 +62,8 @@ export const BoardsProvider: React.FC<BoardsProviderProps> = ({
       value={{
         optimisticBoards,
         setOptimisticBoards,
-        loading,
-        setLoading,
+        boardsLoading,
+        setBoardsLoading,
         getCurrentBoard,
       }}
     >

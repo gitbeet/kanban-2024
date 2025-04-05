@@ -24,15 +24,12 @@ const DeleteBoardForm = ({
 }: DeleteTaskFormProps) => {
   const [error, setError] = useState("");
   const { user } = useUser();
-  const {
-    setOptimisticBoards,
-    setLoading: setBoardsLoading,
-    getCurrentBoard,
-  } = useBoards();
+  const { setOptimisticBoards, setBoardsLoading, getCurrentBoard } =
+    useBoards();
   const [pending, startTransition] = useTransition();
 
   useEffect(() => {
-    setBoardsLoading((prev) => ({ ...prev, DELETE_BOARD: pending }));
+    setBoardsLoading((prev) => ({ ...prev, deleteBoard: pending }));
   }, [pending, setBoardsLoading]);
 
   const clientAction = async (e?: FormEvent) => {
