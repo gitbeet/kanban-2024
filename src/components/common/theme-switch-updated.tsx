@@ -19,7 +19,7 @@ export default function ThemeSwitchUpdated({
 
   if (!mounted)
     return (
-      <div className="bg-dark border-color flex w-fit rounded-full border p-1 opacity-50">
+      <div className="bg-dark border-color flex w-fit shrink-0 rounded-full border p-1 opacity-50">
         <div
           role="status"
           aria-busy="true"
@@ -48,7 +48,7 @@ export default function ThemeSwitchUpdated({
     );
 
   return (
-    <div className="bg-dark border-color w-fit rounded-full border p-1.5 drop-shadow">
+    <div className="bg-dark border-color w-fit shrink-0 rounded-full border p-1.5 drop-shadow-sm">
       <button
         aria-label="Switch the theme to system preferred"
         tabIndex={tabIndex}

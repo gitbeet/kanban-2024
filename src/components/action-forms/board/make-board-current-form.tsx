@@ -73,7 +73,7 @@ const MakeBoardCurrentForm = ({ boardId, boardName, ...props }: Props) => {
     <button
       aria-label={`Switch to the ${boardName} board`}
       onClick={clientAction}
-      className={`w-full px-6 py-3.5 transition-colors duration-150 ${boardId === currentBoardId ? "bg-primary-700 text-white hover:bg-primary-600" : "text-secondary--hoverable"} my-1 text-sm font-semibold`}
+      className={`w-full px-6 py-3.5 transition-colors duration-150 ${boardId === currentBoardId ? "hover:bg-neutral-600 bg-neutral-700 text-white dark:bg-neutral-50 dark:text-neutral-800 dark:hover:bg-white" : "text-secondary--hoverable"} my-1 text-sm font-semibold`}
       {...props}
     >
       <p className="flex items-center gap-2">

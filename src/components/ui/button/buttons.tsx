@@ -10,7 +10,7 @@ import { BsThreeDotsVertical } from "react-icons/bs";
 import { IoSettingsSharp } from "react-icons/io5";
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: "primary" | "ghost" | "text" | "danger";
+  variant?: "primary" | "ghost" | "text" | "danger" | "secondary";
   loading?: boolean;
   size?: "small" | "base";
 }
@@ -22,12 +22,12 @@ export const Button = ({
   loading,
   ...props
 }: ButtonProps) => {
-  const variantClasses = `${variant === "primary" ? "border-transparent bg-primary-700 hover:bg-primary-650 text-neutral-50 hover:text-white shadow-md" : variant === "ghost" ? "border-neutral-350 bg-transparent text-neutral-850 hover:text-neutral-950 hover:border-neutral-500 dark:border-neutral-650 dark:text-neutral-50 dark:hover:border-neutral-500" : variant === "text" ? "border-transparent" : variant === "danger" ? "bg-danger-400 text-white border-transparent hover:bg-danger-300" : ""} ${size === "small" ? "text-sm" : ""} transition-colors--default `;
+  const variantClasses = `${variant === "secondary" ? "bg-gradient-to-r from-blue-500 to-cyan-400 text-neutral-50 hover:text-white" : variant === "primary" ? "bg-neutral-900 hover:bg-neutral-700 dark:bg-neutral-50 dark:hover:bg-white text-neutral-50 dark:text-neutral-800 dark:hover:text-neutral-900 hover:text-white" : variant === "ghost" ? "border border-neutral-350 bg-transparent text-neutral-850 hover:text-neutral-950 hover:border-neutral-650 dark:border-neutral-650 dark:text-neutral-50 dark:hover:border-neutral-500" : variant === "danger" ? "bg-danger-400 text-white  hover:bg-danger-300" : ""} ${size === "small" ? "text-sm" : ""} transition ${variant !== "text" ? "shadow" : ""} `;
 
   return (
     <button
       {...props}
-      className={` ${props.className} ${variantClasses} rounded border px-3 py-1.5 font-bold ${loading ? "cursor-wait" : ""} disabled:opacity-50`}
+      className={` ${props.className} ${variantClasses} rounded px-3 py-1.5 font-bold active:opacity-50 ${loading ? "cursor-wait" : ""} disabled:opacity-50`}
     >
       {loading ? <LoadingPage /> : children}
     </button>
@@ -64,7 +64,7 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
       <button
         ref={ref}
         {...props}
-        className={`bg-neutral-600 transition-colors--default flex h-6 w-6 shrink-0 items-center justify-center text-neutral-700 dark:text-neutral-250 ${variantColor} disabled:pointer-events-none disabled:opacity-50 ${props.className}`}
+        className={`transition-colors--default flex h-6 w-6 shrink-0 items-center justify-center text-neutral-700 dark:text-neutral-250 ${variantColor} disabled:pointer-events-none disabled:opacity-50 ${props.className}`}
       >
         {preset === "close" && <MdClose className="h-full w-full" />}
         {children}

@@ -14,7 +14,7 @@ import "~/styles/globals.css";
 import type { BackgroundType, UserBackgroundType } from "~/types/background";
 
 const roboto = Roboto({
-  weight: ["400", "500", "700", "900"],
+  weight: ["300", "400", "500", "700", "900"],
   subsets: ["latin"],
   variable: "--font-plus-jakarta-sans",
 });

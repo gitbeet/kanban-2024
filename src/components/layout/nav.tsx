@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 import Logo from "../common/logo";
 import MobileMenuButton from "../ui/mobile-menu-button";
+import NavLink from "../ui/nav-link";
 
 const Nav = () => {
   // eslint-disable-next-line @typescript-eslint/unbound-method
@@ -16,39 +17,33 @@ const Nav = () => {
   const isBoardsPage = pathname === "/boards";
 
   return (
-    <nav className="bg-light__test-2 border-color__test relative z-[15] border-b shadow">
+    <nav className="relative z-[15] border-b border-neutral-100 bg-white dark:border-neutral-750 dark:bg-neutral-900 dark:shadow-md">
       <div
-        className={` ${isBoardsPage ? "" : "container"} section-padding relative z-10 flex h-fit items-center justify-between gap-8 py-2`}
+        className={` ${isBoardsPage ? "" : "container"} section-padding relative z-10 flex h-fit items-center justify-between gap-8 py-2.5`}
       >
         <Logo />
 
         <ul className="absolute left-1/2 hidden -translate-x-1/2 gap-8 lg:flex">
           <li>
-            <Link className="text-dark" href="/">
-              Home
-            </Link>
+            <NavLink title="Home" href="/" />
           </li>
           <SignedIn>
             <li>
-              <Link href="/boards" className="text-dark">
-                Boards
-              </Link>
+              <NavLink title="Boards" href="/boards" />
             </li>
           </SignedIn>
           <li>
-            <Link className="text-dark" href="/about">
-              About
-            </Link>
+            <NavLink title="About" href="/about" />
           </li>
           <li>
-            <Link className="text-dark" href="/contact">
-              Contact
-            </Link>
+            <NavLink title="Contact" href="/contact" />
           </li>
         </ul>
         <SignedOut>
           <div className="hidden lg:block">
-            <Button onClick={handleRedirectToSignIn}>Sign in</Button>
+            <Button size="small" onClick={handleRedirectToSignIn}>
+              Sign in
+            </Button>
           </div>
         </SignedOut>
         <SignedIn>
@@ -56,7 +51,7 @@ const Nav = () => {
             <span className="text-light">
               Hello, <b className="text-dark">{user?.firstName ?? "user"}</b>
             </span>
-            <Button variant="ghost" onClick={handleSignOut}>
+            <Button size="small" variant="ghost" onClick={handleSignOut}>
               Sign out
             </Button>
           </div>

@@ -18,7 +18,10 @@ const ConfirmDeleteBoardWindow = () => {
   return (
     <PromptWindow
       cancelButton={
-        <Button onClick={() => setShowConfirmDeleteBoardWindow(false)}>
+        <Button
+          variant="ghost"
+          onClick={() => setShowConfirmDeleteBoardWindow(false)}
+        >
           Cancel
         </Button>
       }

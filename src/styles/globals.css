@@ -4,6 +4,19 @@
 @import "./blobs.css";
 @import "./backgrounds.css";
 
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-7px);
+  }
+}
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
 .no-animations *,
 .no-animations *::before,
 .no-animations *::after {
@@ -27,7 +40,7 @@
 }
 
 .text-heading {
-  @apply text-5xl font-black md:text-6xl;
+  @apply text-5xl font-black md:text-6xl xl:text-7xl;
 }
 
 .text-subheading {
@@ -91,13 +104,13 @@
 }
 
 .section-padding {
-  @apply px-2 md:px-8;
+  @apply px-4 md:px-8;
 }
 
 /* ***** ELEMENTS ***** */
 
 .container {
-  @apply mx-auto max-w-[1400px];
+  @apply mx-auto max-w-[1280px];
 }
 
 .menu {
