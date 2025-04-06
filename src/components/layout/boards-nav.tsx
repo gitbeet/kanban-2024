@@ -2,7 +2,7 @@ import { useBoards } from "~/context/boards-context";
 import { useUI } from "~/context/ui-context";
 import { MoreButton, SettingsButton } from "~/components/ui/button/buttons";
 import { useRef } from "react";
-import EditBoardSmallMenu from "~/components/menus/edit-board/edit-board-small-menu";
+import EditBoardSmallMenu from "../menus/edit-board/edit-board-small-menu";
 
 export const BoardsNav = () => {
   const moreButtonRef = useRef<HTMLButtonElement | null>(null);
@@ -29,15 +29,21 @@ export const BoardsNav = () => {
           <>
             {/* 3 dots button */}
             <MoreButton
-              onClick={() => setShowEditBoardWindow(true)}
+              onClick={() => {
+                setShowEditBoardWindow(true);
+              }}
               ref={moreButtonRef}
             />
-
             <EditBoardSmallMenu
-              position={{
-                x: moreButtonRef.current?.getBoundingClientRect().left ?? 0,
-                y: moreButtonRef.current?.getBoundingClientRect().top ?? 0,
-              }}
+              buttonLeft={
+                moreButtonRef.current?.getBoundingClientRect().left ?? 0
+              }
+              buttonWidth={
+                moreButtonRef.current?.getBoundingClientRect().width ?? 0
+              }
+              buttonBottom={
+                moreButtonRef.current?.getBoundingClientRect().bottom ?? 0
+              }
             />
           </>
         )}

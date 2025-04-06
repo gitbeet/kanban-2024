@@ -1,11 +1,16 @@
+import { SmartPortalWithBackdrop } from "~/components/common/smart-portal";
 import { Button } from "~/components/ui/button/buttons";
 import MoreButtonMenu from "~/components/ui/modal/more-button-menu";
 import { useUI } from "~/context/ui-context";
 
 const EditTaskSmallMenu = ({
-  position,
+  buttonLeft,
+  buttonBottom,
+  buttonWidth,
 }: {
-  position: { x: number; y: number };
+  buttonLeft: number;
+  buttonBottom: number;
+  buttonWidth: number;
 }) => {
   const {
     showEditTaskSmallMenu,
@@ -17,13 +22,11 @@ const EditTaskSmallMenu = ({
     setShowConfirmDeleteTaskWindow,
   } = useUI();
   return (
-    <MoreButtonMenu
-      position={{
-        x: position.x ?? 0,
-        y: position.y ?? 0,
-      }}
-      centered={false}
+    <SmartPortalWithBackdrop
       zIndex={30}
+      buttonLeft={buttonLeft}
+      buttonBottom={buttonBottom}
+      buttonWidth={buttonWidth}
       show={showEditTaskSmallMenu}
       showBackdrop={
         showEditTaskSmallMenu &&
@@ -35,9 +38,8 @@ const EditTaskSmallMenu = ({
         if (showEditTaskMenuAdvanced) return;
         setShowEditTaskSmallMenu(false);
       }}
-      className="!w-fit !p-4"
     >
-      <>
+      <div className="flex w-max flex-col gap-2">
         <Button
           type="button"
           variant="ghost"
@@ -53,8 +55,8 @@ const EditTaskSmallMenu = ({
         >
           Delete task
         </Button>
-      </>
-    </MoreButtonMenu>
+      </div>
+    </SmartPortalWithBackdrop>
   );
 };
 

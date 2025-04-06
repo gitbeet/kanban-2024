@@ -1,5 +1,5 @@
 import { type Metadata } from "next";
-import { UserDataType, type BoardType } from "~/types";
+import type { UserDataType, BoardType } from "~/types";
 import {
   getUserBackgrounds,
   getBoards,

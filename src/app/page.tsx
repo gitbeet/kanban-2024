@@ -3,15 +3,12 @@
 import clipboardIcon from "../../public/icons/clipboard.png";
 import teamIcon from "../../public/icons/team.png";
 import rocketIcon from "../../public/icons/rocket.png";
-
 import { SignedOut, useClerk } from "@clerk/nextjs";
-import Image from "next/image";
-import TestArticle from "~/components/common/test-article";
+import TestArticle from "~/components/landing-page/feature";
 import { Button } from "~/components/ui/button/buttons";
-import hero from "../../public/hero.png";
-import TestStep from "~/components/common/test-step";
+import TestStep from "~/components/landing-page/step";
 import Section from "~/components/ui/section";
-import GradientText from "~/components/ui/gradient-text";
+import GradientText from "~/components/landing-page/gradient-text";
 
 import {
   amazonLogo,
@@ -20,8 +17,8 @@ import {
   tikTokLogo,
   visaLogo,
   youTubeLogo,
-} from "~/components/common/logos";
-import { HeroImage } from "~/components/common/hero-image";
+} from "~/components/landing-page/logos";
+import { HeroImage } from "~/components/landing-page/hero-image";
 
 const Hero = () => {
   // eslint-disable-next-line @typescript-eslint/unbound-method
@@ -60,7 +57,7 @@ const Hero = () => {
 
 const TrustedBy = () => (
   <section className="section-padding z-10 border-y border-neutral-100 bg-white shadow-lg shadow-neutral-250/15 dark:border-neutral-750 dark:bg-neutral-850 dark:shadow-neutral-950/5">
-    <div className="text-neutral-400 container mx-auto flex flex-wrap justify-center gap-8 py-5 dark:text-neutral-500 md:gap-12">
+    <div className="container mx-auto flex flex-wrap justify-center gap-8 py-5 text-neutral-400 dark:text-neutral-500 md:gap-12">
       {netFlixLogo}
       {youTubeLogo}
       {discordLogo}

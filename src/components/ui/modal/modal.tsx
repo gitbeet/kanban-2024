@@ -1,9 +1,9 @@
-import { useEffect, useRef, type HTMLAttributes, type ReactNode } from "react";
+import { useEffect, useRef, type ReactNode } from "react";
 import Backdrop from "./backdrop";
 import { createPortal } from "react-dom";
 import useHasMounted from "~/hooks/useHasMounted";
 import FocusTrap from "focus-trap-react";
-import { AnimationControls, motion, MotionProps } from "framer-motion";
+import { motion, type MotionProps } from "framer-motion";
 import { modalTransition } from "~/utilities/framer-motion";
 interface ModalProps extends MotionProps {
   children: ReactNode;
@@ -24,6 +24,7 @@ export const Modal = ({
   ...props
 }: ModalProps) => {
   const modalRef = useRef<HTMLDivElement>(null);
+  const hasMounted = useHasMounted();
 
   useEffect(() => {
     if (modalRef.current) {
@@ -41,7 +42,7 @@ export const Modal = ({
     }
   }, [show]);
 
-  return (
+  const jsx = (
     <FocusTrap
       active={show}
       focusTrapOptions={{
@@ -50,7 +51,7 @@ export const Modal = ({
         clickOutsideDeactivates: true,
         onDeactivate: () => onClose(),
         checkCanFocusTrap: () =>
-          new Promise((resolve) => setTimeout(resolve, 200)),
+          new Promise((resolve) => setTimeout(resolve, 0)),
       }}
     >
       <motion.div
@@ -71,6 +72,10 @@ export const Modal = ({
       </motion.div>
     </FocusTrap>
   );
+
+  return hasMounted
+    ? createPortal(jsx, document.getElementById("modal-root")!)
+    : null;
 };
 
 interface ModalWithBackdropProps extends ModalProps {
@@ -84,23 +89,14 @@ export const ModalWithBackdrop = ({
   onClose,
   ...props
 }: ModalWithBackdropProps) => {
-  const hasMounted = useHasMounted();
-  const jsx = (
+  return (
     <>
       <Modal zIndex={zIndex} onClose={onClose} {...props}>
         {children}
       </Modal>
-      <Backdrop
-        show={showBackdrop}
-        // onClose={onClose}
-        style={{ zIndex: zIndex - 5 }}
-      />
+      <Backdrop show={showBackdrop} style={{ zIndex: zIndex - 5 }} />
     </>
   );
-
-  return hasMounted
-    ? createPortal(jsx, document.getElementById("modal-root")!)
-    : null;
 };
 
 export interface ModalWithBackdropAndPositionProps

@@ -181,10 +181,9 @@ const EditTask = ({ task, columnId }: { task: TaskType; columnId: string }) => {
 
   const smallMenu = (
     <EditTaskSmallMenu
-      position={{
-        x: moreButtonRef.current?.getBoundingClientRect().left ?? 0,
-        y: moreButtonRef.current?.getBoundingClientRect().top ?? 0,
-      }}
+      buttonBottom={moreButtonRef.current?.getBoundingClientRect().bottom ?? 0}
+      buttonLeft={moreButtonRef.current?.getBoundingClientRect().left ?? 0}
+      buttonWidth={moreButtonRef.current?.getBoundingClientRect().width ?? 0}
     />
   );
 

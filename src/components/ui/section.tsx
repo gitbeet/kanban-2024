@@ -1,4 +1,4 @@
-import { HTMLAttributes, ReactNode } from "react";
+import type { HTMLAttributes, ReactNode } from "react";
 
 type Props = HTMLAttributes<HTMLDivElement> & {
   children: ReactNode;

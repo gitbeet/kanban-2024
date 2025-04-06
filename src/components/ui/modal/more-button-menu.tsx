@@ -8,10 +8,12 @@ const MoreButtonMenu = ({
   show,
   showBackdrop,
   zIndex,
+  align,
   ...props
 }: ModalWithBackdropAndPositionProps) => {
   return (
     <ModalWithBackdropAndPosition
+      align={align}
       position={position}
       centered={false}
       zIndex={zIndex}

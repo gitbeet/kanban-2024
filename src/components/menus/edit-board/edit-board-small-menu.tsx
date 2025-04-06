@@ -1,12 +1,13 @@
+import { SmartPortalWithBackdrop } from "~/components/common/smart-portal";
 import { Button } from "~/components/ui/button/buttons";
-import MoreButtonMenu from "~/components/ui/modal/more-button-menu";
 import { useUI } from "~/context/ui-context";
+type Props = { buttonBottom: number; buttonLeft: number; buttonWidth: number };
 
 const EditBoardSmallMenu = ({
-  position,
-}: {
-  position: { x: number; y: number };
-}) => {
+  buttonBottom,
+  buttonLeft,
+  buttonWidth,
+}: Props) => {
   const {
     showEditBoardWindow,
     showConfirmDeleteBoardWindow,
@@ -15,27 +16,28 @@ const EditBoardSmallMenu = ({
     setShowConfirmDeleteBoardWindow,
   } = useUI();
   return (
-    <MoreButtonMenu
-      position={{
-        x: position.x ?? 0,
-        y: position.y ?? 0,
-      }}
+    <SmartPortalWithBackdrop
+      buttonBottom={buttonBottom}
+      buttonLeft={buttonLeft}
+      buttonWidth={buttonWidth}
       show={showEditBoardWindow}
       showBackdrop={showEditBoardWindow && !showConfirmDeleteBoardWindow}
       onClose={() => setShowEditBoardWindow(false)}
       zIndex={40}
-      align="right"
+      align="left"
     >
-      <Button onClick={() => setShowEditBoardMenu(true)} variant="ghost">
-        Edit Board
-      </Button>
-      <Button
-        onClick={() => setShowConfirmDeleteBoardWindow(true)}
-        variant="danger"
-      >
-        Delete Board
-      </Button>
-    </MoreButtonMenu>
+      <div className="flex w-max flex-col gap-2">
+        <Button onClick={() => setShowEditBoardMenu(true)} variant="ghost">
+          Edit Board
+        </Button>
+        <Button
+          onClick={() => setShowConfirmDeleteBoardWindow(true)}
+          variant="danger"
+        >
+          Delete Board
+        </Button>
+      </div>
+    </SmartPortalWithBackdrop>
   );
 };
 
