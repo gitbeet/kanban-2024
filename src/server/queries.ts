@@ -291,7 +291,11 @@ export const handleCreateBoard = async ({
       );
     }
 
-    await tx.update(boards).set({ current: false });
+    await tx
+      .update(boards)
+      .set({ current: false })
+      .where(eq(boards.userId, userId));
+
     await tx.insert(boards).values(board);
   } catch (error) {
     const errorMessage =
