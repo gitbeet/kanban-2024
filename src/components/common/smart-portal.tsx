@@ -5,6 +5,7 @@ import FocusTrap from "focus-trap-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { modalTransition } from "~/utilities/framer-motion";
 import Backdrop from "../ui/modal/backdrop";
+import { disableScrolling, enableScrolling } from "~/utilities/scroll";
 type Alignment = "left" | "center" | "right";
 
 type SmartPortalProps = {
@@ -81,6 +82,11 @@ export const SmartPortal = ({
       setPositionStyle((prev) => ({ ...prev }));
     }
   }, [show, calculatePosition]);
+
+  useEffect(() => {
+    if (show) return disableScrolling();
+    enableScrolling();
+  }, [show]);
 
   useEffect(() => {
     if (menuRef.current) {

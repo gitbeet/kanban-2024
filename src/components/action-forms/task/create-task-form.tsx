@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { startTransition, useEffect, useRef, useState } from "react";
 import { useBoards } from "~/context/boards-context";
-import { AnimatePresence, motion, useMotionValue } from "framer-motion";
+import { motion } from "framer-motion";
 import { v4 as uuid } from "uuid";
 import { resizeTextArea } from "~/utilities/resizeTextArea";
 import { handleCreateTask } from "~/server/queries";
@@ -96,7 +96,9 @@ const CreateTaskForm = ({
       payload: { boardId, columnId, task: newTask },
     };
     // client mutation
-    setOptimisticBoards(action);
+    startTransition(() => {
+      setOptimisticBoards(action);
+    });
     setTaskName("");
     formRef.current?.scrollIntoView({ block: "end" });
     textAreaRef.current?.focus();

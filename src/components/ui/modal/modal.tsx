@@ -5,6 +5,7 @@ import useHasMounted from "~/hooks/useHasMounted";
 import FocusTrap from "focus-trap-react";
 import { motion, type MotionProps } from "framer-motion";
 import { modalTransition } from "~/utilities/framer-motion";
+import { disableScrolling, enableScrolling } from "~/utilities/scroll";
 interface ModalProps extends MotionProps {
   children: ReactNode;
   zIndex: number;
@@ -25,6 +26,11 @@ export const Modal = ({
 }: ModalProps) => {
   const modalRef = useRef<HTMLDivElement>(null);
   const hasMounted = useHasMounted();
+
+  useEffect(() => {
+    if (show) return disableScrolling();
+    enableScrolling();
+  }, [show]);
 
   useEffect(() => {
     if (modalRef.current) {

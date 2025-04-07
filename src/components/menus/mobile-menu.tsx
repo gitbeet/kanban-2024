@@ -1,9 +1,11 @@
 import { SignedIn, SignedOut, useClerk } from "@clerk/nextjs";
 import Link from "next/link";
-import React, { useRef } from "react";
+import { useRef } from "react";
 import { useUI } from "~/context/ui-context";
 import { Button } from "../ui/button/buttons";
 import FocusTrap from "focus-trap-react";
+import { motion } from "framer-motion";
+import { modalTransition } from "~/utilities/framer-motion";
 
 const MobileMenu = () => {
   // eslint-disable-next-line @typescript-eslint/unbound-method
@@ -22,10 +24,18 @@ const MobileMenu = () => {
       focusTrapOptions={{
         allowOutsideClick: true,
         initialFocus: () => ref.current,
+        delayInitialFocus: true,
+        checkCanFocusTrap: () => new Promise((r) => setTimeout(r, 0)),
       }}
     >
-      <div
-        className={`${showMobileMenu ? "translate-y-0 opacity-100" : "pointer-events-none -translate-y-12 opacity-0"} section-padding bg-light absolute inset-0 z-[10] space-y-8 pt-24 backdrop-blur transition-[opacity,transform]`}
+      <motion.div
+        initial={false}
+        animate={{
+          opacity: showMobileMenu ? 1 : 0,
+          y: showMobileMenu ? 0 : "-1.5rem",
+        }}
+        transition={modalTransition}
+        className={`${showMobileMenu ? "" : "pointer-events-none"} section-padding bg-light absolute inset-0 z-[10] space-y-8 pt-24 backdrop-blur`}
       >
         <button
           onClick={handleCloseMenu}
@@ -104,7 +114,7 @@ const MobileMenu = () => {
             </Button>
           </div>
         </SignedIn>
-      </div>
+      </motion.div>
     </FocusTrap>
   );
 };
