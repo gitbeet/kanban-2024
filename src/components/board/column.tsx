@@ -183,7 +183,6 @@ const Column = ({
           newColumnIndex: Number(newColumnIndex),
         },
       },
-      revalidate: true,
     });
     // TODO: Display the error
     if (response?.error) {

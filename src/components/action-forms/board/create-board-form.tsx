@@ -104,7 +104,6 @@ const CreateBoardForm = ({
     // Server error check
     const response = await handleCreateBoard({
       action,
-      revalidate: true,
     });
     if (response?.error) {
       showCustomErrorToast({ message: response.error });

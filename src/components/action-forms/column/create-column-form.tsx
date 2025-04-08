@@ -85,7 +85,6 @@ const CreateColumnForm = ({ boardId, ...props }: CreateColumnProps) => {
     //server validation / mutation
     const response = await handleCreateColumn({
       action,
-      revalidate: true,
     });
     if (response?.error) {
       showCustomErrorToast({ message: response.error });

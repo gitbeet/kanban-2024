@@ -49,7 +49,6 @@ const RenameSubtaskForm = ({
 
     const response = await handleRenameSubtask({
       action,
-      revalidate: true,
     });
     if (response?.error) {
       showCustomErrorToast({ message: response.error });

@@ -88,7 +88,6 @@ const RenameColumnForm = ({
     // server validation / mutation
     const response = await handleRenameColumn({
       action,
-      revalidate: true,
     });
     if (response?.error) {
       showCustomErrorToast({ message: response.error });

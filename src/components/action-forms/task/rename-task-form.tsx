@@ -105,7 +105,6 @@ const RenameTaskForm = ({
     // Server
     const response = await handleRenameTask({
       action,
-      revalidate: true,
     });
     if (response?.error) {
       showCustomErrorToast({ message: response.error });

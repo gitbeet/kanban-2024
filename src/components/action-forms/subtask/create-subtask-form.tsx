@@ -75,7 +75,6 @@ const CreateSubtaskForm = ({
     // sever validation/state update
     const response = await handleCreateSubtask({
       action,
-      revalidate: true,
     });
     if (response?.error) {
       showCustomErrorToast({ message: response.error });

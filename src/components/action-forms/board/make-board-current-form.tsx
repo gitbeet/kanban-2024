@@ -63,7 +63,6 @@ const MakeBoardCurrentForm = ({ boardId, boardName, ...props }: Props) => {
     // server update
     const response = await handleMakeBoardCurrent({
       action,
-      revalidate: true,
     });
     if (response?.error) {
       showCustomErrorToast({ message: response.error });

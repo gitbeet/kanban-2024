@@ -59,7 +59,6 @@ const DeleteBoardForm = ({
 
     const response = await handleDeleteBoard({
       action,
-      revalidate: true,
     });
     if (response?.error) {
       showCustomErrorToast({ message: response.error });

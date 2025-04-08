@@ -34,7 +34,6 @@ const DeleteSubtaskForm = ({
     });
     const response = await handleDeleteSubtask({
       action,
-      revalidate: true,
     });
     if (response?.error) {
       showCustomErrorToast({ message: response.error });

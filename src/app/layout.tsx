@@ -12,6 +12,7 @@ import { Toaster } from "react-hot-toast";
 import ClientLayout from "~/components/layout/client-layout";
 import "~/styles/globals.css";
 import type { BackgroundType, UserBackgroundType } from "~/types/background";
+import { unstable_cache as cache } from "next/cache";
 
 const roboto = Roboto({
   weight: ["300", "400", "500", "700", "900"],
@@ -46,7 +47,15 @@ export default async function RootLayout({
     }));
   }
 
-  const backgroundsResult = await getBackgrounds();
+  const backgroundsResult = await cache(
+    () => getBackgrounds(),
+    ["all-backgrounds"],
+    {
+      tags: ["backgrounds"],
+      revalidate: 86400,
+    },
+  )();
+
   if (backgroundsResult.backgrounds) {
     backgrounds = backgroundsResult.backgrounds;
   }
@@ -55,6 +64,7 @@ export default async function RootLayout({
   if (userDataResult.data) {
     userData = userDataResult.data;
   }
+
   return (
     <html lang="en" className={`${roboto.variable}`} suppressHydrationWarning>
       <body>

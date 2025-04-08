@@ -42,7 +42,6 @@ const ToggleSubtaskForm = ({
 
     const response = await handleToggleSubtaskCompleted({
       action,
-      revalidate: true,
     });
     if (response?.error) {
       showCustomErrorToast({ message: response.error });

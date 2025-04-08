@@ -106,7 +106,6 @@ const CreateTaskForm = ({
     setLoading(true);
     const response = await handleCreateTask({
       action,
-      revalidate: true,
     });
     if (response?.error) {
       showCustomErrorToast({ message: response.error });

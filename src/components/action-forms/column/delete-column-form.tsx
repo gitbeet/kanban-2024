@@ -41,7 +41,6 @@ const DeleteColumnForm = ({
 
     const response = await handleDeleteColumn({
       action,
-      revalidate: true,
     });
     if (response?.error) {
       showCustomErrorToast({ message: response.error });

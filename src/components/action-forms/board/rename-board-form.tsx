@@ -42,7 +42,6 @@ const RenameBoardForm = ({ boardId }: { boardId: string }) => {
 
     const response = await handleRenameBoard({
       action,
-      revalidate: true,
     });
     if (response?.error) {
       showCustomErrorToast({ message: response.error });

@@ -37,7 +37,6 @@ const DeleteTaskForm = ({
 
     const response = await handleDeleteTask({
       action,
-      revalidate: true,
     });
     if (response?.error) {
       showCustomErrorToast({ message: response.error });

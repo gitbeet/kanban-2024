@@ -24,7 +24,6 @@ const ToggleTaskForm = ({
     setOptimisticBoards(action);
     const response = await handleToggleTaskCompleted({
       action,
-      revalidate: true,
     });
     if (response?.error) {
       showCustomErrorToast({ message: response.error });

@@ -10,7 +10,7 @@ import {
   userBackgrounds,
   userDatas,
 } from "./db/schema";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { and, eq, gt, gte, lt, lte, ne, sql } from "drizzle-orm";
 import type { DatabaseType, UserDataType } from "~/types";
 import {
@@ -44,6 +44,8 @@ import type {
 } from "~/types/actions";
 import { UTApi } from "uploadthing/server";
 import { v4 as uuid } from "uuid";
+import { unstable_cache as cache } from "next/cache";
+
 // ------ User data ------
 
 export const getUserData = async (userId?: string) => {
@@ -54,9 +56,17 @@ export const getUserData = async (userId?: string) => {
       if (userId) actualUserId = userId;
     }
     if (!actualUserId) throw new Error("Unauthorized");
-    const data = await db.query.userDatas.findFirst({
-      where: (model, { eq }) => eq(model.userId, actualUserId),
-    });
+    const getData = cache(
+      async () => {
+        const result = await db.query.userDatas.findFirst({
+          where: (model, { eq }) => eq(model.userId, actualUserId),
+        });
+        return result;
+      },
+      ["user-data", actualUserId],
+      { tags: [`user-data-${actualUserId}`] },
+    );
+    const data = await getData();
     return { data };
   } catch (error) {
     const errorMessage =
@@ -111,7 +121,7 @@ export const modifyUserData = async (newData: Partial<UserDataType>) => {
     const result = UserDataSchema.partial().strict().safeParse(newData);
     if (!result.success) throw new Error("Error while modifying user data");
     await db.update(userDatas).set(newData).where(eq(userDatas.userId, userId));
-    revalidatePath("/");
+    revalidateTag(`user-data-${userId}`);
   } catch (error) {
     const errorMessage =
       error instanceof Error
@@ -126,7 +136,6 @@ export const modifyUserData = async (newData: Partial<UserDataType>) => {
 export const getBackgrounds = async () => {
   try {
     const backgrounds = await db.query.backgrounds.findMany();
-    revalidatePath("/");
     return { backgrounds };
   } catch (error) {
     const errorMessage =
@@ -139,12 +148,21 @@ export const getBackgrounds = async () => {
 
 export const getUserBackgrounds = async () => {
   try {
-    const user = auth();
-    if (!user.userId) throw new Error("Unauthorized");
-    const backgrounds = await db.query.userBackgrounds.findMany({
-      where: (model, { eq }) => eq(model.userId, user.userId),
-    });
-    revalidatePath("/");
+    const { userId } = auth();
+    if (!userId) throw new Error("Unauthorized");
+
+    const getBackgrounds = cache(
+      async () => {
+        const result = await db.query.userBackgrounds.findMany({
+          where: (model, { eq }) => eq(model.userId, userId),
+        });
+        return result;
+      },
+      [`user-backgrounds-${userId}`],
+      { tags: [`backgrounds-${userId}`] },
+    );
+
+    const backgrounds = await getBackgrounds();
     return { backgrounds };
   } catch (error) {
     const errorMessage =
@@ -176,6 +194,7 @@ export const uploadUserBackground = async (
     if (background.userId !== user.userId) throw new Error("Unauthorized");
 
     await db.insert(userBackgrounds).values(background);
+    revalidateTag(`backgrounds-${user.userId}`);
   } catch (error) {
     const errorMessage =
       error instanceof Error
@@ -183,7 +202,6 @@ export const uploadUserBackground = async (
         : "Error while uploading a user background";
     return { error: errorMessage };
   }
-  revalidatePath("/");
 };
 
 export const deleteUserBackground = async (
@@ -213,6 +231,7 @@ export const deleteUserBackground = async (
 
     const api = new UTApi();
     await api.deleteFiles(fileKey);
+    revalidateTag(`backgrounds-${user.userId}`);
   } catch (error) {
     const errorMessage =
       error instanceof Error
@@ -220,7 +239,6 @@ export const deleteUserBackground = async (
         : "Error while deleting a user background";
     return { error: errorMessage };
   }
-  revalidatePath("/");
 };
 
 // ------ Board ------
@@ -229,21 +247,28 @@ export const getBoards = async () => {
     const user = auth();
     if (!user.userId) throw new Error("Unauthorized");
 
-    const boards = await db.query.boards.findMany({
-      where: (model, { eq }) => eq(model.userId, user.userId),
-      with: {
-        columns: {
+    const getCachedBoards = cache(
+      async () => {
+        const result = await db.query.boards.findMany({
+          where: (model, { eq }) => eq(model.userId, user.userId),
           with: {
-            tasks: {
+            columns: {
               with: {
-                subtasks: true,
+                tasks: {
+                  with: {
+                    subtasks: true,
+                  },
+                },
               },
             },
           },
-        },
+        });
+        return result;
       },
-    });
-    revalidatePath("/");
+      ["boards", user.userId],
+      { tags: [`boards-${user.userId}`] },
+    );
+    const boards = await getCachedBoards();
     return { boards };
   } catch (error) {
     const errorMessage =
@@ -257,12 +282,10 @@ export const getBoards = async () => {
 export const handleCreateBoard = async ({
   action,
   tx = db,
-  revalidate = false,
   inTransaction = false,
 }: {
   action: CreateBoardAction;
   tx?: DatabaseType;
-  revalidate?: boolean;
   inTransaction?: boolean;
 }) => {
   const { payload } = action;
@@ -297,6 +320,7 @@ export const handleCreateBoard = async ({
       .where(eq(boards.userId, userId));
 
     await tx.insert(boards).values(board);
+    revalidateTag(`boards-${userId}`);
   } catch (error) {
     const errorMessage =
       error instanceof Error ? error.message : "Error while creating a board";
@@ -308,18 +332,15 @@ export const handleCreateBoard = async ({
       };
     }
   }
-  revalidate && revalidatePath("/");
 };
 
 export const handleRenameBoard = async ({
   action,
   tx = db,
-  revalidate = false,
   inTransaction = false,
 }: {
   action: RenameBoardAction;
   tx?: DatabaseType;
-  revalidate?: boolean;
   inTransaction?: boolean;
 }) => {
   try {
@@ -345,6 +366,7 @@ export const handleRenameBoard = async ({
       .update(boards)
       .set({ name: newBoardName, updatedAt: new Date() })
       .where(and(eq(boards.id, boardId), eq(boards.userId, userId)));
+    revalidateTag(`boards-${userId}`);
   } catch (error) {
     const errorMessage =
       error instanceof Error ? error.message : "Error while a renaming board";
@@ -356,18 +378,15 @@ export const handleRenameBoard = async ({
       };
     }
   }
-  revalidate && revalidatePath("/");
 };
 
 export const handleDeleteBoard = async ({
   action,
   tx = db,
-  revalidate = false,
   inTransaction = false,
 }: {
   action: DeleteBoardAction;
   tx?: DatabaseType;
-  revalidate?: boolean;
   inTransaction?: boolean;
 }) => {
   try {
@@ -400,6 +419,7 @@ export const handleDeleteBoard = async ({
       .update(boards)
       .set({ current: true })
       .where(and(eq(boards.index, 1), eq(boards.userId, userId)));
+    revalidateTag(`boards-${userId}`);
   } catch (error) {
     const errorMessage =
       error instanceof Error ? error.message : "Error while deleting board";
@@ -411,18 +431,15 @@ export const handleDeleteBoard = async ({
       };
     }
   }
-  revalidate && revalidatePath("/");
 };
 
 export const handleMakeBoardCurrent = async ({
   action,
   tx = db,
-  revalidate = false,
   inTransaction = false,
 }: {
   action: MakeBoardCurrentAction;
   tx?: DatabaseType;
-  revalidate?: boolean;
   inTransaction?: boolean;
 }) => {
   try {
@@ -439,6 +456,7 @@ export const handleMakeBoardCurrent = async ({
       .update(boards)
       .set({ current: true })
       .where(and(eq(boards.id, newCurrentBoardId), eq(boards.userId, userId)));
+    revalidateTag(`boards-${userId}`);
   } catch (error) {
     const errorMessage =
       error instanceof Error
@@ -452,19 +470,16 @@ export const handleMakeBoardCurrent = async ({
       };
     }
   }
-  revalidate && revalidatePath("/");
 };
 
 // ------ Column ------
 export const handleCreateColumn = async ({
   action,
   tx = db,
-  revalidate = false,
   inTransaction = false,
 }: {
   action: CreateColumnAction;
   tx?: DatabaseType;
-  revalidate?: boolean;
   inTransaction?: boolean;
 }) => {
   try {
@@ -496,6 +511,7 @@ export const handleCreateColumn = async ({
     if (maxIndex + 1 !== column.index) throw new Error("Wrong index");
 
     await tx.insert(columns).values(column);
+    revalidateTag(`boards-${userId}`);
   } catch (error) {
     const errorMessage =
       error instanceof Error ? error.message : "Error while creating a column";
@@ -507,18 +523,15 @@ export const handleCreateColumn = async ({
       };
     }
   }
-  revalidate && revalidatePath("/");
 };
 
 export const handleRenameColumn = async ({
   action,
   tx = db,
-  revalidate = false,
   inTransaction = false,
 }: {
   action: RenameColumnAction;
   tx?: DatabaseType;
-  revalidate?: boolean;
   inTransaction?: boolean;
 }) => {
   try {
@@ -543,6 +556,7 @@ export const handleRenameColumn = async ({
       .update(columns)
       .set({ name: newColumnName, updatedAt: new Date() })
       .where(and(eq(columns.id, columnId)));
+    revalidateTag(`boards-${userId}`);
   } catch (error) {
     const errorMessage =
       error instanceof Error ? error.message : "Error while renaming column";
@@ -554,18 +568,15 @@ export const handleRenameColumn = async ({
       };
     }
   }
-  revalidate && revalidatePath("/");
 };
 
 export const handleDeleteColumn = async ({
   action,
   tx = db,
-  revalidate = false,
   inTransaction = false,
 }: {
   action: DeleteColumnAction;
   tx?: DatabaseType;
-  revalidate?: boolean;
   inTransaction?: boolean;
 }) => {
   try {
@@ -601,6 +612,7 @@ export const handleDeleteColumn = async ({
         ),
       );
     await tx.delete(columns).where(eq(columns.id, columnId));
+    revalidateTag(`boards-${userId}`);
   } catch (error) {
     const errorMessage =
       error instanceof Error ? error.message : "Error while deleting a column";
@@ -612,19 +624,16 @@ export const handleDeleteColumn = async ({
       };
     }
   }
-  revalidate && revalidatePath("/");
 };
 
 // ------ Task ------
 export const handleCreateTask = async ({
   action,
   tx = db,
-  revalidate = false,
   inTransaction = false,
 }: {
   action: CreateTaskAction;
   tx?: DatabaseType;
-  revalidate?: boolean;
   inTransaction?: boolean;
 }) => {
   try {
@@ -652,6 +661,7 @@ export const handleCreateTask = async ({
     if (maxIndex + 1 !== task.index) throw new Error("Wrong index");
 
     await tx.insert(tasks).values(task);
+    revalidateTag(`boards-${userId}`);
   } catch (error) {
     const errorMessage =
       error instanceof Error ? error.message : "Error while creating a task";
@@ -663,18 +673,15 @@ export const handleCreateTask = async ({
       };
     }
   }
-  revalidate && revalidatePath("/");
 };
 
 export const handleRenameTask = async ({
   action,
   tx = db,
-  revalidate = false,
   inTransaction = false,
 }: {
   action: RenameTaskAction;
   tx?: DatabaseType;
-  revalidate?: boolean;
   inTransaction?: boolean;
 }) => {
   try {
@@ -696,6 +703,7 @@ export const handleRenameTask = async ({
       .update(tasks)
       .set({ name: newTaskName, updatedAt: new Date() })
       .where(eq(tasks.id, taskId));
+    revalidateTag(`boards-${userId}`);
   } catch (error) {
     const errorMessage =
       error instanceof Error ? error.message : "Error while renaming a task";
@@ -707,18 +715,15 @@ export const handleRenameTask = async ({
       };
     }
   }
-  revalidate && revalidatePath("/");
 };
 
 export const handleDeleteTask = async ({
   action,
   tx = db,
-  revalidate = false,
   inTransaction = false,
 }: {
   action: DeleteTaskAction;
   tx?: DatabaseType;
-  revalidate?: boolean;
   inTransaction?: boolean;
 }) => {
   try {
@@ -745,6 +750,7 @@ export const handleDeleteTask = async ({
         and(eq(tasks.columnId, task.columnId), gt(tasks.index, task.index)),
       );
     await tx.delete(tasks).where(eq(tasks.id, taskId));
+    revalidateTag(`boards-${userId}`);
   } catch (error) {
     const errorMessage =
       error instanceof Error ? error.message : "Error while deleting a task";
@@ -756,18 +762,15 @@ export const handleDeleteTask = async ({
       };
     }
   }
-  revalidate && revalidatePath("/");
 };
 
 export const handleToggleTaskCompleted = async ({
   action,
   tx = db,
-  revalidate = false,
   inTransaction = false,
 }: {
   action: ToggleTaskAction;
   tx?: DatabaseType;
-  revalidate?: boolean;
   inTransaction?: boolean;
 }) => {
   try {
@@ -792,6 +795,7 @@ export const handleToggleTaskCompleted = async ({
       .update(tasks)
       .set({ completed: !task.completed, updatedAt: new Date() })
       .where(eq(tasks.id, taskId));
+    revalidateTag(`boards-${userId}`);
   } catch (error) {
     const errorMessage =
       error instanceof Error ? error.message : "Error while toggling a task";
@@ -803,18 +807,15 @@ export const handleToggleTaskCompleted = async ({
       };
     }
   }
-  revalidate && revalidatePath("/");
 };
 
 export const handleSwitchTaskColumn = async ({
   action,
   tx = db,
-  revalidate = false,
   inTransaction = false,
 }: {
   action: SwitchTaskColumnAction;
   tx?: DatabaseType;
-  revalidate?: boolean;
   inTransaction?: boolean;
 }) => {
   try {
@@ -922,6 +923,7 @@ export const handleSwitchTaskColumn = async ({
         })
         .where(eq(tasks.id, taskId));
     }
+    revalidateTag(`boards-${userId}`);
   } catch (error) {
     const errorMessage =
       error instanceof Error
@@ -935,19 +937,16 @@ export const handleSwitchTaskColumn = async ({
       };
     }
   }
-  revalidate && revalidatePath("/");
 };
 
 // ------ Subtask ------
 export const handleCreateSubtask = async ({
   action,
   tx = db,
-  revalidate = false,
   inTransaction = false,
 }: {
   action: CreateSubtaskAction;
   tx?: DatabaseType;
-  revalidate?: boolean;
   inTransaction?: boolean;
 }) => {
   try {
@@ -956,6 +955,9 @@ export const handleCreateSubtask = async ({
 
     const { payload } = action;
     const { subtask } = payload;
+
+    if (subtask.name === "ERROR_TEST")
+      throw new Error("(TEST) Error while creating a task");
 
     const result = SubtaskSchema.safeParse(subtask);
     if (!result.success) throw new Error("Error while creating a subtask");
@@ -970,6 +972,7 @@ export const handleCreateSubtask = async ({
     if (maxIndex + 1 !== subtask.index) throw new Error("Wrong index");
 
     await tx.insert(subtasks).values(subtask);
+    revalidateTag(`boards-${userId}`);
   } catch (error) {
     const errorMessage =
       error instanceof Error ? error.message : "Error while creating a subtask";
@@ -981,18 +984,15 @@ export const handleCreateSubtask = async ({
       };
     }
   }
-  revalidate && revalidatePath("/");
 };
 
 export const handleRenameSubtask = async ({
   action,
   tx = db,
-  revalidate = false,
   inTransaction = false,
 }: {
   action: RenameSubtaskAction;
   tx?: DatabaseType;
-  revalidate?: boolean;
   inTransaction?: boolean;
 }) => {
   const { userId } = auth();
@@ -1012,6 +1012,7 @@ export const handleRenameSubtask = async ({
       .update(subtasks)
       .set({ name: newSubtaskName, updatedAt: new Date() })
       .where(eq(subtasks.id, subtaskId));
+    revalidateTag(`boards-${userId}`);
   } catch (error) {
     const errorMessage =
       error instanceof Error ? error.message : "Error while renaming subtask";
@@ -1023,18 +1024,15 @@ export const handleRenameSubtask = async ({
       };
     }
   }
-  revalidate && revalidatePath("/");
 };
 
 export const handleDeleteSubtask = async ({
   action,
   tx = db,
-  revalidate = false,
   inTransaction = false,
 }: {
   action: DeleteSubtaskAction;
   tx?: DatabaseType;
-  revalidate?: boolean;
   inTransaction?: boolean;
 }) => {
   try {
@@ -1063,6 +1061,7 @@ export const handleDeleteSubtask = async ({
         ),
       );
     await tx.delete(subtasks).where(eq(subtasks.id, subtaskId));
+    revalidateTag(`boards-${userId}`);
   } catch (error) {
     const errorMessage =
       error instanceof Error ? error.message : "Error while deleting subtask";
@@ -1074,18 +1073,15 @@ export const handleDeleteSubtask = async ({
       };
     }
   }
-  revalidate && revalidatePath("/");
 };
 
 export const handleToggleSubtaskCompleted = async ({
   action,
   tx = db,
-  revalidate = false,
   inTransaction = false,
 }: {
   action: ToggleSubtaskAction;
   tx?: DatabaseType;
-  revalidate?: boolean;
   inTransaction?: boolean;
 }) => {
   try {
@@ -1110,6 +1106,7 @@ export const handleToggleSubtaskCompleted = async ({
       .update(subtasks)
       .set({ completed: !subtask.completed, updatedAt: new Date() })
       .where(eq(subtasks.id, subtaskId));
+    revalidateTag(`boards-${userId}`);
   } catch (error) {
     const errorMessage =
       error instanceof Error ? error.message : "Error while toggling subtask";
@@ -1121,7 +1118,6 @@ export const handleToggleSubtaskCompleted = async ({
       };
     }
   }
-  revalidate && revalidatePath("/");
 };
 
 // ------ Transaction ------
@@ -1218,7 +1214,7 @@ export async function mutateTable(actions: Action[]) {
         }
       }
     });
-    revalidatePath("/");
+    revalidateTag(`boards-${user.userId}`);
   } catch (error) {
     const errorMessage =
       error instanceof Error ? error.message : "An error has occurred";
