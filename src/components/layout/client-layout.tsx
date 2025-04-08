@@ -2,7 +2,6 @@
 
 import { usePathname } from "next/navigation";
 import Menus from "../menus/menus";
-import Nav from "./nav";
 import Footer from "./footer";
 import Background from "../background/background";
 import { MotionGlobalConfig } from "framer-motion";
@@ -22,13 +21,11 @@ const ClientLayout = ({ children }: { children: React.ReactNode }) => {
             : "mx-auto flex min-h-screen flex-col justify-between"
         }
       >
-        <Background />
-        <Nav />
         {children}
         {!isBoardsPage && <Footer />}
+        {isBoardsPage && <Background />}
         {isBoardsPage && <Menus />}
         <MobileMenu />
-
         <div id="modal-root" className="absolute h-0 w-0" />
       </div>
     </>

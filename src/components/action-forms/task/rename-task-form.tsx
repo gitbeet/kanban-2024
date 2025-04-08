@@ -19,19 +19,21 @@ const RenameTaskForm = ({
   boardId,
   columnId,
   task,
-  setDraggable,
+  isRenamingTask,
+  setIsRenamingTask,
 }: {
   boardId: string;
   columnId: string;
   task: TaskType;
-  setDraggable?: Dispatch<SetStateAction<boolean>>;
+  isRenamingTask: boolean;
+  setIsRenamingTask: Dispatch<SetStateAction<boolean>>;
+  setDraggale?: Dispatch<SetStateAction<boolean>>;
 }) => {
   // States
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   const [newTaskName, setNewTaskName] = useState(task.name);
-  const [isOpen, setIsOpen] = useState(false);
   const { setOptimisticBoards, getCurrentBoard } = useBoards();
   const [pending, startTransition] = useTransition();
 
@@ -42,11 +44,11 @@ const RenameTaskForm = ({
   // Dynamic height for the textarea
   useEffect(
     () => resizeTextArea(textAreaRef),
-    [task.name, newTaskName, isOpen],
+    [task.name, newTaskName, isRenamingTask],
   );
 
   // Disable draggable when renaming so you can interact with the field
-  useEffect(() => setDraggable?.(!isOpen), [isOpen, setDraggable]);
+  // useEffect(() => setDraggable?.(!isOpen), [isOpen]);
 
   const handleTaskNameChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -62,7 +64,7 @@ const RenameTaskForm = ({
     // Client validation
     if (task.name.trim() === newTaskName.trim()) {
       setLoading(false);
-      setIsOpen(false);
+      setIsRenamingTask(false);
       setNewTaskName("");
       setError("");
       return;
@@ -112,13 +114,13 @@ const RenameTaskForm = ({
 
     // Wait for server to finish then set loading to false
     setLoading(false);
-    setIsOpen(false);
+    setIsRenamingTask(false);
     setNewTaskName("");
     setError("");
   };
 
   function handleClickOutside() {
-    setIsOpen(false);
+    setIsRenamingTask(false);
     setNewTaskName(task.name);
     setError("");
   }
@@ -126,7 +128,7 @@ const RenameTaskForm = ({
   return (
     <div className={`${loading ? "pointer-events-none" : ""} max-w-full`}>
       <FocusTrap
-        active={isOpen}
+        active={isRenamingTask}
         focusTrapOptions={{
           allowOutsideClick: true,
           escapeDeactivates: true,
@@ -139,35 +141,35 @@ const RenameTaskForm = ({
           ref={renameTaskRef}
           onSubmit={clientAction}
         >
-          {!isOpen && (
+          {!isRenamingTask && (
             <button
               aria-label="Click to rename task"
               onClick={() => {
                 setNewTaskName(task.name);
-                setIsOpen(true);
+                setIsRenamingTask(true);
               }}
               className="input-readonly text-left"
             >
               <p> {task.name}</p>
             </button>
           )}
-          {isOpen && (
+          {isRenamingTask && (
             <TextArea
               ref={textAreaRef}
               rows={1}
-              readOnly={!isOpen}
-              className={` ${isOpen ? "input" : "input-readonly"} text-sm dark:bg-neutral-700 dark:focus:bg-neutral-950/50`}
+              readOnly={!isRenamingTask}
+              className={` ${isRenamingTask ? "input" : "input-readonly"} text-sm dark:bg-neutral-700 dark:focus:bg-neutral-950/50`}
               value={newTaskName}
               onChange={handleTaskNameChange}
               error={error}
             />
           )}
-          {isOpen && (
+          {isRenamingTask && (
             <motion.div
               initial={{ opacity: 0, x: -4 }}
               animate={{ opacity: 1, x: 0 }}
               transition={smallElementTransition}
-              className={`${error ? "mb-6" : "mb-1.5"} flex gap-1.5`}
+              className={`${error ? "mb-6" : "mb-1"} flex gap-1.5`}
             >
               <SaveButton disabled={!!error || loading || pending} />
               <CancelButton onClick={handleClickOutside} />

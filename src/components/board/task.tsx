@@ -11,10 +11,7 @@ import { useUI } from "~/context/ui-context";
 import { EditButton } from "../ui/button/buttons";
 import type { TaskType } from "../../types";
 import ToggleTaskForm from "../action-forms/task/toggle-task-form";
-import {
-  sidebarTransition,
-  smallElementTransition,
-} from "~/utilities/framer-motion";
+import { sidebarTransition } from "~/utilities/framer-motion";
 
 const Task = ({
   columnId,
@@ -26,9 +23,8 @@ const Task = ({
   handleDragStart: Function;
 }) => {
   const { getCurrentBoard } = useBoards();
-  const [draggable, setDraggable] = useState(false);
   const { setShowEditTaskMenu, setEditedTask } = useUI();
-
+  const [isRenamingTask, setIsRenamingTask] = useState(false);
   const currentBoardId = getCurrentBoard()?.id;
 
   const completedSubtasks = task.subtasks.filter((s) => s.completed).length;
@@ -40,7 +36,7 @@ const Task = ({
   };
 
   // "draggable" is set to false when renaming so the state can be used to hide the menu button while renaming the task
-  const menuButtonJsx = draggable && (
+  const menuButtonJsx = !isRenamingTask && (
     <EditButton
       className="bg-dark text-light absolute right-1 top-1 z-[2] flex !h-5 !w-5 items-center justify-center p-0.5 focus-visible:opacity-100"
       onClick={handleClick}
@@ -62,8 +58,8 @@ const Task = ({
         transition={sidebarTransition}
         layoutId={task.id}
         onDragStart={(e) => handleDragStart(e, task, columnId)}
-        draggable={draggable}
-        className={`task-bg group relative flex shrink-0 cursor-grab flex-col gap-1 rounded-lg py-1.5 pl-2 ${draggable ? "pr-10" : "pr-2"}`}
+        draggable={!isRenamingTask}
+        className={`task-bg group relative flex shrink-0 cursor-grab flex-col gap-1 rounded-lg py-1.5 pl-2 ${!isRenamingTask ? "pr-10" : "pr-2"}`}
       >
         <div className="flex flex-1 items-start">
           <div>
@@ -75,7 +71,8 @@ const Task = ({
             />
           </div>
           <RenameTaskForm
-            setDraggable={setDraggable}
+            isRenamingTask={isRenamingTask}
+            setIsRenamingTask={setIsRenamingTask}
             boardId={currentBoardId}
             columnId={columnId}
             task={task}
