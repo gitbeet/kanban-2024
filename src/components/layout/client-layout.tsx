@@ -21,11 +21,12 @@ const ClientLayout = ({ children }: { children: React.ReactNode }) => {
             : "mx-auto flex min-h-screen flex-col justify-between"
         }
       >
+        {isBoardsPage && <Background />}
         {children}
         {!isBoardsPage && <Footer />}
-        {isBoardsPage && <Background />}
         {isBoardsPage && <Menus />}
         <MobileMenu />
+
         <div id="modal-root" className="absolute h-0 w-0" />
       </div>
     </>
