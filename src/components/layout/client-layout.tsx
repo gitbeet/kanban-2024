@@ -7,7 +7,16 @@ import Background from "../background/background";
 import { MotionGlobalConfig } from "framer-motion";
 import { useSettings } from "~/context/settings-context";
 import MobileMenu from "../menus/mobile-menu";
-const ClientLayout = ({ children }: { children: React.ReactNode }) => {
+import ClientNav from "../client-nav";
+const ClientLayout = ({
+  children,
+  loggedIn,
+  name,
+}: {
+  children: React.ReactNode;
+  loggedIn: boolean;
+  name: string | null | undefined;
+}) => {
   const { performanceMode } = useSettings();
   const pathname = usePathname();
   const isBoardsPage = pathname === "/boards";
@@ -21,12 +30,12 @@ const ClientLayout = ({ children }: { children: React.ReactNode }) => {
             : "mx-auto flex min-h-screen flex-col justify-between"
         }
       >
+        <ClientNav loggedIn={loggedIn} name={name} />
         {isBoardsPage && <Background />}
         {children}
         {!isBoardsPage && <Footer />}
         {isBoardsPage && <Menus />}
         <MobileMenu />
-
         <div id="modal-root" className="absolute h-0 w-0" />
       </div>
     </>

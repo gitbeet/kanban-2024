@@ -14,6 +14,7 @@ import "~/styles/globals.css";
 import type { BackgroundType, UserBackgroundType } from "~/types/background";
 import { unstable_cache as cache } from "next/cache";
 import ServerNavWrapper from "~/components/server-nav-wrapper";
+import { auth, currentUser } from "@clerk/nextjs/server";
 
 const roboto = Roboto({
   weight: ["300", "400", "500", "700", "900"],
@@ -66,6 +67,9 @@ export default async function RootLayout({
     userData = userDataResult.data;
   }
 
+  const { userId } = auth();
+  const user = userId ? await currentUser() : null;
+
   return (
     <html lang="en" className={`${roboto.variable}`} suppressHydrationWarning>
       <body>
@@ -82,8 +86,9 @@ export default async function RootLayout({
               duration: 10000,
             }}
           />
-          <ServerNavWrapper />
-          <ClientLayout>{children}</ClientLayout>
+          <ClientLayout loggedIn={!!user} name={user?.firstName}>
+            {children}
+          </ClientLayout>
         </Providers>
       </body>
     </html>
