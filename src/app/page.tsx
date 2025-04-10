@@ -64,7 +64,7 @@ const Hero = () => {
 
 const TrustedBy = () => (
   <Section variant="secondary" className="!py-6">
-    <div className="container mx-auto flex flex-wrap justify-between text-slate-400 dark:text-slate-600 md:gap-12">
+    <div className="container mx-auto flex flex-wrap justify-center gap-6 text-slate-400 dark:text-slate-600 md:gap-12">
       {netFlixLogo}
       {youTubeLogo}
       {discordLogo}
@@ -116,12 +116,12 @@ const Philosophy = () => (
       </>
     </SectionHeading>
     <SectionSubheading>
-      <p className="mx-auto max-w-2xl">
+      <span className="mx-auto max-w-2xl">
         At the heart of our tool is the <b>belief</b> that productivity comes
         from clarity, not complexity. We&apos;ve stripped away the unnecessary
         so you can focus on what matters - organizing tasks in a way that feels
         natural and effortless.
-      </p>
+      </span>
     </SectionSubheading>
   </Section>
 );
