@@ -1,19 +1,22 @@
+"use client";
+
 import { useClerk } from "@clerk/nextjs";
 import { Button } from "./ui/button/buttons";
+import { type AuthButtonProps } from "./sign-in-button";
 
-const SignOutButton = () => {
+const SignOutButton = ({ text = "Sign out", ...props }: AuthButtonProps) => {
   const { signOut, loaded } = useClerk();
   const handleSignOut = async () => await signOut();
   return (
     <>
       {loaded && (
-        <Button size="small" variant="ghost" onClick={handleSignOut}>
-          Sign out
+        <Button {...props} onClick={handleSignOut}>
+          {text}
         </Button>
       )}
       {!loaded && (
-        <Button size="small" variant="ghost" disabled>
-          Sign out
+        <Button {...props} disabled>
+          {text}
         </Button>
       )}
     </>

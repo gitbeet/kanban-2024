@@ -1,5 +1,3 @@
-"use client";
-
 import clipboardIcon from "../../public/icons/clipboard.png";
 import teamIcon from "../../public/icons/team.png";
 import rocketIcon from "../../public/icons/rocket.png";
@@ -22,43 +20,38 @@ import HeroHeading from "~/components/ui/typography/hero-heading";
 import HeroSubheading from "~/components/ui/typography/hero-subheading";
 import SectionHeading from "~/components/ui/typography/section-heading";
 import SectionSubheading from "~/components/ui/typography/section-subheading";
+import SignInButton from "~/components/sign-in-button";
+import SignUpButton from "~/components/sign-up-button";
+import { auth, currentUser } from "@clerk/nextjs/server";
 
-const Hero = () => {
-  // eslint-disable-next-line @typescript-eslint/unbound-method
-  const { redirectToSignIn, redirectToSignUp } = useClerk();
-  const handleRedirectToSignUp = async () => await redirectToSignUp();
-  const handleRedirectToSignIn = async () => await redirectToSignIn();
+const Hero = ({ loggedIn }: { loggedIn: boolean }) => {
   return (
-    <div className="bg-neutral-25 dark:bg-neutral-900">
-      <Section className="relative flex flex-col gap-4 md:flex-row md:gap-16">
-        <div className="grow space-y-8 md:space-y-12">
-          <div className="z-[2] flex flex-col items-start gap-6 md:py-12">
-            <HeroHeading>
-              <ColorGradientText text="Organize " />
-              <span>
-                Your work,
-                <br /> Your way
-              </span>
-            </HeroHeading>
-            <HeroSubheading
-              text="Streamline tasks, collaborate effortlessly, and boost productivity
+    <Section className="relative flex flex-col gap-4 md:flex-row md:gap-16">
+      <div className="grow space-y-8 md:space-y-12">
+        <div className="z-[2] flex flex-col items-start gap-6 md:py-12">
+          <HeroHeading>
+            <ColorGradientText text="Organize " />
+            <span>
+              Your work,
+              <br /> Your way
+            </span>
+          </HeroHeading>
+          <HeroSubheading
+            text="Streamline tasks, collaborate effortlessly, and boost productivity
               with our Trello-inspired project management tool. Visualize your
               workflow and get things done—faster and smarter!"
-              className="z-10 max-w-[700px] text-left"
-            />
-          </div>
-          <SignedOut>
-            <div className="flex gap-3">
-              <Button onClick={handleRedirectToSignUp} variant="ghost">
-                Sign up for free
-              </Button>
-              <Button onClick={handleRedirectToSignIn}>Sign in</Button>
-            </div>
-          </SignedOut>
+            className="z-10 max-w-[700px] text-left"
+          />
         </div>
-        <HeroImage />
-      </Section>
-    </div>
+        {!loggedIn && (
+          <div className="flex gap-3">
+            <SignUpButton size="base" variant="ghost" />
+            <SignInButton size="base" variant="primary" />
+          </div>
+        )}
+      </div>
+      <HeroImage />
+    </Section>
   );
 };
 
@@ -162,13 +155,9 @@ const Steps = () => (
   </Section>
 );
 
-const CTA = () => {
-  // eslint-disable-next-line @typescript-eslint/unbound-method
-  const { redirectToSignIn, redirectToSignUp } = useClerk();
-  const handleRedirectToSignUp = async () => await redirectToSignUp();
-  const handleRedirectToSignIn = async () => await redirectToSignIn();
+const CTA = ({ loggedIn }: { loggedIn: boolean }) => {
   return (
-    <SignedOut>
+    !loggedIn && (
       <Section variant="secondary">
         <div className="space-y-4">
           <SectionHeading>
@@ -182,25 +171,27 @@ const CTA = () => {
         </div>
         <div className="h-8" />
         <div className="z-10 flex justify-center gap-4">
-          <Button onClick={handleRedirectToSignUp} variant="ghost">
-            Sign up for free
-          </Button>
-          <Button onClick={handleRedirectToSignIn}>Sign in</Button>
+          <SignUpButton size="base" variant="ghost" />
+          <SignInButton size="base" variant="primary" />
         </div>
       </Section>
-    </SignedOut>
+    )
   );
 };
 
-export default function HomePage() {
+const Home = async () => {
+  const { userId } = auth();
+  const user = userId ? await currentUser() : null;
   return (
     <>
-      <Hero />
+      <Hero loggedIn={!!user} />
       <TrustedBy />
       <Features />
       <Philosophy />
       <Steps />
-      <CTA />
+      <CTA loggedIn={!!user} />
     </>
   );
-}
+};
+
+export default Home;

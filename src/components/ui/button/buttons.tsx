@@ -9,7 +9,15 @@ import { LoadingPage } from "../loading-spinner";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { IoSettingsSharp } from "react-icons/io5";
 
-interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+export type ButtonVariant =
+  | "primary"
+  | "ghost"
+  | "text"
+  | "danger"
+  | "secondary";
+export type ButtonSize = "small" | "base";
+
+export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: "primary" | "ghost" | "text" | "danger" | "secondary";
   loading?: boolean;
   size?: "small" | "base";

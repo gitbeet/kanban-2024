@@ -1,20 +1,32 @@
-import { useClerk } from "@clerk/nextjs";
-import { Button } from "./ui/button/buttons";
+"use client";
 
-const SignInButton = () => {
+import { useClerk } from "@clerk/nextjs";
+import {
+  Button,
+  type ButtonSize,
+  type ButtonVariant,
+} from "./ui/button/buttons";
+
+export type AuthButtonProps = {
+  variant: ButtonVariant;
+  size: ButtonSize;
+  text?: string;
+};
+
+const SignInButton = ({ text = "Sign in", ...props }: AuthButtonProps) => {
   // eslint-disable-next-line @typescript-eslint/unbound-method
   const { redirectToSignIn, loaded } = useClerk();
   const handleRedirectToSignIn = async () => await redirectToSignIn();
   return (
     <>
       {loaded && (
-        <Button size="small" onClick={handleRedirectToSignIn}>
-          Sign in
+        <Button {...props} onClick={handleRedirectToSignIn}>
+          {text}
         </Button>
       )}
       {!loaded && (
-        <Button size="small" variant="primary" disabled>
-          Sign in
+        <Button {...props} disabled>
+          {text}
         </Button>
       )}
     </>

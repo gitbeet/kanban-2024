@@ -38,14 +38,14 @@ const ClientNav = ({
                 <span className="text-light">Hello, </span>
                 <b>{name}</b>
               </p>
-              <SignOutButton />
+              <SignOutButton size="small" variant="ghost" />
             </div>
           </>
         )}
         {!loggedIn && (
           <>
             <div className="hidden lg:block">
-              <SignInButton />
+              <SignInButton size="small" variant="primary" />
             </div>
           </>
         )}
