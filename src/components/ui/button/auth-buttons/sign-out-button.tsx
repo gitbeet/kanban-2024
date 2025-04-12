@@ -1,7 +1,7 @@
 "use client";
 
 import { useClerk } from "@clerk/nextjs";
-import { Button } from "./ui/button/button";
+import { Button } from "../button";
 import { type AuthButtonProps } from "./sign-in-button";
 
 const SignOutButton = ({ text = "Sign out", ...props }: AuthButtonProps) => {

@@ -3,7 +3,7 @@ import type { TextareaHTMLAttributes } from "react";
 import { handlePressEnterToSubmit } from "~/utilities/handlePressEnterOrEscape";
 import { motion, type MotionProps } from "framer-motion";
 import { smallElementTransition } from "~/utilities/framer-motion";
-import ErrorText from "./error-text";
+import ErrorText from "../typography/error-text";
 
 type TextAreaProps = MotionProps &
   TextareaHTMLAttributes<HTMLTextAreaElement> & {

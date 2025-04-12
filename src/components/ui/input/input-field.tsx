@@ -2,8 +2,8 @@ import { forwardRef, type InputHTMLAttributes } from "react";
 import { handlePressEnterToSubmit } from "~/utilities/handlePressEnterOrEscape";
 import { motion } from "framer-motion";
 import { smallElementTransition } from "~/utilities/framer-motion";
-import ErrorText from "./error-text";
-import Text from "./typography/text";
+import ErrorText from "../typography/error-text";
+import Text from "../typography/text";
 
 type BaseProps = InputHTMLAttributes<HTMLInputElement> & {
   className?: string;

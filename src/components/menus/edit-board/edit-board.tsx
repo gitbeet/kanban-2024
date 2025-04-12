@@ -1,5 +1,5 @@
 import { type ChangeEvent, startTransition, useEffect, useState } from "react";
-import InputField from "~/components/ui/input-field";
+import InputField from "~/components/ui/input/input-field";
 import { ModalWithBackdrop } from "~/components/ui/modal/modal";
 import { useUI } from "~/context/ui-context";
 import type { BoardType, ColumnType } from "~/types";

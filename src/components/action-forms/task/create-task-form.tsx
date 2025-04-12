@@ -9,7 +9,7 @@ import { handleCreateTask } from "~/server/queries";
 import { TaskSchema } from "~/zod-schemas";
 import type { ChangeEvent, FormEvent } from "react";
 import type { TaskType } from "~/types";
-import TextArea from "~/components/ui/text-area";
+import TextArea from "~/components/ui/input/text-area";
 import FocusTrap from "focus-trap-react";
 import { type CreateTaskAction } from "~/types/actions";
 import { showCustomErrorToast } from "~/utilities/showCustomErrorToast";

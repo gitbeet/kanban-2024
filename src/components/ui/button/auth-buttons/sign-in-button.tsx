@@ -1,11 +1,7 @@
 "use client";
 
 import { useClerk } from "@clerk/nextjs";
-import {
-  Button,
-  type ButtonSize,
-  type ButtonVariant,
-} from "./ui/button/button";
+import { Button, type ButtonSize, type ButtonVariant } from "../button";
 
 export type AuthButtonProps = {
   variant: ButtonVariant;

@@ -1,5 +1,5 @@
 import { type ButtonHTMLAttributes } from "react";
-import { LoadingPage } from "../loading-spinner";
+import LoadingPage from "../loading/loading-page";
 
 export type ButtonVariant =
   | "primary"

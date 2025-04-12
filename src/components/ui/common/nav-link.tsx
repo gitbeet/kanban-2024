@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Text from "./typography/text";
+import Text from "../typography/text";
 
 const NavLink = ({ href, title }: { href: string; title: string }) => {
   return (

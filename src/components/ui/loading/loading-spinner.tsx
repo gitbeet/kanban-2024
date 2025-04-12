@@ -7,7 +7,7 @@ const LoadingSpinner = ({ size = 24 }: { size?: number }) => {
     >
       <svg
         aria-hidden="true"
-        className="dark:text-gray-600 h-8 w-8 animate-spin fill-primary-600 text-neutral-250"
+        className="h-8 w-8 animate-spin fill-primary-600 text-neutral-250 dark:text-gray-600"
         viewBox="0 0 100 101"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
@@ -25,11 +25,5 @@ const LoadingSpinner = ({ size = 24 }: { size?: number }) => {
     </div>
   );
 };
-
-export const LoadingPage = () => (
-  <div className="grid h-full w-full place-content-center">
-    <LoadingSpinner />
-  </div>
-);
 
 export default LoadingSpinner;

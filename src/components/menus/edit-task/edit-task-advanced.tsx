@@ -7,7 +7,7 @@ import { mutateTable } from "~/server/queries";
 import { SubtaskSchema, TaskSchema } from "~/zod-schemas";
 import type { ChangeEvent } from "react";
 import type { SubtaskType, TaskType } from "~/types";
-import InputField from "~/components/ui/input-field";
+import InputField from "~/components/ui/input/input-field";
 import { ModalWithBackdrop } from "~/components/ui/modal/modal";
 import PromptWindow from "~/components/ui/modal/prompt-window";
 import { useUI } from "~/context/ui-context";

@@ -3,7 +3,6 @@
 import { useBoards } from "~/context/boards-context";
 import { motion } from "framer-motion";
 import CreateBoardForm from "../action-forms/board/create-board-form";
-import { LoadingPage } from "../ui/loading-spinner";
 import Column from "./column";
 import DeleteTaskZone from "./delete-task-zone";
 import CreateColumnForm from "../action-forms/column/create-column-form";
@@ -13,6 +12,7 @@ import { useUI } from "~/context/ui-context";
 import { sidebarTransition } from "~/utilities/framer-motion";
 import Text from "../ui/typography/text";
 import { type ReactNode } from "react";
+import LoadingPage from "../ui/loading/loading-page";
 
 const BlockHeading = ({ title }: { title: string }) => (
   <Text variant="primary">

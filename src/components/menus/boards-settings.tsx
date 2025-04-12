@@ -10,7 +10,7 @@ import { useBackground } from "~/context/bg-context";
 import UploadBackground from "../background/upload-background";
 import UserBackgroundOption from "../background/user-background-option";
 import BlurToggle from "../background/blur-toggle";
-import ExpandMenu from "../ui/expand-menu";
+import ExpandMenu from "../ui/common/expand-menu";
 import { motion } from "framer-motion";
 import { sidebarTransition } from "~/utilities/framer-motion";
 import { useSettings } from "~/context/settings-context";

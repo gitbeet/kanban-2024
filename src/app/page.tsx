@@ -3,7 +3,7 @@ import teamIcon from "../../public/icons/team.png";
 import rocketIcon from "../../public/icons/rocket.png";
 import TestArticle from "~/components/landing-page/feature";
 import TestStep from "~/components/landing-page/step";
-import Section from "~/components/ui/section";
+import Section from "~/components/ui/common/section";
 import ColorGradientText from "~/components/ui/typography/color-gradient-text";
 import {
   amazonLogo,
@@ -18,8 +18,8 @@ import HeroHeading from "~/components/ui/typography/hero-heading";
 import HeroSubheading from "~/components/ui/typography/hero-subheading";
 import SectionHeading from "~/components/ui/typography/section-heading";
 import SectionSubheading from "~/components/ui/typography/section-subheading";
-import SignInButton from "~/components/sign-in-button";
-import SignUpButton from "~/components/sign-up-button";
+import SignInButton from "~/components/ui/button/auth-buttons/sign-in-button";
+import SignUpButton from "~/components/ui/button/auth-buttons/sign-up-button";
 import { auth, currentUser } from "@clerk/nextjs/server";
 
 const Hero = ({ loggedIn }: { loggedIn: boolean }) => {

@@ -4,8 +4,8 @@ import { SignedIn, SignedOut, useClerk } from "@clerk/nextjs";
 import { Button } from "../ui/button/button";
 import { usePathname } from "next/navigation";
 import Logo from "../common/logo";
-import MobileMenuButton from "../ui/mobile-menu-button";
-import NavLink from "../ui/nav-link";
+import MobileMenuButton from "../common/mobile-menu-button";
+import NavLink from "../ui/common/nav-link";
 
 const Nav = () => {
   // eslint-disable-next-line @typescript-eslint/unbound-method

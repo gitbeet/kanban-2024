@@ -7,7 +7,7 @@ import { resizeTextArea } from "~/utilities/resizeTextArea";
 import { TaskSchema } from "~/zod-schemas";
 import type { TaskType } from "~/types";
 import type { ChangeEvent, Dispatch, FormEvent, SetStateAction } from "react";
-import TextArea from "~/components/ui/text-area";
+import TextArea from "~/components/ui/input/text-area";
 import FocusTrap from "focus-trap-react";
 import { type RenameTaskAction } from "~/types/actions";
 import { showCustomErrorToast } from "~/utilities/showCustomErrorToast";

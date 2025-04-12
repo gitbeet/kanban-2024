@@ -2,7 +2,7 @@ import { useRef, useState, useTransition } from "react";
 import { useBoards } from "~/context/boards-context";
 import useClickOutside from "~/hooks/useClickOutside";
 import { handleRenameColumn } from "~/server/queries";
-import InputField from "~/components/ui/input-field";
+import InputField from "~/components/ui/input/input-field";
 import { ColumnSchema } from "~/zod-schemas";
 import type { ChangeEvent, Dispatch, FormEvent, SetStateAction } from "react";
 import { type RenameColumnAction } from "~/types/actions";

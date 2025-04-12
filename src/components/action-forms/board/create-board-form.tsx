@@ -5,7 +5,7 @@ import { useUser } from "@clerk/nextjs";
 import { useBoards } from "~/context/boards-context";
 import { handleCreateBoard } from "~/server/queries";
 import { v4 as uuid } from "uuid";
-import InputField from "~/components/ui/input-field";
+import InputField from "~/components/ui/input/input-field";
 import { motion } from "framer-motion";
 import { BoardSchema } from "~/zod-schemas";
 import type { ChangeEvent, FormEvent } from "react";

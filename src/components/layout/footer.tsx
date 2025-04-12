@@ -1,6 +1,6 @@
 import Logo from "../common/logo";
 import ThemeSwitchUpdated from "../common/theme-switch-updated";
-import NavLink from "../ui/nav-link";
+import NavLink from "../ui/common/nav-link";
 
 const Footer = ({ loggedIn }: { loggedIn: boolean }) => {
   return (
