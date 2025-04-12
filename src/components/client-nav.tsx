@@ -6,6 +6,7 @@ import SignInButton from "./sign-in-button";
 import { usePathname } from "next/navigation";
 import MobileMenuButton from "./ui/mobile-menu-button";
 import NavLink from "./ui/nav-link";
+import Text from "./ui/typography/text";
 const ClientNav = ({
   loggedIn,
   name,
@@ -35,8 +36,12 @@ const ClientNav = ({
           <>
             <div className="hidden items-center gap-2 lg:flex">
               <p className="text-sm">
-                <span className="text-light">Hello, </span>
-                <b>{name}</b>
+                <Text variant="secondary">
+                  <span>Hello, </span>
+                </Text>
+                <Text variant="primary">
+                  <b>{name}</b>
+                </Text>
               </p>
               <SignOutButton size="small" variant="ghost" />
             </div>

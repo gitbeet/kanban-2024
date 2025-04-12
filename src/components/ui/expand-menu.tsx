@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { FaChevronUp } from "react-icons/fa";
 import { AnimatePresence, motion } from "framer-motion";
+import { Button } from "./button/buttons";
+import Text from "./typography/text";
 
 const ExpandMenu = ({
   children,
@@ -21,15 +23,17 @@ const ExpandMenu = ({
 
   return (
     <section>
-      <button
-        className="flex w-full grow items-center justify-between rounded bg-transparent p-2.5 transition hover:bg-white active:bg-neutral-50 dark:hover:bg-neutral-800 dark:active:bg-neutral-750"
-        onClick={() => setIsOpen((prev) => !prev)}
-        tabIndex={tabIndex}
-        aria-expanded={isOpen}
-        disabled={disabled}
-      >
-        {header} {menuIcon}
-      </button>
+      <Text variant="primary">
+        <button
+          className="flex w-full grow items-center justify-between rounded bg-transparent p-2.5 transition hover:bg-white active:bg-neutral-50 dark:hover:bg-neutral-800 dark:active:bg-neutral-750"
+          onClick={() => setIsOpen((prev) => !prev)}
+          tabIndex={tabIndex}
+          aria-expanded={isOpen}
+          disabled={disabled}
+        >
+          {header} {menuIcon}
+        </button>
+      </Text>
       <AnimatePresence initial={false}>
         {isOpen && (
           <motion.div
@@ -56,7 +60,7 @@ const ExpandMenu = ({
             }}
             className="overflow-hidden"
           >
-            <div className="px-2.5 py-4">{children}</div>
+            <div className="px-2 py-4">{children}</div>
           </motion.div>
         )}
       </AnimatePresence>

@@ -1,8 +1,13 @@
 import { useBoards } from "~/context/boards-context";
 import { useUI } from "~/context/ui-context";
-import { MoreButton, SettingsButton } from "~/components/ui/button/buttons";
+import {
+  Button,
+  MoreButton,
+  SettingsButton,
+} from "~/components/ui/button/buttons";
 import { useRef } from "react";
 import EditBoardSmallMenu from "../menus/edit-board/edit-board-small-menu";
+import Text from "../ui/typography/text";
 
 export const BoardsNav = () => {
   const moreButtonRef = useRef<HTMLButtonElement | null>(null);
@@ -49,13 +54,14 @@ export const BoardsNav = () => {
         )}
         {/* Board name button */}
         {!noBoards && (
-          <button
+          <Button
             disabled={sidebarAnimating}
             onClick={handleToggleShowSidebar}
-            className="text-dark cursor-pointer text-center text-xl font-bold"
+            className="text-xl"
+            variant="text"
           >
             {!noBoards && currentBoard?.name}
-          </button>
+          </Button>
         )}
       </div>
       <SettingsButton

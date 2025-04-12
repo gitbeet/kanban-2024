@@ -16,6 +16,8 @@ import { sidebarTransition } from "~/utilities/framer-motion";
 import { useSettings } from "~/context/settings-context";
 import { modifyUserData } from "~/server/queries";
 import { showCustomErrorToast } from "~/utilities/showCustomErrorToast";
+import Text from "../ui/typography/text";
+import SettingsSection from "../ui/boards-settings/settings-section";
 
 const BoardsSettings = () => {
   const {
@@ -74,83 +76,85 @@ const BoardsSettings = () => {
           />
 
           <div className="flex flex-col gap-12 pt-8">
-            <h2 className="text-lg font-semibold">Background</h2>
-            <div className="space-y-8">
-              <ExpandMenu
-                disabled={boardsSettingsAnimating}
-                header="Background Settings"
-                tabIndex={resolvedTabIndex}
-              >
-                <OpacitySlider tabIndex={resolvedTabIndex} />
-                <BlurToggle tabIndex={resolvedTabIndex} />
-              </ExpandMenu>
-              <ExpandMenu
-                disabled={boardsSettingsAnimating}
-                header="Color backgrounds"
-                tabIndex={resolvedTabIndex}
-                defaultOpen
-              >
-                <div className="flex flex-wrap gap-3">
-                  {colorBackgrounds.map((b, i) => (
-                    <BackgroundOption
-                      key={i}
-                      background={b}
-                      tabIndex={resolvedTabIndex}
-                    />
-                  ))}
-                </div>
-              </ExpandMenu>
-              <ExpandMenu
-                disabled={boardsSettingsAnimating}
-                header="Image backgrounds"
-                tabIndex={resolvedTabIndex}
-              >
-                <div className="flex flex-wrap gap-3">
-                  {imageBackgrounds.map((b, i) => (
-                    <BackgroundOption
-                      key={i}
-                      background={b}
-                      tabIndex={resolvedTabIndex}
-                    />
-                  ))}
-                </div>
-              </ExpandMenu>
-              <ExpandMenu
-                header="User backgrounds"
-                tabIndex={resolvedTabIndex}
-                disabled={boardsSettingsAnimating}
-              >
-                <div className="flex flex-wrap gap-3">
-                  {optimisticUserBackgrounds.map((b) => (
-                    <UserBackgroundOption key={b.id} background={b} />
-                  ))}
-                  <UploadBackground />
-                </div>
-              </ExpandMenu>
-            </div>
-            <form
-              onSubmit={togglePerformanceMode}
-              className="flex items-start gap-2"
-            >
-              <div className="pt-0.5">
-                <ToggleButton checked={performanceMode} />
-              </div>
-              <div>
-                <p>Disable animations</p>
-                <span className="text-light text-sm">
-                  (improves performance)
-                </span>
-              </div>
-            </form>
-            <div className="space-y-4">
-              <h4 className="text-lg font-semibold">Theme</h4>
-              <div className="pl-2">
-                <ThemeSwitchUpdated
+            <SettingsSection title="Background">
+              <>
+                <ExpandMenu
+                  disabled={boardsSettingsAnimating}
+                  header="Background Settings"
+                  tabIndex={resolvedTabIndex}
+                >
+                  <OpacitySlider tabIndex={resolvedTabIndex} />
+                  <BlurToggle tabIndex={resolvedTabIndex} />
+                </ExpandMenu>
+                <ExpandMenu
+                  disabled={boardsSettingsAnimating}
+                  header="Color backgrounds"
+                  tabIndex={resolvedTabIndex}
+                  defaultOpen
+                >
+                  <div className="flex flex-wrap gap-3">
+                    {colorBackgrounds.map((b, i) => (
+                      <BackgroundOption
+                        key={i}
+                        background={b}
+                        tabIndex={resolvedTabIndex}
+                      />
+                    ))}
+                  </div>
+                </ExpandMenu>
+                <ExpandMenu
+                  disabled={boardsSettingsAnimating}
+                  header="Image backgrounds"
+                  tabIndex={resolvedTabIndex}
+                >
+                  <div className="flex flex-wrap gap-3">
+                    {imageBackgrounds.map((b, i) => (
+                      <BackgroundOption
+                        key={i}
+                        background={b}
+                        tabIndex={resolvedTabIndex}
+                      />
+                    ))}
+                  </div>
+                </ExpandMenu>
+                <ExpandMenu
+                  header="User backgrounds"
                   tabIndex={resolvedTabIndex}
                   disabled={boardsSettingsAnimating}
-                />
-              </div>
-            </div>
+                >
+                  <div className="flex flex-wrap gap-3">
+                    {optimisticUserBackgrounds.map((b) => (
+                      <UserBackgroundOption key={b.id} background={b} />
+                    ))}
+                    <UploadBackground />
+                  </div>
+                </ExpandMenu>
+              </>
+            </SettingsSection>
+            <SettingsSection title="Performance">
+              <>
+                <form
+                  onSubmit={togglePerformanceMode}
+                  className="flex items-start gap-2"
+                >
+                  <div className="pt-0.5">
+                    <ToggleButton checked={performanceMode} />
+                  </div>
+                  <div>
+                    <p>Disable animations</p>
+                    <span className="text-light text-sm">
+                      (improves performance)
+                    </span>
+                  </div>
+                </form>
+              </>
+            </SettingsSection>
+            <SettingsSection title="Theme">
+              <ThemeSwitchUpdated
+                tabIndex={resolvedTabIndex}
+                disabled={boardsSettingsAnimating}
+              />
+            </SettingsSection>
           </div>
         </div>
       </FocusTrap>
