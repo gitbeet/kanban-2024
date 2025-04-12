@@ -1,5 +1,5 @@
 import { SmartPortalWithBackdrop } from "~/components/common/smart-portal";
-import { Button } from "~/components/ui/button/buttons";
+import { Button } from "~/components/ui/button/button";
 import { useUI } from "~/context/ui-context";
 type Props = { buttonBottom: number; buttonLeft: number; buttonWidth: number };
 

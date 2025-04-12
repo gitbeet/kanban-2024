@@ -1,5 +1,5 @@
 import DeleteBoardForm from "~/components/action-forms/board/delete-board-form";
-import { Button } from "~/components/ui/button/buttons";
+import { Button } from "~/components/ui/button/button";
 import PromptWindow from "~/components/ui/modal/prompt-window";
 import { useBoards } from "~/context/boards-context";
 import { useUI } from "~/context/ui-context";

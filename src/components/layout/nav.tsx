@@ -1,7 +1,7 @@
 "use client";
 
 import { SignedIn, SignedOut, useClerk } from "@clerk/nextjs";
-import { Button } from "../ui/button/buttons";
+import { Button } from "../ui/button/button";
 import { usePathname } from "next/navigation";
 import Logo from "../common/logo";
 import MobileMenuButton from "../ui/mobile-menu-button";

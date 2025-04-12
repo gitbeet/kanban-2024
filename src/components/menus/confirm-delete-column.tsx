@@ -1,6 +1,6 @@
 import { useUI } from "~/context/ui-context";
 import PromptWindow from "../ui/modal/prompt-window";
-import { Button } from "../ui/button/buttons";
+import { Button } from "../ui/button/button";
 import DeleteColumnForm from "../action-forms/column/delete-column-form";
 const ConfirmDeleteColumn = () => {
   const {

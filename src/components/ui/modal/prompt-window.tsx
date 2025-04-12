@@ -1,5 +1,5 @@
+import CloseButton from "../button/close-button";
 import { ModalWithBackdrop } from "./modal";
-import { CloseButton } from "../button/buttons";
 interface Props {
   show: boolean;
   showBackdrop: boolean;

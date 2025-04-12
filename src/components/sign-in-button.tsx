@@ -5,7 +5,7 @@ import {
   Button,
   type ButtonSize,
   type ButtonVariant,
-} from "./ui/button/buttons";
+} from "./ui/button/button";
 
 export type AuthButtonProps = {
   variant: ButtonVariant;

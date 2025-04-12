@@ -1,6 +1,5 @@
 import { SmartPortalWithBackdrop } from "~/components/common/smart-portal";
-import { Button } from "~/components/ui/button/buttons";
-import MoreButtonMenu from "~/components/ui/modal/more-button-menu";
+import { Button } from "~/components/ui/button/button";
 import { useUI } from "~/context/ui-context";
 
 const EditTaskSmallMenu = ({

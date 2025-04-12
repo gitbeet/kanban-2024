@@ -2,15 +2,8 @@ import { useRef, useState, useTransition } from "react";
 import { useBoards } from "~/context/boards-context";
 import { v4 as uuid } from "uuid";
 import { handleCreateColumn } from "~/server/queries";
-import {
-  AddButton,
-  Button,
-  CancelButton,
-  SaveButton,
-} from "~/components/ui/button/buttons";
 import InputField from "~/components/ui/input-field";
 import { ColumnSchema } from "~/zod-schemas";
-import { FaPlus } from "react-icons/fa6";
 import type { ColumnType } from "~/types";
 import type { ChangeEvent, FormEvent } from "react";
 import FocusTrap from "focus-trap-react";
@@ -22,7 +15,9 @@ import {
   slideFormDownVariants,
   smallElementTransition,
 } from "~/utilities/framer-motion";
-import Text from "~/components/ui/typography/text";
+import AddButton from "~/components/ui/button/add-button";
+import CancelButton from "~/components/ui/button/cancel-button";
+import SaveButton from "~/components/ui/button/save-button";
 interface CreateColumnProps extends React.HTMLAttributes<HTMLDivElement> {
   boardId: string;
 }

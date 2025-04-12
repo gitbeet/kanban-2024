@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { FaChevronUp } from "react-icons/fa";
 import { AnimatePresence, motion } from "framer-motion";
-import { Button } from "./button/buttons";
+import { Button } from "./button/icon-buton";
 import Text from "./typography/text";
 
 const ExpandMenu = ({

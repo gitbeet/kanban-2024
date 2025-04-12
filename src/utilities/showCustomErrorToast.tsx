@@ -1,5 +1,5 @@
 import toast from "react-hot-toast";
-import { Button } from "~/components/ui/button/buttons";
+import { Button } from "~/components/ui/button/button";
 
 export const showCustomErrorToast = ({ message }: { message: string }) => {
   toast.error((t) => (

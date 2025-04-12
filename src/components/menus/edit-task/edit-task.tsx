@@ -1,9 +1,4 @@
 import { useEffect, useRef, useState, useTransition } from "react";
-import {
-  Button,
-  MoreButton,
-  ToggleButton,
-} from "~/components/ui/button/buttons";
 import { ModalWithBackdrop } from "~/components/ui/modal/modal";
 import { useBoards } from "~/context/boards-context";
 import { useUI } from "~/context/ui-context";
@@ -17,6 +12,9 @@ import type {
 } from "~/types/actions";
 import PromptWindow from "~/components/ui/modal/prompt-window";
 import { showCustomErrorToast } from "~/utilities/showCustomErrorToast";
+import { Button } from "~/components/ui/button/button";
+import MoreButton from "~/components/ui/button/more-button";
+import ToggleButton from "~/components/ui/button/toggle-button";
 
 const EditTask = ({ task, columnId }: { task: TaskType; columnId: string }) => {
   const {

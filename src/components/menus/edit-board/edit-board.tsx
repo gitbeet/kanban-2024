@@ -1,9 +1,4 @@
 import { type ChangeEvent, startTransition, useEffect, useState } from "react";
-import {
-  Button,
-  CloseButton,
-  DeleteButton,
-} from "~/components/ui/button/buttons";
 import InputField from "~/components/ui/input-field";
 import { ModalWithBackdrop } from "~/components/ui/modal/modal";
 import { useUI } from "~/context/ui-context";
@@ -20,6 +15,9 @@ import type {
 } from "~/types/actions";
 import { useBoards } from "~/context/boards-context";
 import { showCustomErrorToast } from "~/utilities/showCustomErrorToast";
+import { Button } from "~/components/ui/button/button";
+import DeleteButton from "~/components/ui/button/delete-button";
+import CloseButton from "~/components/ui/button/close-button";
 
 type ErrorType = {
   boardName: string;

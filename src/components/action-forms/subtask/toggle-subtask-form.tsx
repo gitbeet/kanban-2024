@@ -1,11 +1,11 @@
 import { useTransition } from "react";
 import type { FormEvent } from "react";
 import { handleToggleSubtaskCompleted } from "~/server/queries";
-import { ToggleButton } from "~/components/ui/button/buttons";
 import { useBoards } from "~/context/boards-context";
 import type { SubtaskType } from "~/types";
-import { ToggleSubtaskAction } from "~/types/actions";
+import { type ToggleSubtaskAction } from "~/types/actions";
 import { showCustomErrorToast } from "~/utilities/showCustomErrorToast";
+import ToggleButton from "~/components/ui/button/toggle-button";
 
 const ToggleSubtaskForm = ({
   columnId,

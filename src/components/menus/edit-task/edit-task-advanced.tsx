@@ -1,6 +1,6 @@
 "use client";
 
-import { startTransition, useEffect, useState, useTransition } from "react";
+import { startTransition, useEffect, useState } from "react";
 import { useBoards } from "~/context/boards-context";
 import { v4 as uuid } from "uuid";
 import { mutateTable } from "~/server/queries";
@@ -8,11 +8,6 @@ import { SubtaskSchema, TaskSchema } from "~/zod-schemas";
 import type { ChangeEvent } from "react";
 import type { SubtaskType, TaskType } from "~/types";
 import InputField from "~/components/ui/input-field";
-import {
-  Button,
-  CloseButton,
-  DeleteButton,
-} from "~/components/ui/button/buttons";
 import { ModalWithBackdrop } from "~/components/ui/modal/modal";
 import PromptWindow from "~/components/ui/modal/prompt-window";
 import { useUI } from "~/context/ui-context";
@@ -24,6 +19,9 @@ import type {
   Action,
 } from "~/types/actions";
 import { showCustomErrorToast } from "~/utilities/showCustomErrorToast";
+import { Button } from "~/components/ui/button/button";
+import DeleteButton from "~/components/ui/button/delete-button";
+import CloseButton from "~/components/ui/button/close-button";
 
 interface Props {
   task: TaskType;

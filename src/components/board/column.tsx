@@ -11,10 +11,10 @@ import type { DragEvent } from "react";
 import type { TaskType, ColumnType } from "../../types";
 import { handleSwitchTaskColumn } from "~/server/queries";
 import { useUI } from "~/context/ui-context";
-import { DeleteButton } from "../ui/button/buttons";
 import { motion } from "framer-motion";
 import { sidebarTransition } from "~/utilities/framer-motion";
 import Text from "../ui/typography/text";
+import DeleteButton from "../ui/button/delete-button";
 
 const Column = ({
   boardId,

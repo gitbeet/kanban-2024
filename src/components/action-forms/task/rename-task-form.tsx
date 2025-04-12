@@ -4,7 +4,6 @@ import { useEffect, useState, useTransition, useRef } from "react";
 import { useBoards } from "~/context/boards-context";
 import { handleRenameTask } from "~/server/queries";
 import { resizeTextArea } from "~/utilities/resizeTextArea";
-import { CancelButton, SaveButton } from "~/components/ui/button/buttons";
 import { TaskSchema } from "~/zod-schemas";
 import type { TaskType } from "~/types";
 import type { ChangeEvent, Dispatch, FormEvent, SetStateAction } from "react";
@@ -14,6 +13,8 @@ import { type RenameTaskAction } from "~/types/actions";
 import { showCustomErrorToast } from "~/utilities/showCustomErrorToast";
 import { motion } from "framer-motion";
 import { smallElementTransition } from "~/utilities/framer-motion";
+import CancelButton from "~/components/ui/button/cancel-button";
+import SaveButton from "~/components/ui/button/save-button";
 
 const RenameTaskForm = ({
   boardId,

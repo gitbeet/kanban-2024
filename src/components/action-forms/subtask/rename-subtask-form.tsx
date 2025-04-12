@@ -1,11 +1,11 @@
 import { useState, useTransition } from "react";
 import type { FormEvent } from "react";
 import { handleRenameSubtask } from "~/server/queries";
-import { SaveButton } from "~/components/ui/button/buttons";
 import { useBoards } from "~/context/boards-context";
 import { SubtaskSchema } from "~/zod-schemas";
-import { RenameSubtaskAction } from "~/types/actions";
+import { type RenameSubtaskAction } from "~/types/actions";
 import { showCustomErrorToast } from "~/utilities/showCustomErrorToast";
+import SaveButton from "~/components/ui/button/save-button";
 
 const RenameSubtaskForm = ({
   columnId,

@@ -1,13 +1,10 @@
 import { useBoards } from "~/context/boards-context";
 import { useUI } from "~/context/ui-context";
-import {
-  Button,
-  MoreButton,
-  SettingsButton,
-} from "~/components/ui/button/buttons";
 import { useRef } from "react";
 import EditBoardSmallMenu from "../menus/edit-board/edit-board-small-menu";
-import Text from "../ui/typography/text";
+import { Button } from "../ui/button/button";
+import SettingsButton from "../ui/button/settings-button";
+import MoreButton from "../ui/button/more-button";
 
 export const BoardsNav = () => {
   const moreButtonRef = useRef<HTMLButtonElement | null>(null);

@@ -6,7 +6,6 @@ import InputField from "~/components/ui/input-field";
 import { ColumnSchema } from "~/zod-schemas";
 import type { ChangeEvent, Dispatch, FormEvent, SetStateAction } from "react";
 import { type RenameColumnAction } from "~/types/actions";
-import { CancelButton, SaveButton } from "~/components/ui/button/buttons";
 import FocusTrap from "focus-trap-react";
 import { showCustomErrorToast } from "~/utilities/showCustomErrorToast";
 import { motion } from "framer-motion";
@@ -15,6 +14,8 @@ import {
   slideFormDownVariants,
   smallElementTransition,
 } from "~/utilities/framer-motion";
+import CancelButton from "~/components/ui/button/cancel-button";
+import SaveButton from "~/components/ui/button/save-button";
 
 const RenameColumnForm = ({
   boardId,

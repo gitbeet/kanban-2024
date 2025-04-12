@@ -1,5 +1,5 @@
 import DeleteTaskForm from "~/components/action-forms/task/delete-task-form";
-import { Button } from "~/components/ui/button/buttons";
+import { Button } from "~/components/ui/button/button";
 import PromptWindow from "~/components/ui/modal/prompt-window";
 import { useUI } from "~/context/ui-context";
 import { type TaskType } from "~/types";

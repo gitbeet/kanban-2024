@@ -1,6 +1,6 @@
+import ToggleButton from "~/components/ui/button/toggle-button";
 import { useBoards } from "~/context/boards-context";
 import { handleToggleTaskCompleted } from "~/server/queries";
-import { ToggleButton } from "~/components/ui/button/buttons";
 import { type TaskType } from "~/types";
 import type { ToggleTaskAction } from "~/types/actions";
 import { showCustomErrorToast } from "~/utilities/showCustomErrorToast";

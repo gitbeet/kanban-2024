@@ -1,11 +1,11 @@
 import { startTransition } from "react";
-import { Button } from "../ui/button/buttons";
 import { type DeleteUserBackgroundAction } from "~/types/actions";
 import { deleteUserBackground } from "~/server/queries";
 import { showCustomErrorToast } from "~/utilities/showCustomErrorToast";
 import { useBackground } from "~/context/bg-context";
 import { type UserBackgroundType } from "~/types/background";
 import BackgroundOptionThumbnail from "./background-option-thumbnail";
+import { Button } from "../ui/button/button";
 
 const UserBackgroundOption = ({
   background,

@@ -2,7 +2,7 @@ import { SignedIn, SignedOut, useClerk } from "@clerk/nextjs";
 import Link from "next/link";
 import { useRef } from "react";
 import { useUI } from "~/context/ui-context";
-import { Button } from "../ui/button/buttons";
+import { Button } from "../ui/button/button";
 import FocusTrap from "focus-trap-react";
 import { motion } from "framer-motion";
 import { modalTransition } from "~/utilities/framer-motion";

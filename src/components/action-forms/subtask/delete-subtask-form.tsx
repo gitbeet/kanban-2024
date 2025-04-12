@@ -1,9 +1,9 @@
 import { useState, useTransition } from "react";
 import { handleDeleteSubtask } from "~/server/queries";
-import { DeleteButton } from "~/components/ui/button/buttons";
 import { useBoards } from "~/context/boards-context";
 import { DeleteSubtaskAction } from "~/types/actions";
 import { showCustomErrorToast } from "~/utilities/showCustomErrorToast";
+import DeleteButton from "~/components/ui/button/delete-button";
 
 const DeleteSubtaskForm = ({
   columnId,

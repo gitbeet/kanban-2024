@@ -6,12 +6,6 @@ import { motion } from "framer-motion";
 import { v4 as uuid } from "uuid";
 import { resizeTextArea } from "~/utilities/resizeTextArea";
 import { handleCreateTask } from "~/server/queries";
-import {
-  AddButton,
-  Button,
-  SubmitButton,
-} from "~/components/ui/button/buttons";
-import { FaPlus } from "react-icons/fa6";
 import { TaskSchema } from "~/zod-schemas";
 import type { ChangeEvent, FormEvent } from "react";
 import type { TaskType } from "~/types";
@@ -25,7 +19,9 @@ import {
   slideFormDownVariants,
   smallElementTransition,
 } from "~/utilities/framer-motion";
-import Text from "~/components/ui/typography/text";
+import { Button } from "~/components/ui/button/button";
+import AddButton from "~/components/ui/button/add-button";
+import SubmitButton from "~/components/ui/button/submit-button";
 
 const CreateTaskForm = ({
   boardId,

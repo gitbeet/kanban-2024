@@ -1,10 +1,10 @@
 import { useUI } from "~/context/ui-context";
 import ThemeSwitchUpdated from "../common/theme-switch-updated";
 import BackgroundOption from "../background/background-option";
-import { IconButton, ToggleButton } from "../ui/button/buttons";
+import { IconButton } from "../ui/button/icon-buton";
 import OpacitySlider from "../background/opacity-slider";
 import FocusTrap from "focus-trap-react";
-import { FormEvent, useRef } from "react";
+import { type FormEvent, useRef } from "react";
 // import { colorBackgrounds, imageBackgrounds } from "~/utilities/backgrounds";
 import { useBackground } from "~/context/bg-context";
 import UploadBackground from "../background/upload-background";
@@ -16,8 +16,8 @@ import { sidebarTransition } from "~/utilities/framer-motion";
 import { useSettings } from "~/context/settings-context";
 import { modifyUserData } from "~/server/queries";
 import { showCustomErrorToast } from "~/utilities/showCustomErrorToast";
-import Text from "../ui/typography/text";
 import SettingsSection from "../ui/boards-settings/settings-section";
+import ToggleButton from "../ui/button/toggle-button";
 
 const BoardsSettings = () => {
   const {
