@@ -2,7 +2,12 @@ import { useRef, useState, useTransition } from "react";
 import { useBoards } from "~/context/boards-context";
 import { v4 as uuid } from "uuid";
 import { handleCreateColumn } from "~/server/queries";
-import { CancelButton, SaveButton } from "~/components/ui/button/buttons";
+import {
+  AddButton,
+  Button,
+  CancelButton,
+  SaveButton,
+} from "~/components/ui/button/buttons";
 import InputField from "~/components/ui/input-field";
 import { ColumnSchema } from "~/zod-schemas";
 import { FaPlus } from "react-icons/fa6";
@@ -17,6 +22,7 @@ import {
   slideFormDownVariants,
   smallElementTransition,
 } from "~/utilities/framer-motion";
+import Text from "~/components/ui/typography/text";
 interface CreateColumnProps extends React.HTMLAttributes<HTMLDivElement> {
   boardId: string;
 }
@@ -111,15 +117,11 @@ const CreateColumnForm = ({ boardId, ...props }: CreateColumnProps) => {
   }
 
   const notOpenJsx = (
-    <button
-      onClick={() => {
-        setIsOpen(true);
-      }}
-      className={` ${isOpen ? "pointer-events-none h-0 w-0 opacity-0" : "opacity-100"} text-secondary--hoverable flex items-center gap-2`}
+    <div
+      className={` ${!isOpen ? "opacity-100" : "pointer-events-none h-0 w-0 opacity-0"} `}
     >
-      <FaPlus className="h-3.5 w-3.5" />
-      <span className="text-lg font-bold">Column</span>
-    </button>
+      <AddButton text="Add a column" onClick={() => setIsOpen(true)} />
+    </div>
   );
 
   const openJsx = (
@@ -130,7 +132,7 @@ const CreateColumnForm = ({ boardId, ...props }: CreateColumnProps) => {
       transition={smallElementTransition}
       ref={createColumnRef}
       onSubmit={clientAction}
-      className="flex items-center gap-2 p-1.5"
+      className="flex items-center gap-2"
     >
       <InputField
         ref={inputFieldRef}

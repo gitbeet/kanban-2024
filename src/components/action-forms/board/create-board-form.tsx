@@ -9,6 +9,7 @@ import InputField from "~/components/ui/input-field";
 import { motion } from "framer-motion";
 import { FaPlus } from "react-icons/fa";
 import {
+  AddButton,
   Button,
   CancelButton,
   SaveButton,
@@ -150,19 +151,7 @@ const CreateBoardForm = ({
             }}
             className={props.className}
           >
-            <Button
-              variant="text"
-              onClick={() => setIsOpen(true)}
-              tabIndex={props.tabIndex}
-              aria-label="Add a new board"
-            >
-              <Text variant="secondary" hover>
-                <div className="flex items-center gap-2 text-sm">
-                  <FaPlus className="h-3 w-3" />
-                  <span>Add a board</span>
-                </div>
-              </Text>
-            </Button>
+            <AddButton text="Add a board" onClick={() => setIsOpen(true)} />
           </motion.div>
         )}
 

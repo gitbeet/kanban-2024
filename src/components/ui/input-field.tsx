@@ -3,6 +3,7 @@ import { handlePressEnterToSubmit } from "~/utilities/handlePressEnterOrEscape";
 import { motion } from "framer-motion";
 import { smallElementTransition } from "~/utilities/framer-motion";
 import ErrorText from "./error-text";
+import Text from "./typography/text";
 
 type BaseProps = InputHTMLAttributes<HTMLInputElement> & {
   className?: string;
@@ -54,12 +55,11 @@ const InputField = forwardRef<HTMLInputElement, InputProps>(
     );
 
     const labelJSX = (
-      <label
-        className="text-dark absolute -top-1 -translate-y-full"
-        htmlFor={props.id}
-      >
-        {labelText}
-      </label>
+      <Text variant="primary">
+        <label className="absolute -top-1 -translate-y-full" htmlFor={props.id}>
+          {labelText}dsf
+        </label>
+      </Text>
     );
 
     // ***** ERROR ELEMENTS *****

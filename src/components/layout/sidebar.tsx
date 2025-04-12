@@ -27,7 +27,7 @@ const Sidebar = () => {
       ref={outsideButtonRef}
       disabled={sidebarAnimating}
       onClick={() => setShowSidebar((prev) => !prev)}
-      className={`transitionz-colors bg-dark text-dark absolute right-2 top-1.5 translate-x-full cursor-pointer rounded border border-neutral-250 p-2 text-sm text-white shadow dark:border-neutral-500`}
+      className={`transitionz-colors bg-dark text-dark absolute right-2 top-2.5 translate-x-full cursor-pointer rounded border border-neutral-250 p-2 text-sm text-white shadow dark:border-neutral-500`}
     >
       <FaChevronRight className={showSidebar ? "rotate-180" : ""} />
     </button>
@@ -88,7 +88,10 @@ const Sidebar = () => {
               className="px-4"
             >
               <div className="h-4"></div>
-              <CreateBoardForm tabIndex={showSidebar ? 0 : -1} />
+              <CreateBoardForm
+                tabIndex={showSidebar ? 0 : -1}
+                className="pl-2"
+              />
             </motion.div>
           </div>
           {outsideButton}

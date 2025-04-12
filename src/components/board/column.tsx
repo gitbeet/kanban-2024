@@ -14,6 +14,7 @@ import { useUI } from "~/context/ui-context";
 import { DeleteButton } from "../ui/button/buttons";
 import { motion } from "framer-motion";
 import { sidebarTransition } from "~/utilities/framer-motion";
+import Text from "../ui/typography/text";
 
 const Column = ({
   boardId,
@@ -206,9 +207,9 @@ const Column = ({
         layout="position"
         className={`flex items-center justify-between gap-4 pb-7 pt-2`}
       >
-        <span className={`shrink-0 text-sm text-neutral-500`}>
-          ({column.tasks.length})
-        </span>
+        <Text variant="tertiary">
+          <span className="shrink-0 text-sm">({column.tasks.length})</span>
+        </Text>
         <div className="w-full grow">
           <RenameColumnForm
             isFormOpen={isFormOpen}

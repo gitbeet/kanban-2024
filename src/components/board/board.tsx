@@ -11,6 +11,21 @@ import { BoardsNav } from "../layout/boards-nav";
 import BoardsSettings from "../menus/boards-settings";
 import { useUI } from "~/context/ui-context";
 import { sidebarTransition } from "~/utilities/framer-motion";
+import Text from "../ui/typography/text";
+import { type ReactNode } from "react";
+
+const BlockHeading = ({ title }: { title: string }) => (
+  <Text variant="primary">
+    <h1 className="w-full text-center text-3xl font-bold">{title}</h1>
+  </Text>
+);
+
+const Block = ({ title, children }: { title: string; children: ReactNode }) => (
+  <div className="bg-light__test space-y-6 rounded-md px-12 py-9 drop-shadow-lg">
+    <BlockHeading title={title} />
+    {children}
+  </div>
+);
 
 const Board = () => {
   const { optimisticBoards, boardsLoading, getCurrentBoard } = useBoards();
@@ -23,7 +38,7 @@ const Board = () => {
   )
     return <LoadingPage />;
 
-  const noBoards = !optimisticBoards.length;
+  const noBoards = optimisticBoards.length === 0;
   const noBoardsJsx = (
     <motion.section
       initial={false}
@@ -35,12 +50,9 @@ const Board = () => {
     >
       <BoardsNav />
       <BoardsSettings />
-      <div className="bg-light__test space-y-8 rounded-md p-12 drop-shadow-lg">
-        <h1 className="text-dark w-full text-center text-3xl font-bold">
-          You have no boards
-        </h1>
+      <Block title="You have no boards">
         <CreateBoardForm className="text-center" />
-      </div>
+      </Block>
     </motion.section>
   );
 
@@ -60,12 +72,9 @@ const Board = () => {
     >
       <BoardsNav />
       <BoardsSettings />
-      <div className="bg-light__test rounded-md px-4 pt-8 drop-shadow-lg">
-        <h1 className="text-dark w-full text-center text-3xl font-bold">
-          This board is empty
-        </h1>
-        <CreateColumnForm boardId={currentBoard.id} className="h-32 w-80" />
-      </div>
+      <Block title="This board is empty">
+        <CreateColumnForm boardId={currentBoard.id} />
+      </Block>
     </motion.section>
   );
 

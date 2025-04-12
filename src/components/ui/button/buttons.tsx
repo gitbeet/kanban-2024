@@ -8,6 +8,7 @@ import { MdClose, MdEdit } from "react-icons/md";
 import { LoadingPage } from "../loading-spinner";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { IoSettingsSharp } from "react-icons/io5";
+import Text from "../typography/text";
 
 export type ButtonVariant =
   | "primary"
@@ -41,6 +42,19 @@ export const Button = ({
     </button>
   );
 };
+
+type AddButtonProps = Pick<ButtonProps, "onClick"> & { text: string };
+
+export const AddButton = ({ text, onClick }: AddButtonProps) => (
+  <Button variant="text" onClick={onClick} className="!px-0" size="small">
+    <Text variant="secondary" hover>
+      <div className="flex items-center gap-1">
+        <FaPlus className="h-3 w-3" />
+        <span>{text}</span>
+      </div>
+    </Text>
+  </Button>
+);
 
 export const SubmitButton = ({ children, ...props }: ButtonProps) => {
   const { pending } = useFormStatus();

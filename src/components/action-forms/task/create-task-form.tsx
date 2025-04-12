@@ -6,7 +6,11 @@ import { motion } from "framer-motion";
 import { v4 as uuid } from "uuid";
 import { resizeTextArea } from "~/utilities/resizeTextArea";
 import { handleCreateTask } from "~/server/queries";
-import { Button, SubmitButton } from "~/components/ui/button/buttons";
+import {
+  AddButton,
+  Button,
+  SubmitButton,
+} from "~/components/ui/button/buttons";
 import { FaPlus } from "react-icons/fa6";
 import { TaskSchema } from "~/zod-schemas";
 import type { ChangeEvent, FormEvent } from "react";
@@ -21,6 +25,7 @@ import {
   slideFormDownVariants,
   smallElementTransition,
 } from "~/utilities/framer-motion";
+import Text from "~/components/ui/typography/text";
 
 const CreateTaskForm = ({
   boardId,
@@ -142,17 +147,7 @@ const CreateTaskForm = ({
       <div className="relative z-[1] pt-2">
         {!isOpen && (
           <motion.div layout transition={smallElementTransition}>
-            <Button
-              variant="text"
-              onClick={() => setIsOpen(true)}
-              className="!px-0"
-              size="small"
-            >
-              <div className="text-secondary--hoverable flex items-center gap-1">
-                <FaPlus className="h-3 w-3" />
-                <span>Add a task</span>
-              </div>
-            </Button>
+            <AddButton text="Add a task" onClick={() => setIsOpen(true)} />
           </motion.div>
         )}
         {isOpen && (

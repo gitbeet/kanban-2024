@@ -128,7 +128,7 @@ button,
 .input,
 .input-readonly,
 textarea {
-  @apply focus-visible:outline-1 focus-visible:outline-neutral-25 focus-visible:ring-4 focus-visible:ring-primary-600;
+  @apply text-dark focus-visible:outline-1 focus-visible:outline-neutral-25 focus-visible:ring-4 focus-visible:ring-primary-600;
 }
 
 select,
