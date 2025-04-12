@@ -56,7 +56,7 @@ const ExpandMenu = ({
             }}
             className="overflow-hidden"
           >
-            <div className="px-2.5 pt-4">{children}</div>
+            <div className="px-2.5 py-4">{children}</div>
           </motion.div>
         )}
       </AnimatePresence>

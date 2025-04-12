@@ -1,10 +1,13 @@
 import Link from "next/link";
+import Text from "../ui/typography/text";
 
 const Logo = () => {
   return (
-    <Link href="/" className="text-dark text-center text-xl font-extrabold">
-      <h1>taskly</h1>
-    </Link>
+    <Text variant="primary" hover>
+      <Link href="/" className="text-center text-xl font-extrabold">
+        <h1>taskly</h1>
+      </Link>
+    </Text>
   );
 };
 

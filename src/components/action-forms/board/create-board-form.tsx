@@ -24,6 +24,7 @@ import {
   slideFormDownVariants,
   smallElementTransition,
 } from "~/utilities/framer-motion";
+import Text from "~/components/ui/typography/text";
 
 const CreateBoardForm = ({
   ...props
@@ -155,10 +156,12 @@ const CreateBoardForm = ({
               tabIndex={props.tabIndex}
               aria-label="Add a new board"
             >
-              <div className="text-secondary--hoverable flex items-center gap-2 text-sm">
-                <FaPlus className="h-3 w-3" />
-                <span>Add a board</span>
-              </div>
+              <Text variant="secondary" hover>
+                <div className="flex items-center gap-2 text-sm">
+                  <FaPlus className="h-3 w-3" />
+                  <span>Add a board</span>
+                </div>
+              </Text>
             </Button>
           </motion.div>
         )}

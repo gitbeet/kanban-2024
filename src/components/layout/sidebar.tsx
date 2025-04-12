@@ -12,6 +12,7 @@ import {
   sidebarTransition,
   smallElementTransition,
 } from "~/utilities/framer-motion";
+import Text from "../ui/typography/text";
 
 const Sidebar = () => {
   const { showSidebar, setShowSidebar, setSidebarAnimating, sidebarAnimating } =
@@ -69,9 +70,11 @@ const Sidebar = () => {
         <div className="relative flex h-full flex-col justify-between">
           <div>
             <div className="h-8"></div>
-            <h2 className="pl-6 text-sm font-bold uppercase text-neutral-500">
-              All boards ({optimisticBoards.length})
-            </h2>
+            <Text variant="tertiary">
+              <h2 className="pl-6 text-sm font-bold uppercase">
+                All boards ({optimisticBoards.length})
+              </h2>
+            </Text>
             <div className="h-8"></div>
             <motion.ul
               layout
