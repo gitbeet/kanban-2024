@@ -13,7 +13,6 @@ import ClientLayout from "~/components/layout/client-layout";
 import "~/styles/globals.css";
 import type { BackgroundType, UserBackgroundType } from "~/types/background";
 import { unstable_cache as cache } from "next/cache";
-import ServerNavWrapper from "~/components/server-nav-wrapper";
 import { auth, currentUser } from "@clerk/nextjs/server";
 
 const roboto = Roboto({

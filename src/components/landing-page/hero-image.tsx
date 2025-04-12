@@ -3,7 +3,7 @@ export const HeroImage = () => (
     xmlns="http://www.w3.org/2000/svg"
     xmlSpace="preserve"
     viewBox="0 0 500 500"
-    className="animate-float mx-auto max-w-[550px]"
+    className="animate-float mx-auto max-w-[500px]"
   >
     {/* <g id="Floor">
       <ellipse

@@ -1,3 +1,5 @@
+import Text from "../ui/typography/text";
+
 const TestStep = ({
   number,
   title,
@@ -12,7 +14,7 @@ const TestStep = ({
   last?: boolean;
 }) => {
   return (
-    <div className="flex grow items-center gap-4 pr-4">
+    <article className="flex grow items-center gap-4 pr-4">
       <div className="relative px-8 py-8 text-center text-white">
         <div className={` ${first ? "" : "lg:ml-[20%] lg:w-[120%]"} `}>
           <p className="relative z-10 font-light">step</p>
@@ -25,13 +27,13 @@ const TestStep = ({
                 ? "polygon(-1% 0%, 0% 100%, 80% 100% , 100% 50% , 80% 0% )"
                 : "polygon(-1% 0%, 20% 50% ,-1% 100% , 80% 100% , 100% 50% , 80% 0% )",
             }}
-            className="from-teal-500 relative h-full w-full bg-gradient-to-br to-primary-600"
+            className="relative h-full w-full bg-gradient-to-br from-teal-500 to-blue-500"
           ></div>
         </div>
 
         <div className="absolute bottom-0 left-0 right-0 z-0 h-full w-full lg:hidden">
           <div
-            className="from-teal-500 relative h-full w-full bg-gradient-to-br to-primary-600"
+            className="relative h-full w-full bg-gradient-to-br from-teal-500 to-blue-500"
             style={{
               clipPath: first
                 ? "polygon(0% 0%, 0% 85% , 50% 95%, 100% 85%, 100% 0% )"
@@ -43,10 +45,14 @@ const TestStep = ({
         </div>
       </div>
       <div className="pl-4 text-left">
-        <p className="text-lg font-bold">{title}</p>
-        <p className="text-light">{subtitle}</p>
+        <Text variant="primary">
+          <h3 className="text-xl font-bold">{title}</h3>
+        </Text>
+        <Text variant="secondary">
+          <p className="font-light">{subtitle}</p>
+        </Text>
       </div>
-    </div>
+    </article>
   );
 };
 

@@ -1,4 +1,5 @@
-import Image, { StaticImageData } from "next/image";
+import Image, { type StaticImageData } from "next/image";
+import Text from "../ui/typography/text";
 
 const TestArticle = ({
   heading,
@@ -14,8 +15,12 @@ const TestArticle = ({
       <div className="h-20 w-20 rounded-full p-2">
         <Image src={icon} height={60} width={60} alt="idea" />
       </div>
-      <h2 className="text-center text-2xl font-black">{heading}</h2>
-      <p className="text-light text-center">{body}</p>
+      <Text variant="primary">
+        <h2 className="text-center text-2xl font-black">{heading}</h2>
+      </Text>
+      <Text variant="secondary">
+        <p className="text-center font-light">{body}</p>
+      </Text>
     </article>
   );
 };

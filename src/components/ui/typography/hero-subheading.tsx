@@ -9,7 +9,7 @@ const HeroSubheading = ({
 }) => {
   return (
     <Text variant="secondary">
-      <p className={`text-xl font-light ${className}`}>{text}</p>
+      <p className={`text-lg font-light ${className}`}>{text}</p>
     </Text>
   );
 };

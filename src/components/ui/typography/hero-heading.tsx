@@ -9,9 +9,7 @@ const HeroHeading = ({
 }) => {
   return (
     <VerticalGradientText>
-      <h1 className={`text-5xl font-black md:text-6xl xl:text-7xl`}>
-        {children}
-      </h1>
+      <h1 className={`text-5xl font-black md:text-6xl`}>{children}</h1>
     </VerticalGradientText>
   );
 };

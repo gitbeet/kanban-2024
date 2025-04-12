@@ -1,9 +1,7 @@
 import clipboardIcon from "../../public/icons/clipboard.png";
 import teamIcon from "../../public/icons/team.png";
 import rocketIcon from "../../public/icons/rocket.png";
-import { SignedOut, useClerk } from "@clerk/nextjs";
 import TestArticle from "~/components/landing-page/feature";
-import { Button } from "~/components/ui/button/buttons";
 import TestStep from "~/components/landing-page/step";
 import Section from "~/components/ui/section";
 import ColorGradientText from "~/components/ui/typography/color-gradient-text";
@@ -26,21 +24,23 @@ import { auth, currentUser } from "@clerk/nextjs/server";
 
 const Hero = ({ loggedIn }: { loggedIn: boolean }) => {
   return (
-    <Section className="relative flex flex-col gap-4 md:flex-row md:gap-16">
-      <div className="grow space-y-8 md:space-y-12">
-        <div className="z-[2] flex flex-col items-start gap-6 md:py-12">
+    <Section className="relative flex flex-col gap-4 md:flex-row md:gap-6">
+      <div className="grow space-y-12 md:space-y-16 md:pt-12">
+        <div className="z-[2] flex flex-col items-start gap-6">
           <HeroHeading>
-            <ColorGradientText text="Organize " />
-            <span>
-              Your work,
-              <br /> Your way
-            </span>
+            <>
+              <ColorGradientText text="Organize " />
+              <span>
+                Your work,
+                <br /> Your way
+              </span>
+            </>
           </HeroHeading>
           <HeroSubheading
             text="Streamline tasks, collaborate effortlessly, and boost productivity
               with our Trello-inspired project management tool. Visualize your
               workflow and get things done—faster and smarter!"
-            className="z-10 max-w-[700px] text-left"
+            className="z-10 max-w-[600px] text-left"
           />
         </div>
         {!loggedIn && (

@@ -33,7 +33,7 @@ const ClientLayout = ({
         <ClientNav loggedIn={loggedIn} name={name} />
         {isBoardsPage && <Background />}
         {children}
-        {!isBoardsPage && <Footer />}
+        {!isBoardsPage && <Footer loggedIn={loggedIn} />}
         {isBoardsPage && <Menus />}
         <MobileMenu />
         <div id="modal-root" className="absolute h-0 w-0" />
