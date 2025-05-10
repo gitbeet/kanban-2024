@@ -6,15 +6,16 @@ import {
   varchar,
   boolean,
   integer,
+  pgTable,
 } from "drizzle-orm/pg-core";
 
-export const createTable = pgTableCreator((name) => `kanban-2024_${name}`);
+// export const createTable = pgTableCreator((name) => `kanban-2024_${name}`);
 
 // ---------- MODELS ----------
 
 // ** BOARDS **
 
-export const boards = createTable(
+export const boards = pgTable(
   "board",
   {
     id: varchar("id", { length: 1024 }).primaryKey(),
@@ -35,7 +36,7 @@ export const boards = createTable(
   }),
 );
 
-export const columns = createTable(
+export const columns = pgTable(
   "column",
   {
     id: varchar("id", { length: 1024 }).primaryKey(),
@@ -57,7 +58,7 @@ export const columns = createTable(
   }),
 );
 
-export const tasks = createTable(
+export const tasks = pgTable(
   "task",
   {
     id: varchar("id", { length: 1024 }).primaryKey(),
@@ -80,7 +81,7 @@ export const tasks = createTable(
   }),
 );
 
-export const subtasks = createTable(
+export const subtasks = pgTable(
   "subtask",
   {
     id: varchar("id", { length: 1024 }).primaryKey(),
@@ -105,7 +106,7 @@ export const subtasks = createTable(
 
 // ** BACKGROUNDS **
 
-export const backgrounds = createTable("background", {
+export const backgrounds = pgTable("background", {
   id: varchar("id", { length: 1024 }).primaryKey(),
   type: varchar("type").notNull().$type<"color" | "image">(),
   slug: varchar("slug").notNull().unique(),
@@ -114,7 +115,7 @@ export const backgrounds = createTable("background", {
   alt: varchar("alt").notNull(),
 });
 
-export const userBackgrounds = createTable("user_background", {
+export const userBackgrounds = pgTable("user_background", {
   id: varchar("id", { length: 1024 }).primaryKey(),
   userId: varchar("userId", { length: 256 }).notNull(),
   fileUrl: varchar("fileUrl", { length: 256 }).notNull(),
@@ -126,7 +127,7 @@ export const userBackgrounds = createTable("user_background", {
 
 // ** USER DATA **
 
-export const userDatas = createTable("user_data", {
+export const userDatas = pgTable("user_data", {
   id: varchar("id", { length: 1024 }).primaryKey(),
   userId: varchar("userId", { length: 256 }).unique().notNull(),
   currentBoardId: varchar("current_board_id", { length: 256 }),
