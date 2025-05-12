@@ -2,7 +2,7 @@
 
 import { db } from "./db/index";
 import { auth } from "@clerk/nextjs/server";
-import { boards, columns, subtasks, tasks, userBackgrounds } from "./db/schema";
+import { boards, columns, subtasks, tasks } from "./db/schema";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { and, eq, gt, gte, lt, lte, ne, sql } from "drizzle-orm";
 import type { DatabaseType } from "~/types";
@@ -11,7 +11,6 @@ import {
   ColumnSchema,
   SubtaskSchema,
   TaskSchema,
-  UserBackgroundSchema,
 } from "~/utilities/zod-schemas";
 import type {
   CreateBoardAction,
@@ -31,121 +30,8 @@ import type {
   ToggleSubtaskAction,
   ToggleTaskAction,
   Action,
-  UploadUserBackgroundAction,
-  DeleteUserBackgroundAction,
 } from "~/types/actions";
-import { UTApi } from "uploadthing/server";
 import { unstable_cache as cache } from "next/cache";
-
-// ------ Background ------
-
-export const getBackgrounds = async () => {
-  try {
-    const backgrounds = await db.query.backgrounds.findMany();
-    return { backgrounds };
-  } catch (error) {
-    const errorMessage =
-      error instanceof Error
-        ? error.message
-        : "Error while getting backgrounds";
-    return { error: errorMessage };
-  }
-};
-
-export const getUserBackgrounds = async () => {
-  try {
-    const { userId } = auth();
-    if (!userId) throw new Error("Unauthorized");
-
-    const getBackgrounds = cache(
-      async () => {
-        const result = await db.query.userBackgrounds.findMany({
-          where: (model, { eq }) => eq(model.userId, userId),
-        });
-        return result;
-      },
-      [`user-backgrounds-${userId}`],
-      { tags: [`backgrounds-${userId}`] },
-    );
-
-    const backgrounds = await getBackgrounds();
-    return { backgrounds };
-  } catch (error) {
-    const errorMessage =
-      error instanceof Error
-        ? error.message
-        : "Error while getting user backgrounds";
-    return { error: errorMessage };
-  }
-};
-
-export const uploadUserBackground = async (
-  action: UploadUserBackgroundAction,
-) => {
-  try {
-    const user = auth();
-    if (!user.userId) throw new Error("Unauthorized");
-
-    const { payload } = action;
-    const { background } = payload;
-
-    const result = UserBackgroundSchema.safeParse(background);
-    if (!result.success) {
-      throw new Error(
-        result.error.issues[0]?.message ??
-          "Error while uploading a user background",
-      );
-    }
-
-    if (background.userId !== user.userId) throw new Error("Unauthorized");
-
-    await db.insert(userBackgrounds).values(background);
-    revalidateTag(`backgrounds-${user.userId}`);
-  } catch (error) {
-    const errorMessage =
-      error instanceof Error
-        ? error.message
-        : "Error while uploading a user background";
-    return { error: errorMessage };
-  }
-};
-
-export const deleteUserBackground = async (
-  action: DeleteUserBackgroundAction,
-) => {
-  try {
-    const user = auth();
-    if (!user.userId) throw new Error("Unauthorized");
-
-    const { payload } = action;
-    const { backgroundId, fileKey } = payload;
-
-    const result = UserBackgroundSchema.pick({ id: true }).safeParse({
-      id: backgroundId,
-    });
-    if (!result.success) {
-      throw new Error(
-        result.error.issues[0]?.message ??
-          "Error while deleting a user background",
-      );
-    }
-
-    const deletedRows = await db
-      .delete(userBackgrounds)
-      .where(eq(userBackgrounds.id, backgroundId));
-    if (!deletedRows) throw new Error("Error while deleting the background");
-
-    const api = new UTApi();
-    await api.deleteFiles(fileKey);
-    revalidateTag(`backgrounds-${user.userId}`);
-  } catch (error) {
-    const errorMessage =
-      error instanceof Error
-        ? error.message
-        : "Error while deleting a user background";
-    return { error: errorMessage };
-  }
-};
 
 // ------ Board ------
 export const getBoards = async () => {

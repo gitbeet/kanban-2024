@@ -4,10 +4,10 @@ import type { ClientUploadedFileData } from "uploadthing/types";
 import type { UploadUserBackgroundAction } from "~/types/actions";
 import { v4 as uuid } from "uuid";
 import { useBackground } from "~/context/bg-context";
-import { uploadUserBackground } from "~/server/queries";
 import { showCustomErrorToast } from "~/utilities/showCustomErrorToast";
 import { UploadButton } from "~/utilities/uploadthing";
 import { type UserBackgroundType } from "~/types/background";
+import { uploadUserBackground } from "~/server/server-actions/background/upload-user-background";
 const UploadBackground = ({
   tabIndex = 0,
   disabled = false,
