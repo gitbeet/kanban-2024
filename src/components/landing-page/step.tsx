@@ -1,6 +1,6 @@
 import Text from "../ui/typography/text";
 
-const TestStep = ({
+const Step = ({
   number,
   title,
   subtitle,
@@ -56,4 +56,4 @@ const TestStep = ({
   );
 };
 
-export default TestStep;
+export default Step;
