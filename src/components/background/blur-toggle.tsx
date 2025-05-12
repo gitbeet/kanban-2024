@@ -1,7 +1,7 @@
 import { useEffect, type ChangeEvent } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import { useBackground } from "~/context/bg-context";
-import { modifyUserData } from "~/server/queries";
+import { modifyUserData } from "~/server/server-actions/user-data/modify-user-data";
 import { showCustomErrorToast } from "~/utilities/showCustomErrorToast";
 
 const DEBOUNCE_DELAY = 1500;

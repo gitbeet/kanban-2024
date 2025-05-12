@@ -1,6 +1,6 @@
 import { type WebhookEvent } from "@clerk/nextjs/server";
 import { type NextRequest, NextResponse } from "next/server";
-import { getOrCreateUserData } from "~/server/queries";
+import { getOrCreateUserData } from "~/server/server-actions/user-data/get-or-create-user-data";
 
 export async function POST(req: NextRequest) {
   try {

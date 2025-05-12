@@ -4,7 +4,6 @@ import {
   getUserBackgrounds,
   getBoards,
   getBackgrounds,
-  getUserData,
 } from "~/server/queries";
 import { Roboto } from "next/font/google";
 import Providers from "./providers";
@@ -14,6 +13,7 @@ import "~/styles/globals.css";
 import type { BackgroundType, UserBackgroundType } from "~/types/background";
 import { unstable_cache as cache } from "next/cache";
 import { auth, currentUser } from "@clerk/nextjs/server";
+import { getUserData } from "~/server/server-actions/user-data/get-user-data";
 
 const roboto = Roboto({
   weight: ["300", "400", "500", "700", "900"],

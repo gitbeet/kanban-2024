@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { type HTMLAttributes } from "react";
 import { useBackground } from "~/context/bg-context";
-import { modifyUserData } from "~/server/queries";
+import { modifyUserData } from "~/server/server-actions/user-data/modify-user-data";
 import type { UserBackgroundData, BackgroundType } from "~/types/background";
 import { showCustomErrorToast } from "~/utilities/showCustomErrorToast";
 

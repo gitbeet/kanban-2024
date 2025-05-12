@@ -2,24 +2,16 @@
 
 import { db } from "./db/index";
 import { auth } from "@clerk/nextjs/server";
-import {
-  boards,
-  columns,
-  subtasks,
-  tasks,
-  userBackgrounds,
-  userDatas,
-} from "./db/schema";
+import { boards, columns, subtasks, tasks, userBackgrounds } from "./db/schema";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { and, eq, gt, gte, lt, lte, ne, sql } from "drizzle-orm";
-import type { DatabaseType, UserDataType } from "~/types";
+import type { DatabaseType } from "~/types";
 import {
   BoardSchema,
   ColumnSchema,
   SubtaskSchema,
   TaskSchema,
   UserBackgroundSchema,
-  UserDataSchema,
 } from "~/utilities/zod-schemas";
 import type {
   CreateBoardAction,
@@ -43,93 +35,7 @@ import type {
   DeleteUserBackgroundAction,
 } from "~/types/actions";
 import { UTApi } from "uploadthing/server";
-import { v4 as uuid } from "uuid";
 import { unstable_cache as cache } from "next/cache";
-
-// ------ User data ------
-
-export const getUserData = async (userId?: string) => {
-  try {
-    let actualUserId = userId;
-    if (!actualUserId) {
-      const { userId } = auth();
-      if (userId) actualUserId = userId;
-    }
-    if (!actualUserId) throw new Error("Unauthorized");
-    const getData = cache(
-      async () => {
-        const result = await db.query.userDatas.findFirst({
-          where: (model, { eq }) => eq(model.userId, actualUserId),
-        });
-        return result;
-      },
-      ["user-data", actualUserId],
-      { tags: [`user-data-${actualUserId}`] },
-    );
-    const data = await getData();
-    return { data };
-  } catch (error) {
-    const errorMessage =
-      error instanceof Error ? error.message : "Error while getting user data";
-    return { error: errorMessage };
-  }
-};
-
-export const createUserData = async (userId: string) => {
-  try {
-    const userData: UserDataType = {
-      id: uuid(),
-      userId,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      currentBackgroundId: null,
-      backgroundOpacity: 100,
-      backgroundBlur: 0,
-      performanceMode: false,
-      currentBoardId: null,
-    };
-    const data = await db.insert(userDatas).values(userData);
-    return { data: data.rows };
-  } catch (error) {
-    const errorMessage =
-      error instanceof Error ? error.message : "Error while creating user data";
-    return { error: errorMessage };
-  }
-};
-// TODO : fix error logic
-// Not use error object?
-export const getOrCreateUserData = async (userId: string) => {
-  try {
-    const existingUserData = await getUserData(userId);
-    if (!existingUserData.data) {
-      await createUserData(userId);
-    }
-    return existingUserData;
-  } catch (error) {
-    const errorMessage =
-      error instanceof Error
-        ? error.message
-        : "Error while getting/creating user data";
-    return { error: errorMessage };
-  }
-};
-
-export const modifyUserData = async (newData: Partial<UserDataType>) => {
-  try {
-    const { userId } = auth();
-    if (!userId) throw new Error("Unauthorized");
-    const result = UserDataSchema.partial().strict().safeParse(newData);
-    if (!result.success) throw new Error("Error while modifying user data");
-    await db.update(userDatas).set(newData).where(eq(userDatas.userId, userId));
-    revalidateTag(`user-data-${userId}`);
-  } catch (error) {
-    const errorMessage =
-      error instanceof Error
-        ? error.message
-        : "Error while modifying user data";
-    return { error: errorMessage };
-  }
-};
 
 // ------ Background ------
 

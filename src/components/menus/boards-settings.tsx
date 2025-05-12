@@ -14,10 +14,10 @@ import ExpandMenu from "../ui/common/expand-menu";
 import { motion } from "framer-motion";
 import { sidebarTransition } from "~/utilities/framer-motion";
 import { useSettings } from "~/context/settings-context";
-import { modifyUserData } from "~/server/queries";
 import { showCustomErrorToast } from "~/utilities/showCustomErrorToast";
 import SettingsSection from "../ui/boards-settings/settings-section";
 import ToggleButton from "../ui/button/toggle-button";
+import { modifyUserData } from "~/server/server-actions/user-data/modify-user-data";
 
 const BoardsSettings = () => {
   const {
