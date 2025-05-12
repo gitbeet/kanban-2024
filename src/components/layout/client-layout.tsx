@@ -7,7 +7,7 @@ import Background from "../background/background";
 import { MotionGlobalConfig } from "framer-motion";
 import { useSettings } from "~/context/settings-context";
 import MobileMenu from "../menus/mobile-menu";
-import ClientNav from "../client-nav";
+import ClientNav from "./client-nav";
 const ClientLayout = ({
   children,
   loggedIn,

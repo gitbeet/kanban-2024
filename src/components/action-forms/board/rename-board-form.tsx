@@ -4,7 +4,7 @@ import { useRef, useState, useTransition } from "react";
 import { useBoards } from "~/context/boards-context";
 import { handleRenameBoard } from "~/server/queries";
 import InputField from "~/components/ui/input/input-field";
-import { BoardSchema } from "~/zod-schemas";
+import { BoardSchema } from "~/utilities/zod-schemas";
 import type { ChangeEvent } from "react";
 import { useUser } from "@clerk/nextjs";
 import { type RenameBoardAction } from "~/types/actions";

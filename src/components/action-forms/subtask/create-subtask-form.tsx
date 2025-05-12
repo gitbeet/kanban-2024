@@ -2,7 +2,7 @@ import { useState, useTransition } from "react";
 import type { FormEvent } from "react";
 import { useBoards } from "~/context/boards-context";
 import type { SubtaskType } from "~/types";
-import { SubtaskSchema } from "~/zod-schemas";
+import { SubtaskSchema } from "~/utilities/zod-schemas";
 import { v4 as uuid } from "uuid";
 import { handleCreateSubtask } from "~/server/queries";
 import { type CreateSubtaskAction } from "~/types/actions";

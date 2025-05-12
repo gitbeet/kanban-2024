@@ -4,7 +4,7 @@ import { ModalWithBackdrop } from "~/components/ui/modal/modal";
 import { useUI } from "~/context/ui-context";
 import type { BoardType, ColumnType } from "~/types";
 import { v4 as uuid } from "uuid";
-import { BoardSchema, ColumnSchema } from "~/zod-schemas";
+import { BoardSchema, ColumnSchema } from "~/utilities/zod-schemas";
 import { mutateTable } from "~/server/queries";
 import PromptWindow from "~/components/ui/modal/prompt-window";
 import type {

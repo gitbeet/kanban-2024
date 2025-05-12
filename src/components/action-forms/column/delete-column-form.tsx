@@ -1,7 +1,7 @@
 import { type FormEvent, useState, useTransition } from "react";
 import { useBoards } from "~/context/boards-context";
 import { handleDeleteColumn } from "~/server/queries";
-import { ColumnSchema } from "~/zod-schemas";
+import { ColumnSchema } from "~/utilities/zod-schemas";
 import type { DeleteColumnAction } from "~/types/actions";
 import { showCustomErrorToast } from "~/utilities/showCustomErrorToast";
 import DeleteButton from "~/components/ui/button/delete-button";

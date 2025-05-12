@@ -4,7 +4,7 @@ import { startTransition, useEffect, useState } from "react";
 import { useBoards } from "~/context/boards-context";
 import { v4 as uuid } from "uuid";
 import { mutateTable } from "~/server/queries";
-import { SubtaskSchema, TaskSchema } from "~/zod-schemas";
+import { SubtaskSchema, TaskSchema } from "~/utilities/zod-schemas";
 import type { ChangeEvent } from "react";
 import type { SubtaskType, TaskType } from "~/types";
 import InputField from "~/components/ui/input/input-field";

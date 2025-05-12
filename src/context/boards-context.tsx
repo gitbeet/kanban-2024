@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext, useOptimistic, useState } from "react";
-import { handleOptimisticUpdate } from "~/optimisticHandlers";
+import { handleOptimisticUpdate } from "~/optimistic-handlers";
 import type { BoardType, SetOptimisticType } from "~/types";
 import type { ReactNode } from "react";
 import type { Action } from "~/types/actions";

@@ -2,7 +2,7 @@
 import { useEffect, useState, useTransition } from "react";
 import { useBoards } from "~/context/boards-context";
 import { handleMakeBoardCurrent } from "~/server/queries";
-import { BoardSchema } from "~/zod-schemas";
+import { BoardSchema } from "~/utilities/zod-schemas";
 import type { FormEvent, HTMLAttributes } from "react";
 import { useUser } from "@clerk/nextjs";
 import { MdDashboard } from "react-icons/md";

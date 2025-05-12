@@ -7,7 +7,7 @@ import { handleCreateBoard } from "~/server/queries";
 import { v4 as uuid } from "uuid";
 import InputField from "~/components/ui/input/input-field";
 import { motion } from "framer-motion";
-import { BoardSchema } from "~/zod-schemas";
+import { BoardSchema } from "~/utilities/zod-schemas";
 import type { ChangeEvent, FormEvent } from "react";
 import type { BoardType } from "~/types";
 import FocusTrap from "focus-trap-react";

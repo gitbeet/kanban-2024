@@ -1,12 +1,12 @@
 "use client";
 
-import Logo from "./common/logo";
-import SignOutButton from "./ui/button/auth-buttons/sign-out-button";
-import SignInButton from "./ui/button/auth-buttons/sign-in-button";
+import Logo from "../common/logo";
+import SignOutButton from "../ui/button/auth-buttons/sign-out-button";
+import SignInButton from "../ui/button/auth-buttons/sign-in-button";
 import { usePathname } from "next/navigation";
-import MobileMenuButton from "./common/mobile-menu-button";
-import NavLink from "./ui/common/nav-link";
-import Text from "./ui/typography/text";
+import MobileMenuButton from "../common/mobile-menu-button";
+import NavLink from "../ui/common/nav-link";
+import Text from "../ui/typography/text";
 const ClientNav = ({
   loggedIn,
   name,

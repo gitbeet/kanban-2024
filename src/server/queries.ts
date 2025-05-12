@@ -20,7 +20,7 @@ import {
   TaskSchema,
   UserBackgroundSchema,
   UserDataSchema,
-} from "~/zod-schemas";
+} from "~/utilities/zod-schemas";
 import type {
   CreateBoardAction,
   CreateColumnAction,

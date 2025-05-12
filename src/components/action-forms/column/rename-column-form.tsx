@@ -3,7 +3,7 @@ import { useBoards } from "~/context/boards-context";
 import useClickOutside from "~/hooks/useClickOutside";
 import { handleRenameColumn } from "~/server/queries";
 import InputField from "~/components/ui/input/input-field";
-import { ColumnSchema } from "~/zod-schemas";
+import { ColumnSchema } from "~/utilities/zod-schemas";
 import type { ChangeEvent, Dispatch, FormEvent, SetStateAction } from "react";
 import { type RenameColumnAction } from "~/types/actions";
 import FocusTrap from "focus-trap-react";

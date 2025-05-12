@@ -4,7 +4,7 @@ import { useEffect, useState, useTransition, useRef } from "react";
 import { useBoards } from "~/context/boards-context";
 import { handleRenameTask } from "~/server/queries";
 import { resizeTextArea } from "~/utilities/resizeTextArea";
-import { TaskSchema } from "~/zod-schemas";
+import { TaskSchema } from "~/utilities/zod-schemas";
 import type { TaskType } from "~/types";
 import type { ChangeEvent, Dispatch, FormEvent, SetStateAction } from "react";
 import TextArea from "~/components/ui/input/text-area";

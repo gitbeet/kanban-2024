@@ -3,7 +3,7 @@ import { useBoards } from "~/context/boards-context";
 import { v4 as uuid } from "uuid";
 import { handleCreateColumn } from "~/server/queries";
 import InputField from "~/components/ui/input/input-field";
-import { ColumnSchema } from "~/zod-schemas";
+import { ColumnSchema } from "~/utilities/zod-schemas";
 import type { ColumnType } from "~/types";
 import type { ChangeEvent, FormEvent } from "react";
 import FocusTrap from "focus-trap-react";

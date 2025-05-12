@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import { v4 as uuid } from "uuid";
 import { resizeTextArea } from "~/utilities/resizeTextArea";
 import { handleCreateTask } from "~/server/queries";
-import { TaskSchema } from "~/zod-schemas";
+import { TaskSchema } from "~/utilities/zod-schemas";
 import type { ChangeEvent, FormEvent } from "react";
 import type { TaskType } from "~/types";
 import TextArea from "~/components/ui/input/text-area";

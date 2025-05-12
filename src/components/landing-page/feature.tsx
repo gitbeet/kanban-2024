@@ -1,7 +1,7 @@
 import Image, { type StaticImageData } from "next/image";
 import Text from "../ui/typography/text";
 
-const TestArticle = ({
+const Feature = ({
   heading,
   body,
   icon,
@@ -25,4 +25,4 @@ const TestArticle = ({
   );
 };
 
-export default TestArticle;
+export default Feature;

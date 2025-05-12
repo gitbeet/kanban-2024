@@ -6,7 +6,7 @@ import RenameColumnForm from "../action-forms/column/rename-column-form";
 import CreateTaskForm from "../action-forms/task/create-task-form";
 import Task from "./task";
 import DropIndicator from "./drop-indicator";
-import { SwitchTaskActionSchema } from "~/zod-schemas";
+import { SwitchTaskActionSchema } from "~/utilities/zod-schemas";
 import type { DragEvent } from "react";
 import type { TaskType, ColumnType } from "../../types";
 import { handleSwitchTaskColumn } from "~/server/queries";
