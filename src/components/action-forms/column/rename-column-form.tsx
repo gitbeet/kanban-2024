@@ -1,7 +1,6 @@
 import { useRef, useState, useTransition } from "react";
 import { useBoards } from "~/context/boards-context";
 import useClickOutside from "~/hooks/useClickOutside";
-import { handleRenameColumn } from "~/server/queries";
 import InputField from "~/components/ui/input/input-field";
 import { ColumnSchema } from "~/utilities/zod-schemas";
 import type { ChangeEvent, Dispatch, FormEvent, SetStateAction } from "react";
@@ -11,11 +10,11 @@ import { showCustomErrorToast } from "~/utilities/showCustomErrorToast";
 import { motion } from "framer-motion";
 import {
   slideButtonsRightVariants,
-  slideFormDownVariants,
   smallElementTransition,
 } from "~/utilities/framer-motion";
 import CancelButton from "~/components/ui/button/cancel-button";
 import SaveButton from "~/components/ui/button/save-button";
+import { handleRenameColumn } from "~/server/server-actions/column/rename-column";
 
 const RenameColumnForm = ({
   boardId,

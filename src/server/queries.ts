@@ -2,7 +2,7 @@
 
 import { db } from "./db/index";
 import { auth } from "@clerk/nextjs/server";
-import { boards, columns, subtasks, tasks } from "./db/schema";
+import { subtasks, tasks } from "./db/schema";
 import { revalidateTag } from "next/cache";
 import { and, eq, gt, gte, lt, lte, ne, sql } from "drizzle-orm";
 import type { DatabaseType } from "~/types";
@@ -12,13 +12,10 @@ import {
   TaskSchema,
 } from "~/utilities/zod-schemas";
 import type {
-  CreateColumnAction,
   CreateSubtaskAction,
   CreateTaskAction,
-  DeleteColumnAction,
   DeleteSubtaskAction,
   DeleteTaskAction,
-  RenameColumnAction,
   RenameSubtaskAction,
   RenameTaskAction,
   SwitchTaskColumnAction,
@@ -30,160 +27,9 @@ import { handleCreateBoard } from "./server-actions/board/create-board";
 import { handleRenameBoard } from "./server-actions/board/rename-board";
 import { handleDeleteBoard } from "./server-actions/board/delete-board";
 import { handleMakeBoardCurrent } from "./server-actions/board/make-board-current";
-
-// ------ Column ------
-export const handleCreateColumn = async ({
-  action,
-  tx = db,
-  inTransaction = false,
-}: {
-  action: CreateColumnAction;
-  tx?: DatabaseType;
-  inTransaction?: boolean;
-}) => {
-  try {
-    const { payload } = action;
-    const { column } = payload;
-    const { boardId } = column;
-
-    const { userId } = auth();
-    if (!userId) throw new Error("Unauthorized");
-
-    if (column.name === "ERROR_TEST")
-      throw new Error("(TEST) Error while creating a column");
-
-    const result = ColumnSchema.safeParse(column);
-    if (!result.success) {
-      throw new Error("Error while creating a column");
-    }
-
-    // calculate current max position
-    const columnsOrdered = await tx.query.columns.findMany({
-      where: (model, { eq }) => eq(model.boardId, boardId),
-      orderBy: (model, { desc }) => desc(model.index),
-      limit: 1,
-    });
-
-    const maxIndex = columnsOrdered[0]?.index ?? 0;
-
-    if (typeof maxIndex === undefined) throw new Error("No max index");
-    if (maxIndex + 1 !== column.index) throw new Error("Wrong index");
-
-    await tx.insert(columns).values(column);
-    revalidateTag(`boards-${userId}`);
-  } catch (error) {
-    const errorMessage =
-      error instanceof Error ? error.message : "Error while creating a column";
-    if (inTransaction) {
-      throw new Error(errorMessage);
-    } else {
-      return {
-        error: errorMessage,
-      };
-    }
-  }
-};
-
-export const handleRenameColumn = async ({
-  action,
-  tx = db,
-  inTransaction = false,
-}: {
-  action: RenameColumnAction;
-  tx?: DatabaseType;
-  inTransaction?: boolean;
-}) => {
-  try {
-    const { payload } = action;
-    const { columnId, newColumnName } = payload;
-
-    const { userId } = auth();
-    if (!userId) throw new Error("Unauthorized");
-
-    if (newColumnName === "ERROR_TEST")
-      throw new Error("(TEST) Error while renaming a column");
-
-    const result = ColumnSchema.pick({ id: true, name: true }).safeParse({
-      id: columnId,
-      name: newColumnName,
-    });
-    if (!result.success) {
-      throw new Error("Error while renaming a column");
-    }
-
-    await tx
-      .update(columns)
-      .set({ name: newColumnName, updatedAt: new Date() })
-      .where(and(eq(columns.id, columnId)));
-    revalidateTag(`boards-${userId}`);
-  } catch (error) {
-    const errorMessage =
-      error instanceof Error ? error.message : "Error while renaming column";
-    if (inTransaction) {
-      throw new Error(errorMessage);
-    } else {
-      return {
-        error: errorMessage,
-      };
-    }
-  }
-};
-
-export const handleDeleteColumn = async ({
-  action,
-  tx = db,
-  inTransaction = false,
-}: {
-  action: DeleteColumnAction;
-  tx?: DatabaseType;
-  inTransaction?: boolean;
-}) => {
-  try {
-    const { payload } = action;
-    const { boardId, columnId } = payload;
-
-    const { userId } = auth();
-    if (!userId) throw new Error("Unauthorized");
-
-    const result = ColumnSchema.pick({ id: true, boardId: true }).safeParse({
-      id: columnId,
-      boardId,
-    });
-    if (!result.success) {
-      throw new Error("Error while deleting a column");
-    }
-
-    const column = await tx.query.columns.findFirst({
-      where: (model, { eq }) => eq(model.id, columnId),
-    });
-    if (!column) throw new Error("Column not found");
-
-    if (column.name === "COLUMN_ERROR_TEST")
-      throw new Error("(TEST) Error while deleting a column");
-
-    await tx
-      .update(columns)
-      .set({ index: sql`${columns.index} - 1` })
-      .where(
-        and(
-          eq(columns.boardId, column.boardId),
-          gt(columns.index, column.index),
-        ),
-      );
-    await tx.delete(columns).where(eq(columns.id, columnId));
-    revalidateTag(`boards-${userId}`);
-  } catch (error) {
-    const errorMessage =
-      error instanceof Error ? error.message : "Error while deleting a column";
-    if (inTransaction) {
-      throw new Error(errorMessage);
-    } else {
-      return {
-        error: errorMessage,
-      };
-    }
-  }
-};
+import { handleCreateColumn } from "./server-actions/column/create-column";
+import { handleRenameColumn } from "./server-actions/column/rename-column";
+import { handleDeleteColumn } from "./server-actions/column/delete-column";
 
 // ------ Task ------
 export const handleCreateTask = async ({

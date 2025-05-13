@@ -1,7 +1,6 @@
 import { useRef, useState, useTransition } from "react";
 import { useBoards } from "~/context/boards-context";
 import { v4 as uuid } from "uuid";
-import { handleCreateColumn } from "~/server/queries";
 import InputField from "~/components/ui/input/input-field";
 import { ColumnSchema } from "~/utilities/zod-schemas";
 import type { ColumnType } from "~/types";
@@ -18,6 +17,7 @@ import {
 import AddButton from "~/components/ui/button/add-button";
 import CancelButton from "~/components/ui/button/cancel-button";
 import SaveButton from "~/components/ui/button/save-button";
+import { handleCreateColumn } from "~/server/server-actions/column/create-column";
 interface CreateColumnProps extends React.HTMLAttributes<HTMLDivElement> {
   boardId: string;
 }
