@@ -1,4 +1,5 @@
 import CloseButton from "../button/close-button";
+import Text from "../typography/text";
 import { ModalWithBackdrop } from "./modal";
 interface Props {
   show: boolean;
@@ -34,7 +35,9 @@ const PromptWindow = ({
         />
         <div className="h-4" />
         <div className="flex flex-col items-center gap-8">
-          <h3 className="text-center">{message}</h3>
+          <Text variant="primary">
+            <p className="text-center">{message}</p>
+          </Text>
           <div className="flex items-center gap-2">
             {confirmButton}
             {cancelButton}

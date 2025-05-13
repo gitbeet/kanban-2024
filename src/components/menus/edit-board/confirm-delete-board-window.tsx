@@ -45,11 +45,11 @@ const ConfirmDeleteBoardWindow = () => {
       showBackdrop={showConfirmDeleteBoardWindow}
       zIndex={50}
       message={
-        <span>
+        <>
           Are you sure you want to delete the ‘
           <span className="font-bold">{currentBoard?.name}</span>’ board ,all
           its tasks and subtasks? This action cannot be reversed.
-        </span>
+        </>
       }
     />
   );

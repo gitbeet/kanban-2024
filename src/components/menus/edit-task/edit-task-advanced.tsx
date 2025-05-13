@@ -22,6 +22,8 @@ import { showCustomErrorToast } from "~/utilities/showCustomErrorToast";
 import { Button } from "~/components/ui/button/button";
 import DeleteButton from "~/components/ui/button/delete-button";
 import CloseButton from "~/components/ui/button/close-button";
+import MenuHeading from "../menu-heading";
+import MenuSectionHeading from "../menu-section-heading";
 
 interface Props {
   task: TaskType;
@@ -411,10 +413,10 @@ export const EditTaskAdvanced = ({ columnId, task }: Props) => {
         showBackdrop={showEditTaskMenuAdvanced && showConfirmCancelWindow}
         onClose={() => setShowConfirmCancelWindow(false)}
         message={
-          <span>
+          <>
             Are you sure you want to cancel your changes? All unsaved progress
             will be lost.
-          </span>
+          </>
         }
         confirmButton={
           <Button
@@ -451,14 +453,13 @@ export const EditTaskAdvanced = ({ columnId, task }: Props) => {
         {/* p-1 to fix overflow-auto not showing outline on focused elements */}
         <div className="text-dark relative max-h-[95dvh] overflow-auto p-1">
           <div className="flex items-center justify-between">
-            <h1 className="text-lg font-bold">Edit Task</h1>
+            <MenuHeading text="Edit Task" />
             <CloseButton onClick={handleShowConfirmationWindow} />
           </div>
           <div className="h-8" />
-
           {/* -----  ----- */}
           <div className="space-y-4">
-            <h4 className="text-sm font-bold">Title</h4>
+            <MenuSectionHeading text="Title" />
             <InputField
               error={error.name}
               value={temporaryTaskName}
@@ -474,7 +475,7 @@ export const EditTaskAdvanced = ({ columnId, task }: Props) => {
 
           {/* -----  ----- */}
           <div className="space-y-4">
-            <h3 className="text-sm font-bold">Subtasks</h3>
+            <MenuSectionHeading text="Subtasks" />
             {temporarySubtasks.length === 0 && (
               <p className="text-light text-center">You have no subtasks</p>
             )}
@@ -525,7 +526,7 @@ export const EditTaskAdvanced = ({ columnId, task }: Props) => {
           <div className="h-8" />
           {/* -----  ----- */}
           <div className="space-y-4">
-            <h3 className="text-sm font-bold">Column</h3>
+            <MenuSectionHeading text="Column" />
             <select value={temporaryColumnId} onChange={handleChangeTaskColumn}>
               {board?.columns.map((c) => (
                 <option key={c.id} value={c.id}>

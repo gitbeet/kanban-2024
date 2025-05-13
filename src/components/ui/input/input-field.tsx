@@ -57,7 +57,7 @@ const InputField = forwardRef<HTMLInputElement, InputProps>(
     const labelJSX = (
       <Text variant="primary">
         <label className="absolute -top-1 -translate-y-full" htmlFor={props.id}>
-          {labelText}dsf
+          {labelText}
         </label>
       </Text>
     );

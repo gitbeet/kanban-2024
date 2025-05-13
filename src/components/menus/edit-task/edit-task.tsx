@@ -15,6 +15,8 @@ import { showCustomErrorToast } from "~/utilities/showCustomErrorToast";
 import { Button } from "~/components/ui/button/button";
 import MoreButton from "~/components/ui/button/more-button";
 import ToggleButton from "~/components/ui/button/toggle-button";
+import MenuHeading from "../menu-heading";
+import MenuSectionHeading from "../menu-section-heading";
 
 const EditTask = ({ task, columnId }: { task: TaskType; columnId: string }) => {
   const {
@@ -247,7 +249,7 @@ const EditTask = ({ task, columnId }: { task: TaskType; columnId: string }) => {
         className="flex max-h-[95dvh] flex-col gap-8 overflow-auto"
       >
         <div className="flex items-center justify-between gap-4">
-          <h3 className="text-dark truncate text-xl font-bold">{task.name}</h3>
+          <MenuHeading text={task.name} />
           <MoreButton ref={moreButtonRef} onClick={handleClickMoreMenu} />
         </div>
         <div className="space-y-4">
@@ -294,7 +296,7 @@ const EditTask = ({ task, columnId }: { task: TaskType; columnId: string }) => {
           </ul>
         </div>
         <div>
-          <h4 className="text-dark text-sm font-bold">Column</h4>
+          <MenuSectionHeading text="Column" />
           <div className="h-4" />
           <select
             disabled={pending || loading}
@@ -311,7 +313,7 @@ const EditTask = ({ task, columnId }: { task: TaskType; columnId: string }) => {
           </select>
         </div>
         <div>
-          <h4 className="text-dark text-sm font-bold">Position</h4>
+          <MenuSectionHeading text="Position" />
           <div className="h-4" />
           <select
             disabled={pending || loading}

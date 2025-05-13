@@ -18,6 +18,8 @@ import { showCustomErrorToast } from "~/utilities/showCustomErrorToast";
 import { Button } from "~/components/ui/button/button";
 import DeleteButton from "~/components/ui/button/delete-button";
 import CloseButton from "~/components/ui/button/close-button";
+import MenuHeading from "../menu-heading";
+import MenuSectionHeading from "../menu-section-heading";
 
 type ErrorType = {
   boardName: string;
@@ -310,10 +312,10 @@ const EditBoard = ({ board }: { board: BoardType }) => {
         showBackdrop={showEditBoardMenu && showConfirmCancelWindow}
         onClose={() => setShowConfirmCancelWindow(false)}
         message={
-          <span>
+          <>
             Are you sure you want to cancel your changes? All unsaved progress
             will be lost.
-          </span>
+          </>
         }
         confirmButton={
           <Button onClick={handleCloseWindow} type="submit" variant="danger">
@@ -343,12 +345,12 @@ const EditBoard = ({ board }: { board: BoardType }) => {
       >
         <div className="text-dark relative space-y-8">
           <div className="flex items-center justify-between">
-            <h1 className="text-lg font-bold">Edit Board</h1>
+            <MenuHeading text="Edit Board" />
             <CloseButton onClick={handleShowConfirmationWindow} />
           </div>
           {/* -----  ----- */}
           <div className="space-y-4">
-            <h4 className="text-sm font-bold">Board Name</h4>
+            <MenuSectionHeading text="Board Name" />
             <InputField
               error={error.boardName}
               value={boardName}
@@ -362,7 +364,7 @@ const EditBoard = ({ board }: { board: BoardType }) => {
           </div>
           {/* -----  ----- */}
           <div className="space-y-4">
-            <h3 className="text-sm font-bold">Columns</h3>
+            <MenuSectionHeading text="Columns" />
             <ul className="max-h-44 space-y-2.5 overflow-auto p-1 scrollbar-thin">
               {temporaryColumns
                 .sort((a, b) => a.index - b.index)
