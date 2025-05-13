@@ -5,6 +5,7 @@ import EditBoardSmallMenu from "../menus/edit-board/edit-board-small-menu";
 import { Button } from "../ui/button/button";
 import SettingsButton from "../ui/button/settings-button";
 import MoreButton from "../ui/button/more-button";
+import Text from "../ui/typography/text";
 
 export const BoardsNav = () => {
   const moreButtonRef = useRef<HTMLButtonElement | null>(null);
@@ -51,14 +52,11 @@ export const BoardsNav = () => {
         )}
         {/* Board name button */}
         {!noBoards && (
-          <Button
-            disabled={sidebarAnimating}
-            onClick={handleToggleShowSidebar}
-            className="text-xl"
-            variant="text"
-          >
-            {!noBoards && currentBoard?.name}
-          </Button>
+          <button disabled={sidebarAnimating} onClick={handleToggleShowSidebar}>
+            <Text variant="primary" hover>
+              <p className="text-xl font-bold">{currentBoard?.name}</p>
+            </Text>
+          </button>
         )}
       </div>
       <SettingsButton

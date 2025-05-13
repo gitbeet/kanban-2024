@@ -18,6 +18,7 @@ import { showCustomErrorToast } from "~/utilities/showCustomErrorToast";
 import SettingsSection from "../ui/boards-settings/settings-section";
 import ToggleButton from "../ui/button/toggle-button";
 import { modifyUserData } from "~/server/server-actions/user-data/modify-user-data";
+import Text from "../ui/typography/text";
 
 const BoardsSettings = () => {
   const {
@@ -141,10 +142,12 @@ const BoardsSettings = () => {
                     <ToggleButton checked={performanceMode} />
                   </div>
                   <div>
-                    <p>Disable animations</p>
-                    <span className="text-light text-sm">
-                      (improves performance)
-                    </span>
+                    <Text variant="primary">
+                      <p>Disable animations</p>
+                    </Text>
+                    <Text variant="tertiary">
+                      <span className="text-sm">(improves performance)</span>
+                    </Text>
                   </div>
                 </form>
               </>

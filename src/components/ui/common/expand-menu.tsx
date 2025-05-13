@@ -22,17 +22,19 @@ const ExpandMenu = ({
 
   return (
     <section>
-      <Text variant="primary">
-        <button
-          className="flex w-full grow items-center justify-between rounded bg-transparent p-2.5 transition hover:bg-white active:bg-neutral-50 dark:hover:bg-neutral-800 dark:active:bg-neutral-750"
-          onClick={() => setIsOpen((prev) => !prev)}
-          tabIndex={tabIndex}
-          aria-expanded={isOpen}
-          disabled={disabled}
-        >
-          {header} {menuIcon}
-        </button>
-      </Text>
+      <button
+        className="group flex w-full grow items-center justify-between rounded bg-transparent p-2.5 transition hover:bg-white active:bg-neutral-50 dark:hover:bg-neutral-800 dark:active:bg-neutral-750"
+        onClick={() => setIsOpen((prev) => !prev)}
+        tabIndex={tabIndex}
+        aria-expanded={isOpen}
+        disabled={disabled}
+      >
+        <Text variant="primary" hover group>
+          <>
+            {header} {menuIcon}
+          </>
+        </Text>
+      </button>
       <AnimatePresence initial={false}>
         {isOpen && (
           <motion.div

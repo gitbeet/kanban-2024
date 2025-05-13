@@ -138,7 +138,7 @@ const RenameTaskForm = ({
         }}
       >
         <form
-          className="flex items-center gap-2"
+          className="flex items-center justify-start gap-2"
           ref={renameTaskRef}
           onSubmit={clientAction}
         >
@@ -149,9 +149,9 @@ const RenameTaskForm = ({
                 setNewTaskName(task.name);
                 setIsRenamingTask(true);
               }}
-              className="input-readonly text-left"
+              className="input-readonly break-all text-left"
             >
-              <p> {task.name}</p>
+              {task.name}
             </button>
           )}
           {isRenamingTask && (

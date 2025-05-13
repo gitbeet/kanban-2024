@@ -3,6 +3,7 @@ import { useDebouncedCallback } from "use-debounce";
 import { useEffect } from "react";
 import { showCustomErrorToast } from "~/utilities/showCustomErrorToast";
 import { modifyUserData } from "~/server/server-actions/user-data/modify-user-data";
+import Text from "../ui/typography/text";
 
 const DEBOUNCE_DELAY = 1500;
 
@@ -32,7 +33,9 @@ const OpacitySlider = ({ tabIndex = 1 }: { tabIndex?: number }) => {
 
   return (
     <div className="space-y-2">
-      <h4 className="text-light">Opacity</h4>
+      <Text variant="secondary">
+        <h4>Opacity</h4>
+      </Text>
       <input
         className="w-full grow accent-primary-700"
         aria-label="Adjust the background opacity"

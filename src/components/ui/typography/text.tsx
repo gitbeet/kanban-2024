@@ -6,7 +6,8 @@ type TextVariant =
   | "accent"
   | "tertiary"
   | "danger"
-  | "success";
+  | "success"
+  | "inverse";
 
 type Props = {
   variant: TextVariant;
@@ -22,6 +23,7 @@ const classesMap: Record<TextVariant, string> = {
   danger: "text-red-500",
   accent: "text-purple-500",
   success: "text-teal-400",
+  inverse: "text-slate-50 dark:text-slate-900",
 };
 
 // note: change group hover class when changing hover class
@@ -32,6 +34,7 @@ const hoverClassesMap: Record<TextVariant, string> = {
   danger: "hover:text-red-400",
   accent: "hover:text-purple-400",
   success: "hover:text-teal-300",
+  inverse: "hover:text-white hover:dark:text-slate-950",
 };
 
 const groupHoverClassesMap: Record<TextVariant, string> = {
@@ -41,6 +44,7 @@ const groupHoverClassesMap: Record<TextVariant, string> = {
   danger: "group-hover:text-red-400",
   accent: "group-hover:text-purple-400",
   success: "group-hover:text-teal-300",
+  inverse: "group-hover:text-white group-hover:dark:text-slate-950",
 };
 
 const Text = ({ variant, hover = false, group = false, children }: Props) => {

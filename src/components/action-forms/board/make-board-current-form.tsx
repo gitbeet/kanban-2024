@@ -83,10 +83,12 @@ const MakeBoardCurrentForm = ({ boardId, boardName, ...props }: Props) => {
       {...props}
     >
       {boardId === currentBoardId && (
-        <p className="flex items-center gap-2 text-slate-50 dark:text-slate-900">
-          <MdDashboard />
-          <span className="truncate"> {boardName}</span>
-        </p>
+        <Text variant="inverse" hover group>
+          <p className="flex items-center gap-2">
+            <MdDashboard />
+            <span className="truncate"> {boardName}</span>
+          </p>
+        </Text>
       )}
       {boardId !== currentBoardId && (
         <Text variant="secondary" hover group>

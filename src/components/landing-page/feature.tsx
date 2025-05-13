@@ -16,7 +16,7 @@ const Feature = ({
         <Image src={icon} height={60} width={60} alt="idea" />
       </div>
       <Text variant="primary">
-        <h2 className="text-center text-2xl font-black">{heading}</h2>
+        <h3 className="text-center text-2xl font-black">{heading}</h3>
       </Text>
       <Text variant="secondary">
         <p className="text-center font-light">{body}</p>

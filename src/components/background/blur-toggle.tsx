@@ -3,6 +3,7 @@ import { useDebouncedCallback } from "use-debounce";
 import { useBackground } from "~/context/bg-context";
 import { modifyUserData } from "~/server/server-actions/user-data/modify-user-data";
 import { showCustomErrorToast } from "~/utilities/showCustomErrorToast";
+import Text from "../ui/typography/text";
 
 const DEBOUNCE_DELAY = 1500;
 
@@ -36,7 +37,9 @@ const BlurToggle = ({ tabIndex = 0 }: { tabIndex?: number }) => {
   return (
     <div className="space-y-2">
       {/* use label */}
-      <h4 className="text-light">Background blur</h4>
+      <Text variant="secondary">
+        <h4>Background blur</h4>
+      </Text>
       <input
         type="range"
         min={0}
