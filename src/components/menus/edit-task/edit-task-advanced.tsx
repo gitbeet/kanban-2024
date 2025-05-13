@@ -3,7 +3,7 @@
 import { startTransition, useEffect, useState } from "react";
 import { useBoards } from "~/context/boards-context";
 import { v4 as uuid } from "uuid";
-import { mutateTable } from "~/server/queries";
+import { applyBoardActionsTransactionally } from "~/server/server-actions/apply-board-actions-transactionally";
 import { SubtaskSchema, TaskSchema } from "~/utilities/zod-schemas";
 import type { ChangeEvent } from "react";
 import type { SubtaskType, TaskType } from "~/types";
@@ -392,7 +392,7 @@ export const EditTaskAdvanced = ({ columnId, task }: Props) => {
       changes.forEach((action) => setOptimisticBoards(action));
     });
 
-    const response = await mutateTable(changes);
+    const response = await applyBoardActionsTransactionally(changes);
     if (response?.error) {
       showCustomErrorToast({ message: response.error });
     }

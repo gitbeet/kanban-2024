@@ -1,28 +1,27 @@
 "use server";
 
-import { db } from "./db/index";
+import { db } from "../db/index";
 import { auth } from "@clerk/nextjs/server";
 import { revalidateTag } from "next/cache";
 import type { Action } from "~/types/actions";
-import { handleCreateBoard } from "./server-actions/board/create-board";
-import { handleRenameBoard } from "./server-actions/board/rename-board";
-import { handleDeleteBoard } from "./server-actions/board/delete-board";
-import { handleMakeBoardCurrent } from "./server-actions/board/make-board-current";
-import { handleCreateColumn } from "./server-actions/column/create-column";
-import { handleRenameColumn } from "./server-actions/column/rename-column";
-import { handleDeleteColumn } from "./server-actions/column/delete-column";
-import { handleCreateTask } from "./server-actions/task/create-task";
-import { handleRenameTask } from "./server-actions/task/rename-task";
-import { handleDeleteTask } from "./server-actions/task/delete-task";
-import { handleToggleTaskCompleted } from "./server-actions/task/toggle-task";
-import { handleSwitchTaskColumn } from "./server-actions/task/switch-task-column";
-import { handleCreateSubtask } from "./server-actions/subtask/create-subtask";
-import { handleRenameSubtask } from "./server-actions/subtask/rename-subtask";
-import { handleDeleteSubtask } from "./server-actions/subtask/delete-subtask";
-import { handleToggleSubtaskCompleted } from "./server-actions/subtask/toggle-subtask";
+import { handleCreateBoard } from "./board/create-board";
+import { handleRenameBoard } from "./board/rename-board";
+import { handleDeleteBoard } from "./board/delete-board";
+import { handleMakeBoardCurrent } from "./board/make-board-current";
+import { handleCreateColumn } from "./column/create-column";
+import { handleRenameColumn } from "./column/rename-column";
+import { handleDeleteColumn } from "./column/delete-column";
+import { handleCreateTask } from "./task/create-task";
+import { handleRenameTask } from "./task/rename-task";
+import { handleDeleteTask } from "./task/delete-task";
+import { handleToggleTaskCompleted } from "./task/toggle-task";
+import { handleSwitchTaskColumn } from "./task/switch-task-column";
+import { handleCreateSubtask } from "./subtask/create-subtask";
+import { handleRenameSubtask } from "./subtask/rename-subtask";
+import { handleDeleteSubtask } from "./subtask/delete-subtask";
+import { handleToggleSubtaskCompleted } from "./subtask/toggle-subtask";
 
-// ------ Transaction ------
-export async function mutateTable(actions: Action[]) {
+export async function applyBoardActionsTransactionally(actions: Action[]) {
   const user = auth();
   try {
     if (!user.userId) throw new Error("Unauthorized");

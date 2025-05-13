@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, useTransition } from "react";
 import { ModalWithBackdrop } from "~/components/ui/modal/modal";
 import { useBoards } from "~/context/boards-context";
 import { useUI } from "~/context/ui-context";
-import { mutateTable } from "~/server/queries";
+import { applyBoardActionsTransactionally } from "~/server/server-actions/apply-board-actions-transactionally";
 import type { SubtaskType, TaskType } from "~/types";
 import EditTaskSmallMenu from "./edit-task-small-menu";
 import type {
@@ -171,7 +171,7 @@ const EditTask = ({ task, columnId }: { task: TaskType; columnId: string }) => {
     startTransition(() => {
       actions.forEach((action) => setOptimisticBoards(action));
     });
-    const response = await mutateTable(actions);
+    const response = await applyBoardActionsTransactionally(actions);
     if (response?.error) {
       showCustomErrorToast({ message: response.error });
     }

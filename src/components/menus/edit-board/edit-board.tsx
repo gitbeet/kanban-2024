@@ -5,7 +5,7 @@ import { useUI } from "~/context/ui-context";
 import type { BoardType, ColumnType } from "~/types";
 import { v4 as uuid } from "uuid";
 import { BoardSchema, ColumnSchema } from "~/utilities/zod-schemas";
-import { mutateTable } from "~/server/queries";
+import { applyBoardActionsTransactionally } from "~/server/server-actions/apply-board-actions-transactionally";
 import PromptWindow from "~/components/ui/modal/prompt-window";
 import type {
   CreateColumnAction,
@@ -282,7 +282,7 @@ const EditBoard = ({ board }: { board: BoardType }) => {
     // when saving close the small menu aswell
     setShowEditBoardWindow(false);
 
-    const response = await mutateTable(actions);
+    const response = await applyBoardActionsTransactionally(actions);
     if (response?.error) {
       showCustomErrorToast({ message: response.error });
     }
