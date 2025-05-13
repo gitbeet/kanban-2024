@@ -1,6 +1,5 @@
 import { type Metadata } from "next";
 import type { UserDataType, BoardType } from "~/types";
-import { getBoards } from "~/server/queries";
 import { Roboto } from "next/font/google";
 import Providers from "./providers";
 import { Toaster } from "react-hot-toast";
@@ -12,6 +11,7 @@ import { auth, currentUser } from "@clerk/nextjs/server";
 import { getUserData } from "~/server/server-actions/user-data/get-user-data";
 import { getBackgrounds } from "~/server/server-actions/background/get-background";
 import { getUserBackgrounds } from "~/server/server-actions/background/get-user-backgrounds";
+import { getBoards } from "~/server/server-actions/board/get-boards";
 
 const roboto = Roboto({
   weight: ["300", "400", "500", "700", "900"],

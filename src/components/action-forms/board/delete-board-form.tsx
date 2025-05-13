@@ -2,11 +2,11 @@ import { useEffect, useState, useTransition } from "react";
 import { useBoards } from "~/context/boards-context";
 import { BoardSchema } from "~/utilities/zod-schemas";
 import type { FormEvent } from "react";
-import { handleDeleteBoard } from "~/server/queries";
 import { useUser } from "@clerk/nextjs";
 import { type DeleteBoardAction } from "~/types/actions";
 import { showCustomErrorToast } from "~/utilities/showCustomErrorToast";
 import DeleteButton from "~/components/ui/button/delete-button";
+import { handleDeleteBoard } from "~/server/server-actions/board/delete-board";
 
 interface DeleteTaskFormProps extends React.HTMLAttributes<HTMLDivElement> {
   boardId: string;

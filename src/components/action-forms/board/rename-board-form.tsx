@@ -2,7 +2,6 @@
 
 import { useRef, useState, useTransition } from "react";
 import { useBoards } from "~/context/boards-context";
-import { handleRenameBoard } from "~/server/queries";
 import InputField from "~/components/ui/input/input-field";
 import { BoardSchema } from "~/utilities/zod-schemas";
 import type { ChangeEvent } from "react";
@@ -10,6 +9,7 @@ import { useUser } from "@clerk/nextjs";
 import { type RenameBoardAction } from "~/types/actions";
 import { showCustomErrorToast } from "~/utilities/showCustomErrorToast";
 import EditButton from "~/components/ui/button/edit-button";
+import { handleRenameBoard } from "~/server/server-actions/board/rename-board";
 
 const RenameBoardForm = ({ boardId }: { boardId: string }) => {
   const [newBoardName, setNewBoardName] = useState("");

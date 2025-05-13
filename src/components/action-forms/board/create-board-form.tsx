@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState, useTransition } from "react";
 import { useUser } from "@clerk/nextjs";
 import { useBoards } from "~/context/boards-context";
-import { handleCreateBoard } from "~/server/queries";
 import { v4 as uuid } from "uuid";
 import InputField from "~/components/ui/input/input-field";
 import { motion } from "framer-motion";
@@ -21,6 +20,7 @@ import {
 import AddButton from "~/components/ui/button/add-button";
 import CancelButton from "~/components/ui/button/cancel-button";
 import SaveButton from "~/components/ui/button/save-button";
+import { handleCreateBoard } from "~/server/server-actions/board/create-board";
 
 const CreateBoardForm = ({
   ...props

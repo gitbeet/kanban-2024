@@ -3,26 +3,21 @@
 import { db } from "./db/index";
 import { auth } from "@clerk/nextjs/server";
 import { boards, columns, subtasks, tasks } from "./db/schema";
-import { revalidatePath, revalidateTag } from "next/cache";
+import { revalidateTag } from "next/cache";
 import { and, eq, gt, gte, lt, lte, ne, sql } from "drizzle-orm";
 import type { DatabaseType } from "~/types";
 import {
-  BoardSchema,
   ColumnSchema,
   SubtaskSchema,
   TaskSchema,
 } from "~/utilities/zod-schemas";
 import type {
-  CreateBoardAction,
   CreateColumnAction,
   CreateSubtaskAction,
   CreateTaskAction,
-  DeleteBoardAction,
   DeleteColumnAction,
   DeleteSubtaskAction,
   DeleteTaskAction,
-  MakeBoardCurrentAction,
-  RenameBoardAction,
   RenameColumnAction,
   RenameSubtaskAction,
   RenameTaskAction,
@@ -31,238 +26,10 @@ import type {
   ToggleTaskAction,
   Action,
 } from "~/types/actions";
-import { unstable_cache as cache } from "next/cache";
-
-// ------ Board ------
-export const getBoards = async () => {
-  try {
-    const user = auth();
-    if (!user.userId) throw new Error("Unauthorized");
-
-    const getCachedBoards = cache(
-      async () => {
-        const result = await db.query.boards.findMany({
-          where: (model, { eq }) => eq(model.userId, user.userId),
-          with: {
-            columns: {
-              with: {
-                tasks: {
-                  with: {
-                    subtasks: true,
-                  },
-                },
-              },
-            },
-          },
-        });
-        return result;
-      },
-      ["boards", user.userId],
-      { tags: [`boards-${user.userId}`] },
-    );
-    const boards = await getCachedBoards();
-    return { boards };
-  } catch (error) {
-    const errorMessage =
-      error instanceof Error ? error.message : "Error while getting boards";
-    return {
-      error: errorMessage,
-    };
-  }
-};
-
-export const handleCreateBoard = async ({
-  action,
-  tx = db,
-  inTransaction = false,
-}: {
-  action: CreateBoardAction;
-  tx?: DatabaseType;
-  inTransaction?: boolean;
-}) => {
-  const { payload } = action;
-  const { board } = payload;
-  try {
-    const { userId } = auth();
-    if (!userId) throw new Error("Unauthorized");
-
-    if (board.name === "ERROR_TEST")
-      throw new Error("(TEST) Error while creating a board");
-
-    const boardsOrdered = await tx.query.boards.findMany({
-      where: (model, { eq }) => eq(model.userId, userId),
-      orderBy: (model, { desc }) => desc(model.index),
-      limit: 1,
-    });
-
-    const maxIndex = boardsOrdered[0]?.index ?? 0;
-    if (typeof maxIndex === undefined) throw new Error("No max index");
-    if (maxIndex + 1 !== board.index) throw new Error("Wrong index");
-
-    const result = BoardSchema.safeParse(board);
-    if (!result.success) {
-      throw new Error(
-        result.error.issues[0]?.message ?? "Error while creating a board",
-      );
-    }
-
-    await tx
-      .update(boards)
-      .set({ current: false })
-      .where(eq(boards.userId, userId));
-
-    await tx.insert(boards).values(board);
-    revalidateTag(`boards-${userId}`);
-  } catch (error) {
-    const errorMessage =
-      error instanceof Error ? error.message : "Error while creating a board";
-    if (inTransaction) {
-      throw new Error(errorMessage);
-    } else {
-      return {
-        error: errorMessage,
-      };
-    }
-  }
-};
-
-export const handleRenameBoard = async ({
-  action,
-  tx = db,
-  inTransaction = false,
-}: {
-  action: RenameBoardAction;
-  tx?: DatabaseType;
-  inTransaction?: boolean;
-}) => {
-  try {
-    const { payload } = action;
-    const { boardId, newBoardName } = payload;
-
-    const { userId } = auth();
-    if (!userId) throw new Error("Unauthorized");
-    if (newBoardName === "ERROR_TEST")
-      throw new Error("(TEST) Error while renaming a board");
-
-    const result = BoardSchema.pick({ id: true, name: true }).safeParse({
-      id: boardId,
-      name: newBoardName,
-    });
-    if (!result.success) {
-      throw new Error(
-        result.error.issues[0]?.message ?? "Error while renaming a board",
-      );
-    }
-
-    await tx
-      .update(boards)
-      .set({ name: newBoardName, updatedAt: new Date() })
-      .where(and(eq(boards.id, boardId), eq(boards.userId, userId)));
-    revalidateTag(`boards-${userId}`);
-  } catch (error) {
-    const errorMessage =
-      error instanceof Error ? error.message : "Error while a renaming board";
-    if (inTransaction) {
-      throw new Error(errorMessage);
-    } else {
-      return {
-        error: errorMessage,
-      };
-    }
-  }
-};
-
-export const handleDeleteBoard = async ({
-  action,
-  tx = db,
-  inTransaction = false,
-}: {
-  action: DeleteBoardAction;
-  tx?: DatabaseType;
-  inTransaction?: boolean;
-}) => {
-  try {
-    const { payload } = action;
-    const { boardId, boardIndex, wasCurrent } = payload;
-
-    const { userId } = auth();
-    if (!userId) throw new Error("Unauthorized");
-
-    const result = BoardSchema.pick({ id: true, index: true }).safeParse({
-      id: boardId,
-      index: boardIndex,
-    });
-
-    if (!result.success) {
-      throw new Error(
-        result.error.issues[0]?.message ?? "Error while deleting a board",
-      );
-    }
-
-    await tx
-      .update(boards)
-      .set({ index: sql`${boards.index} - 1` })
-      .where(and(gt(boards.index, boardIndex), eq(boards.userId, userId)));
-    await tx
-      .delete(boards)
-      .where(and(eq(boards.id, boardId), eq(boards.userId, userId)));
-    if (!wasCurrent) return revalidatePath("/");
-    await tx
-      .update(boards)
-      .set({ current: true })
-      .where(and(eq(boards.index, 1), eq(boards.userId, userId)));
-    revalidateTag(`boards-${userId}`);
-  } catch (error) {
-    const errorMessage =
-      error instanceof Error ? error.message : "Error while deleting board";
-    if (inTransaction) {
-      throw new Error(errorMessage);
-    } else {
-      return {
-        error: errorMessage,
-      };
-    }
-  }
-};
-
-export const handleMakeBoardCurrent = async ({
-  action,
-  tx = db,
-  inTransaction = false,
-}: {
-  action: MakeBoardCurrentAction;
-  tx?: DatabaseType;
-  inTransaction?: boolean;
-}) => {
-  try {
-    const { payload } = action;
-    const { oldCurrentBoardId, newCurrentBoardId } = payload;
-    const { userId } = auth();
-    if (!userId) throw new Error("Unauthorized");
-
-    await tx
-      .update(boards)
-      .set({ current: false, updatedAt: new Date() })
-      .where(and(eq(boards.id, oldCurrentBoardId), eq(boards.userId, userId)));
-    await tx
-      .update(boards)
-      .set({ current: true })
-      .where(and(eq(boards.id, newCurrentBoardId), eq(boards.userId, userId)));
-    revalidateTag(`boards-${userId}`);
-  } catch (error) {
-    const errorMessage =
-      error instanceof Error
-        ? error.message
-        : "Error while making board current";
-    if (inTransaction) {
-      throw new Error(errorMessage);
-    } else {
-      return {
-        error: errorMessage,
-      };
-    }
-  }
-};
+import { handleCreateBoard } from "./server-actions/board/create-board";
+import { handleRenameBoard } from "./server-actions/board/rename-board";
+import { handleDeleteBoard } from "./server-actions/board/delete-board";
+import { handleMakeBoardCurrent } from "./server-actions/board/make-board-current";
 
 // ------ Column ------
 export const handleCreateColumn = async ({
