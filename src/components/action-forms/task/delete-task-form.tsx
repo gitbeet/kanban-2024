@@ -1,6 +1,6 @@
-import { FormEvent, startTransition, useState } from "react";
+import { type FormEvent, startTransition } from "react";
 import { useBoards } from "~/context/boards-context";
-import { handleDeleteTask } from "~/server/queries";
+import { handleDeleteTask } from "~/server/server-actions/task/delete-task";
 import { type DeleteTaskAction } from "~/types/actions";
 import { showCustomErrorToast } from "~/utilities/showCustomErrorToast";
 

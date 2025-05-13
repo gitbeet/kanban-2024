@@ -9,12 +9,12 @@ import DropIndicator from "./drop-indicator";
 import { SwitchTaskActionSchema } from "~/utilities/zod-schemas";
 import type { DragEvent } from "react";
 import type { TaskType, ColumnType } from "../../types";
-import { handleSwitchTaskColumn } from "~/server/queries";
 import { useUI } from "~/context/ui-context";
 import { motion } from "framer-motion";
 import { sidebarTransition } from "~/utilities/framer-motion";
 import Text from "../ui/typography/text";
 import DeleteButton from "../ui/button/delete-button";
+import { handleSwitchTaskColumn } from "~/server/server-actions/task/switch-task-column";
 
 const Column = ({
   boardId,

@@ -5,7 +5,6 @@ import { useBoards } from "~/context/boards-context";
 import { motion } from "framer-motion";
 import { v4 as uuid } from "uuid";
 import { resizeTextArea } from "~/utilities/resizeTextArea";
-import { handleCreateTask } from "~/server/queries";
 import { TaskSchema } from "~/utilities/zod-schemas";
 import type { ChangeEvent, FormEvent } from "react";
 import type { TaskType } from "~/types";
@@ -22,6 +21,7 @@ import {
 import { Button } from "~/components/ui/button/button";
 import AddButton from "~/components/ui/button/add-button";
 import SubmitButton from "~/components/ui/button/submit-button";
+import { handleCreateTask } from "~/server/server-actions/task/create-task";
 
 const CreateTaskForm = ({
   boardId,
