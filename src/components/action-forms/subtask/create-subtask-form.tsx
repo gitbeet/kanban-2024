@@ -4,10 +4,10 @@ import { useBoards } from "~/context/boards-context";
 import type { SubtaskType } from "~/types";
 import { SubtaskSchema } from "~/utilities/zod-schemas";
 import { v4 as uuid } from "uuid";
-import { handleCreateSubtask } from "~/server/queries";
 import { type CreateSubtaskAction } from "~/types/actions";
 import { showCustomErrorToast } from "~/utilities/showCustomErrorToast";
 import SaveButton from "~/components/ui/button/save-button";
+import { handleCreateSubtask } from "~/server/server-actions/subtask/create-subtask";
 const CreateSubtaskForm = ({
   columnId,
   taskId,
