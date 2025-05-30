@@ -1,4 +1,3 @@
-import React from "react";
 import { ModalWithBackdropAndPosition } from "~/components/ui/modal/modal";
 import type { ModalWithBackdropAndPositionProps } from "~/components/ui/modal/modal";
 

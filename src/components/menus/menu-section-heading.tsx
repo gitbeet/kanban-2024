@@ -1,4 +1,3 @@
-import React from "react";
 import Text from "../ui/typography/text";
 
 const MenuSectionHeading = ({ text }: { text: string }) => {

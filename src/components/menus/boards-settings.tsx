@@ -5,7 +5,6 @@ import { IconButton } from "../ui/button/icon-buton";
 import OpacitySlider from "../background/opacity-slider";
 import FocusTrap from "focus-trap-react";
 import { type FormEvent, useRef } from "react";
-// import { colorBackgrounds, imageBackgrounds } from "~/utilities/backgrounds";
 import { useBackground } from "~/context/bg-context";
 import UploadBackground from "../background/upload-background";
 import UserBackgroundOption from "../background/user-background-option";
