@@ -1,6 +1,7 @@
 const ColorGradientText = ({ text }: { text: string }) => {
   return (
-    <span className="isolate bg-gradient-to-r from-blue-500 via-teal-400 to-sky-500 bg-clip-text !text-transparent">
+    // py-1 to fix clipping
+    <span className="isolate bg-gradient-to-r from-blue-500 via-teal-400 to-sky-500 bg-clip-text py-1 !text-transparent">
       {text}
     </span>
   );
