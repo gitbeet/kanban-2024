@@ -6,7 +6,7 @@ const VerticalGradientText = ({
   children: ReactElement<{ className?: string }>;
 }) => {
   const baseClasses =
-    "bg-gradient-to-b from-slate-500 to-slate-900 bg-clip-text text-transparent dark:from-slate-50 dark:to-slate-300";
+    "bg-gradient-to-b py-1 from-slate-500 to-slate-900 bg-clip-text text-transparent dark:from-slate-50 dark:to-slate-300";
 
   if (!isValidElement(children)) {
     return <span className={baseClasses}>{children}</span>;

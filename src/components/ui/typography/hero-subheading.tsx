@@ -5,7 +5,7 @@ const HeroSubheading = ({
   className,
 }: {
   text: string;
-  className: string;
+  className?: string;
 }) => {
   return (
     <Text variant="secondary">
