@@ -79,7 +79,7 @@ export default async function RootLayout({
           <Toaster
             position="bottom-center"
             toastOptions={{
-              className: "bg-light__test text-dark",
+              className: "bg-column text-primary",
               duration: 10000,
             }}
           />

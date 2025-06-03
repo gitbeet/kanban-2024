@@ -4,12 +4,105 @@
 @import "./blobs.css";
 @import "./backgrounds.css";
 
-/* 
-*,
-*::before,
-*::after {
-  outline: 1px solid red;
-} */
+@layer utilities {
+  /* ***** SCROLL ***** */
+  .no-scroll {
+    @apply overflow-hidden;
+  }
+
+  /* ***** TRANSITIONS ***** */
+  .transition-colors--default {
+    @apply transition-colors duration-150;
+  }
+
+  /* ***** TYPOGRAPHY *****  */
+  /* ***** TYPOGRAPHY VARIANTS */
+  .text-primary {
+    @apply text-slate-900 dark:text-slate-100;
+  }
+
+  .text-secondary {
+    @apply text-slate-600 dark:text-slate-400;
+  }
+
+  .text-secondary--hoverable {
+    @apply text-secondary transition-colors--default hover:text-neutral-700 dark:hover:text-neutral-250;
+  }
+
+  /* ***** TYPOGRAPHY SIZES */
+  .text-heading {
+    @apply text-5xl font-black md:text-6xl xl:text-7xl;
+  }
+
+  .text-subheading {
+    @apply text-3xl font-bold;
+  }
+
+  .text-body {
+    @apply text-base;
+  }
+
+  .text-caption {
+    @apply text-sm;
+  }
+
+  /* ***** BACKGROUND ***** */
+  .bg-dark {
+    @apply bg-neutral-100 dark:bg-neutral-800;
+  }
+
+  .bg-light {
+    @apply bg-neutral-50 dark:bg-neutral-700;
+  }
+
+  .bg-column {
+    @apply bg-neutral-100/60 backdrop-blur dark:bg-neutral-900/90;
+  }
+
+  .bg-sidebar {
+    @apply bg-neutral-50/80 backdrop-blur-sm dark:bg-neutral-850/90;
+  }
+
+  /* ELEMENTS BACKGROUND */
+  .task-bg,
+  .menu-bg {
+    @apply bg-light rounded-md;
+  }
+
+  .menu-bg {
+    @apply shadow-xl;
+  }
+
+  .task-bg {
+    @apply border border-transparent shadow-md hover:border-neutral-250 dark:hover:border-neutral-650;
+  }
+
+  /* ***** BORDER  */
+  .border-color {
+    @apply border-neutral-100 dark:border-neutral-700;
+  }
+
+  .border-color__test {
+    @apply border-neutral-100 dark:border-neutral-700;
+  }
+
+  /* SECTION */
+  .section-light {
+    @apply bg-light border-color border-y;
+  }
+
+  .section-padding {
+    @apply px-4 md:px-8;
+  }
+
+  .container {
+    @apply mx-auto max-w-[1280px];
+  }
+
+  .menu {
+    @apply absolute left-[50dvw] top-[50dvh] w-[min(calc(100dvw-2rem),25rem)];
+  }
+}
 
 @keyframes float {
   0%,
@@ -32,104 +125,14 @@
   transform: none !important;
 }
 
-.no-scroll {
-  overflow: hidden;
-}
-
-/* ***** TEXT *****  */
-
-.text-dark {
-  @apply text-neutral-850 dark:text-neutral-50;
-}
-
-.text-light {
-  @apply text-neutral-650 dark:text-neutral-350;
-}
-
-.text-heading {
-  @apply text-5xl font-black md:text-6xl xl:text-7xl;
-}
-
-.text-subheading {
-  @apply text-3xl font-bold;
-}
-
-.text-body {
-  @apply text-base;
-}
-
-.text-caption {
-  @apply text-sm;
-}
-
-.text-secondary,
-.text-secondary--hoverable {
-  @apply transition-colors--default text-light;
-}
-
-.text-secondary--hoverable {
-  @apply hover:text-neutral-700 dark:hover:text-neutral-250;
-}
-
-/* ***** BACKGROUND ***** */
-
-.border-color {
-  @apply border-neutral-100 dark:border-neutral-700;
-}
-
-.border-color__test {
-  @apply border-neutral-100 dark:border-neutral-700;
-}
-
-.bg-dark {
-  @apply bg-neutral-100 dark:bg-neutral-800;
-}
-
-.bg-light {
-  @apply bg-neutral-50 dark:bg-neutral-700;
-}
-
-.bg-light__test {
-  @apply bg-neutral-100/60 backdrop-blur dark:bg-neutral-900/90;
-}
-
-.bg-light__test-2 {
-  @apply bg-neutral-50/80 backdrop-blur-sm dark:bg-neutral-850/90;
-}
-
-.task-bg,
-.menu-bg {
-  @apply bg-light rounded-md shadow-xl;
-}
-
-.task-bg {
-  @apply border border-transparent hover:border-neutral-250 dark:hover:border-neutral-650;
-}
-
-.section-light {
-  @apply bg-light border-color border-y;
-}
-
-.section-padding {
-  @apply px-4 md:px-8;
-}
-
 /* ***** ELEMENTS ***** */
-
-.container {
-  @apply mx-auto max-w-[1280px];
-}
-
-.menu {
-  @apply absolute left-[50dvw] top-[50dvh] w-[min(calc(100dvw-2rem),25rem)];
-}
 
 select,
 button,
 .input,
 .input-readonly,
 textarea {
-  @apply text-dark focus-visible:outline-1 focus-visible:outline-neutral-25 focus-visible:ring-4 focus-visible:ring-primary-600;
+  @apply text-primary focus-visible:outline-1 focus-visible:outline-neutral-25 focus-visible:ring-4 focus-visible:ring-primary-600;
 }
 
 select,
@@ -171,11 +174,7 @@ select option {
 }
 
 .input-readonly {
-  @apply text-light bg-transparent;
-}
-
-.transition-colors--default {
-  @apply transition-colors duration-150;
+  @apply text-secondary bg-transparent;
 }
 
 /* ***** RESET ***** */

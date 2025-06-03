@@ -46,8 +46,8 @@ const Nav = () => {
         </SignedOut>
         <SignedIn>
           <div className="hidden space-x-4 lg:block">
-            <span className="text-light">
-              Hello, <b className="text-dark">{user?.firstName ?? "user"}</b>
+            <span className="text-secondary">
+              Hello, <b className="text-primary">{user?.firstName ?? "user"}</b>
             </span>
             <Button size="small" variant="ghost" onClick={handleSignOut}>
               Sign out

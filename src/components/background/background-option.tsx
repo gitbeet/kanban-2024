@@ -19,12 +19,12 @@ const BackgroundOption = ({
       <div className="relative">
         <p className="pointer-events-none opacity-0">{title}</p>
         <Text variant="secondary">
-          <p className="text-light absolute inset-0 text-center text-sm transition group-hover:!opacity-0">
+          <p className="text-secondary absolute inset-0 text-center text-sm transition group-hover:!opacity-0">
             {title}
           </p>
         </Text>
         <Text variant="primary">
-          <p className="text-dark absolute inset-0 text-center text-sm opacity-0 transition group-hover:opacity-100">
+          <p className="text-primary absolute inset-0 text-center text-sm opacity-0 transition group-hover:opacity-100">
             {title}
           </p>
         </Text>

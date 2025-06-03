@@ -17,8 +17,8 @@ type Props = {
 };
 
 const classesMap: Record<TextVariant, string> = {
-  primary: "text-slate-900 dark:text-slate-100",
-  secondary: "text-slate-600 dark:text-slate-400",
+  primary: "text-primary",
+  secondary: "text-secondary",
   tertiary: "text-slate-500",
   danger: "text-red-500",
   accent: "text-purple-500",

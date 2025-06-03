@@ -51,7 +51,7 @@ const BoardsSettings = () => {
       }}
       transition={sidebarTransition}
       tabIndex={showBoardsSettings ? 0 : -1}
-      className={` ${showBoardsSettings ? "" : "pointer-events-none"} bg-light__test-2 text-dark absolute bottom-0 right-0 top-0 z-10 w-[min(100dvw,320px)] overflow-auto px-4 py-8 shadow-xl scrollbar-thin`}
+      className={` ${showBoardsSettings ? "" : "pointer-events-none"} bg-sidebar text-primary absolute bottom-0 right-0 top-0 z-10 w-[min(100dvw,320px)] overflow-auto px-4 py-8 shadow-xl scrollbar-thin`}
     >
       <FocusTrap
         active={showBoardsSettings}

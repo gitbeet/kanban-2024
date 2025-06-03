@@ -26,7 +26,7 @@ export default function ThemeSwitchUpdated({
           tabIndex={-1}
           className="rounded-full border border-transparent p-1.5"
         >
-          <FaLaptopCode className="text-light h-4 w-4 shrink-0" />
+          <FaLaptopCode className="text-secondary h-4 w-4 shrink-0" />
         </div>
         <div
           role="status"
@@ -34,7 +34,7 @@ export default function ThemeSwitchUpdated({
           tabIndex={-1}
           className="rounded-full border border-transparent p-1.5"
         >
-          <IoMdSunny className="text-light h-4 w-4 shrink-0" />
+          <IoMdSunny className="text-secondary h-4 w-4 shrink-0" />
         </div>
         <div
           role="status"
@@ -42,7 +42,7 @@ export default function ThemeSwitchUpdated({
           tabIndex={-1}
           className="rounded-full border border-transparent p-1.5"
         >
-          <IoMdMoon className="text-light h-4 w-4 shrink-0" />
+          <IoMdMoon className="text-secondary h-4 w-4 shrink-0" />
         </div>
       </div>
     );
@@ -55,7 +55,7 @@ export default function ThemeSwitchUpdated({
         onClick={() => setTheme("system")}
         className={` ${theme === "system" ? "border-color bg-light" : "border-transparent"} rounded-full border p-1.5`}
       >
-        <FaLaptopCode className="text-light h-4 w-4 shrink-0" />
+        <FaLaptopCode className="text-secondary h-4 w-4 shrink-0" />
       </button>
       <button
         aria-label="Switch to light theme"
@@ -63,7 +63,7 @@ export default function ThemeSwitchUpdated({
         onClick={() => setTheme("light")}
         className={` ${theme === "light" ? "border-color bg-light" : "border-transparent"} rounded-full border p-1.5`}
       >
-        <IoMdSunny className="text-light h-4 w-4 shrink-0" />
+        <IoMdSunny className="text-secondary h-4 w-4 shrink-0" />
       </button>
       <button
         aria-label="Switch to dark theme"
@@ -71,7 +71,7 @@ export default function ThemeSwitchUpdated({
         onClick={() => setTheme("dark")}
         className={` ${theme === "dark" ? "border-color bg-light" : "border-transparent"} rounded-full border p-1.5`}
       >
-        <IoMdMoon className="text-light h-4 w-4 shrink-0" />
+        <IoMdMoon className="text-secondary h-4 w-4 shrink-0" />
       </button>
     </div>
   );

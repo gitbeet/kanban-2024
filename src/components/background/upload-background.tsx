@@ -57,9 +57,9 @@ const UploadBackground = ({
     <UploadButton
       appearance={{
         button:
-          "border border-neutral-250 dark:border-neutral-650 text-dark hover:border-neutral-350 hover:dark:border-neutral-500  ut-uploading:cursor-not-allowed  w-full rounded-sm h-[63px] transition ",
+          "border border-neutral-250 dark:border-neutral-650 text-primary hover:border-neutral-350 hover:dark:border-neutral-500  ut-uploading:cursor-not-allowed  w-full rounded-sm h-[63px] transition ",
         container: "w-28  flex flex-col justify-between rounded-sm group",
-        allowedContent: " text-light h-12 mb-2",
+        allowedContent: " text-secondary h-12 mb-2",
       }}
       endpoint="imageUploader"
       onClientUploadComplete={(res) => handleUpload(res)}

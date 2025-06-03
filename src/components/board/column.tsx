@@ -201,7 +201,7 @@ const Column = ({
       onDrop={handleDragEnd}
       key={column.id}
       // hard coded width for transition animation
-      className={`${active ? "bg-white/55 backdrop-blur-md dark:bg-neutral-950/80" : "bg-light__test"} w-80 rounded-md p-6 shadow-lg`}
+      className={`${active ? "bg-white/55 backdrop-blur-md dark:bg-neutral-950/80" : "bg-column"} w-80 rounded-md p-6 shadow-lg`}
     >
       <motion.div
         layout="position"

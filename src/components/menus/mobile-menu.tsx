@@ -39,7 +39,7 @@ const MobileMenu = () => {
       >
         <button
           onClick={handleCloseMenu}
-          className="text-light pointer-events-none text-sm opacity-0 focus:pointer-events-auto focus:opacity-100"
+          className="text-secondary pointer-events-none text-sm opacity-0 focus:pointer-events-auto focus:opacity-100"
         >
           Close mobile menu
         </button>
@@ -48,7 +48,7 @@ const MobileMenu = () => {
             <Link
               ref={ref}
               tabIndex={resolvedTabIndex}
-              className="text-dark text-xl font-semibold"
+              className="text-primary text-xl font-semibold"
               href="/"
             >
               Home
@@ -58,7 +58,7 @@ const MobileMenu = () => {
             <li onClick={handleCloseMenu}>
               <Link
                 tabIndex={resolvedTabIndex}
-                className="text-dark text-xl font-semibold"
+                className="text-primary text-xl font-semibold"
                 href="/boards"
               >
                 Boards
@@ -68,7 +68,7 @@ const MobileMenu = () => {
           <li onClick={handleCloseMenu}>
             <Link
               tabIndex={resolvedTabIndex}
-              className="text-dark text-xl font-semibold"
+              className="text-primary text-xl font-semibold"
               href="/about"
             >
               About
@@ -77,7 +77,7 @@ const MobileMenu = () => {
           <li onClick={handleCloseMenu}>
             <Link
               tabIndex={resolvedTabIndex}
-              className="text-dark text-xl font-semibold"
+              className="text-primary text-xl font-semibold"
               href="/contact"
             >
               Contact
@@ -99,8 +99,8 @@ const MobileMenu = () => {
         </SignedOut>
         <SignedIn>
           <div className="space-x-4">
-            <span className="text-light">
-              Hello, <b className="text-dark">{user?.firstName ?? "user"}</b>
+            <span className="text-secondary">
+              Hello, <b className="text-primary">{user?.firstName ?? "user"}</b>
             </span>
             <Button
               tabIndex={resolvedTabIndex}

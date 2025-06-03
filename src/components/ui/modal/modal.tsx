@@ -72,7 +72,7 @@ export const Modal = ({
         ref={modalRef}
         {...props}
         style={{ zIndex, ...props.style }}
-        className={`menu-bg ${centered ? "menu" : ""} absolute p-6 ${show ? "" : "pointer-events-none"} text-dark ${className}`}
+        className={`menu-bg ${centered ? "menu" : ""} absolute p-6 ${show ? "" : "pointer-events-none"} text-primary ${className}`}
       >
         {children}
       </motion.div>

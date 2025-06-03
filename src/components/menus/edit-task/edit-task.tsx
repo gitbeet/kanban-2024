@@ -253,7 +253,7 @@ const EditTask = ({ task, columnId }: { task: TaskType; columnId: string }) => {
           <MoreButton ref={moreButtonRef} onClick={handleClickMoreMenu} />
         </div>
         <div className="space-y-4">
-          <h4 className="text-light text-sm font-bold">
+          <h4 className="text-secondary text-sm font-bold">
             {allSubtasks < 1
               ? "No subtasks"
               : `Subtasks ( ${completedSubtasks} of ${allSubtasks} )`}
@@ -286,7 +286,7 @@ const EditTask = ({ task, columnId }: { task: TaskType; columnId: string }) => {
                     className={`${
                       subtask.completed
                         ? "text-secondary line-through"
-                        : "text-dark"
+                        : "text-primary"
                     } truncate`}
                   >
                     {subtask.name}

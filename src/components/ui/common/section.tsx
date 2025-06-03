@@ -1,8 +1,16 @@
 import type { HTMLAttributes, ReactNode } from "react";
 
+type SectionVariant = "primary" | "secondary";
+
 type Props = HTMLAttributes<HTMLDivElement> & {
   children: ReactNode;
-  variant?: "primary" | "secondary";
+  variant?: SectionVariant;
+};
+
+const variantClasses: Record<SectionVariant, string> = {
+  primary: "bg-neutral-25 dark:bg-neutral-900",
+  secondary:
+    "border-y border-neutral-100 bg-white dark:border-neutral-750 dark:bg-neutral-850",
 };
 
 const Section = ({
@@ -11,11 +19,7 @@ const Section = ({
   className,
   ...props
 }: Props) => {
-  const variantClass =
-    variant === "primary"
-      ? "bg-neutral-25 dark:bg-neutral-900"
-      : "border-y border-neutral-100 bg-white  dark:border-neutral-750 dark:bg-neutral-850";
-
+  const variantClass = variantClasses[variant];
   return (
     <div className={variantClass}>
       <section

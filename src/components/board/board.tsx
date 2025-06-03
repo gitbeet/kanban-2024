@@ -21,7 +21,7 @@ const BlockHeading = ({ title }: { title: string }) => (
 );
 
 const Block = ({ title, children }: { title: string; children: ReactNode }) => (
-  <div className="bg-light__test space-y-6 rounded-md px-12 py-9 drop-shadow-lg">
+  <div className="bg-column space-y-6 rounded-md px-12 py-9 drop-shadow-lg">
     <BlockHeading title={title} />
     {children}
   </div>
@@ -112,7 +112,7 @@ const Board = () => {
             className="relative z-[2] h-96"
           >
             <CreateColumnForm
-              className="bg-light__test h-32 w-80 shrink-0 overflow-hidden rounded-md drop-shadow-lg"
+              className="bg-column h-32 w-80 shrink-0 overflow-hidden rounded-md drop-shadow-lg"
               boardId={currentBoard.id}
             />
             <div className="h-4" />

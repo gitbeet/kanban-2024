@@ -451,7 +451,7 @@ export const EditTaskAdvanced = ({ columnId, task }: Props) => {
         onClose={handleShowConfirmationWindow}
       >
         {/* p-1 to fix overflow-auto not showing outline on focused elements */}
-        <div className="text-dark relative max-h-[95dvh] overflow-auto p-1">
+        <div className="text-primary relative max-h-[95dvh] overflow-auto p-1">
           <div className="flex items-center justify-between">
             <MenuHeading text="Edit Task" />
             <CloseButton onClick={handleShowConfirmationWindow} />
@@ -477,7 +477,7 @@ export const EditTaskAdvanced = ({ columnId, task }: Props) => {
           <div className="space-y-4">
             <MenuSectionHeading text="Subtasks" />
             {temporarySubtasks.length === 0 && (
-              <p className="text-light text-center">You have no subtasks</p>
+              <p className="text-secondary text-center">You have no subtasks</p>
             )}
             {/* p-1 to fix overflow-auto not showing outline on focused elements */}
             <ul className="max-h-44 space-y-2.5 overflow-auto p-1 scrollbar-thin">

@@ -27,7 +27,7 @@ const Sidebar = () => {
       ref={outsideButtonRef}
       disabled={sidebarAnimating}
       onClick={() => setShowSidebar((prev) => !prev)}
-      className={`transitionz-colors bg-dark text-dark absolute right-2 top-1.5 translate-x-full cursor-pointer rounded border border-neutral-250 p-2 text-sm text-white shadow dark:border-neutral-500`}
+      className={`transitionz-colors bg-dark text-primary absolute right-2 top-1.5 translate-x-full cursor-pointer rounded border border-neutral-250 p-2 text-sm text-white shadow dark:border-neutral-500`}
     >
       <FaChevronRight className={showSidebar ? "rotate-180" : ""} />
     </button>
@@ -56,7 +56,7 @@ const Sidebar = () => {
         x: showSidebar ? 0 : -208,
       }}
       transition={sidebarTransition}
-      className="bg-light__test-2 left-0 top-0 z-[5] h-full w-56 shrink-0 border-r shadow-xl dark:border-neutral-750"
+      className="bg-sidebar left-0 top-0 z-[5] h-full w-56 shrink-0 border-r shadow-xl dark:border-neutral-750"
     >
       <FocusTrap
         active={showSidebar}
