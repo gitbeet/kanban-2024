@@ -25,8 +25,99 @@
     @apply text-slate-600 dark:text-slate-400;
   }
 
-  .text-secondary--hoverable {
-    @apply text-secondary transition-colors--default hover:text-neutral-700 dark:hover:text-neutral-250;
+  .text-tertiary {
+    @apply text-slate-500 dark:text-slate-500;
+  }
+
+  .text-danger {
+    @apply text-red-500 dark:text-red-400;
+  }
+
+  .text-accent {
+    @apply text-purple-500 dark:text-purple-400;
+  }
+
+  .text-success {
+    @apply text-teal-500 dark:text-teal-400;
+  }
+
+  .text-inverse {
+    @apply text-slate-50 dark:text-slate-900;
+  }
+
+  /* ***** HOVER STATES ***** */
+  .text-primary__hover,
+  .text-secondary__hover,
+  .text-tertiary__hover,
+  .text-danger__hover,
+  .text-accent__hover,
+  .text-success__hover,
+  .text-inverse__hover
+  .text-primary__group-hover,
+  .text-secondary__group-hover,
+  .text-tertiary__group-hover,
+  .text-danger__group-hover,
+  .text-accent__group-hover,
+  .text-success__group-hover,
+  .text-inverse__group-hover{
+    @apply transition-colors--default;
+  }
+
+  .text-primary__hover {
+    @apply hover:text-slate-600 dark:hover:text-slate-300;
+  }
+
+  .text-secondary__hover {
+    @apply hover:text-slate-800 dark:hover:text-slate-200;
+  }
+
+  .text-tertiary__hover {
+    @apply hover:text-slate-600 dark:hover:text-slate-400;
+  }
+
+  .text-danger__hover {
+    @apply hover:text-red-400;
+  }
+
+  .text-accent__hover {
+    @apply hover:text-purple-400;
+  }
+
+  .text-success__hover {
+    @apply hover:text-teal-300;
+  }
+
+  .text-inverse__hover {
+    @apply hover:text-white hover:dark:text-slate-950;
+  }
+
+  /* ***** GROUP HOVER STATES ***** */
+  .text-primary__group-hover {
+    @apply group-hover:text-slate-600 dark:group-hover:text-slate-300;
+  }
+
+  .text-secondary__group-hover {
+    @apply group-hover:text-slate-800 dark:group-hover:text-slate-200;
+  }
+
+  .text-tertiary__group-hover {
+    @apply group-hover:text-slate-600 dark:group-hover:text-slate-400;
+  }
+
+  .text-danger__group-hover {
+    @apply group-hover:text-red-400;
+  }
+
+  .text-accent__group-hover {
+    @apply group-hover:text-purple-400;
+  }
+
+  .text-success__group-hover {
+    @apply group-hover:text-teal-300;
+  }
+
+  .text-inverse__group-hover {
+    @apply group-hover:text-white group-hover:dark:text-slate-950;
   }
 
   /* ***** TYPOGRAPHY SIZES */

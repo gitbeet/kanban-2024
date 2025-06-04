@@ -19,32 +19,32 @@ type Props = {
 const classesMap: Record<TextVariant, string> = {
   primary: "text-primary",
   secondary: "text-secondary",
-  tertiary: "text-slate-500",
-  danger: "text-red-500",
-  accent: "text-purple-500",
-  success: "text-teal-400",
-  inverse: "text-slate-50 dark:text-slate-900",
+  tertiary: "text-tertiary",
+  danger: "text-danger",
+  accent: "text-accent",
+  success: "text-success",
+  inverse: "text-inverse",
 };
 
 // note: change group hover class when changing hover class
 const hoverClassesMap: Record<TextVariant, string> = {
-  primary: "hover:text-slate-600 dark:hover:text-slate-300",
-  secondary: "hover:text-slate-800 dark:hover:text-slate-200",
-  tertiary: "hover:text-slate-600 dark:hover:text-slate-400",
-  danger: "hover:text-red-400",
-  accent: "hover:text-purple-400",
-  success: "hover:text-teal-300",
-  inverse: "hover:text-white hover:dark:text-slate-950",
+  primary: "text-primary__hover",
+  secondary: "text-secondary__hover",
+  tertiary: "text-tertiary__hover",
+  danger: "text-danger__hover",
+  accent: "text-accent__hover",
+  success: "text-success__hover",
+  inverse: "text-inverse__hover",
 };
 
 const groupHoverClassesMap: Record<TextVariant, string> = {
-  primary: "group-hover:text-slate-600 dark:group-hover:text-slate-300",
-  secondary: "group-hover:text-slate-800 dark:group-hover:text-slate-200",
-  tertiary: "group-hover:text-slate-600 dark:group-hover:text-slate-400",
-  danger: "group-hover:text-red-400",
-  accent: "group-hover:text-purple-400",
-  success: "group-hover:text-teal-300",
-  inverse: "group-hover:text-white group-hover:dark:text-slate-950",
+  primary: "text-primary__group-hover",
+  secondary: "text-secondary__group-hover",
+  tertiary: "text-tertiary__group-hover",
+  danger: "text-danger__group-hover",
+  accent: "text-accent__group-hover",
+  success: "text-success__group-hover",
+  inverse: "text-inverse__group-hover",
 };
 
 const Text = ({ variant, hover = false, group = false, children }: Props) => {
